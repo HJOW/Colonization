@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -18,17 +16,14 @@ import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.NormalColony;
-import org.duckdns.hjow.colonization.ui.BackupManager;
-import org.duckdns.hjow.colonization.ui.CityPanel;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
-import org.duckdns.hjow.colonization.ui.ColonyPanel;
-import org.duckdns.hjow.colonization.ui.GlobalLogDialog;
+import org.duckdns.hjow.colonization.ui.GlobalLogUI;
 
 /** Colonization 프로그램 핵심 클래스 */
 public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Serializable {
     private static final long serialVersionUID = -5740844908011980260L;
     
-    protected transient Colonization superInstance;
+    protected transient ColonizationMainClass superInstance;
     protected transient Thread thread;
     protected transient volatile boolean threadSwitch, threadPaused, threadShutdown, reserveSaving, reserveRefresh;
     protected transient volatile boolean bCheckerPauseCompleted = false;
@@ -395,7 +390,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         Colony col = getSelectedColony();
         if(col == null) return;
         
-        try { col.oneCycle(cycle, null, col, 100, getColonyPanel(col)); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        try { col.oneCycle(cycle, null, col, 100, null); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         try {
         	refreshArenaPanel(cycle);
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
@@ -423,61 +418,6 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     /** 사이클 진행에 따른 정착지 화면 내용 갱신 (성능을 위해 항상 전체를 새로고침하지는 않음. 확실히 새로고침하려면 refreshColonyContent 메소드 사용) */
     public void refreshArenaPanel(int cycle) { }
-    
-    /** 백업 복원 받기 */
-    public void applyRestore(List<Colony> colonies, BackupManager backupMan, boolean concat) {
-        // 파일 다 지워야 함
-        File root = getColonySaveRootDirectory();
-        File[] lists = root.listFiles(getColonyFileFilter());
-        for(File f : lists) {
-            f.delete();
-        }
-        
-        // 복원 처리
-        if(concat) { // 병합
-            List<Colony> temp = new ArrayList<Colony>();
-            temp.addAll(this.colonies);
-            
-            this.colonies.clear();
-            
-            for(Colony c : temp) {
-                boolean dupl = false;
-                for(Colony alreadyIn : this.colonies) {
-                    if(c.getKey() == alreadyIn.getKey()) { dupl = true; break; }
-                }
-                if(dupl) continue;
-                this.colonies.add(c);
-            }
-            
-            for(Colony c : colonies) {
-                boolean dupl = false;
-                for(Colony alreadyIn : this.colonies) {
-                    if(c.getKey() == alreadyIn.getKey()) { dupl = true; break; }
-                }
-                if(dupl) continue;
-                this.colonies.add(c);
-            }
-        } else { // 대체
-            this.colonies.clear();
-            this.colonies.addAll(colonies);
-        }
-        
-        reserveSaving = true; // 저장 예약
-        refreshColonyList();  // 목록 갱신
-    }
-    
-    /** 해당 정착지를 출력하는 영역 반환 */
-    public ColonyPanel getColonyPanel(Colony col) {
-        return null;
-    }
-    
-    /** 해당 도시를 출력하는 도시 영역 반환 */
-    public CityPanel getCityPanel(City city) {
-        Colony col = getSelectedColony();
-        ColonyPanel colPn = getColonyPanel(col);
-        if(colPn == null) return null;
-        return colPn.getCityPanel(city);
-    }
     
     /** 도시가 속한 정착지 찾기 */
     @Override
@@ -590,6 +530,6 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     public static final short DEFENCETYPE_SMALL    = 1;
     public static final short DEFENCETYPE_BUILDING = 9;
     
-    protected static transient GlobalLogDialog dialogGlobalLog;
+    protected static transient GlobalLogUI dialogGlobalLog;
     protected static transient boolean flagDebugMode = false; // 실행 시간 표시 플래그
 }

@@ -19,7 +19,7 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 
 /** 전역 로그 출력 대화상자 */
-public class GlobalLogDialog {
+public class GlobalLogDialog implements GlobalLogUI {
     protected JLogArea taLog;
     protected JDialog dialog;
     protected boolean threadSwitch = true;
@@ -75,14 +75,17 @@ public class GlobalLogDialog {
 		}).start();
     }
 
+    @Override
     public void log(String msg) {
         taLog.log(msg);
     }
 
+    @Override
     public void clear() {
         taLog.clear();
     }
 
+    @Override
     public void open(ColonyManager superInstance) {
         if(dialog == null) {
             init(superInstance);
@@ -90,6 +93,7 @@ public class GlobalLogDialog {
         dialog.setVisible(true);
     }
 
+    @Override
     public void close() {
         dialog.setVisible(false);
     }
@@ -115,6 +119,7 @@ public class GlobalLogDialog {
     	}
     }
     
+    @Override
     public void dispose() {
     	threadSwitch = false;
         close();

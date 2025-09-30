@@ -2,7 +2,7 @@ package org.duckdns.hjow.colonization;
 
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 
-public class Colonization implements Runnable {
+public class Colonization implements GUIColonizationMainClass {
 	private static final Colonization INSTANCES = new Colonization();
     public static void main(String[] args) {
     	INSTANCES.run();

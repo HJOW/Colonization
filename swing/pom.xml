@@ -3,7 +3,8 @@
     <groupId>org.duckdns.hjow</groupId>
     <artifactId>colonization-swing</artifactId>
     <version>0.0.1</version>
-    <name>Colonization game build with Swing</name>
+    <name>Colonization - Swing</name>
+	<description>Colonization game built with Swing</description>
 	<licenses>
 		<license>
 			<name>The Apache License, Version 2.0</name>

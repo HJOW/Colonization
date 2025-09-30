@@ -43,6 +43,7 @@ import javax.swing.UIManager;
 import org.duckdns.hjow.colonization.Colonization;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GUIColonizationMainClass;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.SimulationSpeed;
 import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
@@ -54,7 +55,6 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 /** Colonization 프로그램 핵심 클래스 Swing 버전 */
 public class GUIColonyManager extends ColonyManager {
 	private static final long serialVersionUID = -2483528821790634383L;
-	protected transient Colonization superInstance;
 	
 	protected transient JFrame frame;
     protected transient JPanel pnRoot, pnMain, pnFront;
@@ -84,13 +84,13 @@ public class GUIColonyManager extends ColonyManager {
     protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel;
     
     /** 생성자, 상위 프로그램에서 호출됨 */
-    public GUIColonyManager(Colonization superInstance) {
+    public GUIColonyManager(GUIColonizationMainClass superInstance) {
     	super();
         this.superInstance = superInstance;
     }
 
     /** UI 초기화 */
-    public void init(Colonization superInstance) {
+    public void init(GUIColonizationMainClass superInstance) {
     	// 설정 파일 읽기
     	loadLocalConfigs();
     	
@@ -133,8 +133,9 @@ public class GUIColonyManager extends ColonyManager {
         });*/
         
         if(dialogGlobalLog == null) dialogGlobalLog = new GlobalLogDialog(this);
-        dialogGlobalLog.setSize(w, logHeight);
-        dialogGlobalLog.setLocationBottom(frame);
+        GlobalLogDialog logDiag = (GlobalLogDialog) dialogGlobalLog;
+        logDiag.setSize(w, logHeight);
+        logDiag.setLocationBottom(frame);
         
         if(fileChooser == null) {
             fileChooser = new JFileChooser();
@@ -511,7 +512,9 @@ public class GUIColonyManager extends ColonyManager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dialogGlobalLog.open(getSelf());
-                dialogGlobalLog.setLocationBottom(getDialog());
+                
+                GlobalLogDialog logDiag = (GlobalLogDialog) dialogGlobalLog;
+                logDiag.setLocationBottom(getDialog());
             }
         });
         
@@ -892,7 +895,7 @@ public class GUIColonyManager extends ColonyManager {
     public void onWindowClosing() {
         setEditable(false);
         
-        Colonization superInst = superInstance;
+        GUIColonizationMainClass superInst = (GUIColonizationMainClass) superInstance;
         if(! flagSaveBeforeClose) return;
         flagSaveBeforeClose = false;
         
@@ -1069,6 +1072,7 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 쓰레드에서 1 사이클 당 1회 호출됨 */
+    @Override
     public void oneCycle() {
         Colony col = getSelectedColony();
         if(col == null) return;
