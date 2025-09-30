@@ -66,9 +66,9 @@ public class GUIColonyManager extends ColonyManager {
     protected transient JEditorPane webNotice;
     
     protected transient JPanel pnCols, pnNoColonies;
-    protected transient ColonyPanel cpNow;
+    protected transient DefaultColonyPanel cpNow;
     protected transient JComboBox<Colony> cbxColony;
-    protected transient List<ColonyPanel> pnColonies = new Vector<ColonyPanel>();
+    protected transient List<DefaultColonyPanel> pnColonies = new Vector<DefaultColonyPanel>();
     
     protected transient JProgressBar progThreadStatus;
     protected transient JLabel lbRunningTime;
@@ -865,7 +865,7 @@ public class GUIColonyManager extends ColonyManager {
         disposeContents();
         
         cpNow = null;
-        for(ColonyPanel p : pnColonies) {
+        for(DefaultColonyPanel p : pnColonies) {
             p.dispose();
         }
         pnColonies.clear();
@@ -925,7 +925,7 @@ public class GUIColonyManager extends ColonyManager {
             if(cardMain != null) cardMain.show(pnMain, "C2");
         }
         
-        for(ColonyPanel c : pnColonies) {
+        for(DefaultColonyPanel c : pnColonies) {
             Colony col = c.getColony();
             
             if(editable) {
@@ -1017,7 +1017,7 @@ public class GUIColonyManager extends ColonyManager {
         menuFileDel.setEnabled(true);
         menuFileNew.setEnabled(true);
         
-        for(ColonyPanel c : pnColonies) {
+        for(DefaultColonyPanel c : pnColonies) {
             Colony col = c.getColony();
             if(col == null) return;
             if(col.getHp() <= 0) return;
@@ -1065,7 +1065,7 @@ public class GUIColonyManager extends ColonyManager {
         menuFileReset.setEnabled(false);
         menuFileDel.setEnabled(false);
         menuFileNew.setEnabled(false);
-        for(ColonyPanel c : pnColonies) { c.setEditable(false); }
+        for(DefaultColonyPanel c : pnColonies) { c.setEditable(false); }
         
         btnThrPlay.setEnabled(true);
         menuActionThrPlay.setEnabled(true);
@@ -1116,9 +1116,9 @@ public class GUIColonyManager extends ColonyManager {
             return;
         }
         
-        ColonyPanel colPn = getColonyPanel(col);
+        DefaultColonyPanel colPn = getColonyPanel(col);
         if(colPn == null) {
-            colPn = new ColonyPanel(col, this);
+            colPn = new DefaultColonyPanel(col, this);
             pnColonies.add(colPn);
         }
         
@@ -1132,8 +1132,8 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 해당 정착지를 출력하는 영역 반환 */
-    public ColonyPanel getColonyPanel(Colony col) {
-        for(ColonyPanel cp : pnColonies) {
+    public DefaultColonyPanel getColonyPanel(Colony col) {
+        for(DefaultColonyPanel cp : pnColonies) {
             if(cp.getColony().getKey() == col.getKey()) {
                 return cp;
             }
@@ -1144,7 +1144,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 해당 도시를 출력하는 도시 영역 반환 */
     public CityPanel getCityPanel(City city) {
         Colony col = getSelectedColony();
-        ColonyPanel colPn = getColonyPanel(col);
+        DefaultColonyPanel colPn = getColonyPanel(col);
         if(colPn == null) return null;
         return colPn.getCityPanel(city);
     }
