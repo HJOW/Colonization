@@ -1,2 +1,2 @@
-/java-common/target/**
-/swing/target/**
+java-common/target/**
+swing/target/**
