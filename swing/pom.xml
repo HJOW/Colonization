@@ -17,6 +17,11 @@
             <artifactId>hjow-commons</artifactId>
             <version>0.0.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.duckdns.hjow</groupId>
+            <artifactId>colonization-java-common</artifactId>
+            <version>0.0.1</version>        
+        </dependency>
 	</dependencies>
 	<build>
         <defaultGoal>install</defaultGoal>
