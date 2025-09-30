@@ -548,16 +548,16 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     protected void processSearch(String keyword, ColonyElementPanel component) {
         if(component.getComponent() == null) return;
         if(keyword == null || keyword.equals("")) {
-            component.getComponent().setVisible(true);
+            ((Component) component.getComponent()).setVisible(true);
             return;
         }
         
         String name = component.getTargetName();
-        if(name == null) { component.getComponent().setVisible(false); return; }
+        if(name == null) { ((Component) component.getComponent()).setVisible(false); return; }
         if(name.indexOf(keyword) >= 0) {
-            component.getComponent().setVisible(true);
+            ((Component) component.getComponent()).setVisible(true);
         } else {
-            component.getComponent().setVisible(false);
+            ((Component) component.getComponent()).setVisible(false);
         }
     }
 
@@ -568,7 +568,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     }
 
     @Override
-    public Component getComponent() {
+    public Object getComponent() {
         return this;
     }
 }
