@@ -829,6 +829,7 @@ public class GUIColonyManager extends ColonyManager {
         frame.setVisible(true);
         if(dialogGlobalLog != null) dialogGlobalLog.open(this);
         onAfterOpened(superInstance);
+        superInstance.closeLoadingDialog();
     }
 
     public boolean isVisible() {
