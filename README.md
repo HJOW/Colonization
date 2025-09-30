@@ -2,6 +2,11 @@
 GUI 요소들로 간단히 만드는 우주시대 정착지 개척 시뮬레이션 게임   
 여러 플랫폼 연습 겸해 손대고 있는 토이 프로젝트입니다.
 
+# Swing 빌드
+Java 의 Swing API 를 활용한 GUI 환경 빌드입니다.
+Java 8 (OpenJDK 1.8 사용 가능) 이상 버전에서 구동되며, GUI 환경이 필요합니다.
+Maven 구동 시 실행 가능한 jar 환경으로 빌드됩니다.
+
 # License
 
    Copyright 2025 HJOW (hujinone22@naver.com)
