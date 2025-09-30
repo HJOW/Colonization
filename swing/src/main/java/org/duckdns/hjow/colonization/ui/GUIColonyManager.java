@@ -198,7 +198,7 @@ public class GUIColonyManager extends ColonyManager {
         
         webNotice = new JEditorPane();
         webNotice.setEditable(false);
-        webNotice.setContentType("text/html");
+        webNotice.setContentType("text/html; charset=UTF-8");
         webNotice.setText(ColonyClassLoader.htmlNoticeEmpty());
         
         pnFrontCenter.setLayout(new BorderLayout());
