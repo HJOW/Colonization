@@ -47,4 +47,17 @@ public interface Facility extends ColonyElements {
     
     /** 유지비 반환 (양수로 반환) */
     public long getMaintainFee(City city, Colony colony);
+    
+    /*
+     * 이 Facility 구현 클래스는 다음 static 메소드들을 반드시 구현해야 함.
+     * 
+     *    public static String getFacilityName()
+     *    public static String getFacilityTitle()
+     *    public static String getFacilityDescription()
+     *    public static Long getFacilityPrice()
+     *    public static Integer getFacilityBuildingCycle()
+     *    public static Long getTechNeeded()
+     *    public static String getImageHex()
+     *    public static String isBuildAvail(Colony col, City city)
+     */
 }
