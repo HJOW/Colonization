@@ -36,7 +36,7 @@ import org.duckdns.hjow.colonization.elements.ColonyBackup;
 
 public class BackupManager implements Disposeable {
     protected JDialog dialog;
-    protected JPanel pnSecurity;
+    protected JPanel pnSecurity, pnCheckboxes;
     protected JTextField tfName, tfFile;
     protected JLabel lbPassword;
     protected JCheckBox chkUseEnc;
@@ -49,6 +49,7 @@ public class BackupManager implements Disposeable {
     protected transient boolean saveMode = true;
     protected transient GUIColonyManager superInstance = null;
     protected transient List<Colony> colonies = new ArrayList<Colony>();
+    protected transient List<JCheckBox> chkColonies = new ArrayList<JCheckBox>();
     protected transient String security = "";
     
     public BackupManager(GUIColonyManager superInstance) {
@@ -87,6 +88,10 @@ public class BackupManager implements Disposeable {
         JPanel pnCenterDown = new JPanel();
         pnCenterDown.setLayout(new BorderLayout());
         pnCenter.add(pnCenterDown, BorderLayout.SOUTH);
+        
+        pnCheckboxes = new JPanel();
+        pnCheckboxes.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pnCenterDown.add(new JScrollPane(pnCheckboxes, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.NORTH);
         
         taDet = new JTextArea();
         taDet.setLineWrap(true);
@@ -215,7 +220,6 @@ public class BackupManager implements Disposeable {
     
     public void openLoad() {
         this.colonies.clear();
-        this.colonies.addAll(colonies);
         
         chkUseEnc.setSelected(false);
         tfFile.setText("");
@@ -236,6 +240,8 @@ public class BackupManager implements Disposeable {
         dialog.setTitle("복원");
         saveMode = false;
         security = "";
+        
+        pnCheckboxes.removeAll();
         
         int sel = backupChooser.showOpenDialog(dialog);
         if(sel != JFileChooser.APPROVE_OPTION) { dialog.setVisible(false); return; }
@@ -284,6 +290,15 @@ public class BackupManager implements Disposeable {
         saveMode = true;
         security = "";
         
+        pnCheckboxes.removeAll();
+        chkColonies.clear();
+        for(Colony c : colonies) {
+            JCheckBox chk = new JCheckBox(c.getName());
+            chk.setSelected(true);
+            pnCheckboxes.add(chk);
+            chkColonies.add(chk);
+        }
+        
         dialog.setVisible(true);
         tfName.requestFocus();
     }
@@ -308,10 +323,17 @@ public class BackupManager implements Disposeable {
         
         prog.setIndeterminate(true);
         
+        List<Colony> selectedList = new ArrayList<Colony>();
+        for(int idx=0; idx<colonies.size(); idx++) {
+            JCheckBox chk = chkColonies.get(idx);
+            if(! chk.isSelected()) continue;
+            selectedList.add(colonies.get(idx));
+        }
+        
         ColonyBackup bak = new ColonyBackup();
         bak.setName(tfName.getText());
         bak.setDescription(ta.getText());
-        bak.getColonies().addAll(colonies);
+        bak.getColonies().addAll(selectedList);
         bak.setCreated(new Date(System.currentTimeMillis()));
         
         JsonObject json;
@@ -369,6 +391,15 @@ public class BackupManager implements Disposeable {
                 colonies.addAll(bak.getColonies());
             }
             
+            pnCheckboxes.removeAll();
+            chkColonies.clear();
+            for(Colony c : colonies) {
+                JCheckBox chk = new JCheckBox(c.getName());
+                chk.setSelected(true);
+                pnCheckboxes.add(chk);
+                chkColonies.add(chk);
+            }
+            
             tfName.setText(bak.getName());
             ta.setText(bak.getDescription());
             taDet.setText("저장일시 : " + new Date(bak.getCreated()));
@@ -386,7 +417,14 @@ public class BackupManager implements Disposeable {
         prog.setIndeterminate(true);
         handleSecurityOnLoading();
         
-        superInstance.applyRestore(colonies, this, false);
+        List<Colony> selectedList = new ArrayList<Colony>();
+        for(int idx=0; idx<colonies.size(); idx++) {
+            JCheckBox chk = chkColonies.get(idx);
+            if(! chk.isSelected()) continue;
+            selectedList.add(colonies.get(idx));
+        }
+        
+        superInstance.applyRestore(selectedList, this, false);
         dialog.setVisible(false);
         colonies.clear();
     }
@@ -398,7 +436,14 @@ public class BackupManager implements Disposeable {
         prog.setIndeterminate(true);
         handleSecurityOnLoading();
         
-        superInstance.applyRestore(colonies, this, true);
+        List<Colony> selectedList = new ArrayList<Colony>();
+        for(int idx=0; idx<colonies.size(); idx++) {
+            JCheckBox chk = chkColonies.get(idx);
+            if(! chk.isSelected()) continue;
+            selectedList.add(colonies.get(idx));
+        }
+        
+        superInstance.applyRestore(selectedList, this, true);
         dialog.setVisible(false);
         colonies.clear();
     }
