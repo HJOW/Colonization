@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.City;
@@ -267,7 +268,13 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     /** 새 정착지 생성 (타입 지정) */
     public Colony newColony(String type) {
+        return newColony(type, null);
+    }
+    
+    /** 새 정착지 생성 (타입 지정) */
+    public Colony newColony(String type, String name) {
         Colony newCol = ColonyClassLoader.newColonyInstance(type);
+        if(DataUtil.isNotEmpty(name)) newCol.setName(name);
         newColonyAfterJobs(newCol);
         
         return newCol;

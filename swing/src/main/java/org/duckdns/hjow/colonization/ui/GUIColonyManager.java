@@ -689,9 +689,14 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 새 정착지 대화상자 응답 시 호출 */
-    public void onNewColonyTypeDecided(String type, NewColonyManager dicider) {
-        if(dicider == null) return;
-        Colony newCol = newColony(type);
+    public void onNewColonyTypeDecided(String type, NewColonyManager decider) {
+        onNewColonyTypeDecided(type, null, decider);
+    }
+    
+    /** 새 정착지 대화상자 응답 시 호출 */
+    public void onNewColonyTypeDecided(String type, String name, NewColonyManager decider) {
+        if(decider == null) return;
+        Colony newCol = newColony(type, name);
         cbxColony.setSelectedItem(newCol);
         
         cardMain.show(pnMain, "C2");

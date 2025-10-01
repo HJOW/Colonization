@@ -11,6 +11,8 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -43,6 +45,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     protected transient JTextField tfColonyName, tfColonyTime, tfIncomes;
     protected transient JTextArea taStatus;
     protected transient JToolBar toolbar;
+    protected transient JButton btnNewCity;
     
     protected transient boolean flagEditable = true;
     
@@ -155,6 +158,16 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         toolbar = new JToolBar();
         pnTopDetail.add(toolbar, BorderLayout.SOUTH);
         
+        btnNewCity = new JButton("새 도시 건설");
+        toolbar.add(btnNewCity);
+        
+        btnNewCity.addActionListener(new ActionListener() {   
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onNewCityRequested();
+            }
+        });
+        
         JPanel pnLog = new JPanel();
         pnLog.setLayout(new BorderLayout());
         pnMain.add(pnLog, BorderLayout.SOUTH);
@@ -179,6 +192,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     public void setEditable(boolean editable) {
         flagEditable = editable;
         tfColonyName.setEditable(editable);
+        btnNewCity.setEnabled(editable);
         for(CityPanel c : pnCities) {
             if(c.getCity().getHp() <= 0) c.setEditable(false);
             else c.setEditable(editable);
@@ -295,6 +309,56 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     /** 모든 행 삭제 */
     public void clearAccountingTable() {
         while(tableAccounting.getRowCount() >= 1) { tableAccounting.removeRow(0); }
+    }
+    
+    /** 새 도시 건설 요청 시 호출 */
+    protected void onNewCityRequested() {
+        Colony col = getColony();
+        
+        // 최대 도시 수 제한 체크
+        int cityCnt = col.getCityCount();
+        if(cityCnt >= col.getMaxCityCount()) { JOptionPane.showMessageDialog(superInstance.getDialog(), "더 이상 새 도시를 건설할 수 없습니다."); return; }
+        
+        // 예산 체크
+        long howMuch = City.getBuildingNewCityFee(col);
+        long nowHave = col.getMoney();
+        if(nowHave < howMuch) { JOptionPane.showMessageDialog(superInstance.getDialog(), "새 도시 건설에는 " + (howMuch - nowHave) + " 의 예산이 더 필요합니다."); return; }
+        
+        // 인구 체크 (소모는 되지 않지만, 최소 조건으로 적용)
+        long population = col.getCitizenCount();
+        if(cityCnt >= 1) {
+            if((population / cityCnt) < 1000) { JOptionPane.showMessageDialog(superInstance.getDialog(), "새 도시를 건설하려면, 현재의 도시들의 인구 평균이 1000 을 넘어야 합니다."); return; }
+        }
+        
+        int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), "새 도시를 건설하시겠습니까?\n" + howMuch + " 의 예산이 필요합니다.", "확인", JOptionPane.YES_NO_OPTION);
+        if(sel != JOptionPane.YES_OPTION) return;
+        
+        newCity();
+    }
+    
+    /** 새 도시 건설 */
+    public void newCity() {
+        Colony col = getColony();
+        
+        // 최대 도시 수 제한 체크
+        int cityCnt = col.getCityCount();
+        if(cityCnt >= col.getMaxCityCount()) throw new RuntimeException("더 이상 새 도시를 건설할 수 없습니다.");
+        
+        // 예산 체크
+        long howMuch = City.getBuildingNewCityFee(col);
+        long nowHave = col.getMoney();
+        if(nowHave < howMuch) throw new RuntimeException("새 도시 건설에는 " + (howMuch - nowHave) + " 의 예산이 더 필요합니다.");
+        
+        // 인구 체크 (소모는 되지 않지만, 최소 조건으로 적용)
+        long population = col.getCitizenCount();
+        if(cityCnt >= 1) {
+            if((population / cityCnt) < 1000) throw new RuntimeException("새 도시를 건설하려면, 현재의 도시들의 인구 평균이 1000 을 넘어야 합니다.");
+        }
+        
+        City c = col.newCity();
+        col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, "신도시 건설");
+        
+        reserveRefresh();
     }
     
     /** 회계 정보 새로고침 */

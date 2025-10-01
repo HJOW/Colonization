@@ -114,9 +114,19 @@ public abstract class Colony implements ColonyElements {
         this.researches = researches;
     }
     
+    /** 연구 목록 초기화 (비우고, 초기 상태로 다시 채움) */
     public void resetResearches() {
         researches.clear();
         researches.addAll(ResearchManager.initList(this));
+    }
+    
+    /** 총 인구 수 구하기 */
+    public long getCitizenCount() {
+        long now = 0L;
+        for(City c : getCities()) {
+            now += c.getCitizenCount();
+        }
+        return now;
     }
 
     @Override
@@ -364,13 +374,27 @@ public abstract class Colony implements ColonyElements {
                 newCity();
                 return;
             }
+        } catch(RuntimeException ex) {
+            throw ex;
         } catch(Exception ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
     
+    /** 이 정착지가 감당 가능한 도시 수를 반환 */
+    public int getMaxCityCount() {
+        return 10000;
+    }
+    
+    /** 현재 도시 수 반환 */
+    public int getCityCount() {
+        return getCities().size();
+    }
+    
     /** 새 도시를 생성 */
     public City newCity() {
+        if(getCityCount() >= getMaxCityCount()) throw new RuntimeException("이 정착지에는 더 이상 도시를 건설할 수 없습니다.");
+        
         City city = new City();
         int idx;
         
@@ -441,7 +465,8 @@ public abstract class Colony implements ColonyElements {
         desc = desc.append("\t").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
         desc = desc.append("\t").append("예산 : ").append(formatterInt.format(getMoney()));
         desc = desc.append("\t").append("기술 : ").append(formatterInt.format(getTech()));
-        desc = desc.append("\t").append("도시 수 : ").append(formatterInt.format(getCities().size()));
+        desc = desc.append("\t").append("도시 수 : ").append(formatterInt.format(getCityCount())).append(" / ").append(formatterInt.format(getMaxCityCount()));
+        desc = desc.append("\t").append("총 인구 : ").append(formatterInt.format(getCitizenCount()));
         
         return desc.toString().trim();
     }

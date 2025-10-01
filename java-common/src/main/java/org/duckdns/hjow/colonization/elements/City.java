@@ -336,13 +336,14 @@ public class City implements ColonyElements {
         
         try {
             if(command.equalsIgnoreCase("NewCitizen")) {
-                createNewCitizen();
+                if(getCitizenCount() < Integer.MAX_VALUE) createNewCitizen();
                 return;
             }
             
             if(command.equalsIgnoreCase("NewFacility")) {
                 if(params == null) return;
                 if(params.equals("")) return;
+                if(getFacility().size() >= getSpaces()) return;
                 
                 Class<?> facilityClass = FacilityManager.getFacilityClass(params);
                 if(facilityClass == null) return;
@@ -437,7 +438,7 @@ public class City implements ColonyElements {
     /** 노숙자 수 계산 */
     public int getHomelesses() {
         int counts = 0;
-        for(Citizen c : citizens) {
+        for(Citizen c : getCitizens()) {
             if(c.isHomeless()) counts++;
         }
         return counts;
@@ -446,7 +447,7 @@ public class City implements ColonyElements {
     /** 백수의 수 계산 */
     public int getJobSeekers() {
         int counts = 0;
-        for(Citizen c : citizens) {
+        for(Citizen c : getCitizens()) {
             if(c.isJobSeeker()) counts++;
         }
         return counts;
@@ -455,7 +456,7 @@ public class City implements ColonyElements {
     /** 노숙자를 주거 모듈에 할당 */
     protected void allocateHome(Colony col) {
         // 시민들 확인해서, 존재하지 않는 주거 모듈에 산다고 되어 있으면 리셋
-        for(Citizen c : citizens) {
+        for(Citizen c : getCitizens()) {
             // 거주민 여부 확인
             if(c.isHomeless()) continue;
             
@@ -466,7 +467,7 @@ public class City implements ColonyElements {
         }
         
         // 시민들 별로 주거 할당
-        for(Citizen c : citizens) {
+        for(Citizen c : getCitizens()) {
             // 노숙자 여부 판단
             if(! c.isHomeless()) continue;
             
@@ -489,7 +490,7 @@ public class City implements ColonyElements {
     	
         List<Facility> list = new ArrayList<Facility>();
         // 시민들 확인해서, 존재하지 않는 직장에 있는지 확인
-        for(final Citizen c : citizens) {
+        for(final Citizen c : getCitizens()) {
             // 직장인 여부 판단
             if(c.isJobSeeker()) continue;
             
@@ -507,7 +508,7 @@ public class City implements ColonyElements {
         }
         
         // 시민별로 일자리 할당
-        for(final Citizen c : citizens) {
+        for(final Citizen c : getCitizens()) {
             // 백수 여부 판단
             if(! c.isJobSeeker()) continue;
             
@@ -608,7 +609,7 @@ public class City implements ColonyElements {
     
     /**  시민 수 반환 */
     public int getCitizenCount() {
-        return citizens.size();
+        return getCitizens().size();
     }
     
     /** 이 도시 내 거주 시설 수용 인원 반환 (이미 거주 중인 자리도 포함) */
@@ -663,6 +664,8 @@ public class City implements ColonyElements {
     
     /** 출산률 적용 */
     public void processBornChance(int cycle, Colony col, int efficiency100) {
+        if(getCitizenCount() >= Integer.MAX_VALUE) return;
+        
         if(cycle % 600 == 0) {
             if(getHomeCapacity() > getCitizenCount()) {
                 if(Math.random() < ( getBornChanceRate(col, efficiency100))) {
@@ -729,6 +732,8 @@ public class City implements ColonyElements {
     
     /** 이주율 (입주) 적용 */
     public void processMoveInChance(int cycle, Colony col, int efficiency100) {
+        if(getCitizenCount() >= Integer.MAX_VALUE) return;
+        
         double moveRate = getMoveChangeRate(col, efficiency100);
         if(cycle % 600 == 0) {
             if(Math.random() < moveRate) {
@@ -973,4 +978,7 @@ public class City implements ColonyElements {
 		}
 		enemies.clear();
 	}
+	
+	/** 도시 건설 비용 */
+	public static long getBuildingNewCityFee(Colony col) { return 1000000L; };
 }

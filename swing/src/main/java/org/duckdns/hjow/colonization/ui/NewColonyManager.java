@@ -16,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
@@ -26,6 +27,7 @@ public class NewColonyManager implements Disposeable {
     protected GUIColonyManager man;
     protected JDialog dialog;
     protected JComboBox<ColonyInformation> cbxColTypes;
+    protected JTextField tfName;
     protected JTextArea ta;
     
     public NewColonyManager(GUIColonyManager man) {
@@ -59,6 +61,9 @@ public class NewColonyManager implements Disposeable {
         pnMain.add(pnCenter, BorderLayout.CENTER);
         pnMain.add(pnDown  , BorderLayout.SOUTH);
         
+        tfName = new JTextField();
+        pnUp.add(tfName, BorderLayout.NORTH);
+        
         Vector<ColonyInformation> list = new Vector<ColonyInformation>();
         list.addAll(ColonyClassLoader.colonyInfos());
         cbxColTypes = new JComboBox<ColonyInformation>(list);
@@ -89,7 +94,7 @@ public class NewColonyManager implements Disposeable {
                 ColonyInformation info = (ColonyInformation) cbxColTypes.getSelectedItem();
                 if(info == null) { JOptionPane.showMessageDialog(getDialog(), "해당 타입으로 정착지를 만들 수 없습니다."); return; }
                 
-                man.onNewColonyTypeDecided(info.getName(), getSelf());
+                man.onNewColonyTypeDecided(info.getName(), tfName.getText(), getSelf());
                 dispose();
             }
         });
