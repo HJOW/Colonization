@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -17,10 +18,11 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.ui.LogComponent;
 import org.duckdns.hjow.commons.util.ClassUtil;
 
 /** TCP로 접속을 받는 Colonization Daemon */
-public class TCPSimpleDaemon {
+public class TCPSimpleDaemon implements Disposeable {
     public static void main(String[] args) {
     	int    port    = PORT_DEFAULT;
     	String charset = "UTF-16";
@@ -42,20 +44,38 @@ public class TCPSimpleDaemon {
     protected volatile ServerSocket           acceptor;
     protected volatile List<TCPSimpleSession> sessions = new Vector<TCPSimpleSession>();
     protected volatile String                 charset  = "UTF-16";
+    protected volatile LogComponent           logger;
     
     protected boolean started = false;
     
     /** 데몬 객체 생성, 포트는 기본값 (65246) 사용 */
-    public TCPSimpleDaemon() {}
+    public TCPSimpleDaemon() {
+    	logger = new LogComponent() {
+			@Override
+			public void log(String msg) {
+				System.out.println(msg);
+			}
+		};
+    }
+    
     /** 포트 지정해 데몬 객체 생성 */
     public TCPSimpleDaemon(int port) {
     	this();
     	this.port = port;
     }
     
+    /** 포트 등을 지정해 데몬 객체 생성 */
+    public TCPSimpleDaemon(int port, String charset, LogComponent logger) {
+    	this();
+    	this.port = port;
+    	this.logger = logger;
+    	this.charset = charset;
+    }
+    
     /** 프론트 데몬 구동 시작, 이 때부터 해당 포트로 TCP 접속을 받기 시작 */
     public void start() {
     	threadAcceptor = true;
+    	logger.log(getClass().getSimpleName() + " initializing... Using " + port + " port.");
     	new Thread(new Runnable() {
 			public void run() {
 				threadAcceptor = true;
@@ -63,17 +83,24 @@ public class TCPSimpleDaemon {
 				while(threadAcceptor) {
 					// 소켓 준비 안되어 있으면 지금 세팅
 					if(acceptor == null) {
-						try { acceptor = new ServerSocket(port); } catch(Throwable tx) { tx.printStackTrace(); threadAcceptor = false; break; }
+						try { 
+							acceptor = new ServerSocket(port); 
+							logger.log("TCP server initialized.");
+						} catch(Throwable tx) { tx.printStackTrace(); logger.log("Error : (" + tx.getClass().getSimpleName() + ") " + tx.getMessage()); threadAcceptor = false; break; }
 					}
 					
 					// 접속 받기
 					try {
 						Socket soc = acceptor.accept();
+						logger.log("Someone connect with TCP.");
+						
 						TCPSimpleSession session = new TCPSimpleSession(soc);
+						session.logger = logger;
 						session.activate();
 						sessions.add(session); // 세션 등록
 					} catch(Throwable tx) {
 						tx.printStackTrace();
+						logger.log("Error : (" + tx.getClass().getSimpleName() + ") " + tx.getMessage());
 					}
 				}
 				
@@ -109,18 +136,28 @@ public class TCPSimpleDaemon {
 				}
 			}
 		}).start();
+    	logger.log(getClass().getSimpleName() + " initialized.");
     }
     
+    @Override
     public void dispose() {
+    	if(logger != null) logger.log(this.getClass().getSimpleName() + " will be disposed.");
     	threadAcceptor = false;
     	for(TCPSimpleSession sessions : sessions) {
 			sessions.dispose();
 		}
 		sessions.clear();
+		ClassUtil.closeAll(acceptor); acceptor = null;
+		logger = new LogComponent() {
+			@Override
+			public void log(String msg) {
+				System.out.println(msg);
+			}
+		};
     }
     
     /** 클라이언트의 요청을 처리하는 메소드 */
-    public static JsonObject process(JsonObject json) throws Exception {
+    public static JsonObject process(JsonObject json, LogComponent logger, String host) throws Exception {
     	String strCycle = json.get("cycle") == null ? "1" : json.get("cycle").toString().trim();
     	int cyclePass = Integer.parseInt(strCycle);
     	
@@ -128,6 +165,8 @@ public class TCPSimpleDaemon {
     	Colony col = ColonyClassLoader.loadColony(jsonCol);
     	jsonCol = null;
     	json = null;
+    	
+    	if(logger != null) logger.log("Colony " + col.getName() + " (" + col.getKey() + ") received by " + host + ".");
     	
     	BigInteger time = col.getTime();
     	time = time.add(BigInteger.ONE);
@@ -142,6 +181,8 @@ public class TCPSimpleDaemon {
     		cycle++;
     		col.oneCycle(cycle, null, col, 100, null);
     	}
+    	
+    	if(logger != null) logger.log("Colony " + col.getName() + " (" + col.getKey() + ") cycle " + cyclePass + " processed.");
     	
     	JsonObject res = new JsonObject();
     	res.put("cycle", new Integer(cyclePass));
@@ -164,19 +205,34 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 	protected long key = ColonyManager.generateKey();
 	protected Socket socket = null;
 	
+	protected volatile LogComponent logger;
+	
 	protected volatile transient boolean threadSwitch = false;
 	protected volatile transient boolean stateReading = false;
 	protected volatile transient String         charset = "UTF-16";
 	protected volatile transient BufferedReader reader;
 	protected volatile transient BufferedWriter writer;
 	
-	public TCPSimpleSession() { }
+	protected transient String clientHost = "UNKNOWN";
+	
+	public TCPSimpleSession() {
+		logger = new LogComponent() {
+			@Override
+			public void log(String msg) {
+				System.out.println(msg);
+			}
+		};
+	}
 	public TCPSimpleSession(Socket socket) { this(socket, "UTF-16"); }
 	public TCPSimpleSession(Socket socket, String charset) { this(); this.charset = charset; this.socket = socket; init(); }
 	
 	/** 소켓 초기화 */
 	protected void init() {
+		logger.log(getClass().getSimpleName() + " initializing...");
+		
 		if(reader != null || writer != null) { ClassUtil.closeAll(reader, writer); }
+		if(socket == null) throw new NullPointerException("TCP socket is not prepared.");
+		
 		try {
 		    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()  , charset));
 		    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
@@ -184,14 +240,25 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 			dispose();
 			throw new RuntimeException(t.getMessage(), t);
 		}
+		
+		clientHost = ((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().toString();
+		logger.log(getClass().getSimpleName() + " initialized. TCP connected from " + clientHost + ".");
 	}
 
 	/** 소켓 및 Stream 모두 닫아 정리 */
 	public void dispose() {
+		if(logger != null) logger.log(this.getClass().getSimpleName() + " (" + clientHost + ") will be disposed.");
 		threadSwitch = false;
 		if(reader != null) { ClassUtil.closeAll(reader); reader = null; }
 		if(writer != null) { ClassUtil.closeAll(writer); writer = null; }
 		if(socket != null) { ClassUtil.closeAll(socket); socket = null; } 
+		logger = new LogComponent() {
+			@Override
+			public void log(String msg) {
+				System.out.println(msg);
+			}
+		};
+		clientHost = "UNKNOWN";
 	}
 	
 	/** 세션이 사용 종료됐는지 판별 */
@@ -238,6 +305,7 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 						continue;
 					} else if(line.equals(TCPSimpleDaemon.STRINGLINE_REQUEST_EXIT)) {
 						threadSwitch = false;
+						logger.log("DAEMON shutdown flag received by " + clientHost + ".");
 						TCPSimpleDaemon.flagExit = true;
 						break;
 					} else {
@@ -256,7 +324,7 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 						strJson = null;
 						
 						// 요청 처리
-						json = TCPSimpleDaemon.process(json);
+						json = TCPSimpleDaemon.process(json, logger, clientHost);
 						strJson = json.toJSON();
 						json = null;
 						
@@ -285,6 +353,7 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 			} catch(Throwable t) {
 				if(! threadSwitch) return;
 				t.printStackTrace();
+				logger.log("Error : (" + t.getClass().getSimpleName() + ") " + t.getMessage());
 			}
 		}
 		threadSwitch = false;

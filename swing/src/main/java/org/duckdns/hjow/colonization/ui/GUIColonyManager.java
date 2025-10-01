@@ -78,6 +78,7 @@ public class GUIColonyManager extends ColonyManager {
     
     protected transient BackupManager backupManager;
     protected transient BenchmarkManager benchManager;
+    protected transient GUITCPSimpleDaemonManager daemonManager;
     
     protected transient JMenuBar menuBar;
     protected transient JMenu menuFile, menuAction;
@@ -541,8 +542,18 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
+        menuItem = new JMenuItem("TCP Daemon");
+        menuAction.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	daemonManager.open();
+            }
+        });
+        
         benchManager  = new BenchmarkManager(frame);
         backupManager = new BackupManager(this);
+        daemonManager = new GUITCPSimpleDaemonManager(frame);
         
         refreshColonyContent();
         cardMain.show(pnMain, "C2");
@@ -913,6 +924,9 @@ public class GUIColonyManager extends ColonyManager {
         
         if(backupManager != null) backupManager.dispose();
         backupManager = null;
+        
+        if(daemonManager != null) daemonManager.dispose();
+        daemonManager = null;
 
         if(dialogGlobalLog != null) {
             dialogGlobalLog.dispose();

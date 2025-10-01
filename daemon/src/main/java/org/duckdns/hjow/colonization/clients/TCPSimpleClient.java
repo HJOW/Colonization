@@ -17,6 +17,15 @@ import org.duckdns.hjow.commons.util.ClassUtil;
 
 /** TCPSimpleDaemon 에 대응하는 Client Util */
 public class TCPSimpleClient {
+	public static Colony request(Colony col, String host) {
+		return request(col, host, TCPSimpleDaemon.PORT_DEFAULT, "UTF-16");
+	}
+	public static Colony request(Colony col, String host, String charset) {
+		return request(col, host, TCPSimpleDaemon.PORT_DEFAULT, charset);
+	}
+	public static Colony request(Colony col, String host, int port) {
+		return request(col, host, port, "UTF-16");
+	}
     public static Colony request(Colony col, String host, int port, String charset) {
     	Socket socket = null;
     	BufferedReader reader = null;
