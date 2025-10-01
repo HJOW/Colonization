@@ -327,6 +327,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 facilityPns.add(pn);
             }
             
+            // 빈 공간 채우기 (아직 행 내에 빈자리가 남아있는 경우)
             if(colNo < columns) {
                 while(colNo < columns) { // 남은 빈 공간 채우기
                     pnEmpty = new JPanel();
@@ -346,6 +347,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             colNo = 0;
             rowNo++;
             
+            // 맨 아래에 빈 공간 넣기
             pnEmpty = new JPanel();
             
             gridBagConst = new GridBagConstraints();

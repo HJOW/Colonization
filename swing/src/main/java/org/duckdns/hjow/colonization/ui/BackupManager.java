@@ -2,6 +2,8 @@ package org.duckdns.hjow.colonization.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -90,8 +92,8 @@ public class BackupManager implements Disposeable {
         pnCenter.add(pnCenterDown, BorderLayout.SOUTH);
         
         pnCheckboxes = new JPanel();
-        pnCheckboxes.setLayout(new FlowLayout(FlowLayout.LEFT));
-        pnCenterDown.add(new JScrollPane(pnCheckboxes, JScrollPane.VERTICAL_SCROLLBAR_NEVER, JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS), BorderLayout.NORTH);
+        pnCheckboxes.setLayout(new GridBagLayout());
+        pnCenterDown.add(new JScrollPane(pnCheckboxes, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.NORTH);
         
         taDet = new JTextArea();
         taDet.setLineWrap(true);
@@ -290,17 +292,69 @@ public class BackupManager implements Disposeable {
         saveMode = true;
         security = "";
         
-        pnCheckboxes.removeAll();
-        chkColonies.clear();
-        for(Colony c : colonies) {
-            JCheckBox chk = new JCheckBox(c.getName());
-            chk.setSelected(true);
-            pnCheckboxes.add(chk);
-            chkColonies.add(chk);
-        }
+        refreshColonyCheckboxes();
         
         dialog.setVisible(true);
         tfName.requestFocus();
+    }
+    
+    /** 정착지 체크박스 목록 새로고침 */
+    protected void refreshColonyCheckboxes() {
+        pnCheckboxes.removeAll();
+        chkColonies.clear();
+        
+        int columns = 3;
+        int rowNo = 0;
+        int colNo = 0;
+        GridBagConstraints gridBagConst;
+        
+        // 정착지 개별 체크박스 생성, 배치
+        for(Colony c : colonies) {
+            JCheckBox chk = new JCheckBox(c.getName());
+            chk.setSelected(true);
+            chkColonies.add(chk);
+            
+            gridBagConst = new GridBagConstraints();
+            gridBagConst.gridx = colNo; colNo++;
+            gridBagConst.gridy = rowNo; if(colNo >= columns) { colNo = 0; rowNo++; }
+            gridBagConst.gridwidth = 1;
+            gridBagConst.gridheight = 1;
+            gridBagConst.weightx = 1.0;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+            gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+            gridBagConst.anchor = GridBagConstraints.NORTH;
+            
+            pnCheckboxes.add(chk, gridBagConst);
+        }
+        
+        // 빈 공간 채우기 (아직 행 내에 빈자리가 남아있는 경우)
+        if(colNo < columns) {
+            while(colNo < columns) { // 남은 빈 공간 채우기
+                gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = colNo; colNo++;
+                gridBagConst.gridy = rowNo;
+                gridBagConst.gridwidth = 1;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 1.0;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                pnCheckboxes.add(new JPanel(), gridBagConst);
+            }
+        }
+        colNo = 0;
+        rowNo++;
+        
+        // 맨 아래에 빈 공간 넣기
+        
+        gridBagConst = new GridBagConstraints();
+        gridBagConst.gridx = colNo; colNo++;
+        gridBagConst.gridy = rowNo; if(colNo >= columns) { colNo = 0; rowNo++; }
+        gridBagConst.gridwidth = columns;
+        gridBagConst.gridheight = 1;
+        gridBagConst.weightx = 1.0;
+        gridBagConst.weighty = 1.0;
+        gridBagConst.fill = GridBagConstraints.BOTH;
+        pnCheckboxes.add(new JPanel(), gridBagConst);
     }
     
     public void close() {
@@ -391,14 +445,7 @@ public class BackupManager implements Disposeable {
                 colonies.addAll(bak.getColonies());
             }
             
-            pnCheckboxes.removeAll();
-            chkColonies.clear();
-            for(Colony c : colonies) {
-                JCheckBox chk = new JCheckBox(c.getName());
-                chk.setSelected(true);
-                pnCheckboxes.add(chk);
-                chkColonies.add(chk);
-            }
+            refreshColonyCheckboxes();
             
             tfName.setText(bak.getName());
             ta.setText(bak.getDescription());
