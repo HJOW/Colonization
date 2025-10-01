@@ -22,18 +22,26 @@ import org.duckdns.hjow.commons.util.ClassUtil;
 /** TCP로 접속을 받는 Colonization Daemon */
 public class TCPSimpleDaemon {
     public static void main(String[] args) {
-    	int port = 65246;
+    	int    port    = PORT_DEFAULT;
+    	String charset = "UTF-16";
     	
     	TCPSimpleDaemon daemon = null;
-    	if(args == null) { daemon = new TCPSimpleDaemon(port); daemon.start(); }
+    	if(args != null) {
+    		if(args.length >= 1) { port    = Integer.parseInt(args[0].trim()); }
+    		if(args.length >= 2) { charset = args[1].trim();                   }
+    	}
     	
+    	daemon = new TCPSimpleDaemon(port);
+    	daemon.charset = charset;
+    	daemon.start();
     }
     
-    protected volatile int     port           = 65246;
+    protected volatile int     port           = PORT_DEFAULT;
     protected volatile boolean threadAcceptor = true;
     
     protected volatile ServerSocket           acceptor;
     protected volatile List<TCPSimpleSession> sessions = new Vector<TCPSimpleSession>();
+    protected volatile String                 charset  = "UTF-16";
     
     protected boolean started = false;
     
@@ -51,27 +59,26 @@ public class TCPSimpleDaemon {
     	new Thread(new Runnable() {
 			public void run() {
 				threadAcceptor = true;
+				
 				while(threadAcceptor) {
+					// 소켓 준비 안되어 있으면 지금 세팅
 					if(acceptor == null) {
 						try { acceptor = new ServerSocket(port); } catch(Throwable tx) { tx.printStackTrace(); threadAcceptor = false; break; }
 					}
 					
+					// 접속 받기
 					try {
 						Socket soc = acceptor.accept();
 						TCPSimpleSession session = new TCPSimpleSession(soc);
 						session.activate();
-						sessions.add(session);
+						sessions.add(session); // 세션 등록
 					} catch(Throwable tx) {
 						tx.printStackTrace();
 					}
 				}
-				threadAcceptor = false;
 				
-				for(TCPSimpleSession sessions : sessions) {
-					sessions.dispose();
-				}
-				sessions.clear();
-				
+				dispose();
+				try { Thread.sleep(1000L); } catch(InterruptedException ex) { }
 				System.exit(0);
 			}
     	}).start();
@@ -81,18 +88,35 @@ public class TCPSimpleDaemon {
 			@Override
 			public void run() {
 				while(threadAcceptor) {
+					// 이미 닫힌 세션 제거
 					int idx = 0;
 					while(idx < sessions.size()) {
 						TCPSimpleSession sess = sessions.get(idx);
 						if(sess.isDisposed()) {
 							sessions.remove(idx);
+							continue;
 						}
+						idx++;
+					}
+					
+					// 데몬 종료 신호 처리
+					if(flagExit) {
+						dispose();
+						break;
 					}
 					
 					try { Thread.sleep(200L); } catch(InterruptedException ex) { break; }
 				}
 			}
 		}).start();
+    }
+    
+    public void dispose() {
+    	threadAcceptor = false;
+    	for(TCPSimpleSession sessions : sessions) {
+			sessions.dispose();
+		}
+		sessions.clear();
     }
     
     /** 클라이언트의 요청을 처리하는 메소드 */
@@ -128,6 +152,7 @@ public class TCPSimpleDaemon {
     
     static volatile boolean flagExit = false;
 
+    public static final int    PORT_DEFAULT             = 65246;
     public static final String STRINGLINE_REQUEST_START = "/*START_COLONIZATION_TCP_REQUEST*/";
     public static final String STRINGLINE_REQUEST_END   = "/*END_COLONIZATION_TCP_REQUEST*/";
     public static final String STRINGLINE_REQUEST_EXIT  = "/*EXIT_COLONIZATION_TCP*/";
@@ -141,18 +166,20 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 	
 	protected volatile transient boolean threadSwitch = false;
 	protected volatile transient boolean stateReading = false;
+	protected volatile transient String         charset = "UTF-16";
 	protected volatile transient BufferedReader reader;
 	protected volatile transient BufferedWriter writer;
 	
 	public TCPSimpleSession() { }
-	public TCPSimpleSession(Socket socket) { this(); this.socket = socket; init(); }
+	public TCPSimpleSession(Socket socket) { this(socket, "UTF-16"); }
+	public TCPSimpleSession(Socket socket, String charset) { this(); this.charset = charset; this.socket = socket; init(); }
 	
 	/** 소켓 초기화 */
 	protected void init() {
 		if(reader != null || writer != null) { ClassUtil.closeAll(reader, writer); }
 		try {
-		    reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
-		    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));
+		    reader = new BufferedReader(new InputStreamReader(socket.getInputStream()  , charset));
+		    writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), charset));
 		} catch(Throwable t) {
 			dispose();
 			throw new RuntimeException(t.getMessage(), t);
@@ -204,7 +231,7 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 				if(line == null) { dispose(); break; }
 				line = line.trim();
 				
-				if(! stateReading) {	
+				if(! stateReading) {
 					if(line.equals(TCPSimpleDaemon.STRINGLINE_REQUEST_START)) { // 요청 내용 시작
 						stateReading = true;
 						collector.setLength(0);
@@ -213,6 +240,8 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 						threadSwitch = false;
 						TCPSimpleDaemon.flagExit = true;
 						break;
+					} else {
+						continue; // Do nothing
 					}
 				} else {
 					if(line.equals(TCPSimpleDaemon.STRINGLINE_REQUEST_END)) { // 요청 내용 종료
@@ -241,6 +270,7 @@ class TCPSimpleSession implements Serializable, Disposeable, Runnable {
 						while(lineTokenizer.hasMoreTokens()) {
 							writer.write(lineTokenizer.nextToken().trim()); writer.newLine();
 						}
+						lineTokenizer = null;
 						
 						// 응답 뒷부분 보내 마무리
 						writer.write(TCPSimpleDaemon.STRINGLINE_REQUEST_END);
