@@ -469,6 +469,17 @@ public class GUIColonyManager extends ColonyManager {
         
         menuFile.addSeparator();
         
+        menuItem = new JMenuItem("재시작");
+        menuFile.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                flagSaveBeforeClose = false;
+                dispose(true);
+                superInstance.restart();
+            }
+        });
+        
         menuItem = new JMenuItem("종료");
         menuFile.add(menuItem);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_MASK));
@@ -477,6 +488,7 @@ public class GUIColonyManager extends ColonyManager {
             public void actionPerformed(ActionEvent e) {
                 flagSaveBeforeClose = false;
                 dispose(true);
+                superInstance.exit();
             }
         });
         
@@ -832,7 +844,15 @@ public class GUIColonyManager extends ColonyManager {
         frame.setVisible(true);
         if(dialogGlobalLog != null) dialogGlobalLog.open(this);
         onAfterOpened(superInstance);
-        superInstance.closeLoadingDialog();
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try { Thread.sleep(500L); } catch(InterruptedException ex) { return; }
+                superInstance.closeLoadingDialog();
+                refreshArenaPanel(0);
+            }
+        }).start();
     }
 
     public boolean isVisible() {

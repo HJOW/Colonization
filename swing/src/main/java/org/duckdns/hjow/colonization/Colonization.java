@@ -23,6 +23,7 @@ public class Colonization implements GUIColonizationMainClass {
     	openLoadingDialog();
     	try { guiMain.dispose(guiMain.isVisible()); } catch(Exception notImportant) { notImportant.printStackTrace(); }
     	guiMain = null;
+    	try { Thread.sleep(3000L); } catch(InterruptedException ex) { exit(); return; }
     	run();
     }
     

@@ -11,10 +11,13 @@ import org.duckdns.hjow.colonization.elements.Facility;
 public class FacilityManager {
     protected static List<FacilityInformation> facilities = new Vector<FacilityInformation>();
     
-    static {
-    	for(Class<?> classOne : ColonyClassLoader.facilityClasses()) {
-    		register(classOne);
-    	}
+    static { reset(); }
+    
+    public static void reset() {
+        facilities.clear();
+        for(Class<?> classOne : ColonyClassLoader.facilityClasses()) {
+            register(classOne);
+        }
     }
     
     public static Facility fromJson(JsonObject json) {
@@ -24,6 +27,7 @@ public class FacilityManager {
         Facility fac = null;
         
         Class<?> classes = getFacilityClass(json.get("type").toString());
+        if(classes == null) { reset(); classes = getFacilityClass(json.get("type").toString()); }
         if(classes == null) return null;
         
         try {
@@ -86,6 +90,7 @@ public class FacilityManager {
     /** Facility 객체 생성 */
     public static Facility newFacilityObject(String name) {
         Class<?> facClass = getFacilityClass(name);
+        if(facClass == null) { reset(); facClass = getFacilityClass(name); }
         if(facClass == null) return null;
         
         return newFacilityObject(facClass);

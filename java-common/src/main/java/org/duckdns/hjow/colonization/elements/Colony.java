@@ -427,6 +427,11 @@ public abstract class Colony implements ColonyElements {
     	return true;
     }
     
+    /** 해당 연구 지원여부 결정 */
+    public boolean supportedResearch(String researchTypeName) {
+        return true;
+    }
+    
     /** 상세 내역 */
     public String getStatusString(ColonyManagerUI superInstance) {
         DecimalFormat formatterInt  = new DecimalFormat("#,###,###,###,###,##0");
@@ -558,6 +563,14 @@ public abstract class Colony implements ColonyElements {
                     }
                 }
             }
+        }
+        // 포함 안된 연구 넣기
+        for(Research oth : ResearchManager.initList(this)) {
+            boolean exists = false;
+            for(Research alr : researches) {
+                if(oth.getName().equals(alr.getName())) { exists = true; break; }
+            }
+            if(! exists) researches.add(oth);
         }
         
         if(json.get("checker") != null) {

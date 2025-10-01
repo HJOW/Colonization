@@ -32,8 +32,13 @@ public class ResearchManager {
     
     public static List<Research> initList(Colony col) {
         List<Research> list = new ArrayList<Research>();
+        
+        if(classes.isEmpty()) classes.addAll(ColonyClassLoader.researchClasses());
         for(Class<?> classOne : classes) {
-            try { Research newInst = (Research) classOne.newInstance(); list.add(newInst); } catch(Exception ex) { ex.printStackTrace(); };
+            try { 
+                Research newInst = (Research) classOne.newInstance();
+                if(col.supportedResearch(newInst.getName())) list.add(newInst); 
+            } catch(Exception ex) { ex.printStackTrace(); };
         }
         return list;
     }

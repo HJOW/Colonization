@@ -113,8 +113,15 @@ public abstract class State implements ColonyElements {
 
     protected static List<Class<?>> stateClasses = ColonyClassLoader.stateClasses();
     
+    public static void reset() {
+        stateClasses.clear();
+        stateClasses.addAll(ColonyClassLoader.stateClasses());
+    }
+    
     public static State createStateInstance(String type) {
         Class<?> stateClass = null;
+        
+        if(stateClasses.isEmpty()) reset();
         
         for(Class<?> classOne : stateClasses) {
             if(classOne.getName().equals(type)) { stateClass = classOne; break; }

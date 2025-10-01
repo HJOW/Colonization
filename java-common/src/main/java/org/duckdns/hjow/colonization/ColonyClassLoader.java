@@ -144,7 +144,11 @@ public class ColonyClassLoader {
 	    if(researchClassListFlag) return researchClassList;
 	    
 	    researchClassList.clear();
-	    for(Pack p : packs) { if(p.isEnabled()) researchClassList.addAll(p.getResearchClasses()); }
+	    for(Pack p : packs) { 
+	        if(p.isEnabled()) {
+	            researchClassList.addAll(p.getResearchClasses()); 
+	        }
+	    }
 	    
         researchClassListFlag = true;
         return researchClassList;

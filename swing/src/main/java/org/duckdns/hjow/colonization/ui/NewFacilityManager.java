@@ -175,7 +175,8 @@ public class NewFacilityManager extends JDialog {
         if(col != null) {
             lists.addAll(FacilityManager.getFacilityInformations());
             for(FacilityInformation info : lists) {
-            	if(col.supportedFacility(info)) cbxFacInfos.addItem(info);
+            	if(! detectBuildAvail(col, info)) continue;
+            	cbxFacInfos.addItem(info);
             }
         }
 
@@ -187,6 +188,13 @@ public class NewFacilityManager extends JDialog {
         
         
         refresh();
+    }
+    
+    /** 해당 시설이 현재 설치 가능한지 판별 */
+    protected boolean detectBuildAvail(Colony col, FacilityInformation info) {
+        if(! col.supportedFacility(info))  return false;
+        if(info.isBuildAvail(col, city) != null) return false;
+        return true;
     }
     
     public void refresh() {
