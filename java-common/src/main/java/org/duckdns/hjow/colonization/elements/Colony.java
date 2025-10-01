@@ -190,7 +190,7 @@ public abstract class Colony implements ColonyElements {
     }
     
     public String getDateString() {
-        BigInteger originals = new BigInteger(getTime().toByteArray()).divide(BigInteger.TEN);
+        BigInteger originals = new BigInteger(getTime().toByteArray()).divide(BigInteger.TEN); // 10 으로 나눠야 1초 단위가 됨
         BigInteger minutes, seconds, hour, date, month, year;
         minutes = new BigInteger(BigInteger.ZERO.toByteArray());
         seconds = new BigInteger(originals.toByteArray());
