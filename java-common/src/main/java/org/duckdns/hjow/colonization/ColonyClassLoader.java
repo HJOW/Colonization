@@ -240,6 +240,8 @@ public class ColonyClassLoader {
 			json = (JsonObject) json.get("swing");
 			
 			applyWebConfigs(json, man);
+		} catch(java.net.UnknownHostException ex) {
+		    GlobalLogs.log("Cannot connect to web config server. Please check the internet status.");
 		} catch(Exception ex) {
 			GlobalLogs.processExceptionOccured(ex, true);
 		} finally {

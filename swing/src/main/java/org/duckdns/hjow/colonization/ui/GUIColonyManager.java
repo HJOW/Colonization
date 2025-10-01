@@ -581,7 +581,11 @@ public class GUIColonyManager extends ColonyManager {
         btnThrPlay.setText("시뮬레이션 시작");
         btnThrPlay.setEnabled(true);
         menuActionThrPlay.setEnabled(true);
-        try { webNotice.setPage(ColonyClassLoader.htmlNoticeUrl()); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        try { webNotice.setPage(ColonyClassLoader.htmlNoticeUrl()); } catch(java.net.UnknownHostException ex) {
+            webNotice.setText(ColonyClassLoader.htmlNoticeEmpty());
+        } catch(Exception ex) { 
+            GlobalLogs.processExceptionOccured(ex, false); 
+        }
         
         setEditable(true);
         
