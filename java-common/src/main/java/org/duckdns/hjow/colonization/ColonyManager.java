@@ -16,6 +16,7 @@ import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
@@ -179,7 +180,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
             for(Colony cx : colonies) { if(c.getName().equals(cx.getName())) exists = true; break; }
             if(exists) return;
             
-            c.setOriginalFileName(f.getName());
+            if(c instanceof AbstractColony) ((AbstractColony) c).setOriginalFileName(f.getName());
             colonies.add(c); 
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); if(alert) alert("오류 : " + ex.getMessage()); }
     }
@@ -212,7 +213,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         
         // 저장
         for(Colony c : colonies) {
-            String name = c.getOriginalFileName();
+            String name = null;
+            if(c instanceof AbstractColony) name = ((AbstractColony) c).getOriginalFileName();
             if(name == null) name = "col_" + c.getKey() + ".colony";
             
             File colFile = new File(root.getAbsolutePath() + File.separator + name);
@@ -236,7 +238,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
             String nameLower = f.getName().toLowerCase().trim();
             if(! ( nameLower.endsWith(".colony") || nameLower.endsWith(".colgz") )) f = new File(f.getAbsolutePath() + ".colony");
             
-            c.save(f); 
+            if(c instanceof AbstractColony) ((AbstractColony) c).save(f);
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); if(alert) { alert("오류 : " + ex.getMessage()); } else { throw new RuntimeException(ex.getMessage()); } }
     }
     

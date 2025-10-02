@@ -87,7 +87,7 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
         spPort = new JSpinner(intModel);
         toolbar.add(spPort);
         
-        btnToggle = new JButton("");
+        btnToggle = new JButton("시작");
         toolbar.add(btnToggle);
         btnToggle.addActionListener(new ActionListener() {
 			@Override

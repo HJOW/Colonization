@@ -1,7 +1,7 @@
 package org.duckdns.hjow.colonization.elements;
 
 /** 기본 제공되는 정착지 시나리오 클래스 */
-public class NormalColony extends Colony {
+public class NormalColony extends AbstractColony {
     private static final long serialVersionUID = -5381698598742715021L;
     
     public NormalColony() {
