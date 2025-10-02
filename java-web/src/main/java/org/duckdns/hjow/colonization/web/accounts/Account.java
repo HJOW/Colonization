@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -13,6 +14,7 @@ import org.duckdns.hjow.commons.util.SecurityUtil;
 
 public class Account implements Serializable {
     private static final long serialVersionUID = -3588933635720038238L;
+    protected long   key = ColonyManager.generateKey();
     protected String id, name;
     protected String passwordHash;
     protected int    status = 1;
@@ -31,6 +33,10 @@ public class Account implements Serializable {
         this.status = status;
         this.grade = grade;
         this.colonies = colonies;
+    }
+    
+    public long getKey() {
+        return key;
     }
 
     public String getId() {
@@ -56,6 +62,10 @@ public class Account implements Serializable {
     public List<Colony> getColonies() {
         return colonies;
     }
+    
+    public void setKey(long k) {
+        this.key = k;
+    }
 
     public void setId(String id) {
         this.id = removeProhibitedChars(id);
@@ -73,7 +83,7 @@ public class Account implements Serializable {
     }
     
     public void setPassword(String password) {
-        setPasswordHash(SecurityUtil.hash(password, "SHA-256"));
+        setPasswordHash(hashPassword(password));
     }
 
     public void setStatus(int status) {
@@ -90,6 +100,7 @@ public class Account implements Serializable {
 
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
+        json.put("key", new Long(getKey()));
         json.put("id", getId());
         json.put("pw", getPasswordHash());
         json.put("name", getName());
@@ -105,6 +116,7 @@ public class Account implements Serializable {
     }
     
     public void fromJson(JsonObject json) {
+        setKey(Long.parseLong(json.get("key").toString()));
         setId(json.get("id").toString());
         setPasswordHash(json.get("pw").toString());
         setName(json.get("name").toString());
@@ -134,5 +146,9 @@ public class Account implements Serializable {
         id = id.replace(",", "").replace(":", "").replace("~", "").replace("\r", "").replace("\t", "").replace("\n", "");
         id = id.trim();
         return id;
+    }
+    
+    public static String hashPassword(String original) {
+        return SecurityUtil.hash(original, "SHA-256");
     }
 }
