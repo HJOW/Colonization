@@ -76,7 +76,7 @@
   </dependencies>
 
   <build>
-    <finalName>colonization-servlet</finalName>
+    <finalName>colonization</finalName>
     <defaultGoal>install</defaultGoal>
     <!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
     <pluginManagement>

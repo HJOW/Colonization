@@ -9,35 +9,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
-import org.duckdns.hjow.colonization.web.key.Key;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.HexUtil;
-import org.duckdns.hjow.commons.util.SecurityUtil;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
 
 public abstract class CommonServlet extends HttpServlet {
     private static final long serialVersionUID = -9127592158446596240L;
     protected Logger logger = LogManager.getLogger(this.getClass());
-    protected Algorithm algJwt;
-    protected String    verifyingClaim = "";
 
     @Override
     public void init() throws ServletException {
-        super.init(); 
-        String jwtKey = "Hello";
-        try {
-            Key key = (Key) Class.forName("org.duckdns.hjow.colonization.web.key.CurrentKey").newInstance();
-            jwtKey = key.getJWTKey();
-            verifyingClaim = key.getJWTVerifyingClaim();
-        } catch(Exception ex) {
-            logger.error("Error on init " + this.getClass().getSimpleName(), ex);
-        }
-        algJwt = Algorithm.HMAC384(SecurityUtil.hash( jwtKey , "SHA-384"));
+        super.init();
     }
     
     @Override
@@ -88,22 +69,13 @@ public abstract class CommonServlet extends HttpServlet {
         
         if(jwt != null) {
             try {
-                JWTVerifier veri = JWT.require(algJwt).withClaim("auth", verifyingClaim).build();
-                
-                if(jwt != null) {
-                    DecodedJWT decoded = veri.verify(jwt);
-                    
-                    Claim claim = decoded.getClaim("id");
-                    String id = claim.asString();
-                    
-                    Account acc = AccountUtil.load(id);
-                    if(acc != null) {
-                        req.setAttribute("id"   ,  id);
-                        req.setAttribute("key"  , new Long(acc.getKey()));
-                        req.setAttribute("name" , acc.getName());
-                        req.setAttribute("grade", new Integer(acc.getGrade()));
-                        logined = true;
-                    }
+            	Account acc = AccountUtil.verifyJWT(jwt);
+                if(acc != null) {
+                    req.setAttribute("id"   , acc.getId());
+                    req.setAttribute("key"  , new Long(acc.getKey()));
+                    req.setAttribute("name" , acc.getName());
+                    req.setAttribute("grade", new Integer(acc.getGrade()));
+                    logined = true;
                 }
             } catch(Exception ex) {
                 logger.error("Error on doBefore when checking jwt token " + ex.getMessage(), ex);

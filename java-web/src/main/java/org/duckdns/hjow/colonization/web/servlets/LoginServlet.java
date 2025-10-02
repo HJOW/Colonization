@@ -11,8 +11,6 @@ import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.HexUtil;
 
-import com.auth0.jwt.JWT;
-
 public class LoginServlet extends CommonServlet {
     private static final long serialVersionUID = 2644868350197546589L;
     
@@ -51,7 +49,7 @@ public class LoginServlet extends CommonServlet {
             }
             
             Map<String, Object> headerContent = new HashMap<String, Object>();
-            String jwt = JWT.create().withHeader(headerContent).withClaim("auth", verifyingClaim).withClaim("id", acc.getId()).withClaim("key", String.valueOf(acc.getKey())).withClaim("when", String.valueOf(System.currentTimeMillis())).sign(algJwt);
+            String jwt = AccountUtil.buildJWT(acc, headerContent);
             
             resp.setHeader("jwt", jwt);
             
