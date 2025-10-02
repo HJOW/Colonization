@@ -188,7 +188,7 @@ public class GUIColonyManager extends ColonyManager {
         pnMainCard2 = new JPanel();
         
         tabMain.add("홈", pnFront);
-        tabMain.add("Colonization", pnMain);
+        tabMain.add("로컬", pnMain);
         
         pnFront.setLayout(new BorderLayout());
         
