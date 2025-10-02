@@ -11,6 +11,7 @@ import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
 import org.duckdns.hjow.colonization.web.key.Key;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.commons.util.SecurityUtil;
 
 import com.auth0.jwt.JWT;
@@ -79,7 +80,12 @@ public abstract class CommonServlet extends HttpServlet {
         boolean logined = false;
         
         // JWT 토큰이 있는 경우 로그인 여부 판단
-        String jwt = req.getHeader("jwt");
+        String jwt = req.getHeader("jwt"); // 먼저 헤더에 있는지 체크
+        if(jwt == null) {
+            jwt = req.getParameter("jwt"); // 헤더에 없으면 매개변수에 있는지 체크
+            if(jwt != null) jwt = HexUtil.decodeString(jwt); // 매개변수의 경우 HEX로 인코딩된 값이 넘어올 테니 디코딩해 사용
+        }
+        
         if(jwt != null) {
             try {
                 JWTVerifier veri = JWT.require(algJwt).withClaim("auth", verifyingClaim).build();
