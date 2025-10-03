@@ -45,11 +45,11 @@ public abstract class AbstractColony implements Colony {
     protected long tech       = 0L;
     
     protected volatile BigInteger time = new BigInteger("0");
-    
-    protected transient String originalFileName;
     protected transient List<AccountingData> accountingData = new Vector<AccountingData>();
-    
+    protected transient String originalFileName;
     protected transient boolean checked = false;
+    
+    protected transient String clientVersion = ColonyManager.getVersionString();
     
     public AbstractColony() {
         checked = true;
@@ -75,7 +75,13 @@ public abstract class AbstractColony implements Colony {
     public void setName(String name) {
         this.name = name;
     }
+    
+    /** 이 정착지를 마지막으로 저장한 ColonyManager 의 버전 반환 */
+    public String getClientVersion() {
+    	return clientVersion;
+    }
 
+    /** 이 정착지 내 도시들 반환 */
     public List<City> getCities() {
         return cities;
     }
@@ -510,6 +516,7 @@ public abstract class AbstractColony implements Colony {
         json.put("money", new Long(getMoney()));
         json.put("tech", new Long(getTech()));
         json.put("time", getTime().toString());
+        json.put("version", getClientVersion());
         
         JsonArray list = new JsonArray();
         for(City c : getCities()) { list.add(c.toJson()); }
@@ -542,6 +549,7 @@ public abstract class AbstractColony implements Colony {
         try { setMoney(Long.parseLong(json.get("money").toString()));                 } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); money      = 0;               }
         try { setTech(Long.parseLong(json.get("tech").toString()));                   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); tech       = 0;               }
         try { setTime(new BigInteger(json.get("time").toString()));                   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); time       = BigInteger.ZERO; }
+        try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.0.0"; }
         
         JsonArray list = null;
         try { list = (JsonArray) json.get("cities"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }

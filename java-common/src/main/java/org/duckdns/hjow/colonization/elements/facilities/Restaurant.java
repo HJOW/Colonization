@@ -12,7 +12,6 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
     
     protected String name = "식당_" + ColonyManager.generateNaturalNumber();
     protected int comportGrade = 0;
-    protected int capacity = 30;
 
     @Override
     public String getName() {
@@ -30,12 +29,8 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
     }
     
     @Override
-    public int getCapacity() {
-        return capacity;
-    }
-    
-    public void setCapacity(int c) {
-        capacity = c;
+    protected int getDefaultCapacity() {
+        return 30;
     }
     
     @Override
@@ -147,22 +142,24 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
 
     @Override
     public void fromJson(JsonObject json) {
+    	super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
         setComportGrade(Integer.parseInt(json.get("comportGrade").toString()));
-        setCapacity(Integer.parseInt(json.get("capacity").toString()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
     }
 
     @Override
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
+        json.putAll(super.toJson());
         json.put("type", getType());
         json.put("name", getName());
         json.put("key", new Long(getKey()));
         json.put("hp", new Long(getHp()));
         json.put("comportGrade", new Integer(getComportGrade()));
-        json.put("capacity", new Integer(getCapacity()));
+        json.put("level", new Integer(getLevel()));
         
         return json;
     }

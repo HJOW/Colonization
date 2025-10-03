@@ -39,7 +39,7 @@ public class TownHouse extends Residence {
     }
 
     @Override
-    public int getCapacity() {
+    protected int getDefaultCapacity() {
         return 12;
     }
     

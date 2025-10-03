@@ -73,18 +73,33 @@ public class FacilityManager {
         }
     }
     
-    /** 시설 이름으로 시설 클래스 찾기 */
-    public static Class<?> getFacilityClass(String name) {
+    /** 해당 시설의 정보 반환 */
+    public static FacilityInformation getFacilityInformation(String name) {
         for(FacilityInformation info : facilities) {
-            if(info.getName().equals(name)) return info.getFacilityClass();
+            if(info.getName().equals(name)) return info;
         }
         for(FacilityInformation info : facilities) {
-            if(info.getFacilityClass().getName().equals(name)) return info.getFacilityClass();
+            if(info.getFacilityClass().getName().equals(name)) return info;
         }
         for(FacilityInformation info : facilities) {
-            if(info.getFacilityClass().getSimpleName().equals(name)) return info.getFacilityClass();
+            if(info.getFacilityClass().getSimpleName().equals(name)) return info;
         }
         return null;
+    }
+    
+    /** 해당 시설의 정보 반환 */
+    public static FacilityInformation getFacilityInformation(Facility f) {
+    	for(FacilityInformation info : facilities) {
+    		if(f.getClass().equals(info.getFacilityClass())) return info;
+    	}
+    	return null;
+    }
+    
+    /** 시설 이름으로 시설 클래스 찾기 */
+    public static Class<?> getFacilityClass(String name) {
+    	FacilityInformation info = getFacilityInformation(name);
+    	if(info == null) return null;
+    	return info.getFacilityClass();
     }
     
     /** Facility 객체 생성 */

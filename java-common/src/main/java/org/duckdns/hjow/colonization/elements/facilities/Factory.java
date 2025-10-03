@@ -10,7 +10,6 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 public class Factory extends DefaultFacility {
     private static final long serialVersionUID = 8465140770981665970L;
     protected String name = "공장_" + ColonyManager.generateNaturalNumber();
-    protected int capacity = 10;
     
     public Factory() {
         
@@ -49,14 +48,10 @@ public class Factory extends DefaultFacility {
     }
 
     @Override
-    public int getCapacity() {
-        return capacity;
+    protected int getDefaultCapacity() {
+        return 10;
     }
     
-    public void setCapacity(int c) {
-        capacity = c;
-    }
-
     @Override
     public String getName() {
         return name;
@@ -82,20 +77,22 @@ public class Factory extends DefaultFacility {
     
     @Override
     public void fromJson(JsonObject json) {
+    	super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
-        setCapacity(Integer.parseInt(json.get("capacity").toString()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
     }
 
     @Override
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
+        json.putAll(super.toJson());
         json.put("type", getType());
         json.put("name", getName());
         json.put("key", new Long(getKey()));
         json.put("hp", new Long(getHp()));
-        json.put("capacity", new Integer(getCapacity()));
+        json.put("level", new Integer(getLevel()));
         
         return json;
     }

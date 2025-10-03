@@ -17,6 +17,8 @@ public class HoldingJob implements Serializable {
     protected String command   = null;
     protected String parameter = null;
     
+    protected transient boolean completed = false;
+    
     public HoldingJob() {
         
     }
@@ -57,6 +59,9 @@ public class HoldingJob implements Serializable {
     public String getCommandTitle() {
         if("NewFacility".equals(getCommand())) return "건설";
         if("NewCitizen".equals(getCommand())) return "이주";
+        
+        if("UpgradeFacility".equals(getCommand())) return "업그레이드";
+        
         return "작업";
     }
 
@@ -81,6 +86,14 @@ public class HoldingJob implements Serializable {
     public void setParameter(String parameter) {
         this.parameter = parameter;
     }
+    
+    public boolean isCompleted() {
+		return completed;
+	}
+
+	public void setCompleted(boolean completed) {
+		this.completed = completed;
+	}
     
     public List<Citizen> getWorkingCitizens(City city) {
         List<Citizen> citizens = new ArrayList<Citizen>();

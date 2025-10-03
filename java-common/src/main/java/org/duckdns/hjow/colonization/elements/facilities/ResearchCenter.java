@@ -54,7 +54,7 @@ public class ResearchCenter extends DefaultFacility {
     }
 
     @Override
-    public int getCapacity() {
+    protected int getDefaultCapacity() {
         return 0;
     }
 
@@ -125,18 +125,22 @@ public class ResearchCenter extends DefaultFacility {
     
     @Override
     public void fromJson(JsonObject json) {
+    	super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
     }
 
     @Override
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
+        json.putAll(super.toJson());
         json.put("type", getType());
         json.put("name", getName());
         json.put("key", new Long(getKey()));
         json.put("hp", new Long(getHp()));
+        json.put("level", new Integer(getLevel()));
         
         return json;
     }

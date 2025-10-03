@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -526,6 +527,43 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         if(Math.random() > correctRate) return 0; // 명중률이므로, 명중률에 벗어나야 0 리턴, 부등호 방향 주의 !
         return damage;
     }
+    
+    /** 현재 버전의 버전 배열 반환 */
+    public static int[] getVersionArray() {
+    	int[] arr = new int[4];
+    	arr[0] = VERSION_MAIN;
+    	arr[1] = VERSION_SUB1;
+    	arr[2] = VERSION_SUB2;
+    	arr[3] = VERSION_SUB3;
+    	return arr;
+    }
+    
+    /** 버전 문자열을 버전 배열로 반환 */
+    public static int[] parseVersionString(String versionString) {
+        String str = versionString.toLowerCase().replace("version", "").replace("ver", "").replace("v", "").trim();
+        int[] arr = new int[4];
+        
+        StringTokenizer dotTokenizer = new StringTokenizer(str, ".");
+        for(int idx=0; idx<arr.length; idx++) {
+        	arr[idx] = Integer.parseInt(dotTokenizer.nextToken().trim());
+        }
+        return arr;
+    }
+    
+    /** 현재 버전 문자열로 반환 */
+    public static String getVersionString() {
+    	return getVersionString(getVersionArray());
+    }
+    
+    /** 버전 배열을 문자열로 변환 */
+    public static String getVersionString(int[] num) {
+    	return num[0] + "." + num[1] + "." + num[2] + "." + num[3];
+    }
+    
+    public static final int VERSION_MAIN = 0;
+    public static final int VERSION_SUB1 = 0;
+    public static final int VERSION_SUB2 = 0;
+    public static final int VERSION_SUB3 = 1;
     
     public static final short ATTACKTYPE_NORMAL = 0;
     public static final short ATTACKTYPE_THIN_BULLET = 1;

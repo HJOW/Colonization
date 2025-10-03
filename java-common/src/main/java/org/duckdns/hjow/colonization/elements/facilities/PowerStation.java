@@ -10,6 +10,7 @@ public class PowerStation extends PowerPlant {
         return "발전소";
     }
 
+    @Override
     protected int getDefaultCapacity() {
         return 100;
     }

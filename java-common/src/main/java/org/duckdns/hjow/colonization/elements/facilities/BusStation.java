@@ -32,7 +32,7 @@ public class BusStation extends TransportStation {
     }
 
     @Override
-    public int getCapacity() {
+    protected int getDefaultCapacity() {
         return 100;
     }
 

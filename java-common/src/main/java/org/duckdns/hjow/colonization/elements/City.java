@@ -10,8 +10,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
-import org.duckdns.hjow.commons.json.JsonArray;
-import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -22,6 +20,8 @@ import org.duckdns.hjow.colonization.elements.facilities.TransportStation;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
+import org.duckdns.hjow.commons.json.JsonArray;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 도시 구현 클래스 */
 public class City implements ColonyElements {
@@ -278,6 +278,7 @@ public class City implements ColonyElements {
             lefts = h.getCycleLeft();
             if(lefts >= 1) continue; // 아직 사이클이 남아있으면 execute 하지 않고 건너뜀
             
+            h.setCompleted(true);
             executeHoldJob(h);
         }
         
@@ -285,7 +286,7 @@ public class City implements ColonyElements {
         idx = 0;
         while(idx < getHoldings().size()) {
             HoldingJob j = getHoldings().get(idx);
-            if(j.getCycleLeft() <= 0) {
+            if(j.getCycleLeft() <= 0 || j.isCompleted()) {
                 // 건설하고 있는 시민들 노숙자로 변경
                 for(Citizen c : j.getWorkingCitizens(this)) {
                     if(c.getBuildingFacility() == j.getKey()) c.setBuildingFacility(0L);
@@ -349,6 +350,19 @@ public class City implements ColonyElements {
                 if(facilityClass == null) return;
                 Object newOne = facilityClass.newInstance();
                 getFacility().add((Facility) newOne);
+            }
+            
+            if(command.equalsIgnoreCase("UpgradeFacility")) {
+            	if(params == null) return;
+                if(params.equals("")) return;
+                
+                long l = Long.parseLong(params.trim());
+                for(Facility f : getFacility()) {
+                	if(f.getKey() == l) {
+                		f.setLevel(f.getLevel() + 1);
+                		break;
+                	}
+                }
             }
         } catch(Exception ex) {
             throw new RuntimeException(ex.getMessage(), ex);

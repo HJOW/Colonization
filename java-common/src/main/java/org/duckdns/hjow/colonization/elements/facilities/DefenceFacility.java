@@ -2,27 +2,32 @@ package org.duckdns.hjow.colonization.elements.facilities;
 
 import java.util.List;
 
+import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.research.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.MilitaryTech;
 import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class Turret extends DefenceFacility implements AttackableObject {
+public abstract class DefenceFacility extends DefaultFacility implements AttackableObject {
     private static final long serialVersionUID = -8553101924279880106L;
+    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
+    
+    protected abstract String getDefaultNamePrefix();
     
     @Override
-    protected String getDefaultNamePrefix() {
-    	return "터렛";
+    public String getName() {
+        return name;
     }
-    
     @Override
-    public String getType() {
-        return "Turret";
+    public void setName(String name) {
+        this.name = name;
     }
     
     @Override
@@ -41,8 +46,42 @@ public class Turret extends DefenceFacility implements AttackableObject {
     }
     
     /** 대미지 처리 후 추가 작업 (상태를 부여한다거나 등등) 이 메소드에서 구현 */
-    @Override
     protected void processAfterAttack(int cycle, ColonyElements element, int finalDamage) { }
+    
+    @Override
+    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, city, colony, efficiency100, colPanel);
+        
+        int castLeft    = getAttackCount();
+        int damages     = getDamage();
+        int naturalized = damages;
+        
+        if(cycle % getAttackCycle() == 0) {
+            List<Enemy> enemies = city.getEnemies();
+            for(Enemy e : enemies) {
+                if(e.getHp() >= 1) {
+                    naturalized = ColonyManager.naturalizeDamage(this, e, damages);
+                    e.addHp(naturalized * (-1));
+                    processAfterAttack(cycle, e, naturalized);
+                    castLeft--;
+                    if(castLeft <= 0) break;
+                }
+            }
+            
+            if(castLeft >= 1) {
+                enemies = colony.getEnemies();
+                for(Enemy e : enemies) {
+                    if(e.getHp() >= 1) {
+                        naturalized = ColonyManager.naturalizeDamage(this, e, damages);
+                        e.addHp(naturalized * (-1));
+                        processAfterAttack(cycle, e, naturalized);
+                        castLeft--;
+                        if(castLeft <= 0) break;
+                    }
+                }
+            }
+        }
+    }
     
     @Override
     public int increasingCityMaxHP() {
@@ -63,7 +102,6 @@ public class Turret extends DefenceFacility implements AttackableObject {
     public int getComportGrade() {
         return 0;
     }
-    
     @Override
     public int getMaxHp() {
         return 500;
@@ -121,7 +159,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     }
     
     public static String getFacilityName() {
-        return "터렛";
+        return "방어시설";
     }
     
     public static String getFacilityTitle() {
@@ -129,7 +167,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     }
     
     public static String getFacilityDescription() {
-        return "기본적인 방어 시설입니다.";
+        return "방어 시설";
     }
     
     public static Long getFacilityPrice() {

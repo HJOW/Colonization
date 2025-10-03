@@ -11,7 +11,6 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     private static final long serialVersionUID = 6472512678804457223L;
     protected String name = "아케이드_" + ColonyManager.generateNaturalNumber();
     protected int comportGrade = 0;
-    protected int capacity = 100;
 
     @Override
     public void setName(String name) {
@@ -47,29 +46,31 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     
     @Override
     public void fromJson(JsonObject json) {
+    	super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
-        setCapacity(Integer.parseInt(json.get("capacity").toString()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
         setComportGrade(Integer.parseInt(json.get("comportGrade").toString()));
     }
 
     @Override
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
+        json.putAll(super.toJson());
         json.put("type", getType());
         json.put("name", getName());
         json.put("key", new Long(getKey()));
         json.put("hp", new Long(getHp()));
-        json.put("capacity", new Integer(getCapacity()));
+        json.put("level", new Integer(getLevel()));
         json.put("comportGrade", new Integer(getComportGrade()));
         
         return json;
     }
 
     @Override
-    public int getCapacity() {
-        return capacity;
+    protected int getDefaultCapacity() {
+        return 100;
     }
 
     @Override
@@ -77,10 +78,6 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
         return name;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-    
     @Override
     public int getComportGrade() {
         return comportGrade;

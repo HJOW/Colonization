@@ -15,6 +15,7 @@ public class SolarStation extends PowerPlant {
         return "광학 발전소";
     }
 
+    @Override
     protected int getDefaultCapacity() {
         return 250;
     }

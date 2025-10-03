@@ -10,12 +10,12 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 public abstract class PowerPlant extends DefaultFacility {
     private static final long serialVersionUID = -7738915080952447743L;
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
-    protected int capacity = getDefaultCapacity();
 
     protected String getDefaultNamePrefix() {
         return "발전소";
     }
 
+    @Override
     protected int getDefaultCapacity() {
         return 100;
     }
@@ -28,15 +28,7 @@ public abstract class PowerPlant extends DefaultFacility {
     public void setName(String name) {
         this.name = name;
     }
-
-    @Override
-    public int getCapacity() {
-        return capacity;
-    }
-    public void setCapacity(int c) {
-        this.capacity = c;
-    }
-
+    
     @Override
     public String getType() {
         return getClass().getSimpleName();
@@ -78,20 +70,22 @@ public abstract class PowerPlant extends DefaultFacility {
 
     @Override
     public void fromJson(JsonObject json) {
+    	super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
-        setCapacity(Integer.parseInt(json.get("capacity").toString()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
     }
 
     @Override
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
+        json.putAll(super.toJson());
         json.put("type", getType());
         json.put("name", getName());
         json.put("key", new Long(getKey()));
         json.put("hp", new Long(getHp()));
-        json.put("capacity", new Integer(getCapacity()));
+        json.put("level", new Integer(getLevel()));
         
         return json;
     }

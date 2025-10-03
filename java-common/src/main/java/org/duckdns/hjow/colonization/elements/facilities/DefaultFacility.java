@@ -21,6 +21,7 @@ public abstract class DefaultFacility implements Facility {
     private static final long serialVersionUID = 8012568139388326869L;
     protected volatile long key = ColonyManager.generateKey();
     protected int hp = getMaxHp();
+    protected int level = 1;
     
     protected List<State> states = new Vector<State>();
     
@@ -166,6 +167,7 @@ public abstract class DefaultFacility implements Facility {
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
+        json.put("level", new Integer(getLevel()));
         
         JsonArray list = (JsonArray) json.get("states");
         states.clear();
@@ -195,6 +197,7 @@ public abstract class DefaultFacility implements Facility {
         json.put("name", getName());
         json.put("key", new Long(getKey()));
         json.put("hp", new Long(getHp()));
+        json.put("level", new Integer(getLevel()));
         
         JsonArray list = new JsonArray();
         for(State s : getStates()) { list.add(s.toJson()); }
@@ -228,6 +231,93 @@ public abstract class DefaultFacility implements Facility {
     		st.dispose();
     	}
     	states.clear();
+    }
+    
+    @Override
+    public int getLevel() { return level; }
+    
+    @Override
+    public void setLevel(int lv) { this.level = lv; if(this.level > getMaxLevel()) this.level = getMaxLevel(); }
+    
+    @Override
+    public int getMaxLevel() { return Integer.MAX_VALUE - 1; }
+    
+    @Override
+    public boolean isUpgradeAvail(Colony col, City city) {
+    	if(getLevel() >= getMaxLevel()) return false;
+    	if(col.getMoney() < getUpgradePrice(col, city)) return false;
+    	
+    	return true;
+    }
+    
+    @Override
+    public long getUpgradePrice(Colony col, City city) {
+    	long res = startUpgradePrice();
+    	for(int idx=1; idx<getLevel(); idx++) {
+    		if(res >= Long.MAX_VALUE / 10) return Long.MAX_VALUE / 10;
+    		
+    		long increases = (long) Math.floor( res * increateUpgradePriceRate() );
+    		if(increases < 1L) increases = 1L;
+    		res = res + increases;
+    	}
+    	return res;
+    }
+    
+    @Override
+    public int getUpgradeCycle(Colony col, City city) {
+    	int res = startUpgradeCycle();
+    	for(int idx=1; idx<getLevel(); idx++) {
+    		if(res >= Integer.MAX_VALUE / 10) return Integer.MAX_VALUE / 10;
+    		
+    		int increases = (int) Math.floor( res * increaseUpgradeCycleRate() );
+    		if(increases < 1) increases = 1;
+    		res = res + increases;
+    	}
+    	return res;
+    }
+    
+    @Override
+    public int getCapacity() {
+    	int res = getDefaultCapacity();
+    	if(res == 0) return res;
+    	for(int idx=1; idx<getLevel(); idx++) {
+    		if(res >= Integer.MAX_VALUE / 10) return Integer.MAX_VALUE / 10;
+    		
+    		int increases = (int) Math.floor( res * increateCapacityRate() );
+    		if(increases < 1) increases = 1;
+    		res = res + increases;
+    	}
+    	return res;
+    }
+    
+    /** 업그레이드 비용 시작 금액 */
+    protected long startUpgradePrice() {
+    	return 5000L;
+    }
+    
+    /** 업그레이드 비용의 레벨 당 증가율 */
+    protected double increateUpgradePriceRate() {
+    	return 0.2;
+    }
+    
+    /** 업그레이드 비용 시작 금액 */
+    protected int startUpgradeCycle() {
+    	return 200;
+    }
+    
+    /** 업그레이드 비용의 레벨 당 증가율 */
+    protected double increaseUpgradeCycleRate() {
+    	return 0.2;
+    }
+    
+    /** 기본 레벨의 Capacity 값 */
+    protected int getDefaultCapacity() {
+    	return 0;
+    }
+    
+    /** 레벨 당 Capacity 증가율 */
+    protected double increateCapacityRate() {
+    	return 0.1;
     }
     
     public static String getFacilityName() {

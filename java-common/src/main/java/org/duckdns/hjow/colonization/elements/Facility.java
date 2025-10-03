@@ -48,6 +48,24 @@ public interface Facility extends ColonyElements {
     /** 유지비 반환 (양수로 반환) */
     public long getMaintainFee(City city, Colony colony);
     
+    /** 이 시설의 레벨 반환 */
+    public int getLevel();
+    
+    /** 이 시설의 레벨 변경 */
+    public void setLevel(int lv);
+    
+    /** 이 시설의 최대 레벨 반환 */
+    public int getMaxLevel();
+    
+    /** 업그레이드 가능 여부 반환 */
+    public boolean isUpgradeAvail(Colony col, City city);
+    
+    /** 이 시설의 업그레이드 비용 반환 */
+    public long getUpgradePrice(Colony col, City city);
+    
+    /** 이 시설의 업그레이드 소요 시간 반환 */
+    public int getUpgradeCycle(Colony col, City city);
+    
     /*
      * 이 Facility 구현 클래스는 다음 static 메소드들을 반드시 구현해야 함.
      * 
