@@ -26,7 +26,6 @@ public class BasicEngineering extends Research {
     public boolean isResearchAvail(Colony col) {
         boolean cond1 = false;
         boolean cond2 = false;
-        boolean cond3 = false;
         
         List<Research> researches = col.getResearches();
         for(Research one : researches) {
@@ -39,12 +38,12 @@ public class BasicEngineering extends Research {
             if(getLevel() >= 30) { // 레벨 30부터
                 // 기초인문학 레벨이 이 공학 레벨만큼 되어야 연구가능
                 if(one instanceof BasicHumanities) {
-                    if(one.getLevel() >= getLevel()) cond3 = true;
+                    if(one.getLevel() >= getLevel()) cond2 = true;
                 }
             }
         }
         
-        return cond1 && cond2 && cond3;
+        return cond1 && cond2;
     }
 
     @Override

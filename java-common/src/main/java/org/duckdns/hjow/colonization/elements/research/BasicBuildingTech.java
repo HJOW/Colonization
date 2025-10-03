@@ -27,6 +27,7 @@ public class BasicBuildingTech extends Research {
         boolean cond1 = false;
         boolean cond2 = false;
         boolean cond3 = false;
+        boolean cond4 = false;
         
         List<Research> researches = col.getResearches();
         for(Research one : researches) {
@@ -41,15 +42,27 @@ public class BasicBuildingTech extends Research {
                 if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 2)) cond2 = true;
             }
             
+            if(getLevel() >= 10) { // 레벨 10부터
+                // 신금속학 레벨이 있어야 연구 가능
+                if(one instanceof NewMetals) {
+                    if(one.getLevel() >= 1) cond3 = true;
+                }
+            } else if(getLevel() >= 25) { // 레벨 25부터
+                // 신금속학 레벨이 이 건축학 레벨만큼 되어야 연구 가능
+                if(one instanceof NewMetals) {
+                    if(one.getLevel() >= chooseMaxInt(getLevel(), 1)) cond3 = true;
+                }
+            }
+            
             if(getLevel() >= 15) { // 레벨 15부터
                 // 기초인문학 레벨이 이 건축학 레벨보다 높아야 연구가능
                 if(one instanceof BasicHumanities) {
-                    if(one.getLevel() > chooseMaxInt(getLevel(), 1)) cond3 = true;
+                    if(one.getLevel() > chooseMaxInt(getLevel(), 1)) cond4 = true;
                 }
             }
         }
         
-        return cond1 && cond2 && cond3;
+        return cond1 && cond2 && cond3 && cond4;
     }
 
     @Override
