@@ -1,3 +1,10 @@
 {
-    "swing" : { "version" : 1 }
+    "swing" : { 
+        "version" : "0.0.0.1"
+        , "noticeKo" : "notice_ko.html"
+        , "noticeEn" : "notice_ko.html"
+        , "builds" : [
+            { "version" : "0.0.0.1", "url" : "colonization-swing-0.0.0.1.jar", "check" : "0" }
+        ]
+    }
 }
