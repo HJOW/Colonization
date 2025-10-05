@@ -1,8 +1,10 @@
-package org.duckdns.hjow.colonization.elements.research;
+package org.duckdns.hjow.colonization.elements.research.biology;
 
 import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.research.BasicScience;
+import org.duckdns.hjow.colonization.elements.research.Research;
 
 public class BasicBiology extends Research {
     private static final long serialVersionUID = -231922131243240067L;
@@ -11,7 +13,7 @@ public class BasicBiology extends Research {
 
     @Override
     public String getName() {
-        return "BasicBiology";
+    	return getClass().getSimpleName();
     }
     
     @Override

@@ -5,8 +5,8 @@ import java.util.List;
 import org.duckdns.hjow.colonization.elements.Colony;
 
 public class Chemical extends Research {
-	private static final long serialVersionUID = -8126939140258858406L;
-	
+	private static final long serialVersionUID = -5288682651598045570L;
+
 	@Override
     public String getName() {
         return "Chemical";

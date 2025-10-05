@@ -7,6 +7,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.LightTech;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
 
 public class SolarStation extends PowerPlant {
     private static final long serialVersionUID = 4079646708867981024L;
@@ -79,6 +80,9 @@ public class SolarStation extends PowerPlant {
         boolean cond2 = false;
         List<Research> researches = col.getResearches();
         for(Research r : researches) {
+        	if(r instanceof EnergyTech) {
+                if(r.getLevel() >= 2) cond1 = true;
+            }
             if(r instanceof LightTech) {
                 if(r.getLevel() >= 1) cond1 = true;
             }

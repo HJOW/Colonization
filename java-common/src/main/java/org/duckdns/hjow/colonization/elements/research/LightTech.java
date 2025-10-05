@@ -3,10 +3,11 @@ package org.duckdns.hjow.colonization.elements.research;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
 
 public class LightTech extends Research {
-	private static final long serialVersionUID = -8126939140258858406L;
-	
+	private static final long serialVersionUID = -6737998466808533544L;
+
 	@Override
     public String getName() {
         return "LightTech";
@@ -24,6 +25,7 @@ public class LightTech extends Research {
     public boolean isResearchAvail(Colony col) {
         boolean cond1 = false;
         boolean cond2 = false;
+        boolean cond3 = false;
         
         List<Research> researches = col.getResearches();
         for(Research one : researches) {
@@ -37,11 +39,16 @@ public class LightTech extends Research {
             // 공학기초 레벨이 이 연구 레벨의 3배가 되어야 연구가능 (최소 6)
             if(one instanceof BasicEngineering) {
                 if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 3)) cond2 = true;
-                if(one.getLevel() < 6) cond1 = false;
+                if(one.getLevel() < 6) cond2 = false;
+            }
+            
+            // 에너지 레벨이 이 연구 레벨만큼 되어야 연구 가능
+            if(one instanceof EnergyTech) {
+                if(one.getLevel() >= (int) chooseMaxInt(getLevel(), 1)) cond3 = true;
             }
         }
         
-        return cond1 && cond2;
+        return cond1 && cond2 && cond3;
     }
 
     @Override
