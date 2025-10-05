@@ -45,7 +45,7 @@ public abstract class CommonServlet extends HttpServlet {
     protected abstract void doCommon(HttpServletRequest req, HttpServletResponse resp) throws Throwable;
     public    abstract String getName();
     
-    /** 로그인 필요 여부 반한 */
+    /** 로그인 필요 여부 반환 */
     protected boolean isLoginNeeded() { return false; }
     
     /** 해당 등급 이상만 접근 가능한지를 반환 */
@@ -53,7 +53,24 @@ public abstract class CommonServlet extends HttpServlet {
     
     /** JSON 을 응답으로 내보냄 */
     public void response(HttpServletResponse resp, JsonObject json) {
-        
+        resp.setCharacterEncoding("UTF-8");
+        try { resp.getWriter().write(json.toJSON()); } catch(Exception ex) { throw new RuntimeException(ex.getMessage(), ex); }
+    }
+    
+    /** 로그인 여부 체크 */
+    protected Account checkLogined(HttpServletRequest req) {
+    	String jwt = req.getHeader("jwt");
+		if(jwt == null || "".equals(jwt)) {
+			jwt = req.getParameter("jwt");
+			if(jwt != null) jwt = HexUtil.decodeString(jwt); // 매개변수의 경우 HEX로 인코딩된 값이 넘어올 테니 디코딩해 사용
+		}
+		if(jwt == null || "".equals(jwt)) {
+			return null;
+		} else {
+			Account acc = AccountUtil.verifyJWT(jwt);
+			if(acc == null) return null;
+			return acc;
+		}
     }
     
     /** doCommon 메소드 내 맨 앞에서 반드시 호출 ! */

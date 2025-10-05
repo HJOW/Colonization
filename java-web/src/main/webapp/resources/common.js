@@ -31,3 +31,15 @@ function HexEncoder() {
         return decodeURIComponent(escape(utf8Str));
     }
 }
+
+$.col = {};
+$.colonizaion = $.col;
+
+$.col.log = function(msg) {
+    try { console.log(msg); } catch(ignores) {}
+};
+
+$.col.ajax = function(options) {
+    return $.ajax(options);
+};
+

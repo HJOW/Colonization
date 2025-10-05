@@ -14,48 +14,79 @@ import org.duckdns.hjow.commons.util.HexUtil;
 public class LoginServlet extends CommonServlet {
     private static final long serialVersionUID = 2644868350197546589L;
     
+    @Override
+    protected boolean isLoginNeeded() { return false; }
+    
+    @Override
     protected void doCommon(HttpServletRequest req, HttpServletResponse resp) throws Throwable {
         doBefore(req, resp);
         
         JsonObject responses = new JsonObject();
         responses.put("success", new Boolean(false));
         responses.put("message", "");
+        responses.put("result", new Boolean(false));
         
         try {
-            String strLoginPacket1 = req.getParameter("login");
-            String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
-            
-            JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
-            
-            strLoginPacket1 = null;
-            strLoginPacket2 = null;
-            
-            if(json.get("id") == null) throw new RuntimeException("Please input ID for login !");
-            String id = json.get("id").toString();
-            
-            if(json.get("pw") == null) throw new RuntimeException("Please input Password for login !");
-            String pw    = json.get("pw").toString();
-            String pwEnc = Account.hashPassword(pw);
-            
-            Account acc = AccountUtil.load(id);
-            if(acc == null) throw new RuntimeException("Cannot find that account.");
-            
-            if(! pwEnc.equals(acc.getPasswordHash())) {
-                pwEnc = Account.hashPassword(pw); // 1회 더 해싱
+        	String svSub1 = req.getParameter("svSub");
+        	if(svSub1 == null) throw new RuntimeException("No sub keyword !");
+        	if(svSub1.equalsIgnoreCase("login")) {
+        		String strLoginPacket1 = req.getParameter("login");
+                String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
+                
+                JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
+                
+                strLoginPacket1 = null;
+                strLoginPacket2 = null;
+                
+                if(json.get("id") == null) throw new RuntimeException("Please input ID for login !");
+                String id = json.get("id").toString();
+                
+                if(json.get("pw") == null) throw new RuntimeException("Please input Password for login !");
+                String pw    = json.get("pw").toString();
+                String pwEnc = Account.hashPassword(pw);
+                
+                Account acc = AccountUtil.load(id);
+                if(acc == null) throw new RuntimeException("Cannot find that account.");
+                
                 if(! pwEnc.equals(acc.getPasswordHash())) {
-                    // TODO
-                    throw new RuntimeException("Cannot find that account."); // ID 찾지 못하는 경우와 동일한 메시지 리턴
+                    pwEnc = Account.hashPassword(pw); // 1회 더 해싱
+                    if(! pwEnc.equals(acc.getPasswordHash())) {
+                        // TODO
+                        throw new RuntimeException("Cannot find that account."); // ID 찾지 못하는 경우와 동일한 메시지 리턴
+                    }
                 }
-            }
-            
-            Map<String, Object> headerContent = new HashMap<String, Object>();
-            String jwt = AccountUtil.buildJWT(acc, headerContent);
-            
-            resp.setHeader("jwt", jwt);
-            
-            responses.put("success", new Boolean(true));
-            responses.put("message", "");
-            responses.put("token", jwt);
+                
+                Map<String, Object> headerContent = new HashMap<String, Object>();
+                String jwt = AccountUtil.buildJWT(acc, headerContent);
+                
+                resp.setHeader("jwt", jwt);
+                
+                responses.put("success", new Boolean(true));
+                responses.put("message", "");
+                responses.put("token", jwt);
+        	} else if(svSub1.equals("check")) {
+        		String jwtMaybe = req.getHeader("jwt");
+        		if(jwtMaybe == null || "".equals(jwtMaybe)) jwtMaybe = req.getParameter("jwt");
+        		if(jwtMaybe == null || "".equals(jwtMaybe)) {
+        			responses.put("success", new Boolean(false));
+                    responses.put("message", "No JWT token !");
+                    responses.put("result", new Boolean(false));
+        		} else {
+        			Account acc = AccountUtil.verifyJWT(jwtMaybe);
+        			if(acc == null) {
+        				responses.put("success", new Boolean(true));
+                        responses.put("message", "");
+                        responses.put("result", new Boolean(false));
+        			} else {
+        				responses.put("success", new Boolean(true));
+                        responses.put("message", "");
+                        responses.put("result", new Boolean(true));
+                        
+                        responses.put("id", acc.getId());
+                        responses.put("name", acc.getName());
+        			}
+        		}
+        	}
         } catch(Exception ex) {
             logger.error("Error on " + this.getName() + " - " + ex.getMessage(), ex);
             responses.put("success", new Boolean(false));

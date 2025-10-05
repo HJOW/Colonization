@@ -19,12 +19,18 @@ public class MainServlet extends CommonServlet {
         CommonServlet sv;
         sv = new LoginServlet();
         children.put(sv.getName(), sv);
+        
+        sv = new ColonyServlet();
+        children.put(sv.getName(), sv);
     }
     
     @Override
     public void destroy() {
         super.destroy(); 
     }
+    
+    @Override
+    protected boolean isLoginNeeded() { return false; }
     
     @Override
     protected void doCommon(HttpServletRequest req, HttpServletResponse resp) throws Throwable {
