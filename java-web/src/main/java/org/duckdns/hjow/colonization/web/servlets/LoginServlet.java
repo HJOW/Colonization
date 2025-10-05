@@ -6,9 +6,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
 
 public class LoginServlet extends CommonServlet {
@@ -38,10 +41,10 @@ public class LoginServlet extends CommonServlet {
                 strLoginPacket1 = null;
                 strLoginPacket2 = null;
                 
-                if(json.get("id") == null) throw new RuntimeException("Please input ID for login !");
+                if(DataUtil.isEmpty(json.get("id"))) throw new RuntimeException("Please input ID for login !");
                 String id = json.get("id").toString();
                 
-                if(json.get("pw") == null) throw new RuntimeException("Please input Password for login !");
+                if(DataUtil.isEmpty(json.get("pw"))) throw new RuntimeException("Please input Password for login !");
                 String pw    = json.get("pw").toString();
                 String pwEnc = Account.hashPassword(pw);
                 
@@ -86,6 +89,44 @@ public class LoginServlet extends CommonServlet {
                         responses.put("name", acc.getName());
         			}
         		}
+        	} else if(svSub1.equals("join")) {
+        		String strLoginPacket1 = req.getParameter("login");
+                String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
+                
+                JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
+                
+                strLoginPacket1 = null;
+                strLoginPacket2 = null;
+                
+                if(DataUtil.isEmpty(json.get("id"))) throw new RuntimeException("Please input ID to join !");
+                String id = json.get("id").toString();
+                
+                String idChecker = Account.removeProhibitedChars(id);
+                if(! idChecker.equals(id)) throw new RuntimeException("Please input ID correct !");
+                
+                if(AccountUtil.existingId(id)) throw new RuntimeException("Someone using that ID already !");
+                
+                if(DataUtil.isEmpty(json.get("name"))) throw new RuntimeException("Please input your name to join !");
+                String name = json.get("name").toString();
+                
+                if(DataUtil.isEmpty(json.get("pw"))) throw new RuntimeException("Please input Password to join !");
+                String pw = json.get("pw").toString();
+                
+                Account newAcc = new Account();
+                newAcc.setId(id);
+                newAcc.setName(name);
+                newAcc.setPassword(pw);
+                newAcc.setGrade(1);
+                newAcc.setStatus(1);
+                
+                Colony newCol = new NormalColony();
+                newCol.newCity();
+                newAcc.getColonies().add(newCol);
+                
+                AccountUtil.save(newAcc);
+                
+                responses.put("success", new Boolean(true));
+                responses.put("message", "");
         	}
         } catch(Exception ex) {
             logger.error("Error on " + this.getName() + " - " + ex.getMessage(), ex);
