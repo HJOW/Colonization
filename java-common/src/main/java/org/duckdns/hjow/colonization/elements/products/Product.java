@@ -99,6 +99,11 @@ public abstract class Product implements ColonyElements {
         return new ArrayList<Product>();
     }
     
+    @Override
+    public String toString() {
+    	return getTitle();
+    }
+    
     private static final List<Product> productTypeList = new Vector<Product>();
     private static synchronized void prepareProductTypeList() {
         productTypeList.clear();

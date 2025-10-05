@@ -8,6 +8,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public abstract class Residence extends DefaultFacility implements Home {
@@ -64,6 +65,11 @@ public abstract class Residence extends DefaultFacility implements Home {
     @Override
     public double additionalComportGradeRate(City city, Colony colony) {
         return 0.0;
+    }
+    
+    @Override
+    public List<String> getProductTypeNeeded() {
+    	return new ArrayList<String>();
     }
 
     @Override
@@ -155,6 +161,39 @@ public abstract class Residence extends DefaultFacility implements Home {
     public List<Citizen> getWorkingCitizens(City city, Colony colony) {
         return new ArrayList<Citizen>();
     }
+    
+    @Override
+	public List<Product> getStored() {
+		return new ArrayList<Product>();
+	}
+
+	@Override
+	public Product takeOut(String type) {
+		return null;
+	}
+
+	@Override
+	public void store(Product p) { throw new RuntimeException("Cannot store here !"); }
+
+	@Override
+	public int getStoredCount(String productType) {
+		return 0;
+	}
+
+	@Override
+	public int getStoredCount() {
+		return 0;
+	}
+
+	@Override
+	public int getMaxStoredCapacity() {
+		return 0;
+	}
+
+	@Override
+	public boolean isStoreAvail(Product p) {
+		return false;
+	}
     
     public static String getFacilityName() {
         return "주거 모듈";

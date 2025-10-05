@@ -14,6 +14,7 @@ import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
@@ -21,6 +22,7 @@ import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.ResidenceModule;
 import org.duckdns.hjow.colonization.elements.facilities.Restaurant;
 import org.duckdns.hjow.colonization.elements.facilities.SmallFactory;
+import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
 import org.duckdns.hjow.colonization.events.InfluenzaEvent;
@@ -442,12 +444,20 @@ public abstract class AbstractColony implements Colony {
         city.getFacility().add(fac);
         
         fac = new Restaurant();
+        for(idx=0; idx<10; idx++) {
+            ((Restaurant) fac).store(new NutritionBlock());
+        }
         city.getFacility().add(fac);
         
         fac = new ResearchCenter();
         city.getFacility().add(fac);
         
-        fac = new SmallFactory();
+        for(idx=0; idx<2; idx++) {
+            fac = new SmallFactory();
+            city.getFacility().add(fac);
+        }
+        
+        fac = new CargoRailSystem();
         city.getFacility().add(fac);
         
         getCities().add(city);

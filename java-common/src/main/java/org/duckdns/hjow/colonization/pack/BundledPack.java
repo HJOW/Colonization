@@ -4,6 +4,7 @@ import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.facilities.Arcade;
 import org.duckdns.hjow.colonization.elements.facilities.ArchitectOffice;
 import org.duckdns.hjow.colonization.elements.facilities.BusStation;
+import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.ResidenceModule;
@@ -12,6 +13,7 @@ import org.duckdns.hjow.colonization.elements.facilities.SmallFactory;
 import org.duckdns.hjow.colonization.elements.facilities.SolarStation;
 import org.duckdns.hjow.colonization.elements.facilities.TownHouse;
 import org.duckdns.hjow.colonization.elements.facilities.Turret;
+import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.biology.BasicBiology;
 import org.duckdns.hjow.colonization.elements.research.biology.BasicMedicalScience;
@@ -48,6 +50,7 @@ public class BundledPack extends DefaultPack {
         facilityClasses.add(Turret.class);
         facilityClasses.add(TownHouse.class);
         facilityClasses.add(SolarStation.class);
+        facilityClasses.add(CargoRailSystem.class);
         
         researchClasses.add(BasicScience.class);
         researchClasses.add(BasicHumanities.class);
@@ -64,6 +67,8 @@ public class BundledPack extends DefaultPack {
         stateClasses.add(Influenza.class);
         stateClasses.add(ImmuneInfluenza.class);
         stateClasses.add(SuperAngry.class);
+        
+        productClasses.add(NutritionBlock.class);
         
     }
 }

@@ -9,6 +9,7 @@ public interface Storage extends Facility {
     public List<Product> getStored();
     public Product takeOut(String type);
     public void store(Product p);
+    public int getStoredCount(String productType);
     public int getStoredCount();
     public int getMaxStoredCapacity();
     public boolean isStoreAvail(Product p);

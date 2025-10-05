@@ -1,13 +1,23 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.products.Product;
+import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class Restaurant extends DefaultFacility implements ServiceFacility {
+public class Restaurant extends DefaultFacility implements ServiceFacility, Storage {
     private static final long serialVersionUID = -7371044845340026748L;
+    protected List<Product> stored = new Vector<Product>();
     protected int comportGrade = 0;
 
     @Override
@@ -45,6 +55,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
         super.oneCycle(cycle, city, colony, efficiency100, colPanel);
         
         if(cycle % getProfitCycle() == 0) {
+        	// 효율 계산
             double efficiencyRate = efficiency100 / 100.0;
             double additionalRate = additionalComportGradeRate(city, colony);
             if(additionalRate < 0.0) additionalRate = 0.0;
@@ -59,14 +70,42 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
             int compGrade = getComportGrade();
             compGrade = (int) Math.round(compGrade * efficiencyRate);
             
+            List<Product> using  = new ArrayList<Product>();
+            List<String> needed = new ArrayList<String>();
+            
+            // 서비스
             int servicingCount = 0;
             for(Citizen c : city.getCitizens()) {
                 if(c.getHunger() >= 80) continue;
                 if(c.getMoney() < usingFee()) continue;
                 
+                // 재료 계산
+                using.clear();
+                needed.clear();
+                
+                for(String pt : getProductTypeNeeded()) { needed.add(new String(pt)); }
+                for(Product p : getStored()) {
+                	int idx = 0;
+                	while(idx<needed.size()) {
+                		String needOne = needed.get(idx);
+                		if(p.getType().equals(needOne)) {
+                			using.add(p);
+                    		needed.remove(idx);
+                    		continue;
+                		}
+                		
+                		idx++;
+                	}
+                }
+                
+                // 재료가 부족하면 중단
+                if(! needed.isEmpty()) break;
+                
+                // 사용료 및 세금 계산
                 long fee = usingFee();
                 long tax = getTax(city, colony); // 사용료에 붙는 세금, 이미 계산 시에 사용료를 반영함.
                 
+                // 서비스
                 servicingCount++;
                 c.setMoney(c.getMoney() - fee - tax);
                 c.setHunger(c.getHunger() + solvingHunger);
@@ -74,6 +113,13 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
                 
                 if(compGrade >= 2) {
                     c.setHappy(c.getHappy() + (compGrade / 2));
+                }
+                
+                // 재료 소모
+                if(servicingCount % 10 == 1) { // 재료 1개 당 10명에게 서비스 (단 무조건 최소 1개 소모)
+                	for(Product p : using) {
+                    	stored.remove(p);
+                    }
                 }
                 
                 if(servicingCount >= getCapacity()) break;
@@ -126,6 +172,64 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
         
         return point;
     }
+    
+    @Override
+	public List<Product> getStored() {
+		return stored;
+	}
+    
+    public void setStored(List<Product> p) {
+    	this.stored = p;
+    }
+
+    @Override
+    public Product takeOut(String type) {
+        for(int idx=0; idx<stored.size(); idx++) {
+            Product p = stored.get(idx);
+            if(p.getType().equals(type)) {
+                stored.remove(p);
+                return p;
+            }
+        }
+        return null;
+    }
+    
+    @Override
+    public void store(Product p) {
+        if(! isStoreAvail(p)) throw new RuntimeException("Cannot store here !");
+        stored.add(p);
+    }
+    
+    @Override
+    public int getStoredCount() {
+        return stored.size();
+    }
+    
+    @Override
+    public int getStoredCount(String productType) {
+    	int c = 0;
+    	for(Product p : stored) {
+    		if(p.getType().equals(productType)) c++;
+    	}
+    	return c;
+    }
+    
+    @Override
+    public int getMaxStoredCapacity() {
+        return 200;
+    }
+    
+    @Override
+    public boolean isStoreAvail(Product p) {
+        return (p instanceof NutritionBlock);
+    }
+    
+    @Override
+    public List<String> getProductTypeNeeded() {
+    	List<String> list = new ArrayList<String>();
+    	list.add("NutritionBlock");
+    	return list;
+    }
 
     @Override
     public void fromJson(JsonObject json) {
@@ -135,6 +239,26 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
         setHp(Integer.parseInt(json.get("hp").toString()));
         setComportGrade(Integer.parseInt(json.get("comportGrade").toString()));
         setLevel(Integer.parseInt(json.get("level").toString()));
+        
+        JsonArray list = (JsonArray) json.get("stored");
+        stored.clear();
+        if(list != null) {
+            for(Object o : list) {
+                if(o instanceof String) o = JsonObject.parseJson(o.toString());
+                if(o instanceof JsonObject) {
+                    try {
+                        JsonObject jsonObj = (JsonObject) o;
+                        Product productOne = Product.createProductInstance(jsonObj.get("type").toString());
+                        if(productOne == null) throw new NullPointerException("Cannot found these product type " + jsonObj);
+                        
+                        productOne.fromJson(jsonObj);
+                        stored.add(productOne);
+                    } catch(Exception ex) {
+                        GlobalLogs.processExceptionOccured(ex, false);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -147,6 +271,10 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
         json.put("hp", new Long(getHp()));
         json.put("comportGrade", new Integer(getComportGrade()));
         json.put("level", new Integer(getLevel()));
+        
+        JsonArray list = new JsonArray();
+        for(Product p : getStored()) { list.add(p.toJson()); }
+        json.put("stored", list);
         
         return json;
     }

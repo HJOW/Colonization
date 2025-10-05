@@ -1,9 +1,14 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public class Arcade extends DefaultFacility implements ServiceFacility {
@@ -80,6 +85,11 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
         return 0.0;
     }
     
+    @Override
+    public List<String> getProductTypeNeeded() {
+    	return new ArrayList<String>();
+    }
+    
     /** 수익 발생 주기 */
     protected int getProfitCycle() {
         return 600;
@@ -123,6 +133,39 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
             }
         }
     }
+    
+    @Override
+	public List<Product> getStored() {
+		return new ArrayList<Product>();
+	}
+
+	@Override
+	public Product takeOut(String type) {
+		return null;
+	}
+
+	@Override
+	public void store(Product p) { throw new RuntimeException("Cannot store here !"); }
+
+	@Override
+	public int getStoredCount(String productType) {
+		return 0;
+	}
+
+	@Override
+	public int getStoredCount() {
+		return 0;
+	}
+
+	@Override
+	public int getMaxStoredCapacity() {
+		return 0;
+	}
+
+	@Override
+	public boolean isStoreAvail(Product p) {
+		return false;
+	}
 
     public static String getFacilityName() {
         return "아케이드";

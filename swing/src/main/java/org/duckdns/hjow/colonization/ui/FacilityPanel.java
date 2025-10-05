@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.ui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -25,8 +26,11 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
+import org.duckdns.hjow.colonization.elements.products.Money;
+import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.states.State;
 
@@ -34,11 +38,13 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     private static final long serialVersionUID = -6078767714905474678L;
     
     protected transient JProgressBar progHp;
-    protected transient JPanel pnUp, pnCenter, pnDown, pnImage;
+    protected transient JPanel pnUp, pnCenter, pnDown, pnImage, pnCbxResearch, pnCbxProducts;
+    protected transient CardLayout cardResProd;
     protected transient JButton btnToggle, btnDestroy;
     protected transient JTextField tfName;
     protected transient JTextArea ta;
     protected transient JComboBox<Research> cbxResearch;
+    protected transient JComboBox<Product>  cbxProducts;
     
     protected transient boolean flagEditable = true;
     
@@ -113,24 +119,52 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         pnCenter.add(new JScrollPane(ta), BorderLayout.CENTER);
         
         JPanel pnCenterDown = new JPanel();
-        pnCenterDown.setLayout(new BorderLayout());
+        cardResProd = new CardLayout();
+        pnCenterDown.setLayout(cardResProd);
         pnCenter.add(pnCenterDown, BorderLayout.SOUTH);
         
-        cbxResearch = new JComboBox<Research>();
-        pnCenterDown.add(cbxResearch);
+        pnCbxResearch = new JPanel();
+        pnCbxProducts = new JPanel();
+        pnCbxResearch.setLayout(new BorderLayout());
+        pnCbxProducts.setLayout(new BorderLayout());
+        pnCenterDown.add(pnCbxResearch, "Research");
+        pnCenterDown.add(pnCbxProducts, "Product");
         
-        if(! (f instanceof ResearchCenter)) cbxResearch.setVisible(false);
-        else {
-            List<Research> tResearches = colony.getResearches();
-            Vector<Research> researches = new Vector<Research>();
-            
-            for(Research r : tResearches) {
-                if(r.isResearchAvail(colony)) researches.add(r);
-            }
-            
-            tResearches = null;
-            
-            cbxResearch.setModel(new DefaultComboBoxModel<Research>(researches));
+        cbxResearch = new JComboBox<Research>();
+        pnCbxResearch.add(cbxResearch);
+        
+        cbxProducts = new JComboBox<Product>();
+        pnCbxProducts.add(cbxProducts);
+        
+        if(! ((f instanceof ResearchCenter) || (f instanceof Factory))) {
+        	pnCenterDown.setVisible(false);
+        } else {
+        	pnCenterDown.setVisible(true);
+        	if(f instanceof ResearchCenter) {
+        		List<Research> tResearches = colony.getResearches();
+                Vector<Research> researches = new Vector<Research>();
+                
+                for(Research r : tResearches) {
+                    if(r.isResearchAvail(colony)) researches.add(r);
+                }
+                
+                tResearches = null;
+                
+                cbxResearch.setModel(new DefaultComboBoxModel<Research>(researches));
+                cardResProd.show(pnCenterDown, "Research");
+        	} else if(f instanceof Factory) {
+        		Factory factory = (Factory) f;
+        		List<Product> products = Product.getProductTypeList();
+        		Vector<Product> avails = new Vector<Product>();
+        		for(Product p : products) {
+        			if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
+        		}
+        		products = null;
+        		avails.add(new Money());
+        		
+        		cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
+        		cardResProd.show(pnCenterDown, "Product");
+        	}
         }
         
         pnCenter.setVisible(false);
@@ -171,6 +205,25 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 }
             }
         });
+        
+        cbxProducts.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(f instanceof Factory) {
+					Factory factory = (Factory) f;
+					Product p = (Product) cbxProducts.getSelectedItem();
+					if(p != null) {
+						if(p instanceof Money) {
+							factory.setProductType(null);
+						} else {
+							factory.setProductType(p.getType());
+						}
+					}
+				}
+			}
+		});
+        
+        refresh(f, city, colony, superInstance);
     }
     
     public long getFacilityKey() {
@@ -264,6 +317,30 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
             } else {
                 res = res.append(" ").append(research.getTitle() + " ( " + research.getProgressPercents() + " % )");
             }
+        } else if(fac instanceof Factory) {
+        	Factory factory = (Factory) fac;
+        	
+        	List<Product> products = Product.getProductTypeList();
+    		Vector<Product> avails = new Vector<Product>();
+    		for(Product p : products) {
+    			if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
+    		}
+    		products = null;
+    		
+    		cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
+    		
+    		String producingType = factory.getProductType();
+    		if(producingType == null || producingType == "Money") {
+    			cbxProducts.setSelectedIndex(0);
+    			factory.setProductType(null);
+    		} else {
+    			for(Product p : avails) {
+    				if(producingType.equals(p.getType())) {
+    					cbxProducts.setSelectedItem(p);
+    					break;
+    				}
+    			}
+    		}
         }
         
         List<Citizen> workers = fac.getWorkingCitizens(city, colony);

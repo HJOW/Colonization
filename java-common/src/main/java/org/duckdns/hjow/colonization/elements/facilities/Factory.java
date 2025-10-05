@@ -62,6 +62,11 @@ public abstract class Factory extends DefaultFacility implements Storage {
         return 600;
     }
     
+    /** 1번 생산에 생산되는 결과물 Product 의 양 (재료와 무관, 즉 재료 1번 사용량 소모 당 생산량을 의미) */
+    protected int getProduceResultCount(Product p) {
+    	return 1;
+    }
+    
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
         super.oneCycle(cycle, city, colony, efficiency100, colPanel);
@@ -73,20 +78,19 @@ public abstract class Factory extends DefaultFacility implements Storage {
             
             boolean createSuccess = false;
             if(getProductType() == null) createSuccess = false;
+            else if(getProductType().equals("Money")) createSuccess = false;
             else {
                 Product p = Product.createProductInstance(getProductType());
                 if(p != null) {
                     // 재료 확인
                     List<Product> sources = p.getSourceProducts();
                     
-                    // 저장소 확인
-                    if(! isStoreAvail(p)) createSuccess = false;
+                    // 저장소 및 생산 가능성 확인
+                    if(! (isStoreAvail(p) && isProduced(p))) createSuccess = false;
                     else {
                         if(sources.isEmpty()) { // 필요 재료가 없으면 성공으로 처리
                             createSuccess = true;
                         } else {
-                            
-                            
                             // 사용 대상 재료 선정
                             List<Product> using = new ArrayList<Product>();
                             
@@ -119,7 +123,9 @@ public abstract class Factory extends DefaultFacility implements Storage {
                         
                         if(createSuccess) {
                             // 생산품 추가
-                            store(p);
+                        	for(int idx=0; idx<getProduceResultCount(p); idx++) {
+                        		if(getStoredCount() < getMaxStoredCapacity()) store(Product.createProductInstance(p.getType()));
+                        	}
                         }
                     }
                 } else {
@@ -168,17 +174,51 @@ public abstract class Factory extends DefaultFacility implements Storage {
     }
     
     @Override
+    public int getStoredCount(String productType) {
+    	int c = 0;
+    	for(Product p : stored) {
+    		if(p.getType().equals(productType)) c++;
+    	}
+    	return c;
+    }
+    
+    @Override
     public int getMaxStoredCapacity() {
         return 1000;
     }
     
     @Override
     public boolean isStoreAvail(Product p) {
+    	if(isProduced(p)) return true;
         return false;
     }
     
+    /** 이 Product 가 이 공장에서 생산 가능한지를 반환, 재료 보유 여부와 저장 가능 (isStoreAvail) 여부는 이 메소드로 검사하지 않으므로 따로 검사해야 함. */
+    public boolean isProduced(Product p) {
+    	return true;
+    }
+    
+    /** 생산 중인 Product 의 Type 반환 */
     public String getProductType() {
         return productType;
+    }
+    
+    /** 생산 중인 Product 의 원재료 리스트 반환 */
+    public List<Product> getProducingProductSources() {
+    	if(getProductType() == null) return null;
+    	Product p = Product.createProductInstance(getProductType());
+    	return p.getSourceProducts();
+    }
+    
+    /** 해당 타입의 Product 가 지금 이 시설에서 생산 중인 Product 의 원재료인지를 반환 */
+    public boolean isProducingSource(String type) {
+    	if(getProductType() == null) return false;
+    	List<Product> sources = getProducingProductSources();
+    	if(sources == null) return false;
+    	for(Product s : sources) {
+    		if(getProductType().equals(s.getType())) return true;
+    	}
+    	return false;
     }
 
     public void setProductType(String productType) {
