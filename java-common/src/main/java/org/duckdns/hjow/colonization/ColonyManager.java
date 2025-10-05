@@ -402,7 +402,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         
         try { col.oneCycle(cycle, null, col, 100, null); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         try {
-        	refreshArenaPanel(cycle);
+            refreshArenaPanel(cycle);
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         cycle++;
@@ -416,7 +416,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     /** 정착지 목록과 화면 내용 갱신 */
     public void refreshColonyList() {
-    	if(colonies.size() >= 1 && selectedColony < 0) selectedColony = 0;
+        if(colonies.size() >= 1 && selectedColony < 0) selectedColony = 0;
         refreshColonyContent();
     }
     
@@ -530,12 +530,12 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     /** 현재 버전의 버전 배열 반환 */
     public static int[] getVersionArray() {
-    	int[] arr = new int[4];
-    	arr[0] = VERSION_MAIN;
-    	arr[1] = VERSION_SUB1;
-    	arr[2] = VERSION_SUB2;
-    	arr[3] = VERSION_SUB3;
-    	return arr;
+        int[] arr = new int[4];
+        arr[0] = VERSION_MAIN;
+        arr[1] = VERSION_SUB1;
+        arr[2] = VERSION_SUB2;
+        arr[3] = VERSION_SUB3;
+        return arr;
     }
     
     /** 버전 문자열을 버전 배열로 반환 */
@@ -545,19 +545,19 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         
         StringTokenizer dotTokenizer = new StringTokenizer(str, ".");
         for(int idx=0; idx<arr.length; idx++) {
-        	arr[idx] = Integer.parseInt(dotTokenizer.nextToken().trim());
+            arr[idx] = Integer.parseInt(dotTokenizer.nextToken().trim());
         }
         return arr;
     }
     
     /** 현재 버전 문자열로 반환 */
     public static String getVersionString() {
-    	return getVersionString(getVersionArray());
+        return getVersionString(getVersionArray());
     }
     
     /** 버전 배열을 문자열로 변환 */
     public static String getVersionString(int[] num) {
-    	return num[0] + "." + num[1] + "." + num[2] + "." + num[3];
+        return num[0] + "." + num[1] + "." + num[2] + "." + num[3];
     }
     
     public static final int VERSION_MAIN = 0;

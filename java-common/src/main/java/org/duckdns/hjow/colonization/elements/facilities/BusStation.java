@@ -9,13 +9,13 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 
 public class BusStation extends TransportStation {
-	private static final long serialVersionUID = 7222508474329385493L;
+    private static final long serialVersionUID = 7222508474329385493L;
     
-	@Override
+    @Override
     protected String getDefaultNamePrefix() {
         return "버스정류장";
     }
-	
+    
     @Override
     public String getStatusDescription(City city, Colony colony) {
         return "";

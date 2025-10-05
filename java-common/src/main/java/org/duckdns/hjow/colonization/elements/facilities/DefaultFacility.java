@@ -28,7 +28,7 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public String getType() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
     
     /** 이름 앞부분 */
@@ -163,7 +163,7 @@ public abstract class DefaultFacility implements Facility {
         while(std < getStates().size()) {
             State st = getStates().get(std);
             if(st.getHp() <= 0 || st.getLefts() <= 0) {
-            	st.dispose();
+                st.dispose();
                 getStates().remove(std);
                 continue;
             }
@@ -246,10 +246,10 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public void dispose() {
-    	for(State st : getStates()) {
-    		st.dispose();
-    	}
-    	states.clear();
+        for(State st : getStates()) {
+            st.dispose();
+        }
+        states.clear();
     }
     
     @Override
@@ -263,80 +263,80 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public boolean isUpgradeAvail(Colony col, City city) {
-    	if(getLevel() >= getMaxLevel()) return false;
-    	if(col.getMoney() < getUpgradePrice(col, city)) return false;
-    	
-    	return true;
+        if(getLevel() >= getMaxLevel()) return false;
+        if(col.getMoney() < getUpgradePrice(col, city)) return false;
+        
+        return true;
     }
     
     @Override
     public long getUpgradePrice(Colony col, City city) {
-    	long res = startUpgradePrice();
-    	for(int idx=1; idx<getLevel(); idx++) {
-    		if(res >= Long.MAX_VALUE / 10) return Long.MAX_VALUE / 10;
-    		
-    		long increases = (long) Math.floor( res * increateUpgradePriceRate() );
-    		if(increases < 1L) increases = 1L;
-    		res = res + increases;
-    	}
-    	return res;
+        long res = startUpgradePrice();
+        for(int idx=1; idx<getLevel(); idx++) {
+            if(res >= Long.MAX_VALUE / 10) return Long.MAX_VALUE / 10;
+            
+            long increases = (long) Math.floor( res * increateUpgradePriceRate() );
+            if(increases < 1L) increases = 1L;
+            res = res + increases;
+        }
+        return res;
     }
     
     @Override
     public int getUpgradeCycle(Colony col, City city) {
-    	int res = startUpgradeCycle();
-    	for(int idx=1; idx<getLevel(); idx++) {
-    		if(res >= Integer.MAX_VALUE / 10) return Integer.MAX_VALUE / 10;
-    		
-    		int increases = (int) Math.floor( res * increaseUpgradeCycleRate() );
-    		if(increases < 1) increases = 1;
-    		res = res + increases;
-    	}
-    	return res;
+        int res = startUpgradeCycle();
+        for(int idx=1; idx<getLevel(); idx++) {
+            if(res >= Integer.MAX_VALUE / 10) return Integer.MAX_VALUE / 10;
+            
+            int increases = (int) Math.floor( res * increaseUpgradeCycleRate() );
+            if(increases < 1) increases = 1;
+            res = res + increases;
+        }
+        return res;
     }
     
     @Override
     public int getCapacity() {
-    	int res = getDefaultCapacity();
-    	if(res == 0) return res;
-    	for(int idx=1; idx<getLevel(); idx++) {
-    		if(res >= Integer.MAX_VALUE / 10) return Integer.MAX_VALUE / 10;
-    		
-    		int increases = (int) Math.floor( res * increateCapacityRate() );
-    		if(increases < 1) increases = 1;
-    		res = res + increases;
-    	}
-    	return res;
+        int res = getDefaultCapacity();
+        if(res == 0) return res;
+        for(int idx=1; idx<getLevel(); idx++) {
+            if(res >= Integer.MAX_VALUE / 10) return Integer.MAX_VALUE / 10;
+            
+            int increases = (int) Math.floor( res * increateCapacityRate() );
+            if(increases < 1) increases = 1;
+            res = res + increases;
+        }
+        return res;
     }
     
     /** 업그레이드 비용 시작 금액 */
     protected long startUpgradePrice() {
-    	return 5000L;
+        return 5000L;
     }
     
     /** 업그레이드 비용의 레벨 당 증가율 */
     protected double increateUpgradePriceRate() {
-    	return 0.2;
+        return 0.2;
     }
     
     /** 업그레이드 비용 시작 금액 */
     protected int startUpgradeCycle() {
-    	return 200;
+        return 200;
     }
     
     /** 업그레이드 비용의 레벨 당 증가율 */
     protected double increaseUpgradeCycleRate() {
-    	return 0.2;
+        return 0.2;
     }
     
     /** 기본 레벨의 Capacity 값 */
     protected int getDefaultCapacity() {
-    	return 0;
+        return 0;
     }
     
     /** 레벨 당 Capacity 증가율 */
     protected double increateCapacityRate() {
-    	return 0.1;
+        return 0.1;
     }
     
     public static String getFacilityName() {

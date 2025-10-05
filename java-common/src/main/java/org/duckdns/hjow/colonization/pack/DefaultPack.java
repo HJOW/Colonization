@@ -76,14 +76,14 @@ public class DefaultPack implements Pack {
     
     @Override
     public List<Class<?>> getProductClasses() {
-		return productClasses;
-	}
+        return productClasses;
+    }
     
-	public void setProductClasses(List<Class<?>> productClasses) {
-		this.productClasses = productClasses;
-	}
+    public void setProductClasses(List<Class<?>> productClasses) {
+        this.productClasses = productClasses;
+    }
     
-	@Override
+    @Override
     public boolean isEnabled() {
         return enabled;
     }

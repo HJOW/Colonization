@@ -171,7 +171,7 @@ public class City implements ColonyElements {
     
     /** 기본 제공 교통 점수 */
     protected long getDefaultTransportPoint() {
-    	return 300L;
+        return 300L;
     }
 
     @Override
@@ -227,21 +227,21 @@ public class City implements ColonyElements {
             
             // 교통시설인 경우 교통점수 계산
             if(f instanceof TransportStation) {
-            	TransportStation t = (TransportStation) f;
-            	
-            	// 두 쌍 이상이 되어야 효력 발생
-            	boolean exists = false;
-            	for(Facility fc : getFacility()) {
-            		if(fc.getKey() == t.getKey()) continue;
-            		if(fc.getType().equalsIgnoreCase(t.getType())) { exists = true; break; }
-            	}
-            	
-            	if(exists) {
-            		// 점수 합산
-                	int adds = t.getCapacity();
-                	adds = (int) Math.floor( adds * (efficiency / 100.0));
-                	trans += adds;
-            	}
+                TransportStation t = (TransportStation) f;
+                
+                // 두 쌍 이상이 되어야 효력 발생
+                boolean exists = false;
+                for(Facility fc : getFacility()) {
+                    if(fc.getKey() == t.getKey()) continue;
+                    if(fc.getType().equalsIgnoreCase(t.getType())) { exists = true; break; }
+                }
+                
+                if(exists) {
+                    // 점수 합산
+                    int adds = t.getCapacity();
+                    adds = (int) Math.floor( adds * (efficiency / 100.0));
+                    trans += adds;
+                }
             }
         }
         calculatedTransPoint = trans;
@@ -353,15 +353,15 @@ public class City implements ColonyElements {
             }
             
             if(command.equalsIgnoreCase("UpgradeFacility")) {
-            	if(params == null) return;
+                if(params == null) return;
                 if(params.equals("")) return;
                 
                 long l = Long.parseLong(params.trim());
                 for(Facility f : getFacility()) {
-                	if(f.getKey() == l) {
-                		f.setLevel(f.getLevel() + 1);
-                		break;
-                	}
+                    if(f.getKey() == l) {
+                        f.setLevel(f.getLevel() + 1);
+                        break;
+                    }
                 }
             }
         } catch(Exception ex) {
@@ -403,7 +403,7 @@ public class City implements ColonyElements {
         while(idx < getCitizens().size()) {
             Citizen c = getCitizens().get(idx);
             if(c.getHp() <= 0) {
-            	c.dispose();
+                c.dispose();
                 getCitizens().remove(idx);
                 continue;
             }
@@ -441,7 +441,7 @@ public class City implements ColonyElements {
         while(idx < getEnemies().size()) {
             Enemy en = getEnemies().get(idx);
             if(en.getHp() <= 0) {
-            	en.dispose();
+                en.dispose();
                 getEnemies().remove(idx);
                 continue;
             }
@@ -501,7 +501,7 @@ public class City implements ColonyElements {
     /** 백수에게 새 직장 할당 */
     protected void allocateWorkers(long transportPoint, Colony col) {
         long trans = transportPoint;
-    	
+        
         List<Facility> list = new ArrayList<Facility>();
         // 시민들 확인해서, 존재하지 않는 직장에 있는지 확인
         for(final Citizen c : getCitizens()) {
@@ -599,19 +599,19 @@ public class City implements ColonyElements {
     
     /** 대중교통 포인트 계산, 벗어나는 시민들 구직자 만들기, 남은 교통점수 반환 */
     protected long applyTransport(long transPoint, Colony colony) {
-    	long now = transPoint;
-    	
-    	for(Facility f : getFacility()) {
-    		if(now >= 0) now = now - f.getWorkingCitizensCount(this, colony);
-    		if(now < 0) {
-    			for(Citizen c : f.getWorkingCitizens(this, colony)) {
-    				c.setWorkingFacility(0L);
-    				break; // 1명씩만 구직자 만들기
-    			}
-    		}
-    	}
-    	
-    	return now;
+        long now = transPoint;
+        
+        for(Facility f : getFacility()) {
+            if(now >= 0) now = now - f.getWorkingCitizensCount(this, colony);
+            if(now < 0) {
+                for(Citizen c : f.getWorkingCitizens(this, colony)) {
+                    c.setWorkingFacility(0L);
+                    break; // 1명씩만 구직자 만들기
+                }
+            }
+        }
+        
+        return now;
     }
     
     /** 새 시민 생성 */
@@ -956,12 +956,12 @@ public class City implements ColonyElements {
     
     /** 계산된 교통 점수 반환 */
     public long getCalculatedTransPoint() {
-    	return calculatedTransPoint;
+        return calculatedTransPoint;
     }
     
     /** 계산된 잔여 교통 점수 반환 */
     public long getCalculatedTransLeftPoint() {
-    	return calculatedTransPointLeft;
+        return calculatedTransPointLeft;
     }
     
     @Override
@@ -977,22 +977,22 @@ public class City implements ColonyElements {
         return res;
     }
 
-	@Override
-	public void dispose() {
-		for(Citizen ct : citizens) {
-			ct.dispose();
-		}
-		citizens.clear();
-		for(Facility f : facility) {
-			f.dispose();
-		}
-		facility.clear();
-		for(Enemy en : enemies) {
-			en.dispose();
-		}
-		enemies.clear();
-	}
-	
-	/** 도시 건설 비용 */
-	public static long getBuildingNewCityFee(Colony col) { return 1000000L; };
+    @Override
+    public void dispose() {
+        for(Citizen ct : citizens) {
+            ct.dispose();
+        }
+        citizens.clear();
+        for(Facility f : facility) {
+            f.dispose();
+        }
+        facility.clear();
+        for(Enemy en : enemies) {
+            en.dispose();
+        }
+        enemies.clear();
+    }
+    
+    /** 도시 건설 비용 */
+    public static long getBuildingNewCityFee(Colony col) { return 1000000L; };
 }

@@ -4,19 +4,19 @@ import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 
 public class SmallFactory extends Factory {
-	private static final long serialVersionUID = -4382361172571288943L;
-	
-	@Override
+    private static final long serialVersionUID = -4382361172571288943L;
+    
+    @Override
     protected String getDefaultNamePrefix() {
         return "공장";
     }
 
-	@Override
+    @Override
     public int getPowerConsume() {
         return 10;
     }
-	
-	@Override
+    
+    @Override
     protected int getDefaultCapacity() {
         return 10;
     }
@@ -25,8 +25,8 @@ public class SmallFactory extends Factory {
     protected int getProfitCycle() {
         return 600;
     }
-	
-	public static String getFacilityName() {
+    
+    public static String getFacilityName() {
         return "생산 시설";
     }
     

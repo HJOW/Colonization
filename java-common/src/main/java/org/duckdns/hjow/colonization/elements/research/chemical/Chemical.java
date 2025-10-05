@@ -7,9 +7,9 @@ import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
 
 public class Chemical extends Research {
-	private static final long serialVersionUID = -5288682651598045570L;
+    private static final long serialVersionUID = -5288682651598045570L;
 
-	@Override
+    @Override
     public String getName() {
         return "Chemical";
     }

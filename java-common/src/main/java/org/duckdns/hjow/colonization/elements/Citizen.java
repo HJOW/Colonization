@@ -72,7 +72,7 @@ public class Citizen implements ColonyElements {
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
-    	// HP 처리
+        // HP 처리
         if(hp < 0) hp = 0;
         if(hp <= 0) return;
         
@@ -136,7 +136,7 @@ public class Citizen implements ColonyElements {
         while(std < getStates().size()) {
             State st = getStates().get(std);
             if(st.getHp() <= 0 || st.getLefts() <= 0) {
-            	st.dispose();
+                st.dispose();
                 getStates().remove(std);
                 continue;
             }
@@ -482,9 +482,9 @@ public class Citizen implements ColonyElements {
     
     @Override
     public void dispose() {
-    	for(State st : getStates()) {
-    		st.dispose();
-    	}
-    	states.clear();
+        for(State st : getStates()) {
+            st.dispose();
+        }
+        states.clear();
     }
 }

@@ -56,23 +56,23 @@ public class GlobalLogDialog implements GlobalLogUI {
         toolbar.add(btnClear);
         
         btnClear.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GlobalLogs.getInstance().clear();
-				taLog.clear();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GlobalLogs.getInstance().clear();
+                taLog.clear();
+            }
+        });
         
         threadSwitch = true;
         new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while(threadSwitch) {
-					oneCycle();
-					try { Thread.sleep(250L); } catch(InterruptedException ex) { threadSwitch = false; break; }
-				}
-			}
-		}).start();
+            @Override
+            public void run() {
+                while(threadSwitch) {
+                    oneCycle();
+                    try { Thread.sleep(250L); } catch(InterruptedException ex) { threadSwitch = false; break; }
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -99,29 +99,29 @@ public class GlobalLogDialog implements GlobalLogUI {
     }
     
     public void setSize(int w, int h) {
-    	dialog.setSize(w, h);
+        dialog.setSize(w, h);
     }
     
     public Dimension getSize() {
-    	return dialog.getSize();
+        return dialog.getSize();
     }
     
     public void setLocationBottom(Window superDialog) {
-    	Point p = superDialog.getLocation();
-    	dialog.setSize(superDialog.getWidth(), dialog.getHeight());
-    	dialog.setLocation((int) p.getX(), (int) (p.getY() + superDialog.getHeight()));
+        Point p = superDialog.getLocation();
+        dialog.setSize(superDialog.getWidth(), dialog.getHeight());
+        dialog.setLocation((int) p.getX(), (int) (p.getY() + superDialog.getHeight()));
     } 
     
     public void oneCycle() {
-    	GlobalLogs inst = GlobalLogs.getInstance();
-    	while(! inst.isEmpty()) {
-    		log(inst.poll());
-    	}
+        GlobalLogs inst = GlobalLogs.getInstance();
+        while(! inst.isEmpty()) {
+            log(inst.poll());
+        }
     }
     
     @Override
     public void dispose() {
-    	threadSwitch = false;
+        threadSwitch = false;
         close();
         dialog.removeAll();
         dialog = null;

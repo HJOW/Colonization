@@ -89,17 +89,17 @@ public class FacilityManager {
     
     /** 해당 시설의 정보 반환 */
     public static FacilityInformation getFacilityInformation(Facility f) {
-    	for(FacilityInformation info : facilities) {
-    		if(f.getClass().equals(info.getFacilityClass())) return info;
-    	}
-    	return null;
+        for(FacilityInformation info : facilities) {
+            if(f.getClass().equals(info.getFacilityClass())) return info;
+        }
+        return null;
     }
     
     /** 시설 이름으로 시설 클래스 찾기 */
     public static Class<?> getFacilityClass(String name) {
-    	FacilityInformation info = getFacilityInformation(name);
-    	if(info == null) return null;
-    	return info.getFacilityClass();
+        FacilityInformation info = getFacilityInformation(name);
+        if(info == null) return null;
+        return info.getFacilityClass();
     }
     
     /** Facility 객체 생성 */

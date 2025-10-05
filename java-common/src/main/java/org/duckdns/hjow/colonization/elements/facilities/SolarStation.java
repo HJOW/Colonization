@@ -81,7 +81,7 @@ public class SolarStation extends PowerPlant {
         boolean cond2 = false;
         List<Research> researches = col.getResearches();
         for(Research r : researches) {
-        	if(r instanceof EnergyTech) {
+            if(r instanceof EnergyTech) {
                 if(r.getLevel() >= 2) cond1 = true;
             }
             if(r instanceof LightTech) {

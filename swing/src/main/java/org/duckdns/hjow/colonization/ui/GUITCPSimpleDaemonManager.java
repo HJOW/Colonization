@@ -43,9 +43,9 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
         GUIUtil.centerWindow(dialog);
         dialog.setTitle("Colonization TCP Daemon Manager");
         dialog.addWindowListener(new WindowAdapter() {
-        	@Override
-        	public void windowClosing(WindowEvent e) { dispose(true); }
-		});
+            @Override
+            public void windowClosing(WindowEvent e) { dispose(true); }
+        });
         
         dialog.setLayout(new BorderLayout());
         
@@ -90,68 +90,68 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
         btnToggle = new JButton("시작");
         toolbar.add(btnToggle);
         btnToggle.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onToggleRequested();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onToggleRequested();
+            }
+        });
         
         taLog = new JLogArea();
         split.setBottomComponent(new JScrollPane(taLog));
-	}
+    }
     
     protected void onToggleRequested() {
-    	btnToggle.setEnabled(false);
-    	String charset = (String) cbxCharset.getSelectedItem();
-    	int    port    = ((Number) spPort.getValue()).intValue();
-    	
-    	cbxCharset.setEnabled(false);
-    	spPort.setEnabled(false);
-    	
-    	flagToggle = (! flagToggle);
-    	
-    	if(daemon != null) { daemon.dispose(); daemon = null; try { Thread.sleep(200L); } catch(InterruptedException ex) {} }
-    	daemon = null;
-    	
-    	if(flagToggle) {
-    		daemon = new TCPSimpleDaemon(port, charset, taLog);
-    	}
-    	
-    	new Thread(new Runnable() {
-			@Override
-			public void run() {
-				if(daemon != null) daemon.start();
-				afterToggled();
-			}
-		}).start();
+        btnToggle.setEnabled(false);
+        String charset = (String) cbxCharset.getSelectedItem();
+        int    port    = ((Number) spPort.getValue()).intValue();
+        
+        cbxCharset.setEnabled(false);
+        spPort.setEnabled(false);
+        
+        flagToggle = (! flagToggle);
+        
+        if(daemon != null) { daemon.dispose(); daemon = null; try { Thread.sleep(200L); } catch(InterruptedException ex) {} }
+        daemon = null;
+        
+        if(flagToggle) {
+            daemon = new TCPSimpleDaemon(port, charset, taLog);
+        }
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(daemon != null) daemon.start();
+                afterToggled();
+            }
+        }).start();
     }
     
     protected void afterToggled() {
-    	try { Thread.sleep(200L); } catch(InterruptedException ex) {}
-    	if(flagToggle) {
-    		btnToggle.setText("종료");
-    	} else {
-    	    cbxCharset.setEnabled(true);
-    	    spPort.setEnabled(true);
-    	    btnToggle.setText("시작");
-    	}
-    	btnToggle.setEnabled(true);
+        try { Thread.sleep(200L); } catch(InterruptedException ex) {}
+        if(flagToggle) {
+            btnToggle.setText("종료");
+        } else {
+            cbxCharset.setEnabled(true);
+            spPort.setEnabled(true);
+            btnToggle.setText("시작");
+        }
+        btnToggle.setEnabled(true);
     }
     
     public void open() {
-    	dialog.setVisible(true);
+        dialog.setVisible(true);
     }
     
-	@Override
-	public void dispose() {
-		dispose(false);
-	}
-	
-	protected void dispose(boolean noClose) {
-		if(! noClose) { if(dialog != null) dialog.setVisible(false); }
-		if(daemon != null) { daemon.dispose(); }
-		if(taLog  != null) { taLog.clear();    }
-		daemon = null;
-		dialog = null;
-	}
+    @Override
+    public void dispose() {
+        dispose(false);
+    }
+    
+    protected void dispose(boolean noClose) {
+        if(! noClose) { if(dialog != null) dialog.setVisible(false); }
+        if(daemon != null) { daemon.dispose(); }
+        if(taLog  != null) { taLog.clear();    }
+        daemon = null;
+        dialog = null;
+    }
 }

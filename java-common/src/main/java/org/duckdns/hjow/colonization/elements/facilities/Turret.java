@@ -17,7 +17,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     
     @Override
     protected String getDefaultNamePrefix() {
-    	return "터렛";
+        return "터렛";
     }
     
     @Override
@@ -95,7 +95,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     
     @Override
     public void fromJson(JsonObject json) {
-    	super.fromJson(json);
+        super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));

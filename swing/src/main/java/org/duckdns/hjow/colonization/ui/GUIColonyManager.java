@@ -54,9 +54,9 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** Colonization 프로그램 핵심 클래스 Swing 버전 */
 public class GUIColonyManager extends ColonyManager {
-	private static final long serialVersionUID = -2483528821790634383L;
-	
-	protected transient JFrame frame;
+    private static final long serialVersionUID = -2483528821790634383L;
+    
+    protected transient JFrame frame;
     protected transient JPanel pnRoot, pnMain, pnFront;
     protected transient JProgressBar progFront;
     protected transient JTabbedPane tabMain;
@@ -86,22 +86,22 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 생성자, 상위 프로그램에서 호출됨 */
     public GUIColonyManager(GUIColonizationMainClass superInstance) {
-    	super();
+        super();
         this.superInstance = superInstance;
     }
 
     /** UI 초기화 */
     public void init(GUIColonizationMainClass superInstance) {
-    	// 설정 파일 읽기
-    	loadLocalConfigs();
-    	
-    	// LookAndFeel 설정
-    	String lookAndFeel = configs.getString("LookAndFeel");
-    	if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel); }
-    	GUIUtil.setLookAndFeel(lookAndFeel.trim()); 
-    	
-    	// JFrame 생성
-    	frame = new JFrame();
+        // 설정 파일 읽기
+        loadLocalConfigs();
+        
+        // LookAndFeel 설정
+        String lookAndFeel = configs.getString("LookAndFeel");
+        if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel); }
+        GUIUtil.setLookAndFeel(lookAndFeel.trim()); 
+        
+        // JFrame 생성
+        frame = new JFrame();
         Dimension winSize = GUIUtil.getScreenSize();
         int w, h;
         w = (int) (winSize.getWidth()  * 0.8);
@@ -226,23 +226,23 @@ public class GUIColonyManager extends ColonyManager {
         pnFrontDownRight.add(btnGotoGame);
         
         btnGotoGame.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tabMain.setSelectedIndex(1);
-				progFront.setVisible(false);
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabMain.setSelectedIndex(1);
+                progFront.setVisible(false);
+            }
+        });
         
         JButton btnExit = new JButton("종료");
         pnFrontDownRight.add(btnExit);
         
         btnExit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				flagSaveBeforeClose = false;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                flagSaveBeforeClose = false;
                 dispose(true);
-			}
-		});
+            }
+        });
         
         cardMain = new CardLayout();
         pnMain.setLayout(cardMain);
@@ -323,9 +323,9 @@ public class GUIColonyManager extends ColonyManager {
         cbxSpeed.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-            	SimulationSpeed spd = (SimulationSpeed) cbxSpeed.getSelectedItem();
-            	if(spd == null) cycleGap = 99L;
-            	else cycleGap = spd.getThreadGap();
+                SimulationSpeed spd = (SimulationSpeed) cbxSpeed.getSelectedItem();
+                if(spd == null) cycleGap = 99L;
+                else cycleGap = spd.getThreadGap();
             }
         });
         
@@ -538,7 +538,7 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	benchManager.open();
+                benchManager.open();
             }
         });
         
@@ -547,7 +547,7 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	daemonManager.open();
+                daemonManager.open();
             }
         });
         
@@ -561,14 +561,14 @@ public class GUIColonyManager extends ColonyManager {
 
     /** 지원되는 시뮬 속도 목록 반환 */
     protected Vector<SimulationSpeed> getSpeedList() {
-    	Vector<SimulationSpeed> strSpeeds = new Vector<SimulationSpeed>();
+        Vector<SimulationSpeed> strSpeeds = new Vector<SimulationSpeed>();
         strSpeeds.add(new SimulationSpeed(1));
         strSpeeds.add(new SimulationSpeed(2));
         strSpeeds.add(new SimulationSpeed(3));
         return strSpeeds;
-	}
+    }
 
-	/** 창이 열리기 전 수행해야 할 작업 */
+    /** 창이 열리기 전 수행해야 할 작업 */
     public void onBeforeOpened(Colonization superInstance) {
         if(thread != null) { try { threadSwitch = false; thread.interrupt(); Thread.sleep(1000L); } catch(Exception exc) {} }
         if(frame == null) init(superInstance);
@@ -605,27 +605,27 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 별도 쓰레드에서 웹 서버에서 설정 불러오기 */
     protected void loadWebConfigs() {
-    	new Thread(new Runnable() {
-			@Override
-			public void run() {
-				progFront.setValue(0);
-				progFront.setIndeterminate(true);
-				ColonyClassLoader.loadWebConfigs(getSelf());
-				
-				progFront.setIndeterminate(false);
-				if(progFront.isVisible()) {
-					int r = 1;
-					
-					while(r < 100) {
-						try { Thread.sleep(12L); } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); break; }
-						progFront.setValue(r); r++;
-					}
-					
-					if(tabMain.getSelectedIndex() == 0) tabMain.setSelectedIndex(1);
-					progFront.setVisible(false);
-				}
-			}
-		}).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                progFront.setValue(0);
+                progFront.setIndeterminate(true);
+                ColonyClassLoader.loadWebConfigs(getSelf());
+                
+                progFront.setIndeterminate(false);
+                if(progFront.isVisible()) {
+                    int r = 1;
+                    
+                    while(r < 100) {
+                        try { Thread.sleep(12L); } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); break; }
+                        progFront.setValue(r); r++;
+                    }
+                    
+                    if(tabMain.getSelectedIndex() == 0) tabMain.setSelectedIndex(1);
+                    progFront.setVisible(false);
+                }
+            }
+        }).start();
     }
     
     /** 메인 쓰레드 실행 */

@@ -69,7 +69,7 @@ public abstract class CommonServlet extends HttpServlet {
         
         if(jwt != null) {
             try {
-            	Account acc = AccountUtil.verifyJWT(jwt);
+                Account acc = AccountUtil.verifyJWT(jwt);
                 if(acc != null) {
                     req.setAttribute("id"   , acc.getId());
                     req.setAttribute("key"  , new Long(acc.getKey()));

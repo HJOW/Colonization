@@ -13,7 +13,7 @@ public class BasicBiology extends Research {
 
     @Override
     public String getName() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
     
     @Override

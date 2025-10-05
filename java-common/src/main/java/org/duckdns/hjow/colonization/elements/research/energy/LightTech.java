@@ -8,9 +8,9 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
 
 public class LightTech extends Research {
-	private static final long serialVersionUID = -6737998466808533544L;
+    private static final long serialVersionUID = -6737998466808533544L;
 
-	@Override
+    @Override
     public String getName() {
         return "LightTech";
     }

@@ -126,187 +126,187 @@ public class ColonyClassLoader {
     private static       boolean        facilityClassListFlag = false;
     
     /** 시설 클래스 목록 반환 */
-	public static synchronized List<Class<?>> facilityClasses() {
-	    if(facilityClassListFlag) return facilityClassList;
-	    
-	    facilityClassList.clear();
-	    for(Pack p : packs) { if(p.isEnabled()) facilityClassList.addAll(p.getFacilityClasses()); }
-	    
+    public static synchronized List<Class<?>> facilityClasses() {
+        if(facilityClassListFlag) return facilityClassList;
+        
+        facilityClassList.clear();
+        for(Pack p : packs) { if(p.isEnabled()) facilityClassList.addAll(p.getFacilityClasses()); }
+        
         facilityClassListFlag = true;
-		return facilityClassList;
-	}
-	
-	private static final List<Class<?>> researchClassList     = new Vector<Class<?>>();
+        return facilityClassList;
+    }
+    
+    private static final List<Class<?>> researchClassList     = new Vector<Class<?>>();
     private static       boolean        researchClassListFlag = false;
-	
+    
     /** 연구 클래스 목록 반환 */
-	public static synchronized List<Class<?>> researchClasses() {
-	    if(researchClassListFlag) return researchClassList;
-	    
-	    researchClassList.clear();
-	    for(Pack p : packs) { 
-	        if(p.isEnabled()) {
-	            researchClassList.addAll(p.getResearchClasses()); 
-	        }
-	    }
-	    
+    public static synchronized List<Class<?>> researchClasses() {
+        if(researchClassListFlag) return researchClassList;
+        
+        researchClassList.clear();
+        for(Pack p : packs) { 
+            if(p.isEnabled()) {
+                researchClassList.addAll(p.getResearchClasses()); 
+            }
+        }
+        
         researchClassListFlag = true;
         return researchClassList;
-	}
-	
-	private static final List<Class<?>> enemyClassList     = new Vector<Class<?>>();
+    }
+    
+    private static final List<Class<?>> enemyClassList     = new Vector<Class<?>>();
     private static       boolean        enemyClassListFlag = false;
-	
+    
     /** 적 클래스 목록 반환 */
-	public static synchronized List<Class<?>> enemyClasses() {
-	    if(enemyClassListFlag) return enemyClassList;
-	    
-	    enemyClassList.clear();
-	    for(Pack p : packs) { if(p.isEnabled()) enemyClassList.addAll(p.getEnemyClasses()); }
-	    
-	    // TODO
-	    
-	    enemyClassListFlag = true;
-		return enemyClassList;
-	}
-	
-	private static final List<Class<?>> stateClassList     = new Vector<Class<?>>();
+    public static synchronized List<Class<?>> enemyClasses() {
+        if(enemyClassListFlag) return enemyClassList;
+        
+        enemyClassList.clear();
+        for(Pack p : packs) { if(p.isEnabled()) enemyClassList.addAll(p.getEnemyClasses()); }
+        
+        // TODO
+        
+        enemyClassListFlag = true;
+        return enemyClassList;
+    }
+    
+    private static final List<Class<?>> stateClassList     = new Vector<Class<?>>();
     private static       boolean        stateClassListFlag = false;
-	
+    
     /** 상태 클래스 목록 반환 */
-	public static synchronized List<Class<?>> stateClasses() {
-	    if(stateClassListFlag) return stateClassList;
-	    
-	    stateClassList.clear();
-	    for(Pack p : packs) { if(p.isEnabled()) stateClassList.addAll(p.getStateClasses()); }
-	    
+    public static synchronized List<Class<?>> stateClasses() {
+        if(stateClassListFlag) return stateClassList;
+        
+        stateClassList.clear();
+        for(Pack p : packs) { if(p.isEnabled()) stateClassList.addAll(p.getStateClasses()); }
+        
         stateClassListFlag = true;
-		return stateClassList;
-	}
-	
-	private static final List<Class<?>> productClassList     = new Vector<Class<?>>();
+        return stateClassList;
+    }
+    
+    private static final List<Class<?>> productClassList     = new Vector<Class<?>>();
     private static       boolean        productClassListFlag = false;
     
     /** 생산품 클래스 목록 반환 */
-	public static synchronized List<Class<?>> productClasses() {
-	    if(productClassListFlag) return productClassList;
-	    
-	    productClassList.clear();
-	    for(Pack p : packs) { if(p.isEnabled()) productClassList.addAll(p.getProductClasses()); }
-	    
-	    productClassListFlag = true;
-		return productClassList;
-	}
-	
+    public static synchronized List<Class<?>> productClasses() {
+        if(productClassListFlag) return productClassList;
+        
+        productClassList.clear();
+        for(Pack p : packs) { if(p.isEnabled()) productClassList.addAll(p.getProductClasses()); }
+        
+        productClassListFlag = true;
+        return productClassList;
+    }
+    
     /** 기본 공지사항 컨텐츠 html 반환 (웹 접근 못했을 시 이 내용 출력) */
-	public static String htmlNoticeEmpty() {
-		StringBuilder res = new StringBuilder("");
-		
-		res = res.append("\n").append("<html>                                                                                                                                                                            ");
-		res = res.append("\n").append("<head>                                                                                                                                                                            ");
-		res = res.append("\n").append("<title>Notice</title>                                                                                                                                                             ");
-		res = res.append("\n").append("</head>                                                                                                                                                                           ");
-		res = res.append("\n").append("<body style='margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; background-color: #EEEEEE;'>                                                                       ");
-		res = res.append("\n").append("    <div style='padding-left: 30px; padding-top: 30px; font-size: 30px; font-family: NanumGothic, \"나눔고딕\", \"Nanum Gothic\", NanumGothicCoding, \"나눔고딕코딩\", \"Nanum Gothic Coding\", Arial, Consolas, \"돋움체\";'></div>");
-		res = res.append("\n").append("</body>                                                                                                                                                                           ");
-		res = res.append("\n").append("</html>                                                                                                                                                                           ");
-		
-		return res.toString().trim();
-	}
-	
+    public static String htmlNoticeEmpty() {
+        StringBuilder res = new StringBuilder("");
+        
+        res = res.append("\n").append("<html>                                                                                                                                                                            ");
+        res = res.append("\n").append("<head>                                                                                                                                                                            ");
+        res = res.append("\n").append("<title>Notice</title>                                                                                                                                                             ");
+        res = res.append("\n").append("</head>                                                                                                                                                                           ");
+        res = res.append("\n").append("<body style='margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; background-color: #EEEEEE;'>                                                                       ");
+        res = res.append("\n").append("    <div style='padding-left: 30px; padding-top: 30px; font-size: 30px; font-family: NanumGothic, \"나눔고딕\", \"Nanum Gothic\", NanumGothicCoding, \"나눔고딕코딩\", \"Nanum Gothic Coding\", Arial, Consolas, \"돋움체\";'></div>");
+        res = res.append("\n").append("</body>                                                                                                                                                                           ");
+        res = res.append("\n").append("</html>                                                                                                                                                                           ");
+        
+        return res.toString().trim();
+    }
+    
     /** 공지사항 웹 URL 반환 */
-	public static String htmlNoticeUrl() {
-		return "http://hjow.duckdns.org/colonization/notice_ko.html";
-	}
-	
+    public static String htmlNoticeUrl() {
+        return "http://hjow.duckdns.org/colonization/notice_ko.html";
+    }
+    
     /** 공통 설정 URL 반환 (이 안에서 최신 버전 코드와 추가 컨텐츠 정보 등을 얻게 됨) */
-	public static String htmlConfigJsonUrl() {
-		return "http://hjow.duckdns.org/colonization/content.json";
-	}
-	
+    public static String htmlConfigJsonUrl() {
+        return "http://hjow.duckdns.org/colonization/content.json";
+    }
+    
     /** 공통 설정 정보 조회 */
-	public static synchronized void loadWebConfigs(ColonyManager man) {
-		InputStream       inp1 = null;
-		InputStreamReader inp2 = null;
-		BufferedReader    inp3 = null;
-		try {
-			StringBuilder str = new StringBuilder("");
-			String line;
-			
-			URL url = new URL(htmlConfigJsonUrl());
-			inp1 = url.openStream();
-			inp2 = new InputStreamReader(inp1, "UTF-8");
-			inp3 = new BufferedReader(inp2);
-			
-			while(true) {
-				line = inp3.readLine();
-				if(line == null) break;
-				str = str.append("\n").append(line);
-			}
-			
-			inp3.close(); inp3 = null;
-			inp2.close(); inp2 = null;
-			inp1.close(); inp1 = null;
-			
-			JsonObject json = (JsonObject) JsonObject.parseJson(str.toString().trim());
-			str = null;
-			
-			json = (JsonObject) json.get("swing");
-			
-			applyWebConfigs(json, man);
-		} catch(java.net.UnknownHostException ex) {
-		    GlobalLogs.log("Cannot connect to web config server. Please check the internet status.");
-		} catch(Exception ex) {
-			GlobalLogs.processExceptionOccured(ex, true);
-		} finally {
-			ClassUtil.closeAll(inp3, inp2, inp1);
-		}
-	}
-	
+    public static synchronized void loadWebConfigs(ColonyManager man) {
+        InputStream       inp1 = null;
+        InputStreamReader inp2 = null;
+        BufferedReader    inp3 = null;
+        try {
+            StringBuilder str = new StringBuilder("");
+            String line;
+            
+            URL url = new URL(htmlConfigJsonUrl());
+            inp1 = url.openStream();
+            inp2 = new InputStreamReader(inp1, "UTF-8");
+            inp3 = new BufferedReader(inp2);
+            
+            while(true) {
+                line = inp3.readLine();
+                if(line == null) break;
+                str = str.append("\n").append(line);
+            }
+            
+            inp3.close(); inp3 = null;
+            inp2.close(); inp2 = null;
+            inp1.close(); inp1 = null;
+            
+            JsonObject json = (JsonObject) JsonObject.parseJson(str.toString().trim());
+            str = null;
+            
+            json = (JsonObject) json.get("swing");
+            
+            applyWebConfigs(json, man);
+        } catch(java.net.UnknownHostException ex) {
+            GlobalLogs.log("Cannot connect to web config server. Please check the internet status.");
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, true);
+        } finally {
+            ClassUtil.closeAll(inp3, inp2, inp1);
+        }
+    }
+    
     /** 공통 웹 설정 정보 적용 */
-	protected static void applyWebConfigs(JsonObject json, ColonyManager man) throws Exception {
-		// TODO
-	}
-	
-	/** 공통 로컬 설정 정보 적용 */
-	public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
-	    // Pack 목록 불러오기
-	    List<Object> packList = null;
-	    try {
-	        packList = cfg.getList("packs");
+    protected static void applyWebConfigs(JsonObject json, ColonyManager man) throws Exception {
+        // TODO
+    }
+    
+    /** 공통 로컬 설정 정보 적용 */
+    public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
+        // Pack 목록 불러오기
+        List<Object> packList = null;
+        try {
+            packList = cfg.getList("packs");
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
         }
-	    
-	    if(packList == null) {
-	        packList = new ArrayList<Object>();
+        
+        if(packList == null) {
+            packList = new ArrayList<Object>();
             cfg.set("packs", packList);
         }
-	    
-	    for(Object o : packList) {
-	        try {
-	            ColonyManagerConfig child = (ColonyManagerConfig) o;
-	            Class<?> classObj = loadClassFrom(child);
-	            Pack packOne = (Pack) classObj.newInstance();
-	            
-	            if(! packs.contains(packOne)) packs.add(packOne);
-	        } catch(Exception ex) {
-	            GlobalLogs.processExceptionOccured(ex, false);
-	        }
-	    }
-	    
-	    for(Pack p : packs) {
-	        try {
-	            if(! packs.contains(p)) loadPack(p);
-	        } catch(Exception ex) {
-	            GlobalLogs.processExceptionOccured(ex, false);
-	        }
-	    }
-	}
-	
-	/** 설정 Map 으로부터 클래스 정보 추출 */
-	protected static Class<?> loadClassFrom(ColonyManagerConfig info) throws Exception {
-	    String className = info.getString("name");
+        
+        for(Object o : packList) {
+            try {
+                ColonyManagerConfig child = (ColonyManagerConfig) o;
+                Class<?> classObj = loadClassFrom(child);
+                Pack packOne = (Pack) classObj.newInstance();
+                
+                if(! packs.contains(packOne)) packs.add(packOne);
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+            }
+        }
+        
+        for(Pack p : packs) {
+            try {
+                if(! packs.contains(p)) loadPack(p);
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+            }
+        }
+    }
+    
+    /** 설정 Map 으로부터 클래스 정보 추출 */
+    protected static Class<?> loadClassFrom(ColonyManagerConfig info) throws Exception {
+        String className = info.getString("name");
         String classUrl  = info.getString("url");
         URL[] urls = new URL[1];
         urls[0] = new URL(classUrl);
@@ -319,45 +319,45 @@ public class ColonyClassLoader {
         } finally {
             ClassUtil.closeAll(loader);
         }
-	}
-	
-	/** Pack 차후 적용 */
-	public static void loadPack(Pack pack) throws Exception {
-	    if(pack == null) return;
-	    if(! pack.isEnabled()) return;
-	    
-	    if(pack.getColonyClasses() != null) {
-	        colonyClassList.addAll(pack.getColonyClasses());
-	        colonyInfoListFlag = false;
-	    }
-	    
-	    if(pack.getFacilityClasses() != null) facilityClassList.addAll(pack.getFacilityClasses());
-	    if(pack.getResearchClasses() != null) researchClassList.addAll(pack.getResearchClasses());
-	    if(pack.getEnemyClasses()    != null) enemyClassList.addAll(pack.getEnemyClasses());
-	    if(pack.getStateClasses()    != null) stateClassList.addAll(pack.getStateClasses());
-	}
-	
-	/** 클래스 정보들과, 불러온 Pack 모두 다시 확인 */
-	public static synchronized void refresh() {
-	    colonyInfoListFlag    = false;
-	    colonyClassListFlag   = false;
-	    facilityClassListFlag = false;
-	    researchClassListFlag = false;
-	    enemyClassListFlag    = false;
-	    stateClassListFlag    = false;
-	    productClassListFlag  = false;
-	}
-	
-	/** 저장된 클래스 정보들 비우기 */
-	public static synchronized void clearAll() {
-	    colonyInfoListFlag    = false; colonyInfoList.clear();
-	    colonyClassListFlag   = false; colonyClassList.clear();
-	    facilityClassListFlag = false; facilityClassList.clear();
-	    researchClassListFlag = false; researchClassList.clear();
-	    enemyClassListFlag    = false; enemyClassList.clear();   
-	    stateClassListFlag    = false; stateClassList.clear();
-	    productClassListFlag  = false; productClassList.clear();
-	    packs.clear();
-	    packs.add(new BundledPack());
-	}
+    }
+    
+    /** Pack 차후 적용 */
+    public static void loadPack(Pack pack) throws Exception {
+        if(pack == null) return;
+        if(! pack.isEnabled()) return;
+        
+        if(pack.getColonyClasses() != null) {
+            colonyClassList.addAll(pack.getColonyClasses());
+            colonyInfoListFlag = false;
+        }
+        
+        if(pack.getFacilityClasses() != null) facilityClassList.addAll(pack.getFacilityClasses());
+        if(pack.getResearchClasses() != null) researchClassList.addAll(pack.getResearchClasses());
+        if(pack.getEnemyClasses()    != null) enemyClassList.addAll(pack.getEnemyClasses());
+        if(pack.getStateClasses()    != null) stateClassList.addAll(pack.getStateClasses());
+    }
+    
+    /** 클래스 정보들과, 불러온 Pack 모두 다시 확인 */
+    public static synchronized void refresh() {
+        colonyInfoListFlag    = false;
+        colonyClassListFlag   = false;
+        facilityClassListFlag = false;
+        researchClassListFlag = false;
+        enemyClassListFlag    = false;
+        stateClassListFlag    = false;
+        productClassListFlag  = false;
+    }
+    
+    /** 저장된 클래스 정보들 비우기 */
+    public static synchronized void clearAll() {
+        colonyInfoListFlag    = false; colonyInfoList.clear();
+        colonyClassListFlag   = false; colonyClassList.clear();
+        facilityClassListFlag = false; facilityClassList.clear();
+        researchClassListFlag = false; researchClassList.clear();
+        enemyClassListFlag    = false; enemyClassList.clear();   
+        stateClassListFlag    = false; stateClassList.clear();
+        productClassListFlag  = false; productClassList.clear();
+        packs.clear();
+        packs.add(new BundledPack());
+    }
 }

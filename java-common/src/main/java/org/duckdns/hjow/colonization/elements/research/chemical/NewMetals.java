@@ -8,9 +8,9 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
 
 public class NewMetals extends Research {
-	private static final long serialVersionUID = -6806613925102489640L;
+    private static final long serialVersionUID = -6806613925102489640L;
 
-	@Override
+    @Override
     public String getName() {
         return "NewMetals";
     }
@@ -45,8 +45,8 @@ public class NewMetals extends Research {
             
             // 공학기초 레벨이 이 연구 레벨의 7배가 되어야 연구가능 (최소 10)
             if(one instanceof BasicEngineering) {
-            	if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 7)) cond3 = true;
-            	if(one.getLevel() < 10) cond3 = false;
+                if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 7)) cond3 = true;
+                if(one.getLevel() < 10) cond3 = false;
             }
         }
         

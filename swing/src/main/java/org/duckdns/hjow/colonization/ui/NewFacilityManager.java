@@ -175,15 +175,15 @@ public class NewFacilityManager extends JDialog {
         if(col != null) {
             lists.addAll(FacilityManager.getFacilityInformations());
             for(FacilityInformation info : lists) {
-            	if(! detectBuildAvail(col, info)) continue;
-            	cbxFacInfos.addItem(info);
+                if(! detectBuildAvail(col, info)) continue;
+                cbxFacInfos.addItem(info);
             }
         }
 
         if(beforeSelected != null) {
-        	if(lists.contains(beforeSelected)) {
-        		cbxFacInfos.setSelectedItem(beforeSelected);
-        	}
+            if(lists.contains(beforeSelected)) {
+                cbxFacInfos.setSelectedItem(beforeSelected);
+            }
         }
         
         

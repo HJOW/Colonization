@@ -88,12 +88,12 @@ public class HoldingJob implements Serializable {
     }
     
     public boolean isCompleted() {
-		return completed;
-	}
+        return completed;
+    }
 
-	public void setCompleted(boolean completed) {
-		this.completed = completed;
-	}
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
     
     public List<Citizen> getWorkingCitizens(City city) {
         List<Citizen> citizens = new ArrayList<Citizen>();

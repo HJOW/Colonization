@@ -7,9 +7,9 @@ import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
 
 public class EnergyTech extends Research {
-	private static final long serialVersionUID = 5917441531836389794L;
+    private static final long serialVersionUID = 5917441531836389794L;
 
-	public EnergyTech() { super(); }
+    public EnergyTech() { super(); }
 
     @Override
     public int getMaxLevel() {

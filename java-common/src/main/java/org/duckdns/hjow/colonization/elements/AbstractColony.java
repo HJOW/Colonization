@@ -78,7 +78,7 @@ public abstract class AbstractColony implements Colony {
     
     /** 이 정착지를 마지막으로 저장한 ColonyManager 의 버전 반환 */
     public String getClientVersion() {
-    	return clientVersion;
+        return clientVersion;
     }
 
     /** 이 정착지 내 도시들 반환 */
@@ -323,7 +323,7 @@ public abstract class AbstractColony implements Colony {
         while(idx < getCities().size()) {
             City cityOne = getCities().get(idx);
             if(cityOne.getHp() <= 0) {
-            	cityOne.dispose();
+                cityOne.dispose();
                 getCities().remove(idx);
                 continue;
             }
@@ -335,7 +335,7 @@ public abstract class AbstractColony implements Colony {
         while(idx < getEnemies().size()) {
             Enemy en = getEnemies().get(idx);
             if(en.getHp() <= 0) {
-            	en.dispose();
+                en.dispose();
                 getEnemies().remove(idx);
                 continue;
             }
@@ -476,7 +476,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public boolean supportedFacility(FacilityInformation info) {
-    	return true;
+        return true;
     }
     
     @Override
@@ -630,10 +630,10 @@ public abstract class AbstractColony implements Colony {
         }
         
         if(json.get("checker") != null) {
-        	try {
+            try {
                 BigInteger checker = new BigInteger(json.get("checker").toString());
                 checked = (checker.equals(getCheckerValue()));
-        	} catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); checked = false; }
+            } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); checked = false; }
         } else {
             checked = false;
         }
@@ -672,14 +672,14 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public void dispose() {
-    	for(City c : cities) {
-    		c.dispose();
-    	}
-    	cities.clear();
-    	for(Enemy en : enemies) {
-    		en.dispose();
-    	}
-    	enemies.clear();
+        for(City c : cities) {
+            c.dispose();
+        }
+        cities.clear();
+        for(Enemy en : enemies) {
+            en.dispose();
+        }
+        enemies.clear();
     }
     
     public static String getColonyClassName() {

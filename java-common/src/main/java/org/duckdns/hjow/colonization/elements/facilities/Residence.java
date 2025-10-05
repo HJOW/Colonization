@@ -102,7 +102,7 @@ public abstract class Residence extends DefaultFacility implements Home {
 
     @Override
     public void fromJson(JsonObject json) {
-    	super.fromJson(json);
+        super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));

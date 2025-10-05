@@ -7,7 +7,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public abstract class TransportStation extends DefaultFacility {
-	private static final long serialVersionUID = 7222508474329385493L;
+    private static final long serialVersionUID = 7222508474329385493L;
     protected int comportGrade = 0;
     
     @Override
@@ -22,7 +22,7 @@ public abstract class TransportStation extends DefaultFacility {
     
     @Override
     public void fromJson(JsonObject json) {
-    	super.fromJson(json);
+        super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));

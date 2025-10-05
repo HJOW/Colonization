@@ -54,8 +54,8 @@ public class AccountUtil {
     protected static Algorithm algJwt;
     protected static String    verifyingClaim;
     protected static void jwtPreSettings() {
-    	if(algJwt == null || verifyingClaim == null) {
-    		String jwtKey = "Hello";
+        if(algJwt == null || verifyingClaim == null) {
+            String jwtKey = "Hello";
             try {
                 Key key = (Key) Class.forName("org.duckdns.hjow.colonization.web.key.CurrentKey").newInstance();
                 jwtKey = key.getJWTKey();
@@ -64,30 +64,30 @@ public class AccountUtil {
                 throw new RuntimeException(ex.getMessage(), ex);
             }
             algJwt = Algorithm.HMAC384(SecurityUtil.hash( jwtKey , "SHA-384"));
-    	}
+        }
     }
     
     public static Algorithm getJWTAlgorithm() {
-    	jwtPreSettings();
-    	return algJwt;
+        jwtPreSettings();
+        return algJwt;
     }
     
     public static String getVerifyingClaim() {
-    	jwtPreSettings();
-    	return verifyingClaim;
+        jwtPreSettings();
+        return verifyingClaim;
     }
     
     /** 새 JWT 토큰 빌드 */
     public static String buildJWT(Account acc, Map<String, Object> headerContent) {
-    	return JWT.create().withHeader(headerContent).withClaim("auth", AccountUtil.getVerifyingClaim()).withClaim("id", acc.getId()).withClaim("key", String.valueOf(acc.getKey())).withClaim("when", String.valueOf(System.currentTimeMillis())).sign(AccountUtil.getJWTAlgorithm());
+        return JWT.create().withHeader(headerContent).withClaim("auth", AccountUtil.getVerifyingClaim()).withClaim("id", acc.getId()).withClaim("key", String.valueOf(acc.getKey())).withClaim("when", String.valueOf(System.currentTimeMillis())).sign(AccountUtil.getJWTAlgorithm());
     }
     
     /** JWT 토큰을 받아 Account 객체 반환 */
     public static Account verifyJWT(String jwt) {
-    	if(jwt == null) return null;
-    	jwtPreSettings();
-    	
-    	try {
+        if(jwt == null) return null;
+        jwtPreSettings();
+        
+        try {
             JWTVerifier veri = JWT.require(algJwt).withClaim("auth", verifyingClaim).build();
             
             if(jwt != null) {
@@ -102,9 +102,9 @@ public class AccountUtil {
                 }
             }
         } catch(Exception ex) {
-        	ex.printStackTrace();
+            ex.printStackTrace();
         }
-    	return null;
+        return null;
     }
     
 }

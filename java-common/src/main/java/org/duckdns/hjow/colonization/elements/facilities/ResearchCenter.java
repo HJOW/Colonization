@@ -113,7 +113,7 @@ public class ResearchCenter extends DefaultFacility {
     
     @Override
     public void fromJson(JsonObject json) {
-    	super.fromJson(json);
+        super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
