@@ -7,9 +7,9 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
-import org.duckdns.hjow.colonization.elements.research.BasicBuildingTech;
-import org.duckdns.hjow.colonization.elements.research.MilitaryTech;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
+import org.duckdns.hjow.colonization.elements.research.military.MilitaryTech;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 public class Turret extends DefenceFacility implements AttackableObject {

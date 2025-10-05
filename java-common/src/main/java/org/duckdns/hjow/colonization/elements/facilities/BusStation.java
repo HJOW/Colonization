@@ -5,9 +5,9 @@ import java.util.List;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 
 public class BusStation extends TransportStation {
 	private static final long serialVersionUID = 7222508474329385493L;

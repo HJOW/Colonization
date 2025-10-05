@@ -1,8 +1,11 @@
-package org.duckdns.hjow.colonization.elements.research;
+package org.duckdns.hjow.colonization.elements.research.engineering;
 
 import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.research.BasicScience;
+import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 
 public class BasicEngineering extends Research {
     private static final long serialVersionUID = -2727850120481565932L;

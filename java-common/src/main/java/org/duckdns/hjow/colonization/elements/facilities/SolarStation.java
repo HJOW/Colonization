@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.BasicBuildingTech;
-import org.duckdns.hjow.colonization.elements.research.LightTech;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
+import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
+import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 
 public class SolarStation extends PowerPlant {
     private static final long serialVersionUID = 4079646708867981024L;

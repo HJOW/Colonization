@@ -1,9 +1,11 @@
-package org.duckdns.hjow.colonization.elements.research;
+package org.duckdns.hjow.colonization.elements.research.energy;
 
 import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
+import org.duckdns.hjow.colonization.elements.research.BasicScience;
+import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
 
 public class LightTech extends Research {
 	private static final long serialVersionUID = -6737998466808533544L;

@@ -1,8 +1,11 @@
-package org.duckdns.hjow.colonization.elements.research;
+package org.duckdns.hjow.colonization.elements.research.biology;
 
 import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.research.BasicScience;
+import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 
 public class BasicMedicalScience extends Research {
     private static final long serialVersionUID = 6925527948145856095L;
@@ -37,12 +40,12 @@ public class BasicMedicalScience extends Research {
             }
             
             // 기초생물학 레벨이 이 의학 레벨의 2배가 되어야 연구가능
-            if(one instanceof BasicScience) {
+            if(one instanceof BasicBiology) {
                 if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 2)) cond2 = true;
             }
             
             // 기초인문학 레벨이 이 의학 레벨만큼 되어야 연구가능
-            if(one instanceof BasicScience) {
+            if(one instanceof BasicHumanities) {
                 if(one.getLevel() >= chooseMaxInt(getLevel(), 1)) cond3 = true;
             }
         }
