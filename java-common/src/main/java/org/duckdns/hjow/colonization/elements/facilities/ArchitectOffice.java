@@ -1,7 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -10,18 +9,12 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public class ArchitectOffice extends DefaultFacility {
     private static final long serialVersionUID = 2620574171874446922L;
-    protected String name = "건축사무소_" + ColonyManager.generateNaturalNumber();
-
+    
     @Override
-    public void setName(String name) {
-        this.name = name;
+    protected String getDefaultNamePrefix() {
+        return "건축사무소";
     }
-
-    @Override
-    public String getType() {
-        return "ArchitectOffice";
-    }
-
+    
     @Override
     public String getStatusDescription(City city, Colony colony) {
         return "";
@@ -57,11 +50,6 @@ public class ArchitectOffice extends DefaultFacility {
         return 0;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-    
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
         super.oneCycle(cycle, city, colony, efficiency100, colPanel);

@@ -12,8 +12,9 @@ import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuilding
 public class SolarStation extends PowerPlant {
     private static final long serialVersionUID = 4079646708867981024L;
 
+    @Override
     protected String getDefaultNamePrefix() {
-        return "광학 발전소";
+        return "광학_발전소";
     }
 
     @Override

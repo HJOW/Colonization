@@ -1,7 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -9,23 +8,17 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public class Arcade extends DefaultFacility implements ServiceFacility {
     private static final long serialVersionUID = 6472512678804457223L;
-    protected String name = "아케이드_" + ColonyManager.generateNaturalNumber();
     protected int comportGrade = 0;
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getType() {
-        return "Arcade";
-    }
 
     @Override
     public String getStatusDescription(City city, Colony colony) {
         // TODO Auto-generated method stub
         return "";
+    }
+    
+    @Override
+    protected String getDefaultNamePrefix() {
+        return "아케이드";
     }
 
     @Override
@@ -71,11 +64,6 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     @Override
     protected int getDefaultCapacity() {
         return 100;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override

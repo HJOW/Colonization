@@ -8,18 +8,8 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public abstract class TransportStation extends DefaultFacility {
 	private static final long serialVersionUID = 7222508474329385493L;
-	protected String name = getDefaultName();
     protected int comportGrade = 0;
     
-    protected String getDefaultName() {
-    	return "";
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
     @Override
     public int getPowerConsume() {
         return 1;
@@ -54,11 +44,6 @@ public abstract class TransportStation extends DefaultFacility {
         return json;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-    
     @Override
     public int getComportGrade() {
         return comportGrade;

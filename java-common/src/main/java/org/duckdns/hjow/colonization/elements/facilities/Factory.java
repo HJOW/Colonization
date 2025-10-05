@@ -9,20 +9,15 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public class Factory extends DefaultFacility {
     private static final long serialVersionUID = 8465140770981665970L;
-    protected String name = "공장_" + ColonyManager.generateNaturalNumber();
+    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
     
     public Factory() {
         
     }
-
+    
     @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getType() {
-        return "Factory";
+    protected String getDefaultNamePrefix() {
+        return "공장";
     }
 
     @Override
@@ -50,11 +45,6 @@ public class Factory extends DefaultFacility {
     @Override
     protected int getDefaultCapacity() {
         return 10;
-    }
-    
-    @Override
-    public String getName() {
-        return name;
     }
     
     /** 수익 발생 주기 */

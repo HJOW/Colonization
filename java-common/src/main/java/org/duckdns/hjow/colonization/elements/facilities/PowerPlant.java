@@ -1,7 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -9,8 +8,8 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public abstract class PowerPlant extends DefaultFacility {
     private static final long serialVersionUID = -7738915080952447743L;
-    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
 
+    @Override
     protected String getDefaultNamePrefix() {
         return "발전소";
     }
@@ -18,20 +17,6 @@ public abstract class PowerPlant extends DefaultFacility {
     @Override
     protected int getDefaultCapacity() {
         return 100;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    @Override
-    public String getType() {
-        return getClass().getSimpleName();
     }
 
     @Override

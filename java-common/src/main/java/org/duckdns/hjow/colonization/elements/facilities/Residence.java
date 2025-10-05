@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -13,21 +12,15 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public abstract class Residence extends DefaultFacility implements Home {
     private static final long serialVersionUID = -2930901725309688206L;
-    
-    protected String name = defaultName();
     protected int comportGrade = 0;
 
     public Residence() {
         
     }
     
-    protected String defaultName() {
-        return "보급형_주거모듈_" + ColonyManager.generateNaturalNumber();
-    }
-
     @Override
-    public String getName() {
-        return name;
+    protected String getDefaultNamePrefix() {
+        return "보급형_주거모듈";
     }
 
     @Override
@@ -55,15 +48,6 @@ public abstract class Residence extends DefaultFacility implements Home {
         return 5;
     }
     
-    @Override
-    public String getType() {
-        return "Residence";
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setHp(int hp) {
         this.hp = hp;
     }

@@ -2,7 +2,6 @@ package org.duckdns.hjow.colonization.elements.facilities;
 
 import java.util.List;
 
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
@@ -12,15 +11,11 @@ import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuilding
 public class BusStation extends TransportStation {
 	private static final long serialVersionUID = 7222508474329385493L;
     
-    protected String getDefaultName() {
-    	return "버스정류장_" + ColonyManager.generateNaturalNumber();
+	@Override
+    protected String getDefaultNamePrefix() {
+        return "버스정류장";
     }
-
-    @Override
-    public String getType() {
-        return "BusStation";
-    }
-
+	
     @Override
     public String getStatusDescription(City city, Colony colony) {
         return "";

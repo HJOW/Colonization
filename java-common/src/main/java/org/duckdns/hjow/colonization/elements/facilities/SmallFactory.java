@@ -3,46 +3,31 @@ package org.duckdns.hjow.colonization.elements.facilities;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 
-public class PowerStation extends PowerPlant {
-    private static final long serialVersionUID = 4079646708867981024L;
-
-    @Override
+public class SmallFactory extends Factory {
+	private static final long serialVersionUID = -4382361172571288943L;
+	
+	@Override
     protected String getDefaultNamePrefix() {
-        return "발전소";
+        return "공장";
     }
 
-    @Override
-    protected int getDefaultCapacity() {
-        return 100;
-    }
-    
-    @Override
-    public String getStatusDescription(City city, Colony colony) {
-        return ""; // TODO
-    }
-    @Override
+	@Override
     public int getPowerConsume() {
-        return 0;
+        return 10;
     }
-    public int getPowerGenerate(Colony col, City city) {
-        return getCapacity();
-    }
-
-    @Override
-    public int getMaxHp() {
-        return 1000;
-    }
-    @Override
-    public int getWorkerNeeded() {
-        return 1;
-    }
-    @Override
-    public int getWorkerCapacity() {
-        return 2;
+	
+	@Override
+    protected int getDefaultCapacity() {
+        return 10;
     }
     
-    public static String getFacilityName() {
-        return "발전 모듈";
+    @Override
+    protected int getProfitCycle() {
+        return 600;
+    }
+	
+	public static String getFacilityName() {
+        return "생산 시설";
     }
     
     public static String getFacilityTitle() {
@@ -50,7 +35,7 @@ public class PowerStation extends PowerPlant {
     }
     
     public static String getFacilityDescription() {
-        return "기본적인 전력 생산 시설입니다.";
+        return "기본적인 생산 시설입니다. 이 곳에서 생산된 물품으로 정착지의 재정에 수익이 발생합니다.";
     }
     
     public static Long getFacilityPrice() {
@@ -58,7 +43,7 @@ public class PowerStation extends PowerPlant {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(300);
+        return new Integer(1200);
     }
     
     public static Long getTechNeeded() {

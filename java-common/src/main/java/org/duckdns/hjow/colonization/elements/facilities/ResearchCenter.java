@@ -1,7 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -10,17 +9,11 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public class ResearchCenter extends DefaultFacility {
     private static final long serialVersionUID = 9084689175126703785L;
-    protected String name = "연구소_" + ColonyManager.generateNaturalNumber();
     protected long researchKey = 0L;
-
+    
     @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String getType() {
-        return "ResearchCenter";
+    protected String getDefaultNamePrefix() {
+        return "연구소";
     }
 
     @Override
@@ -58,11 +51,6 @@ public class ResearchCenter extends DefaultFacility {
         return 0;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-    
     public long getResearchKey() {
         return researchKey;
     }

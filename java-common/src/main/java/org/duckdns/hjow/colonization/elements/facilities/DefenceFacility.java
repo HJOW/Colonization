@@ -17,18 +17,6 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public abstract class DefenceFacility extends DefaultFacility implements AttackableObject {
     private static final long serialVersionUID = -8553101924279880106L;
-    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
-    
-    protected abstract String getDefaultNamePrefix();
-    
-    @Override
-    public String getName() {
-        return name;
-    }
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
     
     @Override
     public int getAttackCount() {

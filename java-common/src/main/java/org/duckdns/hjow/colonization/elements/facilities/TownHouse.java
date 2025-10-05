@@ -2,7 +2,6 @@ package org.duckdns.hjow.colonization.elements.facilities;
 
 import java.util.List;
 
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
@@ -14,8 +13,9 @@ public class TownHouse extends Residence {
     
     public TownHouse() {}
     
-    protected String defaultName() {
-        return "타운하우스_" + ColonyManager.generateNaturalNumber();
+    @Override
+    protected String getDefaultNamePrefix() {
+        return "타운하우스";
     }
 
     @Override
@@ -41,11 +41,6 @@ public class TownHouse extends Residence {
     @Override
     protected int getDefaultCapacity() {
         return 12;
-    }
-    
-    @Override
-    public String getType() {
-        return "TownHouse";
     }
 
     @Override

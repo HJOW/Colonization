@@ -1,7 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -9,18 +8,11 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public class Restaurant extends DefaultFacility implements ServiceFacility {
     private static final long serialVersionUID = -7371044845340026748L;
-    
-    protected String name = "식당_" + ColonyManager.generateNaturalNumber();
     protected int comportGrade = 0;
 
     @Override
-    public String getName() {
-        return name;
-    }
-    
-    @Override
-    public void setName(String name) {
-        this.name = name;
+    protected String getDefaultNamePrefix() {
+        return "식당";
     }
 
     @Override
@@ -87,11 +79,6 @@ public class Restaurant extends DefaultFacility implements ServiceFacility {
                 if(servicingCount >= getCapacity()) break;
             }
         }
-    }
-
-    @Override
-    public String getType() {
-        return "Restaurant";
     }
 
     @Override

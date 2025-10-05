@@ -20,10 +20,29 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 public abstract class DefaultFacility implements Facility {
     private static final long serialVersionUID = 8012568139388326869L;
     protected volatile long key = ColonyManager.generateKey();
+    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
     protected int hp = getMaxHp();
     protected int level = 1;
     
     protected List<State> states = new Vector<State>();
+    
+    @Override
+    public String getType() {
+    	return getClass().getSimpleName();
+    }
+    
+    /** 이름 앞부분 */
+    protected abstract String getDefaultNamePrefix();
+    
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    @Override
+    public String getName() {
+        return name;
+    }
     
     @Override
     public int getComportGrade() {

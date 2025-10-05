@@ -21,11 +21,6 @@ public class Turret extends DefenceFacility implements AttackableObject {
     }
     
     @Override
-    public String getType() {
-        return "Turret";
-    }
-    
-    @Override
     public int getAttackCount() {
         return 1;
     }
