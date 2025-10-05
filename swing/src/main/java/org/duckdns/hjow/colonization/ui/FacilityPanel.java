@@ -116,7 +116,8 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
 
         ta = new JTextArea();
         ta.setEditable(false);
-        pnCenter.add(new JScrollPane(ta), BorderLayout.CENTER);
+        ta.setLineWrap(true);
+        pnCenter.add(new JScrollPane(ta, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         
         JPanel pnCenterDown = new JPanel();
         cardResProd = new CardLayout();
@@ -327,6 +328,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     		}
     		products = null;
     		
+    		avails.add(new Money());
     		cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
     		
     		String producingType = factory.getProductType();
