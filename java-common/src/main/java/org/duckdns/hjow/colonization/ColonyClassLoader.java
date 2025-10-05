@@ -184,6 +184,20 @@ public class ColonyClassLoader {
 		return stateClassList;
 	}
 	
+	private static final List<Class<?>> productClassList     = new Vector<Class<?>>();
+    private static       boolean        productClassListFlag = false;
+    
+    /** 생산품 클래스 목록 반환 */
+	public static synchronized List<Class<?>> productClasses() {
+	    if(productClassListFlag) return productClassList;
+	    
+	    productClassList.clear();
+	    for(Pack p : packs) { if(p.isEnabled()) productClassList.addAll(p.getProductClasses()); }
+	    
+	    productClassListFlag = true;
+		return productClassList;
+	}
+	
     /** 기본 공지사항 컨텐츠 html 반환 (웹 접근 못했을 시 이 내용 출력) */
 	public static String htmlNoticeEmpty() {
 		StringBuilder res = new StringBuilder("");
@@ -331,6 +345,7 @@ public class ColonyClassLoader {
 	    researchClassListFlag = false;
 	    enemyClassListFlag    = false;
 	    stateClassListFlag    = false;
+	    productClassListFlag  = false;
 	}
 	
 	/** 저장된 클래스 정보들 비우기 */
@@ -341,6 +356,7 @@ public class ColonyClassLoader {
 	    researchClassListFlag = false; researchClassList.clear();
 	    enemyClassListFlag    = false; enemyClassList.clear();   
 	    stateClassListFlag    = false; stateClassList.clear();
+	    productClassListFlag  = false; productClassList.clear();
 	    packs.clear();
 	    packs.add(new BundledPack());
 	}

@@ -1,15 +1,23 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+
+import java.util.List;
+import java.util.Vector;
+
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class Factory extends DefaultFacility {
+public abstract class Factory extends DefaultFacility implements Storage {
     private static final long serialVersionUID = 8465140770981665970L;
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
+    protected List<Product> stored = new Vector<Product>();
     
     public Factory() {
         
@@ -66,12 +74,74 @@ public class Factory extends DefaultFacility {
     }
     
     @Override
+    public List<Product> getStored() {
+		return stored;
+	}
+
+	public void setStored(List<Product> stored) {
+		this.stored = stored;
+	}
+	
+	@Override
+    public Product takeOut(String type) {
+    	for(int idx=0; idx<stored.size(); idx++) {
+    		Product p = stored.get(idx);
+    		if(p.getType().equals(type)) {
+    			stored.remove(p);
+    			return p;
+    		}
+    	}
+    	return null;
+    }
+    
+	@Override
+    public void store(Product p) {
+		if(! isStoreAvail(p)) throw new RuntimeException("Cannot store here !");
+    	stored.add(p);
+    }
+    
+	@Override
+    public int getStoredCount() {
+    	return stored.size();
+    }
+    
+	@Override
+    public int getMaxStoredCapacity() {
+    	return 1000;
+    }
+	
+	@Override
+	public boolean isStoreAvail(Product p) {
+		return false;
+	}
+    
+    @Override
     public void fromJson(JsonObject json) {
     	super.fromJson(json);
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
         setLevel(Integer.parseInt(json.get("level").toString()));
+        
+        JsonArray list = (JsonArray) json.get("stored");
+        stored.clear();
+        if(list != null) {
+            for(Object o : list) {
+                if(o instanceof String) o = JsonObject.parseJson(o.toString());
+                if(o instanceof JsonObject) {
+                    try {
+                        JsonObject jsonObj = (JsonObject) o;
+                        Product productOne = Product.createProductInstance(jsonObj.get("type").toString());
+                        if(productOne == null) throw new NullPointerException("Cannot found these product type " + jsonObj);
+                        
+                        productOne.fromJson(jsonObj);
+                        stored.add(productOne);
+                    } catch(Exception ex) {
+                        GlobalLogs.processExceptionOccured(ex, false);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -83,6 +153,10 @@ public class Factory extends DefaultFacility {
         json.put("key", new Long(getKey()));
         json.put("hp", new Long(getHp()));
         json.put("level", new Integer(getLevel()));
+        
+        JsonArray list = new JsonArray();
+        for(Product p : getStored()) { list.add(p.toJson()); }
+        json.put("stored", list);
         
         return json;
     }
@@ -114,7 +188,7 @@ public class Factory extends DefaultFacility {
     public static String getImageHex() {
         return null;
     }
-    
-    /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
+
+	/** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
     public static String isBuildAvail(Colony col, City city) { return null; }
 }

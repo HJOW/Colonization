@@ -10,6 +10,7 @@ public interface Pack extends Serializable {
     public List<Class<?>> getResearchClasses();
     public List<Class<?>> getEnemyClasses();
     public List<Class<?>> getStateClasses();
+    public List<Class<?>> getProductClasses();
     public String getName();
     public String getDesc();
     public boolean isEnabled();

@@ -17,22 +17,28 @@ public class DefaultPack implements Pack {
     protected List<Class<?>> researchClasses = new ArrayList<Class<?>>();
     protected List<Class<?>> enemyClasses    = new ArrayList<Class<?>>();
     protected List<Class<?>> stateClasses    = new ArrayList<Class<?>>();
+    protected List<Class<?>> productClasses  = new ArrayList<Class<?>>();
     
     public DefaultPack() { init(); }
     protected void init() {}
     
+    @Override
     public List<Class<?>> getColonyClasses() {
         return colonyClasses;
     }
+    @Override
     public List<Class<?>> getFacilityClasses() {
         return facilityClasses;
     }
+    @Override
     public List<Class<?>> getResearchClasses() {
         return researchClasses;
     }
+    @Override
     public List<Class<?>> getEnemyClasses() {
         return enemyClasses;
     }
+    @Override
     public List<Class<?>> getStateClasses() {
         return stateClasses;
     }
@@ -67,9 +73,21 @@ public class DefaultPack implements Pack {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+    
+    @Override
+    public List<Class<?>> getProductClasses() {
+		return productClasses;
+	}
+    
+	public void setProductClasses(List<Class<?>> productClasses) {
+		this.productClasses = productClasses;
+	}
+    
+	@Override
     public boolean isEnabled() {
         return enabled;
     }
+    
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

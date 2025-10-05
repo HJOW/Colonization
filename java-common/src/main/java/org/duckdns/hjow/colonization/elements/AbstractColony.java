@@ -15,12 +15,12 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
-import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.ResidenceModule;
 import org.duckdns.hjow.colonization.elements.facilities.Restaurant;
+import org.duckdns.hjow.colonization.elements.facilities.SmallFactory;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
 import org.duckdns.hjow.colonization.events.InfluenzaEvent;
@@ -447,7 +447,7 @@ public abstract class AbstractColony implements Colony {
         fac = new ResearchCenter();
         city.getFacility().add(fac);
         
-        fac = new Factory();
+        fac = new SmallFactory();
         city.getFacility().add(fac);
         
         getCities().add(city);
