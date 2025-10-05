@@ -1,0 +1,14 @@
+@charset "UTF-8";
+body, div, a, p, h1, h2, h3, h4, h5, h6, h7, span, td, th, select {
+	font-size: 11px;
+	font-family: "Nanum Gothic", sans-serif;
+}
+input, textarea, pre {
+	font-family: "Nanum Gothic Coding", monospace;
+}
+.full {
+    width: 100% !important;
+}
+.invisible {
+	display: none !important;
+}
