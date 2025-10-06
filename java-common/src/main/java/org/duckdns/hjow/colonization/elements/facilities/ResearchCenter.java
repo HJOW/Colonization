@@ -72,7 +72,7 @@ public class ResearchCenter extends DefaultFacility {
     
     /** 테크 포인트 증가 사이클 */
     protected int getTechPointIncreaseCycle() {
-        return 100;
+        return 120;
     }
     
     @Override

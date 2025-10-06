@@ -215,8 +215,9 @@ public abstract class AbstractColony implements Colony {
     public String getDateString() {
         BigInteger originals = new BigInteger(getTime().toByteArray()).divide(BigInteger.TEN); // 10 으로 나눠야 1초 단위가 됨
         BigInteger minutes, seconds, hour, date, month, year;
-        minutes = new BigInteger(BigInteger.ZERO.toByteArray());
-        seconds = new BigInteger(originals.toByteArray());
+        // seconds = new BigInteger(originals.toByteArray());
+        // minutes = new BigInteger(BigInteger.ZERO.toByteArray());
+        minutes = new BigInteger(originals.toByteArray());
         hour    = new BigInteger(BigInteger.ZERO.toByteArray());
         date    = new BigInteger(BigInteger.ONE.toByteArray());
         month   = new BigInteger(BigInteger.ONE.toByteArray());
@@ -229,11 +230,11 @@ public abstract class AbstractColony implements Colony {
         std12 = new BigInteger("12");
         
         // DIVIDE - MOD Calculation
-        // Seconds
-        if(seconds.compareTo(std60) >= 0) {
-            minutes = minutes.add(new BigInteger(seconds.toByteArray()).divide(std60));
-            seconds = seconds.mod(std60);
-        }
+        // // Seconds
+        // if(seconds.compareTo(std60) >= 0) {
+        //     minutes = minutes.add(new BigInteger(seconds.toByteArray()).divide(std60));
+        //     seconds = seconds.mod(std60);
+        // }
         
         // Minutes (Once again)
         if(minutes.compareTo(std60) >= 0) {
@@ -249,10 +250,10 @@ public abstract class AbstractColony implements Colony {
         
         // DIVIDE - Loop Calculation
         // Seconds
-        while(seconds.compareTo(std60) >= 0) {
-            seconds = seconds.subtract(std60);
-            minutes = minutes.add(BigInteger.ONE);
-        }
+        // while(seconds.compareTo(std60) >= 0) {
+        //     seconds = seconds.subtract(std60);
+        //     minutes = minutes.add(BigInteger.ONE);
+        // }
         
         // Minutes (Once again)
         while(minutes.compareTo(std60) >= 0) {
@@ -282,7 +283,7 @@ public abstract class AbstractColony implements Colony {
         StringBuilder res = new StringBuilder("");
         res = res.append(year.toString()).append("-").append(String.format("%02d", month.intValue())).append("-").append(String.format("%02d", date.intValue()));
         res = res.append(" ");
-        res = res.append(String.format("%02d", hour.intValue())).append(":").append(String.format("%02d", minutes.intValue())).append(":").append(String.format("%02d", seconds.intValue()));
+        res = res.append(String.format("%02d", hour.intValue())).append(":").append(String.format("%02d", minutes.intValue())); // .append(":").append(String.format("%02d", seconds.intValue()));
         
         return res.toString().trim();
     }

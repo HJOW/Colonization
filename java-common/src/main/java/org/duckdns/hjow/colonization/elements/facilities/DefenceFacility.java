@@ -30,7 +30,7 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
     
     @Override
     public int getAttackCycle() {
-        return 100;
+        return 120;
     }
     
     /** 대미지 처리 후 추가 작업 (상태를 부여한다거나 등등) 이 메소드에서 구현 */

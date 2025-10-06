@@ -36,7 +36,7 @@ public class CargoRailSystem extends DefaultFacility {
     
     /** 액션 발생 주기 */
     protected int getProfitCycle() {
-        return 10;
+        return 60;
     }
     
     @Override

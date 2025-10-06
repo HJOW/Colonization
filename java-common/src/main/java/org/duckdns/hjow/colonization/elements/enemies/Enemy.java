@@ -60,7 +60,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     
     @Override
     public int getAttackCycle() {
-        return 100;
+        return 120;
     }
     
     @Override

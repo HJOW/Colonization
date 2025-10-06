@@ -58,9 +58,11 @@ public class ArchitectOffice extends DefaultFacility {
         double healRate = 0.5;
         healRate = healRate * ( efficiency100 / 100.0 );
         
-        for(Facility f : city.getFacility()) {
-            if(f.getHp() < f.getMaxHp()) {
-                if(Math.random() >= healRate) f.addHp(1); 
+        if(cycle % 60 == 0) {
+            for(Facility f : city.getFacility()) {
+                if(f.getHp() < f.getMaxHp()) {
+                    if(Math.random() >= healRate) f.addHp(1); 
+                }
             }
         }
     }
