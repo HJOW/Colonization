@@ -142,6 +142,8 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         } else {
         	pnCenterDown.setVisible(true);
         	if(f instanceof ResearchCenter) {
+        		ResearchCenter rcenter = (ResearchCenter) f;
+        		
         		List<Research> tResearches = colony.getResearches();
                 Vector<Research> researches = new Vector<Research>();
                 
@@ -152,18 +154,44 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 tResearches = null;
                 
                 cbxResearch.setModel(new DefaultComboBoxModel<Research>(researches));
+                
+                Research research = rcenter.getResearch(colony);
+                if(research != null) {
+                    cbxResearch.setSelectedItem(research);
+                } else {
+                    if(! researches.isEmpty()) cbxResearch.setSelectedIndex(0);
+                    
+                    research = (Research) cbxResearch.getSelectedItem();
+                    if(research == null) rcenter.setResearchKey(0L);
+                    else rcenter.setResearchKey(research.getKey());
+                }
+                
                 cardResProd.show(pnCenterDown, "Research");
         	} else if(f instanceof Factory) {
         		Factory factory = (Factory) f;
         		List<Product> products = Product.getProductTypeList();
         		Vector<Product> avails = new Vector<Product>();
+        		avails.add(new Money());
         		for(Product p : products) {
         			if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
         		}
         		products = null;
-        		avails.add(new Money());
         		
         		cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
+        		
+        		String producingType = factory.getProductType();
+        		if(producingType == null || producingType == "Money") {
+        			cbxProducts.setSelectedIndex(0);
+        			factory.setProductType(null);
+        		} else {
+        			for(Product p : avails) {
+        				if(producingType.equals(p.getType())) {
+        					cbxProducts.setSelectedItem(p);
+        					break;
+        				}
+        			}
+        		}
+        		
         		cardResProd.show(pnCenterDown, "Product");
         	}
         }
@@ -323,12 +351,12 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         	
         	List<Product> products = Product.getProductTypeList();
     		Vector<Product> avails = new Vector<Product>();
+    		avails.add(new Money());
     		for(Product p : products) {
     			if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
     		}
     		products = null;
     		
-    		avails.add(new Money());
     		cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
     		
     		String producingType = factory.getProductType();

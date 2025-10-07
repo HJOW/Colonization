@@ -218,7 +218,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         progHp.setValue(colony.getHp());
         
         List<City> cities = colony.getCities();
-        if(cycle == 0 || cycle % 10000 == 0 || tabCities.getTabCount() != cities.size()) {
+        if(cycle == 0 || cycle % 3600 == 0 || tabCities.getTabCount() != cities.size()) {
             tabCities.removeAll();
             for(CityPanel c : pnCities) { c.dispose(); }
             pnCities.clear();
@@ -230,18 +230,17 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             }
         } else {
             for(int idx=0; idx<pnCities.size(); idx++) {
-                City cityCurrent = pnCities.get(idx).getCity();
+            	CityPanel p = pnCities.get(idx);
+                City cityCurrent = p.getCity();
+                
                 tabCities.setTitleAt(idx, cityCurrent == null ? "" : cityCurrent.getName());
+                p.refresh(cycle, cityCurrent, colony, superInstance);
             }
         }
         
         tfColonyName.setText(colony.getName());
         tfColonyTime.setText(colony.getDateString());
         taStatus.setText(colony.getStatusString(superInstance));
-        
-        for(CityPanel c : pnCities) {
-            c.refresh(cycle, c.getCity(), colony, superInstance);
-        }
         
         pnHoldings.removeAll();
         pnResearches.removeAll();
