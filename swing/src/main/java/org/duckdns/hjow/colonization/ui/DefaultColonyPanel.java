@@ -218,7 +218,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         progHp.setValue(colony.getHp());
         
         List<City> cities = colony.getCities();
-        if(cycle == 0 || cycle % 3600 == 0 || tabCities.getTabCount() != cities.size()) {
+        if(cycle == 0 || cycle % 36000 == 0 || tabCities.getTabCount() != cities.size()) {
             tabCities.removeAll();
             for(CityPanel c : pnCities) { c.dispose(); }
             pnCities.clear();

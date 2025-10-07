@@ -299,7 +299,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         rowNo = 0;
         colNo = 0;
         
-        if(sizes != facilityPns.size()) {
+        if(sizes != facilityPns.size() || cycle == 0 || cycle % 36000 == 0) {
             for(FacilityPanel p : facilityPns) { p.dispose(); }
             facilityPns.clear();
             pnFacilities.removeAll();
@@ -378,46 +378,55 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         }
         
         facList = null;
-        pnCitizens.removeAll();
-        for(CitizenPanel p : citizenPns) { p.dispose(); }
-        citizenPns.clear();
         
         List<Citizen> citizens = city.getCitizens();
-        for(Citizen c : citizens) {
-            if(c.getHp() <= 0) continue;
-            CitizenPanel p = new CitizenPanel(c, city, colony, superInstance);
-            citizenPns.add(p);
-        }
-        citizens = null;
-        rowNo = 0;
-        colNo = 0;
-        // pnCitizens.setLayout(new GridLayout(citizenPns.size(), 1));
-        for(CitizenPanel p : citizenPns) {
+        sizes = citizens.size();
+        
+        if(citizens.size() != citizenPns.size() || cycle == 0 || cycle % 36000 == 0) {
+        	pnCitizens.removeAll();
+            for(CitizenPanel p : citizenPns) { p.dispose(); }
+            citizenPns.clear();
+            
+            for(Citizen c : citizens) {
+                if(c.getHp() <= 0) continue;
+                CitizenPanel p = new CitizenPanel(c, city, colony, superInstance);
+                citizenPns.add(p);
+            }
+            citizens = null;
+            rowNo = 0;
+            colNo = 0;
+            // pnCitizens.setLayout(new GridLayout(citizenPns.size(), 1));
+            for(CitizenPanel p : citizenPns) {
+                gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = colNo; colNo++;
+                gridBagConst.gridy = rowNo; if(colNo >= columns) { colNo = 0; rowNo++; }
+                gridBagConst.gridwidth = 1;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 1.0;
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                pnCitizens.add(p, gridBagConst);
+                p.refresh(cycle, city, colony, superInstance);
+            }
+            
+            pnEmpty = new JPanel();
+            
             gridBagConst = new GridBagConstraints();
             gridBagConst.gridx = colNo; colNo++;
             gridBagConst.gridy = rowNo; if(colNo >= columns) { colNo = 0; rowNo++; }
             gridBagConst.gridwidth = 1;
             gridBagConst.gridheight = 1;
             gridBagConst.weightx = 1.0;
-            gridBagConst.fill = GridBagConstraints.HORIZONTAL;
-            gridBagConst.anchor = GridBagConstraints.NORTH;
+            gridBagConst.fill = GridBagConstraints.BOTH;
+            gridBagConst.weighty = 1.0;
             
-            pnCitizens.add(p, gridBagConst);
-            p.refresh(cycle, city, colony, superInstance);
+            pnCitizens.add(pnEmpty, gridBagConst);
+        } else {
+        	for(CitizenPanel p : citizenPns) {
+        		p.refresh(cycle, city, colony, superInstance);
+        	}
         }
-        
-        pnEmpty = new JPanel();
-        
-        gridBagConst = new GridBagConstraints();
-        gridBagConst.gridx = colNo; colNo++;
-        gridBagConst.gridy = rowNo; if(colNo >= columns) { colNo = 0; rowNo++; }
-        gridBagConst.gridwidth = 1;
-        gridBagConst.gridheight = 1;
-        gridBagConst.weightx = 1.0;
-        gridBagConst.fill = GridBagConstraints.BOTH;
-        gridBagConst.weighty = 1.0;
-        
-        pnCitizens.add(pnEmpty, gridBagConst);
         
         // 작업중 항목 출력
         refreshHoldingJobs();
