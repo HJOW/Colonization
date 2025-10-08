@@ -384,7 +384,11 @@ class MainScreen extends ColCommonComponent {
             <div className="div div_colonization_main">
                 <TopToolbar superInstance={this.superInstance} />
                 <div className="div div_colonization_body">
-                    
+                    {
+                        (this.superInstance.state.colony != null)
+                        ? <ColonyScreen superInstance={this.superInstance} colony={this.superInstance.state.colony}/>
+                        : <div className="div div_colonization_nocolony">식민지를 선택해 주십시오.</div>
+                    }
                 </div>
             </div>
         );
@@ -395,9 +399,36 @@ class TopToolbar extends ColCommonComponent {
     constructor(props) {
         super(props);
     }
+
+    onSelectColony(e) {
+        const key = e.target.value;
+        this.superInstance.selectColony(key).then(() => {
+            // 선택 완료
+        }).catch((errMsg) => {
+            alert(errMsg);
+        });
+    }
+
     render() {
         return (
             <div className="div toolbar div_colonization_toptoolbar">
+                <select className="select select_toptoolbar select_toptoolbar_colonies" onChange={(e) => { this.onSelectColony(e); }}>
+                    { this.superInstance.state.colonies.map((colInfo) => {
+                        return (<option key={colInfo.key} value={colInfo.key} selected={(this.superInstance.state.colony != null) && (this.superInstance.state.colony.key == colInfo.key)}>{colInfo.name}</option>);
+                    })}
+                </select>
+            </div>
+        );
+    }
+}
+
+class ColonyScreen extends ColCommonComponent {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <div className="div div_colonization_colony">
                 
             </div>
         );
