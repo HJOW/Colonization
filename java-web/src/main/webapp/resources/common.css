@@ -1,7 +1,10 @@
 @charset "UTF-8";
-body {
+html, body {
     margin: 0;
     padding: 0;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 body, div, a, p, h1, h2, h3, h4, h5, h6, h7, span, td, th, select {
     font-size: 11px;
@@ -22,4 +25,446 @@ table.layout {
 }
 #div_colonization_root {
     padding: 10px 10px 10px 10px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.width-fitcontent {
+    width: fit-content;
+}
+
+.ui-front {
+    z-index: 1100;
+}
+
+.singlelinetext {
+    white-space: nowrap !important;
+}
+
+.ellipsis {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    word-break: break-all !important;
+    white-space: nowrap;
+}
+
+#div_colonization_root .colony_bodyheader .img_navtop_profile_img {
+	width : 30px;
+	height: 30px;
+	border-radius : 100%;
+}
+
+#div_colonization_root .colony_bodycontent {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#div_colonization_root .colony_bodycontent .colony_main {
+    overflow-x: auto;
+} 
+
+#div_colonization_root, .colony_dialog 
+, #div_colonization_root div, .colony_dialog div {
+    font-size: 1rem;
+}
+
+#div_colonization_root .btn, .colony_dialog .btn
+, #div_colonization_root ul.nav li, #div_colonization_root ul.nav li a, .colony_dialog ul.nav li, .colony_dialog ul.nav li a {
+    font-size: 1.2rem;
+}
+
+#div_colonization_root .btn.small, .colony_dialog .btn.small {
+    font-size: 1rem;
+    margin-right: 3px;
+}
+
+#div_colonization_root th, .colony_dialog th
+, #div_colonization_root th span, .colony_dialog th span {
+    text-align: center;
+}
+
+#div_colonization_root td, .colony_dialog td
+, #div_colonization_root td span, .colony_dialog td span {
+    text-align: left;
+    padding-left: 2px;
+}
+
+#div_colonization_root, #div_colonization_root div, #div_colonization_root p, #div_colonization_root span, #div_colonization_root a
+, #div_colonization_root label, #div_colonization_root td, #div_colonization_root th
+, .colony_dialog, .colony_dialog div, .colony_dialog p, .colony_dialog span, .colony_dialog a
+, .colony_dialog label, .colony_dialog td, .colony_dialog th
+, #div_colonization_root input[type='button'], #div_colonization_root input[type='submit'], .colony_dialog input[type='button'], .colony_dialog input[type='submit'] {
+    font-family: "나눔고딕", 'Nanum Gothic', NanumGothic, "D2Coding", "나눔고딕코딩", NanumGothicCoding, "Nanum Gothic Coding";
+}
+
+#div_colonization_root input, #div_colonization_root select, #div_colonization_root textarea, #div_colonization_root pre, #div_colonization_root code, .colony_dialog input, .colony_dialog select, .colony_dialog textarea, .colony_dialog pre, .colony_dialog code {
+    font-family: "D2Coding", "나눔고딕코딩", NanumGothicCoding, "Nanum Gothic Coding", "나눔고딕", 'Nanum Gothic', NanumGothic; color: black;
+    border: inherit;
+}
+
+#div_colonization_root .ui-jqgrid-btable tr, #div_colonization_root .ui-jqgrid-btable td, .colony_dialog .ui-jqgrid-btable tr, .colony_dialog .ui-jqgrid-btable td {
+    font-family: "D2Coding", "나눔고딕코딩", NanumGothicCoding, "Nanum Gothic Coding", "나눔고딕", 'Nanum Gothic', NanumGothic; color: black;
+}
+
+#div_colonization_root th.center, #div_colonization_root td.center, .colony_dialog th.center, .colony_dialog td.center
+, #div_colonization_root th.center span, #div_colonization_root td.center span, .colony_dialog th.center span, .colony_dialog td.center span {
+    text-align: center !important;
+}
+
+#div_colonization_root th.alignright, #div_colonization_root td.alignright, .colony_dialog th.alignright, .colony_dialog td.alignright
+, #div_colonization_root th.alignright span, #div_colonization_root td.alignright span, .colony_dialog th.alignright span, .colony_dialog td.alignright span {
+    text-align: right !important;
+}
+
+#div_colonization_root th.alignleft, #div_colonization_root td.alignleft, .colony_dialog th.alignleft, .colony_dialog td.alignleft
+, #div_colonization_root th.alignleft span, #div_colonization_root td.alignleft span, .colony_dialog th.alignleft span, .colony_dialog td.alignleft span {
+    text-align: left !important;
+}
+
+#div_colonization_root .full, .colony_dialog .full {
+    width: 100%;
+}
+
+#div_colonization_root   .table_list, #div_colonization_root   .table_list1,
+#div_colonization_root   .table_view, #div_colonization_root   .table_view1, 
+.colony_dialog .table_list, .colony_dialog .table_list1,
+.colony_dialog .table_view, .colony_dialog .table_view1 {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem auto;
+}
+
+#div_colonization_root   .table_list th, #div_colonization_root   .table_list td, #div_colonization_root   .table_list1 th, #div_colonization_root   .table_list1 td,
+#div_colonization_root   .table_view th, #div_colonization_root   .table_view td, #div_colonization_root   .table_view1 th, #div_colonization_root   .table_view1 td, 
+.colony_dialog .table_list th, .colony_dialog .table_list td, .colony_dialog .table_list1 th, .colony_dialog .table_list1 td,
+.colony_dialog .table_view th, .colony_dialog .table_view td, .colony_dialog .table_view1 th, .colony_dialog .table_view1 td {
+    font-size: 1rem;
+}
+
+#div_colonization_root   .table_list.vbar th, #div_colonization_root   .table_list.vbar td, #div_colonization_root   .table_list1.vbar th, #div_colonization_root   .table_list1.vbar td,
+#div_colonization_root   .table_view.vbar th, #div_colonization_root   .table_view.vbar td, #div_colonization_root   .table_view1.vbar th, #div_colonization_root   .table_view1.vbar td, 
+.colony_dialog .table_list.vbar th, .colony_dialog .table_list.vbar td, .colony_dialog .table_list1.vbar th, .colony_dialog .table_list1.vbar td,
+.colony_dialog .table_view.vbar th, .colony_dialog .table_view.vbar td, .colony_dialog .table_view1.vbar th, .colony_dialog .table_view1.vbar td {
+    border-right: 1px solid rgba(189, 189, 189, 0.2);
+}
+
+#div_colonization_root   .table_list.vbar th:last-child, #div_colonization_root   .table_list.vbar td:last-child, #div_colonization_root   .table_list1.vbar th:last-child, #div_colonization_root   .table_list1.vbar td:last-child,
+#div_colonization_root   .table_view.vbar th:last-child, #div_colonization_root   .table_view.vbar td:last-child, #div_colonization_root   .table_view1.vbar th:last-child, #div_colonization_root   .table_view1.vbar td:last-child, 
+.colony_dialog .table_list.vbar th:last-child, .colony_dialog .table_list.vbar td:last-child, .colony_dialog .table_list1.vbar th:last-child, .colony_dialog .table_list1.vbar td:last-child,
+.colony_dialog .table_view.vbar th:last-child, .colony_dialog .table_view.vbar td:last-child, .colony_dialog .table_view1.vbar th:last-child, .colony_dialog .table_view1.vbar td:last-child {
+    border-right: 0;
+}
+
+#div_colonization_root   .table_list.font_r1 th, #div_colonization_root   .table_list.font_r1 td, #div_colonization_root   .table_list1.font_r1 th, #div_colonization_root   .table_list1.font_r1 td,
+#div_colonization_root   .table_view.font_r1 th, #div_colonization_root   .table_view.font_r1 td, #div_colonization_root   .table_view1.font_r1 th, #div_colonization_root   .table_view1.font_r1 td, 
+.colony_dialog .table_list.font_r1 th, .colony_dialog .table_list.font_r1 td, .colony_dialog .table_list1.font_r1 th, .colony_dialog .table_list1.font_r1 td,
+.colony_dialog .table_view.font_r1 th, .colony_dialog .table_view.font_r1 td, .colony_dialog .table_view1.font_r1 th, .colony_dialog .table_view1.font_r1 td {
+    font-size: 1rem;
+}
+
+#div_colonization_root   .table_list.font_r2 th, #div_colonization_root   .table_list.font_r2 td, #div_colonization_root   .table_list1.font_r2 th, #div_colonization_root   .table_list1.font_r2 td,
+#div_colonization_root   .table_view.font_r2 th, #div_colonization_root   .table_view.font_r2 td, #div_colonization_root   .table_view1.font_r2 th, #div_colonization_root   .table_view1.font_r2 td, 
+.colony_dialog .table_list.font_r2 th, .colony_dialog .table_list.font_r2 td, .colony_dialog .table_list1.font_r2 th, .colony_dialog .table_list1.font_r2 td,
+.colony_dialog .table_view.font_r2 th, .colony_dialog .table_view.font_r2 td, .colony_dialog .table_view1.font_r2 th, .colony_dialog .table_view1.font_r2 td {
+    font-size: 2rem;
+}
+
+#div_colonization_root   .table_list.font_p15 th, #div_colonization_root   .table_list.font_p15 td, #div_colonization_root   .table_list1.font_p15 th, #div_colonization_root   .table_list1.font_p15 td,
+#div_colonization_root   .table_view.font_p15 th, #div_colonization_root   .table_view.font_p15 td, #div_colonization_root   .table_view1.font_p15 th, #div_colonization_root   .table_view1.font_p15 td, 
+.colony_dialog .table_list.font_p15 th, .colony_dialog .table_list.font_p15 td, .colony_dialog .table_list1.font_p15 th, .colony_dialog .table_list1.font_p15 td,
+.colony_dialog .table_view.font_p15 th, .colony_dialog .table_view.font_p15 td, .colony_dialog .table_view1.font_p15 th, .colony_dialog .table_view1.font_p15 td {
+    font-size: 15px;
+}
+
+#div_colonization_root   .table_list.font_doc1 th, #div_colonization_root   .table_list.font_doc1 td, #div_colonization_root   .table_list1.font_doc1 th, #div_colonization_root   .table_list1.font_doc1 td,
+#div_colonization_root   .table_view.font_doc1 th, #div_colonization_root   .table_view.font_doc1 td, #div_colonization_root   .table_view1.font_doc1 th, #div_colonization_root   .table_view1.font_doc1 td, 
+.colony_dialog .table_list.font_doc1 th, .colony_dialog .table_list.font_doc1 td, .colony_dialog .table_list1.font_doc1 th, .colony_dialog .table_list1.font_doc1 td,
+.colony_dialog .table_view.font_doc1 th, .colony_dialog .table_view.font_doc1 td, .colony_dialog .table_view1.font_doc1 th, .colony_dialog .table_view1.font_doc1 td {
+    font-size: 24px;
+}
+
+#div_colonization_root   .table_list.font_doc1 th.smallfont, #div_colonization_root   .table_list.font_doc1 td.smallfont, #div_colonization_root   .table_list1.font_doc1 th.smallfont, #div_colonization_root   .table_list1.font_doc1 td.smallfont,
+#div_colonization_root   .table_view.font_doc1 th.smallfont, #div_colonization_root   .table_view.font_doc1 td.smallfont, #div_colonization_root   .table_view1.font_doc1 th.smallfont, #div_colonization_root   .table_view1.font_doc1 td.smallfont, 
+.colony_dialog .table_list.font_doc1 th.smallfont, .colony_dialog .table_list.font_doc1 td.smallfont, .colony_dialog .table_list1.font_doc1 th.smallfont, .colony_dialog .table_list1.font_doc1 td.smallfont,
+.colony_dialog .table_view.font_doc1 th.smallfont, .colony_dialog .table_view.font_doc1 td.smallfont, .colony_dialog .table_view1.font_doc1 th.smallfont, .colony_dialog .table_view1.font_doc1 td.smallfont {
+    font-size: 16px;
+}
+
+#div_colonization_root .table_centers th, #div_colonization_root .table_centers td
+,  .colony_dialog .table_centers th, .colony_dialog .table_centers td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#div_colonization_root .div_table_search {
+    text-align: center;
+}
+
+#div_colonization_root .div_table_search select {
+    padding-left  : 10px;
+    padding-right : 10px;
+    padding-top   :  3px;
+    padding-bottom:  3px;
+}
+
+#div_colonization_root .div_table_search .input_search_keyword, deploy_dialog #div_colonization_root .div_table_search .input_search_keyword {
+    width: 200px;
+}
+
+#div_colonization_root .right_floated, #div_colonization_root .span_table_header_right, .colony_dialog .right_floated, .colony_dialog .span_table_header_right {
+    float: right;
+}
+
+#div_colonization_root .binded_click, .colony_dialog .binded_click {
+    cursor: pointer;
+}
+
+#div_colonization_root input.readonly, #div_colonization_root textarea.readonly, .colony_dialog input.readonly, .colony_dialog textarea.readonly {
+    background-color: rgba(100, 100, 100, 0.3);
+}
+
+#div_colonization_root .div_table_control, .colony_dialog .div_table_control {
+	padding-bottom: 10px;
+}
+
+#div_colonization_root .div_table_control input, #div_colonization_root .div_table_control button, .colony_dialog .div_table_control input, .colony_dialog .div_table_control button {
+	margin-left: 5px;
+}
+
+#div_colonization_root .colfooter, .colony_dialog .colfooter {
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: 100%;
+}
+
+#div_colonization_root .colony_opensources, .colony_dialog .colony_opensources {
+    padding: 10px 10px 10px 10px;
+}
+
+#div_colonization_root .colony_opensources textarea, #div_colonization_root .colony_opensources iframe, .colony_dialog .colony_opensources textarea, .colony_dialog .colony_opensources iframe {
+    width: 100%;
+    height: 200px;
+}
+
+#div_colonization_root .colony_opensources textarea.small, #div_colonization_root .colony_opensources iframe.small, .colony_dialog .colony_opensources textarea.small, .colony_dialog .colony_opensources iframe.small {
+    height: 100px;
+}
+
+#div_colonization_root .colony_opensources_element, .colony_dialog .colony_opensources_element {
+    margin-bottom: 30px;
+}
+
+#div_colonization_root .colony_hidden, .colony_dialog .colony_hidden {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right:0;
+    visibility: hidden;
+}
+
+#div_colonization_root.debug .colony_hidden, .colony_dialog.debug .colony_hidden {
+    display: block;
+    visibility: visible;
+    padding-left : 320px;
+    padding-right:  10px;
+    overflow-y: scroll;
+    height: 100px;
+}
+
+#div_colonization_root .colony_hidden div, #div_colonization_root .colony_hidden textarea, .colony_dialog .colony_hidden div, .colony_dialog .colony_hidden textarea {
+    width: 100%;
+}
+
+#div_colonization_root .colony_nav_footer {
+    position: absolute;
+    bottom: 10px;
+    left: 0px;
+    text-align: left;
+    vertical-align: middle;
+    width: 300px;
+    height: 40px;
+}
+
+#div_colonization_root .colony_themeselector select {
+    width: 80px;
+    text-align: left;
+    margin-left: 20px;
+    font-size: 1.4rem;
+    padding: 5px 5px 5px 5px;
+}
+
+#div_colonization_root .navbar-sessionarea {
+    overflow-x: hidden;
+}
+
+#div_colonization_root .colony_nav.only_mobile {
+    background: transparent;
+}
+
+#div_colonization_root .colony_nav.only_mobile ul {
+    background: transparent;
+}
+
+#div_colonization_root .colony_nav.only_mobile li {
+    background: transparent;
+    display: inline-block;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 140px;
+}
+
+#div_colonization_root .colony_nav.only_mobile li.menu_1 {
+    display: block;
+    text-align: left;
+    width: 100%;
+    background-color: rgba(250, 250, 250, 0.2);
+}
+
+#div_colonization_root .div_table_search, .colony_dialog .div_table_search {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#div_colonization_root .div_table_search select, .colony_dialog .div_table_search select {
+    margin-right: 5px;
+}
+
+#div_colonization_root .div_table_search .btn, .colony_dialog .div_table_search .btn {
+    margin-left: 5px;
+}
+
+#div_colonization_root .table_border_plain th, .colony_dialog .table_border_plain th
+, #div_colonization_root .table_border_plain td, .colony_dialog .table_border_plain td
+, #div_colonization_root .table_border_plain.table_view th, .colony_dialog .table_border_plain.table_view th
+, #div_colonization_root .table_border_plain.table_view td, .colony_dialog .table_border_plain.table_view td {
+    border: 1px solid black;
+}
+
+.colony_dialog .div_selpop_title {
+    font-size: 17px;
+    font-weight: bold;
+    width: 100%;
+    text-align: left;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    padding: 10px 10px 10px 10px;
+}
+
+#div_colonization_root .colony_progress, .colony_dialog .colony_progress {
+    height: 1.5rem;
+    min-width: 100px;
+    background-color: #C9C9C9;
+    position: relative;
+}
+
+#div_colonization_root .colony_progress:before, .colony_dialog .colony_progress:before {
+    content: attr(data-label);
+    font-size: 0.8em;
+    position: absolute;
+    text-align: center;
+    top: 5px;
+    left: 0;
+    right: 0;
+}
+
+#div_colonization_root .colony_progress .colony_progress_inside, .colony_dialog .colony_progress .colony_progress_inside {
+    background-color: #7CC4FF;
+    display: inline-block;
+    height: 100%;
+    text-align: left;
+    z-index: 1;
+}
+
+#div_colonization_root .colony_progress .colony_progress_indetermine, .colony_dialog .colony_progress .colony_progress_indetermine {
+    display: inline-block;
+    width: 2rem;
+    height: 100%;
+    text-align: left;
+    position: absolute;
+    left: 0px;
+    z-index: 2;
+    background-color: #7CC4FF;
+}
+
+#div_colonization_root .colony_progress .colony_progress_text, .colony_dialog .colony_progress .colony_progress_text {
+    display: inline-block;
+    width:100%;
+    height: 100%;
+    text-align: left;
+    position: absolute;
+    left: 10px;
+    z-index: 3;
+    color: #010101;
+    background:transparent;
+}
+
+#div_colonization_root .div_table_paging, .colony_dialog .div_table_paging {
+    text-align: center;
+}
+
+#div_colonization_root .ui-tabs, .colony_dialog .ui-tabs {
+	background: none;
+    background-color: rgba(250, 250, 250, 0.1);
+}
+
+#div_colonization_root .ui-tabs-panel, .colony_dialog .ui-tabs-panel {
+	background: none;
+    background-color: rgba(250, 250, 250, 0.1);
+}
+
+#div_colonization_root .document_style
+, #div_colonization_root .document_style div
+, #div_colonization_root .document_style span
+, #div_colonization_root .document_style p
+, #div_colonization_root .document_style input:not(.btn)
+, #div_colonization_root .document_style button:not(.btn)
+, #div_colonization_root .document_style textarea
+, #div_colonization_root .document_style th
+, #div_colonization_root .document_style td
+, .colony_dialog .document_style
+, .colony_dialog .document_style div
+, .colony_dialog .document_style span
+, .colony_dialog .document_style p
+, .colony_dialog .document_style input:not(.btn)
+, .colony_dialog .document_style button:not(.btn)
+, .colony_dialog .document_style textarea
+, .colony_dialog .document_style th
+, .colony_dialog .document_style td {
+	background-color: white !important;
+	color: black !important;
+}
+
+@media (max-width: 767px) {
+    #div_colonization_root .only_wide {
+        visibility: hidden;
+        width : 0 !important;
+        height: 0 !important;
+    }
+    
+    .navbar-sessionarea ul.navbar-nav {
+        display: inline;
+        text-align: right;
+    }
+    
+    .navbar-sessionarea ul.navbar-nav li {
+        width: 130px;
+        display: inline-block;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    } 
+}
+
+@media (min-width: 768px) {
+    #div_colonization_root .only_mobile {
+        visibility: hidden;
+        width : 0 !important;
+        height: 0 !important;
+    }
 }

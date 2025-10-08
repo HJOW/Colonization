@@ -1,0 +1,349 @@
+@charset "UTF-8";
+
+body:not(.colony_colored) {
+    background-color: rgba(70, 70, 70, 0.99);
+    color: rgba(230, 230, 230, 0.99);
+}
+
+.ui-dialog, .ui-dialog .ui-dialog-content {
+    background-color: rgba(70, 70, 70, 0.99);
+    color: rgba(230, 230, 230, 0.99);
+}
+
+#div_colonization_root, .colony_dialog {
+    overflow-x: hidden;
+    background-color: rgba(70, 70, 70, 0.9);
+    color: rgba(230, 230, 230, 0.99);
+}
+
+#div_colonization_root .colony_bodyheader a, #div_colonization_root .colony_bodyheader .navbar-nav li a {
+    font-weight: bold;
+    color: rgba(157, 157, 157, 0.9);
+}
+
+#div_colonization_root .colony_bodyheader a:hover, #div_colonization_root .colony_bodyheader .navbar-nav li a:hover {
+    font-weight: bolder;
+    color: rgba(200, 200, 200, 0.99);
+}
+
+#div_colonization_root .colony_bodyheader a.a_navtop_profile, #div_colonization_root .colony_bodyheader .navbar-nav li a.a_navtop_profile {
+    color: rgba(170, 170, 170, 0.9);
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+#div_colonization_root .colony_bodyheader a.a_navtop_profile:hover, #div_colonization_root .colony_bodyheader .navbar-nav li a.a_navtop_profile:hover {
+    color: rgba(220, 220, 220, 0.99);
+    font-weight: bolder;
+}
+
+#div_colonization_root .colony_bodycontent {
+    background-image: linear-gradient(90deg, #303030 30%, #454545 100%);
+}
+
+#div_colonization_root .sidebar {
+    background-color: rgba(51, 51, 51, 0.99);
+    border-right: none;
+}
+
+#div_colonization_root .sidebar li {
+    background-color: rgba(70, 70, 70, 0.8);
+}
+
+#div_colonization_root .colony_nav.only_wide li a {
+    color: rgb(200, 200, 200);
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_1 {
+    background-color: rgba(70, 70, 70, 0.8);
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_2 {
+    background-color: rgba(60, 60, 60, 0.8);
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_2.activeMenu {
+    background-color: rgba(120, 120, 120, 0.99);
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_2 a {
+    margin-left: 20px;
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_1:hover {
+    background-color: rgba(75, 75, 75, 0.85);
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_2:hover {
+    background-color: rgba(65, 65, 65, 0.85);
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_2.activeMenu:hover {
+    background-color: rgba(130, 130, 130, 0.99);
+}
+
+#div_colonization_root .colony_nav.only_wide li.menu_1 a:hover, #div_colonization_root .colony_nav.only_wide li.menu_2 a:hover {
+    background-color: transparent;
+}
+
+#div_colonization_root .sidebar {
+    overflow-y: auto;
+}
+
+#div_colonization_root .colony_main {
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+#div_colonization_root input, #div_colonization_root select, #div_colonization_root textarea, .colony_dialog input, .colony_dialog select, .colony_dialog textarea {
+    background-color: rgba(100, 100, 100, 0.8);
+    color: rgba(230, 230, 230, 0.99);
+}
+
+#div_colonization_root pre {
+    background-color: rgba(120, 120, 120, 0.8);
+    color: rgba(230, 230, 230, 0.99);
+}
+
+#div_colonization_root pre code {
+    color: rgba(230, 230, 230, 0.99);
+}
+
+#div_colonization_root input[type="checkbox"], .colony_dialog input[type="checkbox"] {
+    accent-color: #505050;
+}
+
+#div_colonization_root .form-signin {
+    padding: 15px;
+    margin: 0 auto;
+}
+#div_colonization_root .form-signin .form-signin-heading,
+#div_colonization_root .form-signin .checkbox {
+    margin-bottom: 10px;
+}
+#div_colonization_root .form-signin .checkbox {
+    font-weight: 400;
+}
+#div_colonization_root .form-signin .form-control {
+    position: relative;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}
+#div_colonization_root .form-signin .form-control:focus {
+    z-index: 2;
+}
+#div_colonization_root .form-signin input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+#div_colonization_root .form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+#div_colonization_root   .table_list, #div_colonization_root   .table_list1,
+#div_colonization_root   .table_view, #div_colonization_root   .table_view1, 
+.colony_dialog .table_list, .colony_dialog .table_list1,
+.colony_dialog .table_view, .colony_dialog .table_view1 {
+    border: 1px solid #ddd;
+}
+
+#div_colonization_root   .table_list thead, #div_colonization_root   .table_list1 thead, 
+.colony_dialog .table_list thead, .colony_dialog .table_list1 thead {
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+}
+
+#div_colonization_root   .table_list tbody tr, #div_colonization_root   .table_list1 tbody tr,
+#div_colonization_root   .table_view tbody tr, #div_colonization_root   .table_view1 tbody tr,
+.colony_dialog .table_list tbody tr, .colony_dialog .table_list1 tbody tr,
+.colony_dialog .table_view tbody tr, .colony_dialog .table_view1 tbody tr {
+    background-color: rgba(80, 80, 80, 0.2);
+    color: rgba(230, 230, 230, 0.99);
+}
+
+#div_colonization_root   .table_list tbody tr:hover, #div_colonization_root   .table_list1 tbody tr:hover,
+.colony_dialog .table_list tbody tr:hover, .colony_dialog .table_list1 tbody tr:hover {
+    background-color: rgba(80, 80, 80, 0.4);
+}
+
+#div_colonization_root   .table_list td, #div_colonization_root    .table_list1 td,
+#div_colonization_root   .table_view td, #div_colonization_root    .table_view1 td,
+.colony_dialog .table_list td, .colony_dialog  .table_list1 td,
+.colony_dialog .table_view td, .colony_dialog  .table_view1 td {
+    padding: 8px;                  
+    text-align: left;              
+    border-bottom: 1px solid #ddd; 
+    background-color: transparent;
+    color: rgba(230, 230, 230, 0.99);
+}
+
+#div_colonization_root   .table_list th, #div_colonization_root   .table_list1 th,
+#div_colonization_root   .table_view th, #div_colonization_root   .table_view1 th,
+.colony_dialog .table_list th, .colony_dialog .table_list1 th,
+.colony_dialog .table_view th, .colony_dialog .table_view1 th {
+    padding: 8px;                  
+    text-align: center;              
+    border-bottom: 1px solid #ddd; 
+    text-align: center;           
+    background-color: rgba(50, 50, 50, 0.9);
+    color: rgb(220, 220, 220, 0.99);
+    font-weight: bolder;
+}
+
+#div_colonization_root    .select_board_pagesize,
+.colony_dialog  .select_board_pagesize {
+    padding-left  : 10px;
+    padding-right : 10px;
+    padding-top   :  3px;
+    padding-bottom:  3px;
+}
+
+#div_colonization_root   .table_list td.created_by, #div_colonization_root   .table_list td.created_date,
+.colony_dialog .table_list td.created_by, .colony_dialog .table_list td.created_date {
+    font-size: 10px;
+}
+
+#div_colonization_root .btn, .colony_dialog .btn {
+    border-radius: 3px;
+    font-weight: bolder;
+    min-height: 25px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+    
+    border: 1px solid rgba(110, 110, 110, 0.9);
+    color: rgba(220, 220, 220, 0.9);
+    background-color: rgba(16, 16, 16, 0.7);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.5);
+}
+
+#div_colonization_root .btn.small, .colony_dialog .btn.small {
+    border-radius: 1px;
+    font-weight: normal;
+    min-height: 10px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 1px;
+    padding-right: 1px;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px 0 rgba(5, 5, 5, 0.5);
+}
+
+#div_colonization_root .btn:hover, .colony_dialog .btn:hover {
+    background-color: rgba(50, 50, 50, 0.8);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.6);
+}
+
+#div_colonization_root .btn:disabled, .colony_dialog .btn:disabled {
+    border: 1px solid rgba(150, 150, 150, 0.5);
+    color: rgba(16, 16, 16, 0.2);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.1);
+}
+
+#div_colonization_root .btn:active, .colony_dialog .btn:active {
+    border: 1px solid rgba(110, 110, 110, 0.99);
+    background-color: rgba(16, 16, 16, 0.9);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.7);
+}
+
+#div_colonization_root .btn.btn2, .colony_dialog .btn.btn2 {
+    border: 1px solid rgba(180, 180, 180, 0.9);
+    color: rgba(20, 20, 20, 0.9);
+    background-color: rgba(180, 180, 180, 0.7);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.5);
+}
+
+#div_colonization_root .btn.btn2:hover, .colony_dialog .btn.btn2:hover {
+    background-color: rgba(220, 220, 220, 0.7);
+}
+
+#div_colonization_root .btn.btn2:disabled, .colony_dialog .btn.btn2:disabled {
+    border: 1px solid rgba(150, 150, 150, 0.9);
+    color: rgba(20, 20, 20, 0.8);
+    background-color: rgba(150, 150, 150, 0.7);
+}
+
+#div_colonization_root .btn.btn2:active, .colony_dialog .btn.btn2:active {
+    border: 1px solid rgba(200, 200, 200, 0.9);
+    background-color: rgba(200, 200, 200, 0.7);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.5);
+}
+
+#div_colonization_root .btn.page_element, .colony_dialog .btn.page_element {
+    border: 1px solid rgba(110, 110, 110, 0.9);
+    color: rgba(220, 220, 220, 0.9);
+    background-color: rgba(16, 16, 16, 0.5);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.5);
+}
+
+#div_colonization_root .btn.page_element:hover, .colony_dialog .btn.page_element:hover {
+    background-color: rgba(50, 50, 50, 0.7);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.6);
+}
+
+#div_colonization_root .btn.page_element.page_current, .colony_dialog .btn.page_element.page_current {
+    border: 1px solid rgba(110, 110, 110, 0.99);
+    background-color: rgba(16, 16, 16, 0.9);
+    box-shadow: 2px 2px 2px 0 rgba(5, 5, 5, 0.7);
+}
+
+#div_colonization_root .btn.page_element.page_current:hover, .colony_dialog .btn.page_element.page_current:hover {
+    border: 1px solid rgba(130, 130, 130, 0.99);
+    background-color: rgba(25, 25, 25, 0.9);
+}
+
+#div_colonization_root label.lb_for_chk, .colony_dialog label.lb_for_chk {
+    color: #676767;
+}
+
+#div_colonization_root label.lb_for_chk:hover, .colony_dialog label.lb_for_chk:hover {
+    color: #505050;
+}
+
+#div_colonization_root label.lb_for_chk.disabled, .colony_dialog label.lb_for_chk.disabled {
+    color: #b9b9b9;
+}
+
+#div_colonization_root .right_floated, .colony_dialog .right_floated {
+    float: right;
+}
+
+#div_colonization_root .colony_board .span_table_header_right, .colony_dialog .colony_board .span_table_header_right {
+    float: right;
+}
+
+#div_colonization_root .colony_board .div_table_paging, .colony_dialog .colony_board .div_table_paging {
+    text-align: center;
+}
+
+#div_colonization_root .div_table_control, .colony_dialog .div_table_control {
+    text-align: right;
+}
+
+#div_colonization_root .scrolltable_header_div, .colony_dialog .scrolltable_header_div {
+    background-color: rgba(70, 70, 70, 0.2);
+}
+
+#div_colonization_root input.readonly, #div_colonization_root textarea.readonly, .colony_dialog input.readonly, .colony_dialog textarea.readonly {
+    background-color: rgba(50, 50, 50, 0.3);
+}
+
+#div_colonization_root .ui-tabs, .colony_dialog .ui-tabs {
+    background: none;
+    background-color: rgba(20, 20, 20, 0.1);
+}
+
+#div_colonization_root .ui-tabs-panel, .colony_dialog .ui-tabs-panel {
+    background: none;
+    background-color: rgba(20, 20, 20, 0.1);
+}
+
+
