@@ -91,9 +91,9 @@ public abstract class State implements ColonyElements {
         JsonObject json = new JsonObject();
         json.put("type", getClass().getSimpleName());
         json.put("name", getName());
-        json.put("key", new Long(getKey()));
+        json.put("key", String.valueOf(getKey()));
         json.put("hp", new Integer(getHp()));
-        json.put("lefts", new Long(getLefts()));
+        json.put("lefts", String.valueOf(getLefts()));
         return json;
     }
 

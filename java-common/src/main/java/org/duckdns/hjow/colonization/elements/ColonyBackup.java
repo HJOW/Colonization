@@ -126,7 +126,7 @@ public class ColonyBackup implements Serializable {
         json.put("type", "ColonyGroup");
         json.put("name", getName());
         json.put("desc", getDescription());
-        json.put("created", new Long(getCreated()));
+        json.put("created", String.valueOf(getCreated()));
         json.put("security", "");
         json.put("backupver", new Integer(getBackupVersion()));
         

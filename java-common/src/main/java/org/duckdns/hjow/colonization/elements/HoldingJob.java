@@ -106,7 +106,7 @@ public class HoldingJob implements Serializable {
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.put("type", "HoldingJob");
-        json.put("key", new Long(getKey()));
+        json.put("key", String.valueOf(getKey()));
         json.put("cycleMax", new Integer(getCycleMax()));
         json.put("cycleLeft", new Integer(getCycleLeft()));
         json.put("command"  , getCommand());

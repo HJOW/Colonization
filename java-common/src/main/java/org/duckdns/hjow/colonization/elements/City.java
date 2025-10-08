@@ -819,8 +819,8 @@ public class City implements ColonyElements {
         JsonObject json = new JsonObject();
         json.put("type", "City");
         json.put("name", getName());
-        json.put("key", new Long(getKey()));
-        json.put("hp", new Long(getHp()));
+        json.put("key", String.valueOf(getKey()));
+        json.put("hp", String.valueOf(getHp()));
         json.put("tax", new Integer(getTax()));
         json.put("spaces", new Integer(getSpaces()));
         

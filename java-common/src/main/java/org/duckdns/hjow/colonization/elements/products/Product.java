@@ -80,7 +80,7 @@ public abstract class Product implements ColonyElements {
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.put("type", getType());
-        json.put("key", new Long(getKey()));
+        json.put("key", String.valueOf(getKey()));
         return json;
     }
 

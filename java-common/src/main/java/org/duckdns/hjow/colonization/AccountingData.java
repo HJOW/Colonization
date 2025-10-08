@@ -75,8 +75,8 @@ public class AccountingData implements Serializable {
         json.put("type", "AccountingHistory");
         json.put("time", getTime().toString());
         json.put("reason", getReason());
-        json.put("city", new Long(getCityKey()));
-        json.put("source", new Long(getSourceKey()));
+        json.put("city", String.valueOf(getCityKey()));
+        json.put("source", String.valueOf(getSourceKey()));
         
         return json;
     }

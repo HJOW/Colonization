@@ -350,7 +350,7 @@ public class Citizen implements ColonyElements {
         JsonObject json = new JsonObject();
         json.put("type", "Citizen");
         json.put("name", getName());
-        json.put("key", new Long(getKey()));
+        json.put("key", String.valueOf(getKey()));
         
         json.put("hp"                , new Integer(getHp()));
         json.put("hunger"            , new Integer(getHunger()));
@@ -362,12 +362,12 @@ public class Citizen implements ColonyElements {
         json.put("intelligent"       , new Integer(getIntelligent()));
         json.put("educatedIntel"     , new Integer(getEducatedIntelligence()));
         json.put("educatedPhysical"  , new Integer(getEducatedPhysical()));
-        json.put("money"             , new Long(getMoney()));
-        json.put("experience"        , new Long(getExperience()));
-        json.put("workingFacility"   , new Long(getWorkingFacility()));
-        json.put("buildingFacility"  , new Long(getBuildingFacility()));
-        json.put("workingCity"       , new Long(getWorkingCity()));
-        json.put("livingHome"        , new Long(getLivingHome()));
+        json.put("money"             , String.valueOf(getMoney()));
+        json.put("experience"        , String.valueOf(getExperience()));
+        json.put("workingFacility"   , String.valueOf(getWorkingFacility()));
+        json.put("buildingFacility"  , String.valueOf(getBuildingFacility()));
+        json.put("workingCity"       , String.valueOf(getWorkingCity()));
+        json.put("livingHome"        , String.valueOf(getLivingHome()));
         
         JsonArray list = new JsonArray();
         for(State s : getStates()) { list.add(s.toJson()); }

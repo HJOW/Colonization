@@ -214,8 +214,8 @@ public abstract class DefaultFacility implements Facility {
         JsonObject json = new JsonObject();
         json.put("type", getType());
         json.put("name", getName());
-        json.put("key", new Long(getKey()));
-        json.put("hp", new Long(getHp()));
+        json.put("key", String.valueOf(getKey()));
+        json.put("hp", String.valueOf(getHp()));
         json.put("level", new Integer(getLevel()));
         
         JsonArray list = new JsonArray();

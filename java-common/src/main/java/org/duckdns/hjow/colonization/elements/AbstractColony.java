@@ -521,11 +521,11 @@ public abstract class AbstractColony implements Colony {
         JsonObject json = new JsonObject();
         json.put("type", getType());
         json.put("name", getName());
-        json.put("key", new Long(getKey()));
-        json.put("hp", new Long(getHp()));
+        json.put("key", String.valueOf(getKey()));
+        json.put("hp", String.valueOf(getHp()));
         json.put("difficulty", new Integer(getDifficulty()));
-        json.put("money", new Long(getMoney()));
-        json.put("tech", new Long(getTech()));
+        json.put("money", String.valueOf(getMoney()));
+        json.put("tech", String.valueOf(getTech()));
         json.put("time", getTime().toString());
         json.put("version", getClientVersion());
         

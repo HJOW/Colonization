@@ -159,9 +159,9 @@ public abstract class Research implements ColonyElements {
     public JsonObject toJson() {
         JsonObject json = new JsonObject();
         json.put("type"    , getClass().getSimpleName());
-        json.put("key"     , new Long(getKey()));
+        json.put("key"     , String.valueOf(getKey()));
         json.put("level"   , new Integer(getLevel()));
-        json.put("progress", new Long(getProgress()));
+        json.put("progress", String.valueOf(getProgress()));
         return json;
     }
     
