@@ -61,6 +61,7 @@ public class LoginServlet extends CommonServlet {
                 
                 Map<String, Object> headerContent = new HashMap<String, Object>();
                 String jwt = AccountUtil.buildJWT(acc, headerContent);
+                jwt = HexUtil.encodeString(jwt);
                 
                 resp.setHeader("jwt", jwt);
                 
@@ -75,6 +76,7 @@ public class LoginServlet extends CommonServlet {
                     responses.put("message", "No JWT token !");
                     responses.put("result", new Boolean(false));
         		} else {
+        			jwtMaybe = HexUtil.decodeString(jwtMaybe);
         			Account acc = AccountUtil.verifyJWT(jwtMaybe);
         			if(acc == null) {
         				responses.put("success", new Boolean(true));

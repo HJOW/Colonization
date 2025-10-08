@@ -40,6 +40,18 @@ $.col.log = function(msg) {
 };
 
 $.col.ajax = function(options) {
+    var headers = null;
+    if(! $.col.isEmpty(options.sessionKey)) {
+        var token = sessionStorage.getItem(options.sessionKey);
+        if(! $.col.isEmpty(token)) {
+            headers = {};
+            headers['jwt'] = token;
+        }
+    }
+    if(headers != null) {
+        options.headers = headers;
+    }
+
     return $.ajax(options);
 };
 

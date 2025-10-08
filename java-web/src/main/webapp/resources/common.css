@@ -144,6 +144,10 @@ table.layout {
     font-size: 1rem;
 }
 
+#div_colonization_root   .table_view th, .colony_dialog .table_view th {
+    text-align: left;
+}
+
 #div_colonization_root   .table_list.vbar th, #div_colonization_root   .table_list.vbar td, #div_colonization_root   .table_list1.vbar th, #div_colonization_root   .table_list1.vbar td,
 #div_colonization_root   .table_view.vbar th, #div_colonization_root   .table_view.vbar td, #div_colonization_root   .table_view1.vbar th, #div_colonization_root   .table_view1.vbar td, 
 .colony_dialog .table_list.vbar th, .colony_dialog .table_list.vbar td, .colony_dialog .table_list1.vbar th, .colony_dialog .table_list1.vbar td,

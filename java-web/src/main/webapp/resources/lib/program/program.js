@@ -12,8 +12,39 @@ class Colonization extends React.Component {
         this.ctx = props.ctx;
     }
     componentDidMount() {
+        const selfs = this;
         const jwts = this.getJWT();
-        if(jwts != null) { this.setState({jwtToken: jwts}); }
+        if(! $.col.isEmpty(jwts)) {
+            const params = {};
+            params.svName = 'login';
+            params.svSub  = 'check';
+            params.jwt    = jwts;
+
+            let responsed = false;
+            const ajaxOptions = {
+                url : this.ctx + '/web/json',
+                data : params,
+                type : 'POST',
+                dataType : 'json',
+                success : function(responses) {
+                    responsed = true;
+                    if(responses.success) {
+                        if(responses.result) {
+                            selfs.setState({jwtToken: jwts, screen : 'main'}); 
+                        } else {
+                            selfs.setJWT(null, () => { selfs.setState({screen: 'login'}); });
+                        }
+                    } else {
+                        alert('오류 : ' + responses.message);
+                    }
+                }, complete : function() {
+                    if(!responsed) {
+                        alert('오류 : 서버와 통신에 실패하였습니다.');
+                    }
+                }
+            };
+            $.col.ajax(ajaxOptions);
+        }
     }
 
     getJWT() {
@@ -23,10 +54,16 @@ class Colonization extends React.Component {
     }
 
     setJWT(token, callback) {
-        console.log(token);
-        if(typeof(token) == 'object') token = JSON.stringify(token);
-        sessionStorage.setItem('col_jwtToken', token);
-        if(typeof(callback) == 'function') callback();
+        if(! $.col.isEmpty(token)) {
+            if(typeof(token) == 'object') token = JSON.stringify(token);
+            sessionStorage.setItem('col_jwtToken', token);
+        } else {
+            sessionStorage.removeItem('col_jwtToken');
+        }
+        
+        this.setState({jwtToken: token}, () => {
+            if(typeof(callback) == 'function') callback();
+        });
     }
 
     render() {
@@ -69,9 +106,8 @@ class LoginScreen extends ColCommonComponent {
 
         const loginPacket = {};
 
-        loginPacket.id     =  this.getRoot().find('.inp_loginscr_id').val();
-        loginPacket.pw     =  this.getRoot().find('.inp_loginscr_pw').val();
-        loginPacket.pw = new HexEncoder().encode(loginPacket.pw);
+        loginPacket.id =  this.getRoot().find('.inp_loginscr_id').val();
+        loginPacket.pw =  this.getRoot().find('.inp_loginscr_pw').val();
 
         params.login = new HexEncoder().encode(JSON.stringify(loginPacket));
 
@@ -112,7 +148,7 @@ class LoginScreen extends ColCommonComponent {
                 <form onSubmit={() => {return false;}} className="form form_loginscr form_loginscr_main">
                     <table className='layout full table table_view table_loginscr table_loginscr_main'>
                         <colgroup>
-                            <col style={{width: '120px'}}/>
+                            <col style={{width: '135px'}}/>
                             <col/>
                         </colgroup>
                         <tbody>
@@ -124,9 +160,11 @@ class LoginScreen extends ColCommonComponent {
                                 <th>Password</th>
                                 <td><input type='password' name='password' className='full inp inp_pw inp_loginscr_pw'/></td>
                             </tr>
-                            <tr colspan='2' className="tr tr_loginscr tr_loginctr_ctl">
-                                <button type='button' className='btn btn_loginscr btn_loginscr_login' onClick={() => { this.onLoginRequested(); }}>로그인</button>
-                                <button type='button' className='btn btn_loginscr btn_loginscr_join'  onClick={() => { this.onJoinRequested();  }}>가입</button>
+                            <tr className="tr tr_loginscr tr_loginctr_ctl">
+                                <td colspan='2'>
+                                    <button type='button' className='btn btn_loginscr btn_loginscr_login' onClick={() => { this.onLoginRequested(); }}>로그인</button>
+                                    <button type='button' className='btn btn_loginscr btn_loginscr_join'  onClick={() => { this.onJoinRequested();  }}>가입</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -158,7 +196,6 @@ class JoinScreen extends ColCommonComponent {
             return;
         }
 
-        loginPacket.pw = new HexEncoder().encode(params.pw);
         loginPacket.name =  this.getRoot().find('.inp_joinscr_name').val();
         params.login = new HexEncoder().encode(JSON.stringify(loginPacket));
 
@@ -194,7 +231,7 @@ class JoinScreen extends ColCommonComponent {
                 <form onSubmit={() => {return false;}} className="form form_joinscr form_joinscr_main">
                     <table className='layout full table table_view table_joinscr table_joinscr_main'>
                         <colgroup>
-                            <col style={{width: '120px'}}/>
+                            <col style={{width: '135px'}}/>
                             <col/>
                         </colgroup>
                         <tbody>
@@ -214,9 +251,11 @@ class JoinScreen extends ColCommonComponent {
                                 <th>E-Mail</th>
                                 <td><input type='text' name='name' className='full inp inp_tx inp_name inp_joinscr_name'/></td>
                             </tr>
-                            <tr colspan='2' className="tr tr_joinscr tr_joinctr_ctl">
-                                <button type='button' className='btn btn_joinscr btn_joinscr_join'   onClick={() => { this.onJoinRequested(); }}>가입</button>
-                                <button type='button' className='btn btn_joinscr btn_joinscr_cancel' onClick={() => { this.goto('login'); }}>취소</button>
+                            <tr className="tr tr_joinscr tr_joinctr_ctl">
+                                <td colspan='2'>
+                                    <button type='button' className='btn btn_joinscr btn_joinscr_join'   onClick={() => { this.onJoinRequested(); }}>가입</button>
+                                    <button type='button' className='btn btn_joinscr btn_joinscr_cancel' onClick={() => { this.goto('login'); }}>취소</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

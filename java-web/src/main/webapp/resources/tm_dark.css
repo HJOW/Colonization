@@ -177,7 +177,6 @@ body:not(.colony_colored) {
 .colony_dialog .table_list td, .colony_dialog  .table_list1 td,
 .colony_dialog .table_view td, .colony_dialog  .table_view1 td {
     padding: 8px;                  
-    text-align: left;              
     border-bottom: 1px solid #ddd; 
     background-color: transparent;
     color: rgba(230, 230, 230, 0.99);
@@ -187,10 +186,8 @@ body:not(.colony_colored) {
 #div_colonization_root   .table_view th, #div_colonization_root   .table_view1 th,
 .colony_dialog .table_list th, .colony_dialog .table_list1 th,
 .colony_dialog .table_view th, .colony_dialog .table_view1 th {
-    padding: 8px;                  
-    text-align: center;              
+    padding: 8px;                    
     border-bottom: 1px solid #ddd; 
-    text-align: center;           
     background-color: rgba(50, 50, 50, 0.9);
     color: rgb(220, 220, 220, 0.99);
     font-weight: bolder;
@@ -318,14 +315,6 @@ body:not(.colony_colored) {
 
 #div_colonization_root .colony_board .span_table_header_right, .colony_dialog .colony_board .span_table_header_right {
     float: right;
-}
-
-#div_colonization_root .colony_board .div_table_paging, .colony_dialog .colony_board .div_table_paging {
-    text-align: center;
-}
-
-#div_colonization_root .div_table_control, .colony_dialog .div_table_control {
-    text-align: right;
 }
 
 #div_colonization_root .scrolltable_header_div, .colony_dialog .scrolltable_header_div {
