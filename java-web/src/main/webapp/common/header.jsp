@@ -15,8 +15,8 @@ request.setAttribute("ctx", ctx);
 <script type="text/javascript" src="<c:url value="/resources/lib/moment.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/lib/chart.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/common.js"/>"></script>
-<script type="text/javascript" src="<c:url value="/resources/react/babel.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/lib/react/babel.js"/>"></script>
 <script type="text/javascript">$.ctx = "<c:out value="${ctx}"/>";</script>
-<script type="text/babel" src="<c:url value="/resources/lib/react/react.development.js"/>"></script>
-<script type="text/babel" src="<c:url value="/resources/lib/react/react-dom.development.js"/>"></script>
+<script type="text/babel" src="<c:url value="/resources/lib/react/react.production.min.js"/>"></script>
+<script type="text/babel" src="<c:url value="/resources/lib/react/react-dom.production.min.js"/>"></script>
 <script type="text/babel" src="<c:url value="/resources/lib/program/program.js"/>"></script>

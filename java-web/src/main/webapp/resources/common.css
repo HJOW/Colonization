@@ -1,14 +1,25 @@
 @charset "UTF-8";
+body {
+    margin: 0;
+    padding: 0;
+}
 body, div, a, p, h1, h2, h3, h4, h5, h6, h7, span, td, th, select {
-	font-size: 11px;
-	font-family: "Nanum Gothic", sans-serif;
+    font-size: 11px;
+    font-family: "Nanum Gothic", sans-serif;
 }
 input, textarea, pre {
-	font-family: "Nanum Gothic Coding", monospace;
+    font-family: "Nanum Gothic Coding", monospace;
 }
 .full {
     width: 100% !important;
 }
 .invisible {
-	display: none !important;
+    display: none !important;
+}
+table.layout {
+    border-collapse: collapse;
+    border: 0;
+}
+#div_colonization_root {
+    padding: 10px 10px 10px 10px;
 }

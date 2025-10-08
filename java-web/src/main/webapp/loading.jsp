@@ -6,7 +6,7 @@
 <body>
     <div>
         <h2>Please wait...</h2>
-        <div style="width: 100%;"><progress style="text-align: center; margin-top: 300px;"></progress></div>
+        <div style="width: 100%; text-align: center;"><progress style="text-align: center; margin-top: 300px;"></progress></div>
     </div>
 </body>
 </html>
