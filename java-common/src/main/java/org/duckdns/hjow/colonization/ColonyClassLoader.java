@@ -305,7 +305,7 @@ public class ColonyClassLoader {
     }
     
     /** 설정 Map 으로부터 클래스 정보 추출 */
-    protected static Class<?> loadClassFrom(ColonyManagerConfig info) throws Exception {
+    public static Class<?> loadClassFrom(ColonyManagerConfig info) throws Exception {
         String className = info.getString("name");
         String classUrl  = info.getString("url");
         URL[] urls = new URL[1];
