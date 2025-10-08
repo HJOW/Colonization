@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="<c:url value="/resources/lib/jqueryui/jquery-ui.structure.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/resources/lib/jqueryui/jquery-ui.theme.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/resources/common.css"/>"/>
+<link rel="stylesheet" href="<c:url value="/resources/tm_dark.css"/>"/>
 <script type="text/javascript" src="<c:url value="/resources/lib/jquery-1.12.4.js"/>"></script>
 <script>
 $(function() {

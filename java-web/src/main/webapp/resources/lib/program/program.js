@@ -12,8 +12,23 @@ class Colonization extends React.Component {
         this.ctx = props.ctx;
     }
     componentDidMount() {
-
+        const jwts = this.getJWT();
+        if(jwts != null) { this.setState({jwtToken: jwts}); }
     }
+
+    getJWT() {
+        const jwts = sessionStorage.getItem('col_jwtToken');
+        if($.col.isEmpty(jwts)) return null;
+        return jwts;
+    }
+
+    setJWT(token, callback) {
+        console.log(token);
+        if(typeof(token) == 'object') token = JSON.stringify(token);
+        sessionStorage.setItem('col_jwtToken', token);
+        if(typeof(callback) == 'function') callback();
+    }
+
     render() {
         if($.col.isEmpty(this.state.screen)) {
             this.state.screen = 'login';
@@ -51,10 +66,14 @@ class LoginScreen extends ColCommonComponent {
         const params = {};
         params.svName = 'login';
         params.svSub  = 'login';
-        params.id     =  this.getRoot().find('.inp_loginscr_id').val();
-        params.pw     =  this.getRoot().find('.inp_loginscr_pw').val();
 
-        params.pw = new HexEncoder().encode(params.pw);
+        const loginPacket = {};
+
+        loginPacket.id     =  this.getRoot().find('.inp_loginscr_id').val();
+        loginPacket.pw     =  this.getRoot().find('.inp_loginscr_pw').val();
+        loginPacket.pw = new HexEncoder().encode(loginPacket.pw);
+
+        params.login = new HexEncoder().encode(JSON.stringify(loginPacket));
 
         let responsed = false;
         const ajaxOptions = {
@@ -67,8 +86,7 @@ class LoginScreen extends ColCommonComponent {
                 if(responses.success) {
                     try {
                         const token = responses.token;
-                        sessionStorage.setItem('col_jwtToken', token);
-                        selfs.superInstance.setState({jwtToken: token, screen: 'main'});
+                        selfs.superInstance.setJWT(token, () => { selfs.goto('main'); });
                     } catch(e) {
                         alert('오류 : ' + e.message);
                     }
@@ -92,7 +110,7 @@ class LoginScreen extends ColCommonComponent {
         return (
             <div>
                 <form onSubmit={() => {return false;}} className="form form_loginscr form_loginscr_main">
-                    <table className='layout full table table_loginscr table_loginscr_main'>
+                    <table className='layout full table table_view table_loginscr table_loginscr_main'>
                         <colgroup>
                             <col style={{width: '120px'}}/>
                             <col/>
@@ -124,14 +142,57 @@ class JoinScreen extends ColCommonComponent {
     }
 
     onJoinRequested() {
+        const selfs  = this;
+        const params = {};
+        params.svName = 'login';
+        params.svSub  = 'join';
 
+        const loginPacket = {};
+
+        loginPacket.id     =  this.getRoot().find('.inp_joinscr_id').val();
+        loginPacket.pw     =  this.getRoot().find('.inp_joinscr_pw').val();
+        loginPacket.pwc    =  this.getRoot().find('.inp_joinscr_pw_check').val();
+
+        if(loginPacket.pw != loginPacket.pwc) {
+            alert('비밀번호 값과 확인 값이 일치하지 않습니다.');
+            return;
+        }
+
+        loginPacket.pw = new HexEncoder().encode(params.pw);
+        loginPacket.name =  this.getRoot().find('.inp_joinscr_name').val();
+        params.login = new HexEncoder().encode(JSON.stringify(loginPacket));
+
+        let responsed = false;
+        const ajaxOptions = {
+            url : this.ctx + '/web/json',
+            data : params,
+            type : 'POST',
+            dataType : 'json',
+            success : function(responses) {
+                responsed = true;
+                if(responses.success) {
+                    try {
+                        selfs.goto('login');
+                    } catch(e) {
+                        alert('오류 : ' + e.message);
+                    }
+                } else {
+                    alert('오류 : ' + responses.message);
+                }
+            }, complete : function() {
+                if(!responsed) {
+                    alert('오류 : 서버와 통신에 실패하였습니다.');
+                }
+            }
+        };
+        $.col.ajax(ajaxOptions);
     }
 
     render() {
         return (
             <div>
                 <form onSubmit={() => {return false;}} className="form form_joinscr form_joinscr_main">
-                    <table className='layout full table table_joinscr table_joinscr_main'>
+                    <table className='layout full table table_view table_joinscr table_joinscr_main'>
                         <colgroup>
                             <col style={{width: '120px'}}/>
                             <col/>

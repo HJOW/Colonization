@@ -46,8 +46,7 @@ public class LoginServlet extends CommonServlet {
                 
                 if(DataUtil.isEmpty(json.get("pw"))) throw new RuntimeException("Please input Password for login !");
                 String pw    = json.get("pw").toString();
-                String pwEnc = HexUtil.decodeString(pw);
-                pwEnc = Account.hashPassword(pw);
+                String pwEnc = Account.hashPassword(pw);
                 
                 Account acc = AccountUtil.load(id);
                 if(acc == null) throw new RuntimeException("Cannot find that account.");
