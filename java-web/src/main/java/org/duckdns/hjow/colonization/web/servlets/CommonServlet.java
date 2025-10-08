@@ -1,5 +1,9 @@
 package org.duckdns.hjow.colonization.web.servlets;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -7,18 +11,76 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyManagerConfig;
+import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
 
 public abstract class CommonServlet extends HttpServlet {
     private static final long serialVersionUID = -9127592158446596240L;
+    protected static final ColonyManagerConfig configs = new ColonyManagerConfig();
+    
     protected Logger logger = LogManager.getLogger(this.getClass());
-
+    
     @Override
     public void init() throws ServletException {
         super.init();
+        
+        File root = AccountUtil.getAccountRootDirectory();
+        if(! root.exists()) root.mkdirs();
+        
+        try {
+            File conf = new File(root.getAbsolutePath() + File.separator + "config.json");
+            if(conf.exists()) {
+                String strJson = FileUtil.readString(conf, "UTF-8"); // 파일 읽고
+                JsonObject json = (JsonObject) JsonObject.parseJson(strJson); // JSON 파싱
+                configs.fromJson(json); // 설정 넣기
+            }
+            
+            // 설정들 중 클래스 관련 설정 적용
+            ColonyClassLoader.clearAll();
+            // Pack 목록 불러오기
+            List<Object> packList = null;
+            try {
+                packList = configs.getList("packs");
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+            }
+            
+            if(packList == null) {
+                packList = new ArrayList<Object>();
+                configs.set("packs", packList);
+            }
+            
+            List<Pack> packs = new ArrayList<Pack>();
+            
+            for(Object o : packList) {
+                try {
+                    ColonyManagerConfig child = (ColonyManagerConfig) o;
+                    Class<?> classObj = ColonyClassLoader.loadClassFrom(child);
+                    Pack packOne = (Pack) classObj.newInstance();
+                    
+                    if(! packs.contains(packOne)) packs.add(packOne);
+                } catch(Exception ex) {
+                    GlobalLogs.processExceptionOccured(ex, false);
+                }
+            }
+            
+            for(Pack p : packs) {
+                try {
+                    if(! packs.contains(p)) ColonyClassLoader.loadPack(p);
+                } catch(Exception ex) {
+                    GlobalLogs.processExceptionOccured(ex, false);
+                }
+            }
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, false);
+        }
     }
     
     @Override

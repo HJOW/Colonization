@@ -36,7 +36,7 @@ public class ColonyServlet extends CommonServlet {
         		for(Colony c : acc.getColonies()) {
         			JsonObject row = new JsonObject();
         			row.put("name", c.getName());
-        			row.put("key" , new Long(c.getKey()));
+        			row.put("key" , String.valueOf(c.getKey()));
         			arr.add(row);
         		}
         		

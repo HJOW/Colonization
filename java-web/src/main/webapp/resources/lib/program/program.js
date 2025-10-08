@@ -4,7 +4,9 @@ class Colonization extends React.Component {
     ctx = '/';
     state = {
         jwtToken : null,
-        screen : 'login'
+        screen : 'login',
+        colonies : [],
+        colony : null
     };
 
     constructor(props) {
@@ -13,38 +15,20 @@ class Colonization extends React.Component {
     }
     componentDidMount() {
         const selfs = this;
-        const jwts = this.getJWT();
-        if(! $.col.isEmpty(jwts)) {
-            const params = {};
-            params.svName = 'login';
-            params.svSub  = 'check';
-            params.jwt    = jwts;
-
-            let responsed = false;
-            const ajaxOptions = {
-                url : this.ctx + '/web/json',
-                data : params,
-                type : 'POST',
-                dataType : 'json',
-                success : function(responses) {
-                    responsed = true;
-                    if(responses.success) {
-                        if(responses.result) {
-                            selfs.setState({jwtToken: jwts, screen : 'main'}); 
-                        } else {
-                            selfs.setJWT(null, () => { selfs.setState({screen: 'login'}); });
-                        }
-                    } else {
-                        alert('오류 : ' + responses.message);
-                    }
-                }, complete : function() {
-                    if(!responsed) {
-                        alert('오류 : 서버와 통신에 실패하였습니다.');
-                    }
-                }
-            };
-            $.col.ajax(ajaxOptions);
-        }
+        this.checkLogined().then((logined) => {
+            if(logined) {
+                selfs.loadColonies().then(() => {
+                    selfs.setState({screen: 'main'});
+                }).catch((errMsg) => {
+                    alert(errMsg);
+                    selfs.setState({screen: 'login'});
+                });
+            } else {
+                selfs.setState({screen: 'login'});
+            }
+        }).catch((errMsg) => {
+            alert(errMsg);
+        });
     }
 
     getJWT() {
@@ -63,6 +47,132 @@ class Colonization extends React.Component {
         
         this.setState({jwtToken: token}, () => {
             if(typeof(callback) == 'function') callback();
+        });
+    }
+
+    checkLogined() {
+        const selfs = this;
+        return new Promise((resolve, reject) => {
+            const jwts = selfs.getJWT();
+            if(! $.col.isEmpty(jwts)) {
+                const params = {};
+                params.svName = 'login';
+                params.svSub  = 'check';
+                params.jwt    = jwts;
+    
+                let responsed = false;
+                const ajaxOptions = {
+                    url : selfs.ctx + '/web/json',
+                    data : params,
+                    type : 'POST',
+                    dataType : 'json',
+                    success : function(responses) {
+                        responsed = true;
+                        if(responses.success) {
+                            if(responses.result) {
+                                selfs.setState({jwtToken: jwts}, () => {  resolve(true); }); 
+                            } else {
+                                selfs.setJWT(null, () => { resolve(false); });
+                            }
+                        } else {
+                            reject(responses.message);
+                        }
+                    }, complete : function() {
+                        if(! responsed) {
+                            reject('오류 : 서버와 통신에 실패하였습니다.');
+                        }
+                    }
+                };
+                $.col.ajax(ajaxOptions);
+            } else {
+                resolve(false);
+            }
+        });
+    }
+
+    loadColonies() {
+        const selfs = this;
+        return new Promise((resolve, reject) => {
+            const jwts = selfs.getJWT();
+            const params = {};
+            params.svName = 'colony';
+            params.svSub  = 'list';
+            params.jwt    = jwts;
+
+            let responsed = false;
+            const ajaxOptions = {
+                url : selfs.ctx + '/web/json',
+                data : params,
+                type : 'POST',
+                dataType : 'json',
+                success : function(responses) {
+                    responsed = true;
+                    if(responses.success) {
+                        selfs.setState({ colonies : responses.list }, () => { 
+                            let exists = false;
+                            if(selfs.state.colony != null) {
+                                for(const colInfoOne of responses.list) {
+                                    if(colInfoOne.key == selfs.state.colony.key) {
+                                        exists = true; break;
+                                    }
+                                }
+
+                                if(exists) {
+                                    resolve(responses.list);
+                                } else {
+                                    selfs.selectColony(responses.list[0].key).then(() => {
+                                        resolve(responses.list);
+                                    });
+                                }
+                            } else {
+                                selfs.selectColony(responses.list[0].key).then(() => {
+                                    resolve(responses.list);
+                                });
+                            }
+                        });
+                    } else {
+                        reject(responses.message);
+                    }
+                }, complete : function() {
+                    if(! responsed) {
+                        reject('오류 : 서버와 통신에 실패하였습니다.');
+                    }
+                }
+            };
+            $.col.ajax(ajaxOptions);
+        });
+    }
+
+    selectColony(key) {
+        const selfs = this;
+        return new Promise((resolve, reject) => {
+            const jwts = selfs.getJWT();
+            const params = {};
+            params.svName = 'colony';
+            params.svSub  = 'detail';
+            params.key    = String(key);
+            params.jwt    = jwts;
+
+            let responsed = false;
+            const ajaxOptions = {
+                url : selfs.ctx + '/web/json',
+                data : params,
+                type : 'POST',
+                dataType : 'json',
+                success : function(responses) {
+                    responsed = true;
+                    if(responses.success) {
+                        selfs.setState({colony : responses.detail}, () => { resolve(responses.detail); });
+                    } else {
+                        reject(responses.message);
+                    }
+                }, complete : function() {
+                    if(! responsed) {
+                        reject('오류 : 서버와 통신에 실패하였습니다.');
+                    }
+                }
+            };
+            $.col.ajax(ajaxOptions);
         });
     }
 
@@ -271,7 +381,25 @@ class MainScreen extends ColCommonComponent {
     }
     render() {
         return (
-            <div></div>
+            <div className="div div_colonization_main">
+                <TopToolbar superInstance={this.superInstance} />
+                <div className="div div_colonization_body">
+                    
+                </div>
+            </div>
+        );
+    }
+}
+
+class TopToolbar extends ColCommonComponent {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        return (
+            <div className="div toolbar div_colonization_toptoolbar">
+                
+            </div>
         );
     }
 }
