@@ -42,6 +42,9 @@ public interface Facility extends ColonyElements {
     /** 수용량 반환 (거주 모듈의 경우 거주 시민 수용량, 발전 모듈의 경우 전력 생산량) */
     public int getCapacity();
     
+    /** 이 시설이 차지하는 공간 크기 반환 */
+    public int getSpaceSize();
+    
     /** 임금 반환 */
     public long getSalary(City city, Colony colony);
     

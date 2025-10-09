@@ -139,6 +139,13 @@ public class NewFacilityManager extends JDialog {
                         return;
                     };
                     
+                    int leftSpaces = city.getLeftSpaces();
+                    int needSpaces = info.getSpaceSize();
+                    if(leftSpaces < needSpaces) {
+                    	JOptionPane.showMessageDialog(getDialog(), "잔여 공간이 부족합니다.\n" + (needSpaces - leftSpaces) + " 의 공간이 더 필요합니다.");
+                        return;
+                    }
+                    
                     Method mthdChecker = info.getFacilityClass().getMethod("isBuildAvail", Colony.class, City.class);
                     String chkRes = (String) mthdChecker.invoke(null, col, city);
                     if(chkRes != null) {
@@ -147,6 +154,7 @@ public class NewFacilityManager extends JDialog {
                     }
                     
                     HoldingJob job = new HoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
+                    job.setUsingSpace(info.getSpaceSize());
                     city.getHoldings().add(job);
                     
                     col.modifyingMoney(info.getPrice() * (-1) , city, city, info.getTitle() + " 건설");

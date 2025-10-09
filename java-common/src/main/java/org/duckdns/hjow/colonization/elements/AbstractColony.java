@@ -429,13 +429,13 @@ public abstract class AbstractColony implements Colony {
         City city = new City();
         int idx;
         
-        for(idx=0; idx<20; idx++) {
+        for(idx=0; idx<30; idx++) {
             city.createNewCitizen();
         }
         
         Facility fac;
         
-        for(idx=0; idx<6; idx++) {
+        for(idx=0; idx<8; idx++) {
             fac = new ResidenceModule();
             ((Residence) fac).setComportGrade(0);
             city.getFacility().add(fac);

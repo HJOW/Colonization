@@ -309,6 +309,11 @@ public abstract class DefaultFacility implements Facility {
         return res;
     }
     
+    @Override
+    public int getSpaceSize() {
+    	return 1;
+    }
+    
     /** 업그레이드 비용 시작 금액 */
     protected long startUpgradePrice() {
         return 5000L;

@@ -14,6 +14,7 @@ public class HoldingJob implements Serializable {
     protected long   key       = ColonyManager.generateKey();
     protected int    cycleMax  = 0;
     protected int    cycleLeft = 0;
+    protected int    usingSpace = 0;
     protected String command   = null;
     protected String parameter = null;
     
@@ -39,7 +40,16 @@ public class HoldingJob implements Serializable {
         this.key = key;
     }
 
-    public int getCycleMax() {
+    public int getUsingSpace() {
+    	if("NewFacility".equals(getCommand())) return usingSpace;
+    	return 0;
+	}
+
+	public void setUsingSpace(int usingSpace) {
+		this.usingSpace = usingSpace;
+	}
+
+	public int getCycleMax() {
         return cycleMax;
     }
 
@@ -109,6 +119,7 @@ public class HoldingJob implements Serializable {
         json.put("key", String.valueOf(getKey()));
         json.put("cycleMax", new Integer(getCycleMax()));
         json.put("cycleLeft", new Integer(getCycleLeft()));
+        json.put("space", new Integer(getUsingSpace()));
         json.put("command"  , getCommand());
         json.put("parameter", getParameter());
         return json;
@@ -119,6 +130,7 @@ public class HoldingJob implements Serializable {
         key = Long.parseLong(json.get("key").toString());
         setCycleMax(Integer.parseInt(json.get("cycleMax").toString()));
         setCycleLeft(Integer.parseInt(json.get("cycleLeft").toString()));
+        setUsingSpace(Integer.parseInt(json.get("space").toString()));
         setCommand(json.get("command").toString());
         setParameter(json.get("parameter").toString());
     }

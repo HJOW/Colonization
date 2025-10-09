@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.Facility;
 
 /** 시설 정보 */
 public class FacilityInformation implements Serializable {
@@ -81,5 +82,10 @@ public class FacilityInformation implements Serializable {
         } catch(Exception ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
+    }
+    
+    /** 이 시설이 차지하는 공간 크기 반환 */
+    public int getSpaceSize() {
+    	try { return ((Facility) facilityClass.newInstance()).getSpaceSize(); } catch(Exception ex) { throw new RuntimeException(ex.getMessage(), ex); }
     }
 }
