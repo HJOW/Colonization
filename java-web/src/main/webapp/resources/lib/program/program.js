@@ -18,16 +18,25 @@ class Colonization extends React.Component {
         this.checkLogined().then((logined) => {
             if(logined) {
                 selfs.loadColonies().then(() => {
-                    selfs.setState({screen: 'main'});
+                    selfs.setPState({screen: 'main'});
                 }).catch((errMsg) => {
                     alert(errMsg);
-                    selfs.setState({screen: 'login'});
+                    selfs.setPState({screen: 'login'});
                 });
             } else {
-                selfs.setState({screen: 'login'});
+                selfs.setPState({screen: 'login'});
             }
         }).catch((errMsg) => {
             alert(errMsg);
+        });
+    }
+
+    setPState(stateJson) {
+        const selfs = this;
+        return new Promise((resolve, reject) => {
+            selfs.setState(stateJson, () => {
+                resolve(true);
+            });
         });
     }
 
@@ -38,142 +47,78 @@ class Colonization extends React.Component {
     }
 
     setJWT(token, callback) {
-        if(! $.col.isEmpty(token)) {
-            if(typeof(token) == 'object') token = JSON.stringify(token);
-            sessionStorage.setItem('col_jwtToken', token);
-        } else {
-            sessionStorage.removeItem('col_jwtToken');
-        }
-        
-        this.setState({jwtToken: token}, () => {
-            if(typeof(callback) == 'function') callback();
-        });
-    }
-
-    checkLogined() {
         const selfs = this;
         return new Promise((resolve, reject) => {
-            const jwts = selfs.getJWT();
-            if(! $.col.isEmpty(jwts)) {
-                const params = {};
-                params.svName = 'login';
-                params.svSub  = 'check';
-                params.jwt    = jwts;
-    
-                let responsed = false;
-                const ajaxOptions = {
-                    url : selfs.ctx + '/web/json',
-                    data : params,
-                    type : 'POST',
-                    dataType : 'json',
-                    success : function(responses) {
-                        responsed = true;
-                        if(responses.success) {
-                            if(responses.result) {
-                                selfs.setState({jwtToken: jwts}, () => {  resolve(true); }); 
-                            } else {
-                                selfs.setJWT(null, () => { resolve(false); });
-                            }
-                        } else {
-                            reject(responses.message);
-                        }
-                    }, complete : function() {
-                        if(! responsed) {
-                            reject('오류 : 서버와 통신에 실패하였습니다.');
-                        }
-                    }
-                };
-                $.col.ajax(ajaxOptions);
+            if(! $.col.isEmpty(token)) {
+                if(typeof(token) == 'object') token = JSON.stringify(token);
+                sessionStorage.setItem('col_jwtToken', token);
             } else {
-                resolve(false);
+                token = null;
+                sessionStorage.removeItem('col_jwtToken');
             }
+
+            selfs.setState({jwtToken: token}, () => {
+                if(typeof(callback) == 'function') callback();
+                resolve(token);
+            });
         });
+
     }
 
-    loadColonies() {
-        const selfs = this;
-        return new Promise((resolve, reject) => {
-            const jwts = selfs.getJWT();
-            const params = {};
-            params.svName = 'colony';
-            params.svSub  = 'list';
-            params.jwt    = jwts;
+    async checkLogined() {
+        const jwts  = this.getJWT();
+        let res = null;
 
-            let responsed = false;
-            const ajaxOptions = {
-                url : selfs.ctx + '/web/json',
-                data : params,
-                type : 'POST',
-                dataType : 'json',
-                success : function(responses) {
-                    responsed = true;
-                    if(responses.success) {
-                        selfs.setState({ colonies : responses.list }, () => { 
-                            let exists = false;
-                            if(selfs.state.colony != null) {
-                                for(const colInfoOne of responses.list) {
-                                    if(colInfoOne.key == selfs.state.colony.key) {
-                                        exists = true; break;
-                                    }
-                                }
+        if($.col.isEmpty(jwts)) return false;
 
-                                if(exists) {
-                                    resolve(responses.list);
-                                } else {
-                                    selfs.selectColony(responses.list[0].key).then(() => {
-                                        resolve(responses.list);
-                                    });
-                                }
-                            } else {
-                                selfs.selectColony(responses.list[0].key).then(() => {
-                                    resolve(responses.list);
-                                });
-                            }
-                        });
-                    } else {
-                        reject(responses.message);
-                    }
-                }, complete : function() {
-                    if(! responsed) {
-                        reject('오류 : 서버와 통신에 실패하였습니다.');
-                    }
-                }
-            };
-            $.col.ajax(ajaxOptions);
-        });
+        res = await communicates.checkLogined(jwts);
+        if(res == null) {
+            await this.setJWT(null);
+            return false;
+        } else {
+            await this.setPState({jwtToken: jwts});
+            return true;
+        }
     }
 
-    selectColony(key) {
-        const selfs = this;
-        return new Promise((resolve, reject) => {
-            const jwts = selfs.getJWT();
-            const params = {};
-            params.svName = 'colony';
-            params.svSub  = 'detail';
-            params.key    = String(key);
-            params.jwt    = jwts;
+    async loadColonies() {
+        const jwts = this.getJWT();
+        if($.col.isEmpty(jwts)) {
+            resolve([]);
+            return;
+        }
 
-            let responsed = false;
-            const ajaxOptions = {
-                url : selfs.ctx + '/web/json',
-                data : params,
-                type : 'POST',
-                dataType : 'json',
-                success : function(responses) {
-                    responsed = true;
-                    if(responses.success) {
-                        selfs.setState({colony : responses.detail}, () => { resolve(responses.detail); });
-                    } else {
-                        reject(responses.message);
-                    }
-                }, complete : function() {
-                    if(! responsed) {
-                        reject('오류 : 서버와 통신에 실패하였습니다.');
-                    }
+        let lists = null;
+        lists = await communicates.loadColonyList(jwts);
+
+        await this.setPState({ colonies : lists });
+        let exists = false;
+        if(this.state.colony != null) {
+            for(const colInfoOne of lists) {
+                if(colInfoOne.key == this.state.colony.key) {
+                    exists = true; break;
                 }
-            };
-            $.col.ajax(ajaxOptions);
-        });
+            }
+
+            if(exists) {
+                // DO nothing
+            } else {
+                if(lists.length <= 0) return [];
+                await this.selectColony(lists[0].key);
+            }
+        } else {
+            if(lists.length <= 0) return [];
+            await this.selectColony(lists[0].key);
+        }
+        return lists;
+    }
+
+    async selectColony(key) {
+        const jwts = this.getJWT();
+
+        let details = await communicates.getColony(key, jwts);
+        await this.setPState({colony : details});
+        return details;
     }
 
     render() {
@@ -195,11 +140,19 @@ class ColCommonComponent extends React.Component {
         this.superInstance = props.superInstance;
         this.ctx = this.superInstance.ctx;
     }
+    setPState(stateJson) {
+        const selfs = this;
+        return new Promise((resolve, reject) => {
+            selfs.setState(stateJson, () => {
+                resolve(true);
+            });
+        });
+    }
     getRoot() {
         return $('#div_colonization_root');
     }
-    goto(scrName) {
-        this.superInstance.setState({screen: scrName});
+    async goto(scrName) {
+        await this.superInstance.setPState({screen: scrName});
     }
 }
 
@@ -208,48 +161,19 @@ class LoginScreen extends ColCommonComponent {
         super(props);
     }
 
-    onLoginRequested() {
-        const selfs  = this;
-        const params = {};
-        params.svName = 'login';
-        params.svSub  = 'login';
+    async onLoginRequested() {
+        const id = this.getRoot().find('.inp_loginscr_id').val();
+        const pw = this.getRoot().find('.inp_loginscr_pw').val();
 
-        const loginPacket = {};
-
-        loginPacket.id =  this.getRoot().find('.inp_loginscr_id').val();
-        loginPacket.pw =  this.getRoot().find('.inp_loginscr_pw').val();
-
-        params.login = new HexEncoder().encode(JSON.stringify(loginPacket));
-
-        let responsed = false;
-        const ajaxOptions = {
-            url : this.ctx + '/web/json',
-            data : params,
-            type : 'POST',
-            dataType : 'json',
-            success : function(responses) {
-                responsed = true;
-                if(responses.success) {
-                    try {
-                        const token = responses.token;
-                        selfs.superInstance.setJWT(token, () => { selfs.goto('main'); });
-                    } catch(e) {
-                        alert('오류 : ' + e.message);
-                    }
-                } else {
-                    alert('오류 : ' + responses.message);
-                }
-            }, complete : function() {
-                if(!responsed) {
-                    alert('오류 : 서버와 통신에 실패하였습니다.');
-                }
-            }
-        };
-        $.col.ajax(ajaxOptions);
+        let token = null;
+        token = await communicates.login(id, pw);
+        await this.superInstance.setJWT(token);
+        await this.superInstance.loadColonies();
+        await this.goto('main');
     }
 
-    onJoinRequested() {
-        this.goto('join');
+    async onJoinRequested() {
+        await this.goto('join');
     }
 
     render() {
@@ -289,12 +213,7 @@ class JoinScreen extends ColCommonComponent {
         super(props);
     }
 
-    onJoinRequested() {
-        const selfs  = this;
-        const params = {};
-        params.svName = 'login';
-        params.svSub  = 'join';
-
+    async onJoinRequested() {
         const loginPacket = {};
 
         loginPacket.id     =  this.getRoot().find('.inp_joinscr_id').val();
@@ -307,32 +226,12 @@ class JoinScreen extends ColCommonComponent {
         }
 
         loginPacket.name =  this.getRoot().find('.inp_joinscr_name').val();
-        params.login = new HexEncoder().encode(JSON.stringify(loginPacket));
+        let responses = null;
 
-        let responsed = false;
-        const ajaxOptions = {
-            url : this.ctx + '/web/json',
-            data : params,
-            type : 'POST',
-            dataType : 'json',
-            success : function(responses) {
-                responsed = true;
-                if(responses.success) {
-                    try {
-                        selfs.goto('login');
-                    } catch(e) {
-                        alert('오류 : ' + e.message);
-                    }
-                } else {
-                    alert('오류 : ' + responses.message);
-                }
-            }, complete : function() {
-                if(!responsed) {
-                    alert('오류 : 서버와 통신에 실패하였습니다.');
-                }
-            }
-        };
-        $.col.ajax(ajaxOptions);
+        responses = await communicates.join(loginPacket);
+        if(responses) {
+            await this.goto('login');
+        }
     }
 
     render() {
@@ -379,6 +278,11 @@ class MainScreen extends ColCommonComponent {
     constructor(props) {
         super(props);
     }
+
+    componentDidMount() {
+
+    }
+
     render() {
         return (
             <div className="div div_colonization_main">

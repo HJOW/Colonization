@@ -21,4 +21,5 @@ request.setAttribute("ctx", ctx);
 <script type="text/javascript">$.ctx = "<c:out value="${ctx}"/>";</script>
 <script type="text/babel" src="<c:url value="/resources/lib/react/react.production.min.js"/>"></script>
 <script type="text/babel" src="<c:url value="/resources/lib/react/react-dom.production.min.js"/>"></script>
+<script type="text/babel" src="<c:url value="/resources/lib/program/communicate.js"/>"></script>
 <script type="text/babel" src="<c:url value="/resources/lib/program/program.js"/>"></script>
