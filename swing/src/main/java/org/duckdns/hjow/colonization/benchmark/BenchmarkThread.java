@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.benchmark;
 import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 
@@ -31,6 +32,7 @@ public class BenchmarkThread extends ColonyManager implements Disposeable {
         man = null;
     }
     
+    /** 벤치마크 시작 */
     public void startBench() {
         threadPaused = true;
         threadSwitch = true;
@@ -76,4 +78,9 @@ public class BenchmarkThread extends ColonyManager implements Disposeable {
     public long result() {
         return end - start;
     }
+
+	@Override
+	public void open(ColonizationMainClass superInstance) {
+		startBench();
+	}
 }
