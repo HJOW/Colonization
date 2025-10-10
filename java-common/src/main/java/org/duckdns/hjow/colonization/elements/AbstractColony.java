@@ -214,7 +214,7 @@ public abstract class AbstractColony implements Colony {
     @Override
     public String getDateString() {
         BigInteger originals = new BigInteger(getTime().toByteArray()).divide(BigInteger.TEN); // 10 으로 나눠야 1초 단위가 됨
-        BigInteger minutes, seconds, hour, date, month, year;
+        BigInteger minutes, hour, date, month, year;
         // seconds = new BigInteger(originals.toByteArray());
         // minutes = new BigInteger(BigInteger.ZERO.toByteArray());
         minutes = new BigInteger(originals.toByteArray());
@@ -547,6 +547,10 @@ public abstract class AbstractColony implements Colony {
         
         if(checked) json.put("checker", getCheckerValue().toString());
         else        json.put("checker", "0");
+        
+        // 추가 정보 (불러올 때는 필요가 없는) 첨가
+        json.put("maxHp", String.valueOf(getMaxHp()));
+        
         return json;
     }
     

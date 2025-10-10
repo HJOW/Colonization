@@ -3,6 +3,7 @@ String ctx = request.getSession().getServletContext().getContextPath();
 request.setAttribute("ctx", ctx);
 %>
 <meta charset="UTF-8"/>
+<title>Colonization</title>
 <link rel="stylesheet" href="<c:url value="/resources/lib/jqueryui/jquery-ui.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/resources/lib/jqueryui/jquery-ui.structure.css"/>"/>
 <link rel="stylesheet" href="<c:url value="/resources/lib/jqueryui/jquery-ui.theme.css"/>"/>

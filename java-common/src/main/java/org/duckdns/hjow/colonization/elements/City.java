@@ -861,6 +861,11 @@ public class City implements ColonyElements {
         for(Enemy h : enemies) { list.add(h.toJson()); }
         json.put("enemies", list);
         
+        // 추가 정보 (불러올 때는 필요가 없는) 첨가
+        json.put("maxHp", String.valueOf(getMaxHp()));
+        json.put("spaceUsing", new Integer(getUsingSpaces()));
+        json.put("spaceLeft", new Integer(getLeftSpaces()));
+        
         return json;
     }
     
