@@ -22,6 +22,7 @@ import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.HexUtil;
 
 /** 도시 구현 클래스 */
 public class City implements ColonyElements {
@@ -837,6 +838,13 @@ public class City implements ColonyElements {
     
     @Override
     public JsonObject toJson() {
+        return toJson(false, null, this);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
+        city = this;
+        
         JsonObject json = new JsonObject();
         json.put("type", "City");
         json.put("name", getName());
@@ -846,11 +854,11 @@ public class City implements ColonyElements {
         json.put("spaces", new Integer(getSpaces()));
         
         JsonArray list = new JsonArray();
-        for(Facility f : getFacility()) { list.add(f.toJson()); }
+        for(Facility f : getFacility()) { list.add(f.toJson(details, col, city)); }
         json.put("facilities", list);
         
         list = new JsonArray();
-        for(Citizen c : getCitizens()) { list.add(c.toJson()); }
+        for(Citizen c : getCitizens()) { list.add(c.toJson(details, col, city)); }
         json.put("citizens", list);
         
         list = new JsonArray();
@@ -858,13 +866,17 @@ public class City implements ColonyElements {
         json.put("holdings", list);
         
         list = new JsonArray();
-        for(Enemy h : enemies) { list.add(h.toJson()); }
+        for(Enemy h : enemies) { list.add(h.toJson(details, col, city)); }
         json.put("enemies", list);
         
         // 추가 정보 (불러올 때는 필요가 없는) 첨가
         json.put("maxHp", String.valueOf(getMaxHp()));
         json.put("spaceUsing", new Integer(getUsingSpaces()));
         json.put("spaceLeft", new Integer(getLeftSpaces()));
+        
+        if(details) {
+            json.put("statusString", HexUtil.encodeString(getStatusString(col, null)));
+        }
         
         return json;
     }
@@ -961,8 +973,10 @@ public class City implements ColonyElements {
             powerConsume += f.getPowerConsume();
         }
         
+        if(col == null && superInstance != null) col = getColony(superInstance);
+        
         desc = desc.append("\n").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
-        desc = desc.append("\n").append("전력 : ").append(formatterInt.format(powerConsume)).append(" / ").append(formatterInt.format(getPowerGenerate(getColony(superInstance))));
+        desc = desc.append("\n").append("전력 : ").append(formatterInt.format(powerConsume)).append(" / ").append(formatterInt.format(getPowerGenerate(col)));
         desc = desc.append("\n").append("공간 : ").append(formatterInt.format(getUsingSpaces())).append(" / ").append(formatterInt.format(getSpaces()));
         if(getCalculatedTransPoint() > 0L) desc = desc.append("\n").append("교통 한도 : ").append(formatterInt.format(getCalculatedTransLeftPoint())).append(" / ").append(formatterInt.format(getCalculatedTransPoint()));
         desc = desc.append("\n").append("인구 : ").append(formatterInt.format(getCitizenCount()));

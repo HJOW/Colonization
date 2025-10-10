@@ -175,6 +175,13 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         return json;
     }
     
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
+        JsonObject json = toJson();
+        
+        return json;
+    }
+    
     
     protected static List<Class<?>> enemyClasses = ColonyClassLoader.enemyClasses();
     

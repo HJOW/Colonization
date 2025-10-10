@@ -349,26 +349,29 @@ class ColonyScreen extends ColCommonComponent {
     render() {
         const selfs  = this;
         const colony = this.props.colony;
+        console.log(colony);
         return (
             <div className="div div_element div_colonization_colony" data-key={colony.key}>
                 <table className="table layout full">
+                    <colgroup>
+                        <col/>
+                        <col style={{width: '200px'}}/>
+                    </colgroup>
                     <tbody>
                         <tr>
-                            <td>
-                                <input type="text" className="inp inp_colonyscr inp_colonyscr_name" defaultValue={colony.name} readOnly={true}/>
+                            <td className='td td_colonyscr td td_colonyscr_left'>
+                                <h2 className='h2 h2_colonyscr h2_colonyscr_name'>{colony.name}</h2>
+                            </td>
+                            <td className='td td_colonyscr td td_colonyscr_right'>
+                                { colony.dates }
                                 <progress className="prog prog_colonyscr prog_colonyscr_hp" max={colony.maxHp} value={colony.hp}></progress>
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <textarea className="full ta ta_colonyscr ta_colonyscr_desc" readOnly={true}>
-
-
-                                </textarea>
-                            </td>
+                            <td className='td td_colonyscr td_colonyscr_status statusdesc' colSpan={2}>{colony.statusString}</td>
                         </tr>
                         <tr>
-                            <td>
+                            <td colSpan={2}>
                                 <div className="div_colonyscr div_colonyscr_cities_tabs">
                                     {
                                         colony.cities.map((city) => {
@@ -383,8 +386,8 @@ class ColonyScreen extends ColCommonComponent {
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <div className="div_colonyscr div_colonyscr_cities_conent">
+                            <td colSpan={2}>
+                                <div className="div_colonyscr div_colonyscr_cities_content">
                                     {
                                         this.state.city == null ? (<div></div>) : (
                                             <CityScreen superInstance={this.superInstance} colony={colony} city={this.state.city}/>
@@ -401,34 +404,61 @@ class ColonyScreen extends ColCommonComponent {
 }
 
 class CityScreen extends ColCommonComponent {
+    state = {
+        displays : 'facility'
+    }
     constructor(props) {
         super(props);
     }
+    async onTabClicked(displays) {
+        this.getRoot().find('.btn_cityscr_faccitizen').removeClass('selected');
+        this.getRoot().find('.btn_cityscr_faccitizen_' + displays).addClass('selected');
+        await this.setPState({displays : displays});
+    }
     render() {
+        const selfs = this;
         const city = this.props.city;
-        console.log(city);
         return (
             <div className="div div_element div_cityscr div_cityscr_main div_colonization_city" data-key={city.key}>
                 <table className="table layout full">
+                    <colgroup>
+                        <col style={{width: '200px'}}/>
+                        <col/>
+                        <col style={{width: '200px'}}/>
+                    </colgroup>
                     <tbody>
                         <tr>
-                            <td colSpan={2}>
-                                <input type="text" className="inp inp_cityscr inp_cityscr_name" defaultValue={city.name} readOnly={true}/>
+                            <td colSpan={2} className='td td_cityscr td_cityscr_left'>
+                                <h3 className='h3 h3_cityscr h3_cityscr_name'>{city.name}</h3>
+                            </td>
+                            <td className='td td_cityscr td_cityscr_right'>
                                 <progress className="prog prog_cityscr prog_cityscr_hp" max={city.maxHp} value={city.hp}></progress>
                             </td>
                         </tr>
                         <tr>
-                            <td>
-
-                            </td>
-                            <td>
+                            <td className='td td_cityscr td_cityscr_status statusdesc'>{city.statusString}</td>
+                            <td colSpan={2}>
+                                <div className="div div_cityscr div_cityscr_faccitizen_tabs">
+                                    <button type="button" className="btn btn_cityscr btn_cityscr_faccitizen btn_cityscr_faccitizen_facility selected" onClick={() => { selfs.onTabClicked('facility') }}>시설</button>
+                                    <button type="button" className="btn btn_cityscr btn_cityscr_faccitizen btn_cityscr_faccitizen_citizen"           onClick={() => { selfs.onTabClicked('citizen' ) }}>시민</button>
+                                </div>
+                                <div className="div div_cityscr div_cityscr_faccitizen_content">
                                 {
-                                    city.facilities.map((facility) => {
-                                        return (
-                                            <FacilityScreen superInstance={this.superInstance} colony={this.props.colony} city={city} facility={facility}/>
-                                        );
-                                    });
+                                    this.state.displays == 'facility' ? (
+                                        city.facilities.map((facility) => {
+                                            return (
+                                                <FacilityScreen superInstance={this.superInstance} colony={this.props.colony} city={city} facility={facility}/>
+                                            );
+                                        })
+                                    ) : (
+                                        city.citizens.map((citizen) => {
+                                            return (
+                                                <CitizenScreen superInstance={this.superInstance} colony={this.props.colony} city={city} citizen={citizen}/>
+                                            );
+                                        })
+                                    )
                                 }
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -446,7 +476,51 @@ class FacilityScreen extends ColCommonComponent {
         const fac = this.props.facility;
         return (
             <div className="div div_element div_facscr div_facscr_main div_colonization_facility" data-key={fac.key}>
+                <table className="table layout full">
+                    <colgroup>
+                        <col/>
+                        <col style={{width: '200px'}}/>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <h4 className='h4 h4_facscr h4_facscr_name'>{fac.name}</h4>
+                            </td>
+                            <td>
+                                <progress className="prog prog_cityscr prog_cityscr_hp" max={fac.maxHp} value={fac.hp}></progress>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+}
 
+class CitizenScreen extends ColCommonComponent {
+    constructor(props) {
+        super(props);
+    }
+    render() {
+        const citizen = this.props.citizen;
+        return (
+            <div className="div div_element div_citizenscr div_citizenscr_main div_colonization_citizen" data-key={citizen.key}>
+                <table className="table layout full">
+                    <colgroup>
+                        <col/>
+                        <col style={{width: '200px'}}/>
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <h4 className='h4 h4_citizenscr h4_citizenscr_name'>{citizen.name}</h4>
+                            </td>
+                            <td>
+                                <progress className="prog prog_cityscr prog_cityscr_hp" max={citizen.maxHp} value={citizen.hp}></progress>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         );
     }

@@ -58,7 +58,7 @@ public class ColonyServlet extends CommonServlet {
         		} else {
         			responses.put("success", new Boolean(true));
                     responses.put("message", "");
-                    responses.put("detail", col.toJson());
+                    responses.put("detail", col.toJson(true, col, null));
         		}
         	} else if(svSub1.equalsIgnoreCase("cycle")) {
         		String strKey = req.getParameter("key");

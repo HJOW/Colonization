@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
@@ -347,6 +348,11 @@ public class Citizen implements ColonyElements {
 
     @Override
     public JsonObject toJson() {
+        return toJson(false, null, null);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
         JsonObject json = new JsonObject();
         json.put("type", "Citizen");
         json.put("name", getName());
@@ -372,6 +378,15 @@ public class Citizen implements ColonyElements {
         JsonArray list = new JsonArray();
         for(State s : getStates()) { list.add(s.toJson()); }
         json.put("states", list);
+        
+        // 추가 정보 (불러올 때는 필요가 없는) 첨가
+        json.put("maxHp", String.valueOf(getMaxHp()));
+        
+        if(details) {
+            String str = getStatusString(city, col, null);
+            if(str == null) str = "";
+            json.put("statusString", HexUtil.encodeString(str));
+        }
         
         return json;
     }

@@ -78,9 +78,15 @@ public abstract class Product implements ColonyElements {
 
     @Override
     public JsonObject toJson() {
+        return toJson(false, null, null);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
         JsonObject json = new JsonObject();
         json.put("type", getType());
         json.put("key", String.valueOf(getKey()));
+        
         return json;
     }
 

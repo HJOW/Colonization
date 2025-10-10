@@ -157,11 +157,17 @@ public abstract class Research implements ColonyElements {
     
     @Override
     public JsonObject toJson() {
+        return toJson(false, null, null);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
         JsonObject json = new JsonObject();
         json.put("type"    , getClass().getSimpleName());
         json.put("key"     , String.valueOf(getKey()));
         json.put("level"   , new Integer(getLevel()));
         json.put("progress", String.valueOf(getProgress()));
+        
         return json;
     }
     

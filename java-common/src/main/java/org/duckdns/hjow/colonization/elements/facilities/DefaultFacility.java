@@ -9,6 +9,7 @@ import java.util.Vector;
 
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
@@ -182,6 +183,11 @@ public abstract class DefaultFacility implements Facility {
     }
     
     @Override
+    public String getStatusDescription(City city, Colony colony) {
+        return "";
+    }
+    
+    @Override
     public void fromJson(JsonObject json) {
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
@@ -211,6 +217,11 @@ public abstract class DefaultFacility implements Facility {
 
     @Override
     public JsonObject toJson() {
+        return toJson(false, null, null);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
         JsonObject json = new JsonObject();
         json.put("type", getType());
         json.put("name", getName());
@@ -219,8 +230,18 @@ public abstract class DefaultFacility implements Facility {
         json.put("level", new Integer(getLevel()));
         
         JsonArray list = new JsonArray();
-        for(State s : getStates()) { list.add(s.toJson()); }
+        for(State s : getStates()) { list.add(s.toJson(details, col, city)); }
         json.put("states", list);
+        
+        // 추가 정보 (불러올 때는 필요가 없는) 첨가
+        json.put("maxHp", String.valueOf(getMaxHp()));
+        json.put("spaceSize", new Integer(getSpaceSize()));
+        
+        if(details) {
+            String str = getStatusDescription(city, col);
+            if(str == null) str = "";
+            json.put("statusString", HexUtil.encodeString(str));
+        }
         
         return json;
     }

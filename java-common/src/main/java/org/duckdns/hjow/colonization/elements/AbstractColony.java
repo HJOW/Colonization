@@ -10,6 +10,7 @@ import java.util.zip.GZIPOutputStream;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.FileUtil;
+import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -518,6 +519,14 @@ public abstract class AbstractColony implements Colony {
 
     @Override
     public JsonObject toJson() {
+        return toJson(false, this, null);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
+        col  = this;
+        city = null;
+        
         JsonObject json = new JsonObject();
         json.put("type", getType());
         json.put("name", getName());
@@ -530,7 +539,7 @@ public abstract class AbstractColony implements Colony {
         json.put("version", getClientVersion());
         
         JsonArray list = new JsonArray();
-        for(City c : getCities()) { list.add(c.toJson()); }
+        for(City c : getCities()) { list.add(c.toJson(details, col, c)); }
         json.put("cities", list);
         
         list = new JsonArray();
@@ -542,7 +551,7 @@ public abstract class AbstractColony implements Colony {
         json.put("accountinghis", list);
         
         list = new JsonArray();
-        for(Research d : getResearches()) { list.add(d.toJson()); }
+        for(Research d : getResearches()) { list.add(d.toJson(details, col, city)); }
         json.put("researches", list);
         
         if(checked) json.put("checker", getCheckerValue().toString());
@@ -550,6 +559,19 @@ public abstract class AbstractColony implements Colony {
         
         // 추가 정보 (불러올 때는 필요가 없는) 첨가
         json.put("maxHp", String.valueOf(getMaxHp()));
+        
+        if(details) {
+            json.put("statusString", HexUtil.encodeString(getStatusString(null)));
+        }
+        
+        if(details) {
+            String str = getStatusString(null);
+            if(str == null) str = "";
+            json.put("statusString", HexUtil.encodeString(str));
+            
+            str = getDateString();
+            json.put("dates", HexUtil.encodeString(str));
+        }
         
         return json;
     }

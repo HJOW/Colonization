@@ -42,6 +42,9 @@ public interface ColonyElements extends Serializable, Disposeable {
     /** 이 객체를 JSON 형태로 출력 */
     public JsonObject toJson();
     
+    /** 이 객체를 JSON 형태로 출력, 추가 정보 포함 여부 지정, details 를 true 로 지정하는 경우 Colony 객체와 City 객체가 필요함. details 가 false 인 경우 다른 매개변수는 null 을 넣으면 됨. */
+    public JsonObject toJson(boolean details, Colony col, City city);
+    
     /** 변조방지값 계산 */
     public BigInteger getCheckerValue();
 }

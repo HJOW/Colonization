@@ -96,6 +96,13 @@ public abstract class State implements ColonyElements {
         json.put("lefts", String.valueOf(getLefts()));
         return json;
     }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
+        JsonObject json = toJson();
+        
+        return json;
+    }
 
     @Override
     public BigInteger getCheckerValue() {

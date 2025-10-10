@@ -151,7 +151,37 @@ class Communicates {
             dataType : 'json'
         });
         if(responses.success) {
-            return responses.detail;
+            const colony = responses.detail;
+
+            // Status String, Dates 디코딩
+            if(! $.col.isEmpty(colony.statusString)) {
+                colony.statusString = new HexEncoder().decode(colony.statusString);
+            }
+
+            if(! $.col.isEmpty(colony.dates)) {
+                colony.dates = new HexEncoder().decode(colony.dates);
+            }
+
+            for(const city of colony.cities) {
+                if(! $.col.isEmpty(city.statusString)) {
+                    city.statusString = new HexEncoder().decode(city.statusString);
+                }
+
+                for(const fac of city.facilities) {
+                    if(! $.col.isEmpty(fac.statusString)) {
+                        fac.statusString = new HexEncoder().decode(fac.statusString);
+                    }
+                }
+
+                for(const citizen of city.citizens) {
+                    if(! $.col.isEmpty(citizen.statusString)) {
+                        citizen.statusString = new HexEncoder().decode(citizen.statusString);
+                    }
+                }
+            }
+
+
+            return colony;
         }
         throw responses.message;
     }
