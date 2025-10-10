@@ -53,9 +53,9 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     }
 
     @Override
-    public JsonObject toJson() {
+    public JsonObject toJson(boolean details, Colony col, City city) {
         JsonObject json = new JsonObject();
-        json.putAll(super.toJson());
+        json.putAll(super.toJson(details, col, city));
         json.put("type", getType());
         json.put("name", getName());
         json.put("key", String.valueOf(getKey()));

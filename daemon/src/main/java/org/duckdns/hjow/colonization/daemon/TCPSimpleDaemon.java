@@ -186,7 +186,7 @@ public class TCPSimpleDaemon implements Disposeable {
         
         JsonObject res = new JsonObject();
         res.put("cycle", new Integer(cyclePass));
-        res.put("colony", col.toJson());
+        res.put("colony", col.toJson(true, col, null));
         
         return res;
     }

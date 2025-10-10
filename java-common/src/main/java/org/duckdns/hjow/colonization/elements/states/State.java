@@ -88,19 +88,17 @@ public abstract class State implements ColonyElements {
 
     @Override
     public JsonObject toJson() {
+        return toJson(false, null, null);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
         JsonObject json = new JsonObject();
         json.put("type", getClass().getSimpleName());
         json.put("name", getName());
         json.put("key", String.valueOf(getKey()));
         json.put("hp", new Integer(getHp()));
         json.put("lefts", String.valueOf(getLefts()));
-        return json;
-    }
-    
-    @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
-        JsonObject json = toJson();
-        
         return json;
     }
 

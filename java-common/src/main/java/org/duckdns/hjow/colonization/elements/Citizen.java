@@ -376,7 +376,7 @@ public class Citizen implements ColonyElements {
         json.put("livingHome"        , String.valueOf(getLivingHome()));
         
         JsonArray list = new JsonArray();
-        for(State s : getStates()) { list.add(s.toJson()); }
+        for(State s : getStates()) { list.add(s.toJson(details, col, city)); }
         json.put("states", list);
         
         // 추가 정보 (불러올 때는 필요가 없는) 첨가

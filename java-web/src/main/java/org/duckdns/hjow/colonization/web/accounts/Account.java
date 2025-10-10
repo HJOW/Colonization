@@ -109,7 +109,7 @@ public class Account implements Serializable {
         
         JsonArray arr = new JsonArray();
         for(Colony c : getColonies()) {
-            arr.add(c.toJson());
+            arr.add(c.toJson(true, c, null));
         }
         json.put("colonies", arr);
         return json;

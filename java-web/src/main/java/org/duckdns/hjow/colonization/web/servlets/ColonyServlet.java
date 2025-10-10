@@ -91,7 +91,7 @@ public class ColonyServlet extends CommonServlet {
                 
                 responses.put("success", new Boolean(true));
                 responses.put("message", "");
-                responses.put("detail", col.toJson());
+                responses.put("detail", col.toJson(true, col, null));
         	}
         } catch(Exception ex) {
             logger.error("Error on " + this.getName() + " - " + ex.getMessage(), ex);

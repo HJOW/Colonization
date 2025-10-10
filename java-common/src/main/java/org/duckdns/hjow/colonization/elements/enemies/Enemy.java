@@ -163,21 +163,19 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
 
     @Override
     public JsonObject toJson() {
+        return toJson(false, null, null);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city) {
         JsonObject json = new JsonObject();
         json.put("type", getClass().getSimpleName());
         json.put("key", String.valueOf(getKey()));
         json.put("hp", String.valueOf(getHp()));
         
         JsonArray list = new JsonArray();
-        for(State s : getStates()) { list.add(s.toJson()); }
+        for(State s : getStates()) { list.add(s.toJson(details, col, city)); }
         json.put("states", list);
-        
-        return json;
-    }
-    
-    @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
-        JsonObject json = toJson();
         
         return json;
     }
