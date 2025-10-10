@@ -18,6 +18,35 @@ public class FacilityInformation implements Serializable {
     protected int buildingCycle = 1200;
     protected Class<?> facilityClass;
     public FacilityInformation() {}
+    public FacilityInformation(Class<?> facilityClass) {
+    	this();
+        setFacilityClass(facilityClass);
+        try {
+            Method method = facilityClass.getMethod("getFacilityName");
+            setName((String) method.invoke(null));
+            
+            method = facilityClass.getMethod("getFacilityTitle");
+            setTitle((String) method.invoke(null));
+            
+            method = facilityClass.getMethod("getFacilityDescription");
+            setDescription((String) method.invoke(null));
+            
+            method = facilityClass.getMethod("getFacilityPrice");
+            setPrice((Long) method.invoke(null));
+            
+            method = facilityClass.getMethod("getTechNeeded");
+            setTech((Long) method.invoke(null));
+            
+            method = facilityClass.getMethod("getFacilityBuildingCycle");
+            setBuildingCycle((Integer) method.invoke(null));
+            
+            method = facilityClass.getMethod("getImageHex");
+            Object obj = method.invoke(null);
+            if(obj != null) setImageHex(obj.toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
     public String getName() {
         return name;
     }

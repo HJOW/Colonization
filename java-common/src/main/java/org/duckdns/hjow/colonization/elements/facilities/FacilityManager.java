@@ -1,12 +1,11 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Vector;
 
-import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 public class FacilityManager {
     protected static List<FacilityInformation> facilities = new Vector<FacilityInformation>();
@@ -42,31 +41,9 @@ public class FacilityManager {
     
     /** 시설 클래스 등록 */
     public static void register(Class<?> facilityClass) {
-        FacilityInformation info = new FacilityInformation();
-        info.setFacilityClass(facilityClass);
+        FacilityInformation info = null;
         try {
-            Method method = facilityClass.getMethod("getFacilityName");
-            info.setName((String) method.invoke(null));
-            
-            method = facilityClass.getMethod("getFacilityTitle");
-            info.setTitle((String) method.invoke(null));
-            
-            method = facilityClass.getMethod("getFacilityDescription");
-            info.setDescription((String) method.invoke(null));
-            
-            method = facilityClass.getMethod("getFacilityPrice");
-            info.setPrice((Long) method.invoke(null));
-            
-            method = facilityClass.getMethod("getTechNeeded");
-            info.setTech((Long) method.invoke(null));
-            
-            method = facilityClass.getMethod("getFacilityBuildingCycle");
-            info.setBuildingCycle((Integer) method.invoke(null));
-            
-            method = facilityClass.getMethod("getImageHex");
-            Object obj = method.invoke(null);
-            if(obj != null) info.setImageHex(obj.toString());
-            
+        	info = new FacilityInformation(facilityClass);
             if(! facilities.contains(info)) facilities.add(info);
         } catch (Exception e) {
             e.printStackTrace();
