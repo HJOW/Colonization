@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -576,6 +577,9 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     public static final short DEFENCETYPE_NORMAL   = 0;
     public static final short DEFENCETYPE_SMALL    = 1;
     public static final short DEFENCETYPE_BUILDING = 9;
+    
+    public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###,###,###,###,##0");
+    public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("##0.00");
     
     protected static transient GlobalLogUI dialogGlobalLog;
     protected static transient boolean flagDebugMode = false; // 실행 시간 표시 플래그

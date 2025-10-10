@@ -183,6 +183,11 @@ public abstract class DefaultFacility implements Facility {
     }
     
     @Override
+    public long getDestructionFee(City city, Colony colony) {
+    	return 1000L;
+    }
+    
+    @Override
     public String getStatusDescription(City city, Colony colony) {
         return "";
     }

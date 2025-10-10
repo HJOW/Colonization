@@ -51,6 +51,9 @@ public interface Facility extends ColonyElements {
     /** 유지비 반환 (양수로 반환) */
     public long getMaintainFee(City city, Colony colony);
     
+    /** 철거 비용 반환 */
+    public long getDestructionFee(City city, Colony colony);
+    
     /** 이 시설의 레벨 반환 */
     public int getLevel();
     

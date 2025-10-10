@@ -114,6 +114,10 @@ public class City implements ColonyElements {
     public void setHoldings(List<HoldingJob> holdings) {
         this.holdings = holdings;
     }
+    
+    public void addHoldingJob(HoldingJob job) {
+    	holdings.add(job);
+    }
 
     @Override
     public void addHp(int amount) {
@@ -360,6 +364,7 @@ public class City implements ColonyElements {
         try {
             if(command.equalsIgnoreCase("NewCitizen")) {
                 if(getCitizenCount() < Integer.MAX_VALUE) createNewCitizen();
+                j.setCompleted(true);
                 return;
             }
             
@@ -372,6 +377,7 @@ public class City implements ColonyElements {
                 if(facilityClass == null) return;
                 Object newOne = facilityClass.newInstance();
                 getFacility().add((Facility) newOne);
+                j.setCompleted(true);
             }
             
             if(command.equalsIgnoreCase("UpgradeFacility")) {
@@ -382,6 +388,7 @@ public class City implements ColonyElements {
                 for(Facility f : getFacility()) {
                     if(f.getKey() == l) {
                         f.setLevel(f.getLevel() + 1);
+                        j.setCompleted(true);
                         break;
                     }
                 }
@@ -935,7 +942,7 @@ public class City implements ColonyElements {
                     try {
                         HoldingJob h = new HoldingJob();
                         h.fromJson((JsonObject) o);
-                        holdings.add(h);
+                        addHoldingJob(h);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);
                     }

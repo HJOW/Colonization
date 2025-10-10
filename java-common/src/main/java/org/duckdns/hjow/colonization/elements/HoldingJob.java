@@ -70,7 +70,7 @@ public class HoldingJob implements Serializable {
         if("NewFacility".equals(getCommand())) return "건설";
         if("NewCitizen".equals(getCommand())) return "이주";
         
-        if("UpgradeFacility".equals(getCommand())) return "업그레이드";
+        if("UpgradeFacility".equals(getCommand())) return "증축";
         
         return "작업";
     }

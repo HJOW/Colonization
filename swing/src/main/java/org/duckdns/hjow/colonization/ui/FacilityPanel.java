@@ -26,6 +26,7 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
@@ -40,7 +41,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     protected transient JProgressBar progHp;
     protected transient JPanel pnUp, pnCenter, pnDown, pnImage, pnCbxResearch, pnCbxProducts;
     protected transient CardLayout cardResProd;
-    protected transient JButton btnToggle, btnDestroy;
+    protected transient JButton btnToggle, btnDestroy, btnUpgrade;
     protected transient JTextField tfName;
     protected transient JTextArea ta;
     protected transient JComboBox<Research> cbxResearch;
@@ -106,6 +107,10 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         
         btnDestroy = new JButton("철거");
         pnCtrls.add(btnDestroy);
+        
+        btnUpgrade = new JButton("증축");
+        pnCtrls.add(btnUpgrade);
+        btnUpgrade.setVisible(false);
         
         btnToggle = new JButton("▼");
         pnCtrls.add(btnToggle);
@@ -213,14 +218,50 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         btnDestroy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), "이 시설을 철거하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
+            	long m = f.getDestructionFee(city, colony);
+            	long currentMoney = colony.getMoney();
+            	
+            	if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), "예산이 " + ColonyManager.FORMATTER_INT.format( m - currentMoney ) + " 부족합니다."); return; }
+            	
+            	if(f.getHp() <= 0) { JOptionPane.showMessageDialog(superInstance.getDialog(), "이미 곧 철거될 예정입니다."); return; }
+            	
+            	String msg = "이 시설을 철거하시겠습니까?";
+            	msg += "\n" + ColonyManager.FORMATTER_INT.format(m) + " 예산 필요";
+            	
+                int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, "확인", JOptionPane.YES_NO_OPTION);
                 if(sel != JOptionPane.YES_OPTION) return;
+                
+                colony.modifyingMoney(m * (-1L), city, f, "Destruction");
                 
                 f.setHp(0);
                 superInstance.refreshColonyContent();
-                JOptionPane.showMessageDialog(superInstance.getDialog(), "철거 지시가 내려졌습니다. 시뮬레이션을 진행해 주세요.");
+                JOptionPane.showMessageDialog(superInstance.getDialog(), "철거 지시가 내려졌습니다. 곧 철거될 것입니다.");
             }
         });
+        
+        btnUpgrade.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				long m = f.getUpgradePrice(colony, city);
+				int  c = f.getUpgradeCycle(colony, city);
+				long currentMoney = colony.getMoney();
+				
+				if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), "예산이 " + ColonyManager.FORMATTER_INT.format( m - currentMoney ) + " 부족합니다."); return; }
+				if(f.getLevel() >= f.getMaxLevel()) { JOptionPane.showMessageDialog(superInstance.getDialog(), "더 이상 증축이 불가능합니다."); return; }
+				if(! isUpgradeAvail(f, colony, city)) { JOptionPane.showMessageDialog(superInstance.getDialog(), "증축이 불가능합니다."); return; }
+				
+				String msg = "이 시설을 증축하시겠습니까?";
+				msg += "\n" + ColonyManager.FORMATTER_INT.format(m) + " 예산 필요";
+				
+				int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, "확인", JOptionPane.YES_NO_OPTION);
+				if(sel != JOptionPane.YES_OPTION) return;
+				
+				colony.modifyingMoney(m * (-1L), city, f, "Upgrade");
+				
+				HoldingJob newJob = new HoldingJob(c, c, "UpgradeFacility", String.valueOf(f.getKey()));
+				city.addHoldingJob(newJob);
+			}
+		});
         
         cbxResearch.addItemListener(new ItemListener() {
             @Override
@@ -396,6 +437,8 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         
         if(fac.getHp() <= 0) setEditable(false);
         else setEditable(flagEditable);
+        
+        btnUpgrade.setVisible(isUpgradeAvail(fac, colony, city));
     }
     
     @Override
@@ -404,12 +447,32 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         if(fac == null) { setEditable(false); return; }
         refresh(fac, city, colony, superInstance);
     }
+    
+    /** 업그레이드 가능 여부 확인 */
+    protected boolean isUpgradeAvail(Facility fac, Colony col, City city) {
+    	if(! fac.isUpgradeAvail(col, city)) return false;
+        if(fac.getLevel() >= fac.getMaxLevel()) return false;
+        if(col.getMoney() < fac.getUpgradePrice(col, city)) return false;
+        
+        // 이미 업그레이드 중인지 확인
+        for(HoldingJob j : city.getHoldings()) {
+        	if("UpgradeFacility".equalsIgnoreCase(j.getCommand())) {
+        		long key = Long.parseLong(j.getParameter().trim());
+        		if(fac.getKey() == key) {
+        			return false;
+        		}
+        	}
+        }
+        
+        return true;
+    }
 
     @Override
     public void setEditable(boolean editable) {
         flagEditable = editable;
         tfName.setEditable(editable);
         btnDestroy.setEnabled(editable);
+        btnUpgrade.setEnabled(editable);
         cbxResearch.setEnabled(editable);
     }
 
