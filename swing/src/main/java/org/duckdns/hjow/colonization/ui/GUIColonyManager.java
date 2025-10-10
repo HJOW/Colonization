@@ -40,7 +40,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.duckdns.hjow.colonization.Colonization;
+import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GUIColonizationMainClass;
@@ -569,7 +569,7 @@ public class GUIColonyManager extends ColonyManager {
     }
 
     /** 창이 열리기 전 수행해야 할 작업 */
-    public void onBeforeOpened(Colonization superInstance) {
+    public void onBeforeOpened(GUIColonizationMainClass superInstance) {
         if(thread != null) { try { threadSwitch = false; thread.interrupt(); Thread.sleep(1000L); } catch(Exception exc) {} }
         if(frame == null) init(superInstance);
         
@@ -578,7 +578,7 @@ public class GUIColonyManager extends ColonyManager {
     }
 
     /** 창이 열린 후 수행해야 할 작업 */
-    public void onAfterOpened(Colonization superInstance) {
+    public void onAfterOpened(GUIColonizationMainClass superInstance) {
         btnThrPlay.setEnabled(false);
         menuActionThrPlay.setEnabled(false);
         
@@ -859,17 +859,17 @@ public class GUIColonyManager extends ColonyManager {
     }
 
     /** 메인 대화 상자를 연다. */
-    public void open(Colonization superInstance) {
-        onBeforeOpened(superInstance);
+    public void open(ColonizationMainClass superInstance) {
+        onBeforeOpened((GUIColonizationMainClass) superInstance);
         frame.setVisible(true);
         if(dialogGlobalLog != null) dialogGlobalLog.open(this);
-        onAfterOpened(superInstance);
+        onAfterOpened((GUIColonizationMainClass) superInstance);
         
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try { Thread.sleep(500L); } catch(InterruptedException ex) { return; }
-                superInstance.closeLoadingDialog();
+                ((GUIColonizationMainClass) superInstance).closeLoadingDialog();
                 refreshArenaPanel(0);
             }
         }).start();

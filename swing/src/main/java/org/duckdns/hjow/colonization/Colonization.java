@@ -36,7 +36,7 @@ public class Colonization extends ConsoleColonization implements GUIColonization
             manager = null;
         }
         manager = new GUIColonyManager(this);
-        ((GUIColonyManager) manager).open(this);
+        manager.open(this);
     }
     
     @Override

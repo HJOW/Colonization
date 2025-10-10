@@ -6,7 +6,6 @@ import java.util.Map;
 import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.commons.util.ClassUtil;
-import org.duckdns.hjow.consolemenu.ConsoleMenu;
 
 public class ConsoleColonization implements ColonizationMainClass {
     private static final ConsoleColonization INSTANCES = new ConsoleColonization();
@@ -17,7 +16,6 @@ public class ConsoleColonization implements ColonizationMainClass {
     }
     
     protected transient Map<String, String> arguments = new HashMap<String, String>();
-    protected transient ConsoleMenu   rootMenu  = null;
     protected transient ColonyManager manager   = null;
 
     /** 사전 준비, 프로그램 실행 시 받은 매개변수 입력 */
@@ -27,21 +25,17 @@ public class ConsoleColonization implements ColonizationMainClass {
 
     @Override
     public void run() {
-        if(manager != null) {
-            manager.dispose();
-            manager = null;
-        }
-        manager = new ConsoleColonyManager();
-        
         restart();
     }
 
     @Override
     public void restart() {
-        if(rootMenu != null) rootMenu.closeMenu();
-        rootMenu = new ConsoleMenu();
-        rootMenu.setEndOperationExit(true);
-        rootMenu.launch();
+        if(manager != null) {
+            manager.dispose();
+            manager = null;
+        }
+        manager = new ConsoleColonyManager();
+        manager.open(this);
     }
 
     @Override

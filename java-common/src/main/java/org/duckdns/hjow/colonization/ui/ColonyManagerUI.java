@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.ui;
 
+import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 
@@ -9,4 +10,7 @@ public interface ColonyManagerUI {
     
     /** 도시가 속한 정착지 찾기 */
     public Colony getColonyFrom(City city);
+    
+    /** Colonization 실행 */
+    public void open(ColonizationMainClass superInstance);
 }
