@@ -157,7 +157,7 @@ public class NewFacilityManager extends JDialog {
                     job.setUsingSpace(info.getSpaceSize());
                     city.getHoldings().add(job);
                     
-                    col.modifyingMoney(info.getPrice() * (-1) , city, city, info.getTitle() + " 건설");
+                    col.modifyingMoney(info.getPrice() * (-1) , city, city, "Building", info.getTitle());
                     
                     colonyManager.refreshColonyContent();
                     dispose();

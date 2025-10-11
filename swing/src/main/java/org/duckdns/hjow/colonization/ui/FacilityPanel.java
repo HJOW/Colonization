@@ -231,7 +231,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
                 if(sel != JOptionPane.YES_OPTION) return;
                 
-                colony.modifyingMoney(m * (-1L), city, f, "Destruction");
+                colony.modifyingMoney(m * (-1L), city, f, "Destruction", String.valueOf(f.getName()));
                 
                 f.setHp(0);
                 superInstance.refreshColonyContent();
@@ -256,7 +256,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
 				int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
 				if(sel != JOptionPane.YES_OPTION) return;
 				
-				colony.modifyingMoney(m * (-1L), city, f, "Upgrade");
+				colony.modifyingMoney(m * (-1L), city, f, "Upgrade", f.getName());
 				
 				HoldingJob newJob = new HoldingJob(c, c, "UpgradeFacility", String.valueOf(f.getKey()));
 				city.addHoldingJob(newJob);

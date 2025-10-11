@@ -128,7 +128,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
                 servicingCount++;
                 c.setHappy(c.getHappy() + 5 + (compGrade / 2));
                 c.setMoney(c.getMoney() - fee - tax);
-                colony.modifyingMoney(tax, city, colony, "세금 - " + getFacilityTitle());
+                colony.modifyingMoney(tax, city, c, "Tax", getName());
                 
                 if(servicingCount >= getCapacity()) break;
             }

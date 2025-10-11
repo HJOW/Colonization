@@ -190,10 +190,10 @@ public abstract class AbstractColony implements Colony {
     }
     
     @Override
-    public void modifyingMoney(long money, City city, ColonyElements objType, String reason) {
+    public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String moreString) {
         setMoney(getMoney() + money);
         
-        AccountingData data = new AccountingData(getTime(), money, reason, city, objType);
+        AccountingData data = new AccountingData(getTime(), money, reason, city, objType, moreString);
         addAccountingData(data);
     }
 
@@ -386,6 +386,13 @@ public abstract class AbstractColony implements Colony {
             }
         }
         
+        // 예산이 음수인 경우 이자 발생
+        if(getMoney() < 0L) {
+        	if(cycle % 60 == 0) {
+        	    long interests = ((long) Math.floor(Math.abs(getMoney()) * 0.009)) * (-1);
+        	    modifyingMoney(interests, city, colony, "Interest", colony.getName());
+        	}
+        }
         
         // 시간 지남
         time = time.add(BigInteger.ONE);

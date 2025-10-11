@@ -13,6 +13,7 @@ public class AccountingData implements Serializable {
     protected BigInteger time = BigInteger.ZERO;
     protected long amount = 0L;
     protected String reason = "";
+    protected String moreString = "";
     protected long cityKey;
     protected long sourceKey;
     
@@ -20,12 +21,16 @@ public class AccountingData implements Serializable {
     
     public AccountingData() {}
     public AccountingData(BigInteger time, long amount, String reason, City city, ColonyElements sources) {
-        super();
+        this();
         this.time = time;
         this.amount = amount;
         this.reason = reason;
         this.cityKey = city.getKey();
         this.sourceKey = sources.getKey();
+    }
+    public AccountingData(BigInteger time, long amount, String reason, City city, ColonyElements sources, String moreString) {
+        this(time, amount, reason, city, sources);
+        this.moreString = moreString;
     }
     
     public BigInteger getTime() {
@@ -63,7 +68,13 @@ public class AccountingData implements Serializable {
     public void setSourceKey(long sourceKey) {
         this.sourceKey = sourceKey;
     }
-    public boolean isDisposed() {
+    public String getMoreString() {
+		return moreString;
+	}
+	public void setMoreString(String moreString) {
+		this.moreString = moreString;
+	}
+	public boolean isDisposed() {
         return disposed;
     }
     public void dispose() {
@@ -77,6 +88,7 @@ public class AccountingData implements Serializable {
         json.put("reason", getReason());
         json.put("city", String.valueOf(getCityKey()));
         json.put("source", String.valueOf(getSourceKey()));
+        json.put("more", String.valueOf(getMoreString()));
         
         return json;
     }
@@ -88,5 +100,6 @@ public class AccountingData implements Serializable {
         setReason(json.get("reason").toString());
         setCityKey(Long.parseLong(json.get("city").toString()));
         setSourceKey(Long.parseLong(json.get("source").toString()));
+        if(json.containsKey("more")) setMoreString(json.get("more").toString());
     }
 }

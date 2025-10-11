@@ -30,6 +30,7 @@ import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 정착지 정보 출력 및 컨트롤을 담당하는 UI 컴포넌트 */
 public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, ColonyPanel {
@@ -355,7 +356,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         }
         
         City c = col.newCity();
-        col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, ColonyManager.t("신도시 건설"));
+        col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, "NewCity", "");
         
         reserveRefresh();
     }
@@ -407,6 +408,13 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                     }
                 }
                 if(sourceName == null) sourceName = "UNKNOWN";
+                
+                String mores = data.getMoreString();
+                if(DataUtil.isNotEmpty(mores)) {
+                	if(sourceName.equals("UNKNOWN") || sourceName.equals("")) sourceName = mores;
+                	else if(sourceName.equals(mores)) sourceName = mores;
+                	if(! sourceName.equals(mores)) sourceName += " " + mores;
+                }
                 
                 rows.add(sourceName);
                 

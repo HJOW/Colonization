@@ -136,7 +136,7 @@ public abstract class Factory extends DefaultFacility implements Storage {
             
             if(! createSuccess) {
                 // 생산 실패, 혹은 생산품 지정이 안된 경우, 다른 돈벌이를 했다고 가정하고 자금 추가
-                colony.modifyingMoney(increases, city, this, "work");
+                colony.modifyingMoney(increases, city, this, "Work", getName());
             }
         }
     }

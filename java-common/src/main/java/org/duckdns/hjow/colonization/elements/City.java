@@ -341,6 +341,14 @@ public class City implements ColonyElements {
                 }
             }
         }
+        
+        // 예산이 마이너스인 경우 행복도 등 감소
+        if(colony.getMoney() < 0L) {
+        	for(Citizen c : getCitizens()) {
+        		if(c.getHappy() > 30) c.setHappy(30);
+        		if(cycle % 60 == 0) c.addHappy(-1);
+        	}
+        }
     }
     
     /** 시설의 비용 처리 */
@@ -348,11 +356,11 @@ public class City implements ColonyElements {
         // 임금 처리
         for(Citizen c : f.getWorkingCitizens(this, colony)) {
             long sal = f.getSalary(this, colony);
-            colony.modifyingMoney( sal * (-1), this, f, "salary" );
+            colony.modifyingMoney( sal * (-1), this, f, "Salary", c.getName());
             c.setMoney(c.getMoney() + sal);
         }
         // 유지비 처리
-        colony.modifyingMoney( f.getMaintainFee(this, colony) * (-1), this, f, "maintain" );
+        colony.modifyingMoney( f.getMaintainFee(this, colony) * (-1), this, f, "Maintain", f.getName());
     }
     
     /** 예약 작업 처리 */

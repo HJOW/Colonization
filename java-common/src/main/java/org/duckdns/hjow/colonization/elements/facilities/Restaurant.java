@@ -110,7 +110,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
                 servicingCount++;
                 c.setMoney(c.getMoney() - fee - tax);
                 c.setHunger(c.getHunger() + solvingHunger);
-                colony.modifyingMoney(tax, city, colony, ColonyManager.t("세금") + " - " + getFacilityTitle());
+                colony.modifyingMoney(tax, city, c, "Tax", getName());
                 
                 if(compGrade >= 2) {
                     c.setHappy(c.getHappy() + (compGrade / 2));
