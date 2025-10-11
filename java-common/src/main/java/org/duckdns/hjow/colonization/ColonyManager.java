@@ -6,12 +6,14 @@ import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.resource.FileStringTable;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
@@ -129,11 +131,25 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         if(! root.exists()) root.mkdirs();
         
         try {
+        	// 기본 설정 파일 불러오기
             File conf = new File(root.getAbsolutePath() + File.separator + "config.json");
             if(conf.exists()) {
                 String strJson = FileUtil.readString(conf, "UTF-8"); // 파일 읽고
                 JsonObject json = (JsonObject) JsonObject.parseJson(strJson); // JSON 파싱
                 configs.fromJson(json); // 설정 넣기
+            }
+            
+            // 스트링 테이블 불러오기
+            String stringTablePath = configs.getString("StringTableFile");
+            if(DataUtil.isNotEmpty(stringTablePath)) {
+            	File fileStringTable = new File(stringTablePath.trim());
+            	if(! fileStringTable.exists()) {
+            		Properties newProp = new Properties();
+            		// TODO : 기본 데이터 불러오기
+            		FileUtil.saveProperties(fileStringTable, newProp);
+            	}
+            	FileStringTable stringTable = new FileStringTable(fileStringTable);
+            	STRINGTABLE.setOriginalInstance(stringTable);
             }
             
             // 설정들 중 클래스 관련 설정 적용
@@ -529,6 +545,11 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         return damage;
     }
     
+    /** 다국어 번역, 번역 데이터에 없는 텍스트이면 매개변수 그대로 반환 */
+    public static String t(String originals) {
+    	return STRINGTABLE.t(originals);
+    }
+    
     /** 현재 버전의 버전 배열 반환 */
     public static int[] getVersionArray() {
         int[] arr = new int[4];
@@ -580,6 +601,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###,###,###,###,##0");
     public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("##0.00");
+    
+    protected static final ColonyStringTable STRINGTABLE = new ColonyStringTable();
     
     protected static transient GlobalLogUI dialogGlobalLog;
     protected static transient boolean flagDebugMode = false; // 실행 시간 표시 플래그
