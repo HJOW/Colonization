@@ -145,7 +145,7 @@ public class GUIColonyManager extends ColonyManager {
             filterCol = new javax.swing.filechooser.FileFilter() {
                 @Override
                 public String getDescription() {
-                    return "정착지 파일 (*.colony)";
+                    return t("정착지 파일") + " (*.colony)";
                 }
                 
                 @Override
@@ -159,7 +159,7 @@ public class GUIColonyManager extends ColonyManager {
             filterColGz = new javax.swing.filechooser.FileFilter() {
                 @Override
                 public String getDescription() {
-                    return "정착지 GZ 압축형 파일 (*.colgz)";
+                    return t("정착지 GZ 압축형 파일") + " (*.colgz)";
                 }
                 
                 @Override
@@ -187,8 +187,8 @@ public class GUIColonyManager extends ColonyManager {
         pnMainCard1 = new JPanel();
         pnMainCard2 = new JPanel();
         
-        tabMain.add("홈", pnFront);
-        tabMain.add("로컬", pnMain);
+        tabMain.add(t("홈"), pnFront);
+        tabMain.add(t("로컬"), pnMain);
         
         pnFront.setLayout(new BorderLayout());
         
@@ -233,7 +233,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        JButton btnExit = new JButton("종료");
+        JButton btnExit = new JButton(t("종료"));
         pnFrontDownRight.add(btnExit);
         
         btnExit.addActionListener(new ActionListener() {
@@ -329,7 +329,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        btnThrPlay = new JButton("시뮬레이션 시작");
+        btnThrPlay = new JButton(t("시뮬레이션 시작"));
         toolbarNorth.add(btnThrPlay);
         
         btnThrPlay.addActionListener(new ActionListener() {
@@ -379,7 +379,7 @@ public class GUIColonyManager extends ColonyManager {
         pnNoColMain.add(pnNoColCenter, BorderLayout.CENTER);
         pnNoColMain.add(pnNoColSouth , BorderLayout.SOUTH);
         
-        JButton btnNewCol = new JButton("새 정착지 개척");
+        JButton btnNewCol = new JButton(t("새 정착지 개척"));
         btnNewCol.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -395,10 +395,10 @@ public class GUIColonyManager extends ColonyManager {
         
         JMenuItem menuItem;
         
-        menuFile = new JMenu("파일");
+        menuFile = new JMenu(t("파일"));
         menuBar.add(menuFile);
         
-        menuFileNew = new JMenuItem("새 정착지 개척");
+        menuFileNew = new JMenuItem(t("새 정착지 개척"));
         menuFile.add(menuFileNew);
         menuFileNew.addActionListener(new ActionListener() {
             @Override
@@ -407,7 +407,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuFileDel = new JMenuItem("이 정착지 삭제");
+        menuFileDel = new JMenuItem(t("이 정착지 삭제"));
         menuFile.add(menuFileDel);
         menuFileDel.addActionListener(new ActionListener() {
             @Override
@@ -418,7 +418,7 @@ public class GUIColonyManager extends ColonyManager {
         
         menuFile.addSeparator();
         
-        menuFileSave = new JMenuItem("다른 이름으로 이 정착지 저장");
+        menuFileSave = new JMenuItem(t("다른 이름으로 이 정착지 저장"));
         menuFile.add(menuFileSave);
         menuFileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
         menuFileSave.addActionListener(new ActionListener() {
@@ -428,7 +428,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuFileLoad = new JMenuItem("외부 정착지 파일 불러오기");
+        menuFileLoad = new JMenuItem(t("외부 정착지 파일 불러오기"));
         menuFile.add(menuFileLoad);
         menuFileLoad.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, KeyEvent.CTRL_MASK));
         menuFileLoad.addActionListener(new ActionListener() {
@@ -440,7 +440,7 @@ public class GUIColonyManager extends ColonyManager {
         
         menuFile.addSeparator();
 
-        menuFileBackup = new JMenuItem("백업");
+        menuFileBackup = new JMenuItem(t("백업"));
         menuFile.add(menuFileBackup);
         menuFileBackup.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, KeyEvent.CTRL_MASK));
         menuFileBackup.addActionListener(new ActionListener() {
@@ -450,7 +450,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuFileRestore = new JMenuItem("복원");
+        menuFileRestore = new JMenuItem(t("복원"));
         menuFile.add(menuFileRestore);
         menuFileRestore.addActionListener(new ActionListener() {
             @Override
@@ -459,7 +459,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuFileReset = new JMenuItem("정착지 모두 포기 (초기화)");
+        menuFileReset = new JMenuItem(t("정착지 모두 포기 (초기화)"));
         menuFile.add(menuFileReset);
         menuFileReset.addActionListener(new ActionListener() {
             @Override
@@ -470,7 +470,7 @@ public class GUIColonyManager extends ColonyManager {
         
         menuFile.addSeparator();
         
-        menuItem = new JMenuItem("재시작");
+        menuItem = new JMenuItem(t("재시작"));
         menuFile.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
@@ -481,7 +481,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuItem = new JMenuItem("종료");
+        menuItem = new JMenuItem(t("종료"));
         menuFile.add(menuItem);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.ALT_MASK));
         menuItem.addActionListener(new ActionListener() {
@@ -493,10 +493,10 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuAction = new JMenu("동작");
+        menuAction = new JMenu(t("동작"));
         menuBar.add(menuAction);
         
-        menuActionThrPlay = new JMenuItem("시뮬레이션 시작");
+        menuActionThrPlay = new JMenuItem(t("시뮬레이션 시작"));
         menuAction.add(menuActionThrPlay);
         menuActionThrPlay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
         menuActionThrPlay.addActionListener(new ActionListener() {
@@ -508,7 +508,7 @@ public class GUIColonyManager extends ColonyManager {
 
         menuAction.addSeparator();
 
-        menuItem = new JCheckBoxMenuItem("디버그 모드");
+        menuItem = new JCheckBoxMenuItem(t("디버그 모드"));
         menuAction.add(menuItem);
         menuItem.addItemListener(new ItemListener() {
             @Override
@@ -519,7 +519,7 @@ public class GUIColonyManager extends ColonyManager {
         });
         ((JCheckBoxMenuItem)menuItem).setSelected(isDebugModeEnabled());
 
-        menuItem = new JMenuItem("전역 로그 보기");
+        menuItem = new JMenuItem(t("전역 로그 보기"));
         menuAction.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
@@ -533,7 +533,7 @@ public class GUIColonyManager extends ColonyManager {
         
         menuAction.addSeparator();
         
-        menuItem = new JMenuItem("Benchmark");
+        menuItem = new JMenuItem(t("성능 벤치마크"));
         menuAction.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
@@ -542,7 +542,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuItem = new JMenuItem("TCP Daemon");
+        menuItem = new JMenuItem(t("TCP 데몬"));
         menuAction.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
@@ -723,7 +723,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 현재의 정착지 삭제 요청 시 호출됨 */
     protected void onDeleteThisRequested() {
         Colony col = getColony();
-        int sel = JOptionPane.showConfirmDialog(getDialog(), "정착지 " + col.getName() + "을/를 포기하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
+        int sel = JOptionPane.showConfirmDialog(getDialog(), t("정착지 [COLONY] 을/를 포기하시겠습니까?").replace("[COLONY]", col.getName()), t("확인"), JOptionPane.YES_NO_OPTION);
         if(sel != JOptionPane.YES_OPTION) return;
         
         cardMain.show(pnMain, "C2");
@@ -758,7 +758,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 정착지 하나를 별도 파일로 저장 요청 시 호출됨 */
     protected void onSaveRequested() {
         Colony c = getSelectedColony();
-        if(c == null) { alert("저장할 정착지를 선택해 주세요."); return; }
+        if(c == null) { alert(t("저장할 정착지를 선택해 주세요.")); return; }
         
         int s = fileChooser.showSaveDialog(getDialog());
         if(s == JFileChooser.APPROVE_OPTION) {
@@ -1052,8 +1052,8 @@ public class GUIColonyManager extends ColonyManager {
         btnThrPlay.setEnabled(false);
         menuActionThrPlay.setEnabled(false);
         
-        btnThrPlay.setText("시뮬레이션 시작");
-        menuActionThrPlay.setText("시뮬레이션 시작");
+        btnThrPlay.setText(t("시뮬레이션 시작"));
+        menuActionThrPlay.setText(t("시뮬레이션 시작"));
         btnSaveAs.setEnabled(true);
         btnLoadAs.setEnabled(true);
         cbxColony.setEnabled(true);
@@ -1101,8 +1101,8 @@ public class GUIColonyManager extends ColonyManager {
             }
         } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
-        btnThrPlay.setText("시뮬레이션 정지");
-        menuActionThrPlay.setText("시뮬레이션 정지");
+        btnThrPlay.setText(t("시뮬레이션 정지"));
+        menuActionThrPlay.setText(t("시뮬레이션 정지"));
         btnSaveAs.setEnabled(false);
         btnLoadAs.setEnabled(false);
         cbxColony.setEnabled(false);

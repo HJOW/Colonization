@@ -64,7 +64,7 @@ public class NewFacilityManager extends JDialog {
         
         setSize(400, 300);
         setLayout(new BorderLayout());
-        setTitle("새 시설 건설");
+        setTitle(ColonyManager.t("새 시설 건설"));
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -99,8 +99,8 @@ public class NewFacilityManager extends JDialog {
         ta.setLineWrap(true);
         pnCenter.add(new JScrollPane(ta), BorderLayout.CENTER);
         
-        btnOk    = new JButton("건설");
-        btnClose = new JButton("취소");
+        btnOk    = new JButton(ColonyManager.t("건설"));
+        btnClose = new JButton(ColonyManager.t("취소"));
         
         pnDown.add(btnOk);
         pnDown.add(btnClose);
@@ -130,19 +130,19 @@ public class NewFacilityManager extends JDialog {
                     col = city.getColony(colonyManager);
                     
                     if(col.getMoney() < info.getPrice().longValue()) {
-                        JOptionPane.showMessageDialog(getDialog(), "예산이 부족합니다.\n" + (info.getPrice() - col.getMoney()) + " 의 예산이 더 필요합니다.");
+                        JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("예산이 부족합니다.\n[MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(info.getPrice() - col.getMoney())));
                         return;
                     };
                     
                     if(col.getTech() < info.getTech().longValue()) {
-                        JOptionPane.showMessageDialog(getDialog(), "기술이 부족합니다.\n" + (info.getTech() - col.getTech()) + " 의 기술이 더 필요합니다.");
+                        JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("기술이 부족합니다.\n[TECH] 의 기술이 더 필요합니다.").replace("[TECH]", String.valueOf(info.getTech() - col.getTech())));
                         return;
                     };
                     
                     int leftSpaces = city.getLeftSpaces();
                     int needSpaces = info.getSpaceSize();
                     if(leftSpaces < needSpaces) {
-                    	JOptionPane.showMessageDialog(getDialog(), "잔여 공간이 부족합니다.\n" + (needSpaces - leftSpaces) + " 의 공간이 더 필요합니다.");
+                    	JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("잔여 공간이 부족합니다.\n[SPACE] 의 공간이 더 필요합니다.").replace("[SPACE]", String.valueOf(needSpaces - leftSpaces)));
                         return;
                     }
                     
@@ -162,7 +162,7 @@ public class NewFacilityManager extends JDialog {
                     colonyManager.refreshColonyContent();
                     dispose();
                 } catch(Exception ex) {
-                    JOptionPane.showMessageDialog(getDialog(), "오류가 발생하였습니다.\n" + ex.getMessage());
+                    JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류가 발생하였습니다.") + "\n" + ex.getMessage());
                 }
             }
         });
@@ -220,17 +220,17 @@ public class NewFacilityManager extends JDialog {
         String appends  = "";
         
         if(col.getMoney() < info.getPrice().longValue()) {
-            prepends = "\n건설에 " + (info.getPrice() - col.getMoney()) + " 의 예산이 더 필요합니다.";
+            prepends = "\n" + ColonyManager.t("건설에 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(info.getPrice() - col.getMoney()));
             avail = false;
         }
         if(col.getTech() < info.getTech().longValue()) {
-            prepends = "\n건설에 " + (info.getTech() - col.getTech()) + " 의 기술이 더 필요합니다.";
+            prepends = "\n" + ColonyManager.t("건설에 [TECH] 의 기술이 더 필요합니다.").replace("[TECH]", String.valueOf(info.getTech() - col.getTech()));
             avail = false;
         }
         
-        appends = appends + "\n" + "비용 : " + info.getPrice();
-        appends = appends + "\n" + "기술 : " + info.getTech();
-        appends = appends + "\n" + "소요 : " + info.getBuildingCycle();
+        appends = appends + "\n" + ColonyManager.t("비용") + " : " + info.getPrice();
+        appends = appends + "\n" + ColonyManager.t("기술") + " : " + info.getTech();
+        appends = appends + "\n" + ColonyManager.t("소요") + " : " + info.getBuildingCycle();
         
         ta.setText(new String(prepends + "\n\n" + info.getDescription() + "\n\n" + appends).trim());
         btnOk.setEnabled(avail);

@@ -32,6 +32,7 @@ import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyBackup;
@@ -104,10 +105,10 @@ public class BackupManager implements Disposeable {
         pnSecurity.setLayout(new FlowLayout(FlowLayout.LEFT));
         pnCenterDown.add(pnSecurity, BorderLayout.SOUTH);
         
-        chkUseEnc = new JCheckBox("암호화");
+        chkUseEnc = new JCheckBox(ColonyManager.t("암호화"));
         pnSecurity.add(chkUseEnc);
         
-        lbPassword = new JLabel("암호");
+        lbPassword = new JLabel(ColonyManager.t("암호"));
         pnSecurity.add(lbPassword);
         
         tfPassword = new JPasswordField(10);
@@ -121,9 +122,9 @@ public class BackupManager implements Disposeable {
         
         tfFile = new JTextField(20);
         btnSelFile = new JButton("...");
-        btnAccept = new JButton("저장");
-        btnConcat = new JButton("복원 (병합)");
-        btnClose = new JButton("취소");
+        btnAccept = new JButton(ColonyManager.t("저장"));
+        btnConcat = new JButton(ColonyManager.t("복원 (병합)"));
+        btnClose = new JButton(ColonyManager.t("취소"));
         
         pnCtrl.add(tfFile);
         pnCtrl.add(btnSelFile);
@@ -160,8 +161,8 @@ public class BackupManager implements Disposeable {
                 new Thread(new Runnable() {   
                     @Override
                     public void run() {
-                        if(saveMode) { try { onSaveRequested();         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); JOptionPane.showMessageDialog(dialog, "오류 : " + ex.getMessage()); } }
-                        else         { try { onLoadCompleteRequested(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); JOptionPane.showMessageDialog(dialog, "오류 : " + ex.getMessage()); } }
+                        if(saveMode) { try { onSaveRequested();         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); JOptionPane.showMessageDialog(dialog, ColonyManager.t("오류") + " : " + ex.getMessage()); } }
+                        else         { try { onLoadCompleteRequested(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); JOptionPane.showMessageDialog(dialog, ColonyManager.t("오류") + " : " + ex.getMessage()); } }
                         prog.setIndeterminate(false);
                         btnAccept.setEnabled(enBtnAccept);
                         btnConcat.setEnabled(enBtnConcat);
@@ -181,7 +182,7 @@ public class BackupManager implements Disposeable {
                 new Thread(new Runnable() {   
                     @Override
                     public void run() {
-                        try { onLoadConcatRequested(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); JOptionPane.showMessageDialog(dialog, "오류 : " + ex.getMessage()); }
+                        try { onLoadConcatRequested(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); JOptionPane.showMessageDialog(dialog, ColonyManager.t("오류") + " : " + ex.getMessage()); }
                         prog.setIndeterminate(false);
                         btnAccept.setEnabled(enBtnAccept);
                         btnConcat.setEnabled(enBtnConcat);
@@ -208,7 +209,7 @@ public class BackupManager implements Disposeable {
         backupChooser.addChoosableFileFilter(new javax.swing.filechooser.FileFilter() {
             @Override
             public String getDescription() {
-                return "정착지 백업 파일 (*.colbak)";
+                return ColonyManager.t("정착지 백업 파일") + " (*.colbak)";
             }
             
             @Override
@@ -234,12 +235,12 @@ public class BackupManager implements Disposeable {
         pnSecurity.setVisible(false);
         chkUseEnc.setVisible(false);
         taDet.setVisible(true);
-        btnAccept.setText("복원 (대체)");
+        btnAccept.setText(ColonyManager.t("복원 (대체)"));
         tfName.setText("");
         ta.setText("");
         tfName.setEditable(false);
         ta.setEditable(false);
-        dialog.setTitle("복원");
+        dialog.setTitle(ColonyManager.t("복원"));
         saveMode = false;
         security = "";
         
@@ -251,7 +252,7 @@ public class BackupManager implements Disposeable {
         File file = backupChooser.getSelectedFile();
         tfFile.setText(file.getAbsolutePath());
         
-        dialog.setTitle("복원 - " + file.getName());
+        dialog.setTitle(ColonyManager.t("복원") + " - " + file.getName());
         
         prog.setIndeterminate(true);
         btnAccept.setEnabled(false);
@@ -283,12 +284,12 @@ public class BackupManager implements Disposeable {
         lbPassword.setVisible(false);
         pnSecurity.setVisible(true);
         chkUseEnc.setVisible(true);
-        btnAccept.setText("저장");
+        btnAccept.setText(ColonyManager.t("저장"));
         tfName.setEditable(true);
         ta.setEditable(true);
-        tfName.setText("이 곳에 백업의 이름을 입력해 주세요.");
-        ta.setText("이 곳에 백업의 설명을 입력해 주세요.");
-        dialog.setTitle("백업");
+        tfName.setText(ColonyManager.t("이 곳에 백업의 이름을 입력해 주세요."));
+        ta.setText(ColonyManager.t("이 곳에 백업의 설명을 입력해 주세요."));
+        dialog.setTitle(ColonyManager.t("백업"));
         saveMode = true;
         security = "";
         
@@ -373,7 +374,7 @@ public class BackupManager implements Disposeable {
     
     protected void onSaveRequested() {
         String strFile = tfFile.getText().trim();
-        if(strFile.equals("")) { JOptionPane.showMessageDialog(dialog, "저장할 파일 경로와 이름을 지정해 주세요."); return; }
+        if(strFile.equals("")) { JOptionPane.showMessageDialog(dialog, ColonyManager.t("저장할 파일 경로와 이름을 지정해 주세요.")); return; }
         
         prog.setIndeterminate(true);
         
@@ -409,14 +410,14 @@ public class BackupManager implements Disposeable {
             colonies.clear();
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
-            JOptionPane.showMessageDialog(dialog, "오류 : " + ex.getMessage());
+            JOptionPane.showMessageDialog(dialog, ColonyManager.t("오류") + " : " + ex.getMessage());
         }
     }
     
     protected void onLoadRequested() {
         File file = new File(tfFile.getText());
         if(! file.exists()) {
-            JOptionPane.showMessageDialog(dialog, "파일을 찾을 수 없습니다.\n" + file.getAbsolutePath());
+            JOptionPane.showMessageDialog(dialog, ColonyManager.t("파일을 찾을 수 없습니다.") + "\n" + file.getAbsolutePath());
             dialog.setVisible(false);
             return;
         }
@@ -452,13 +453,13 @@ public class BackupManager implements Disposeable {
             taDet.setText("저장일시 : " + new Date(bak.getCreated()));
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
-            JOptionPane.showMessageDialog(dialog, "오류 : " + ex.getMessage());
+            JOptionPane.showMessageDialog(dialog, ColonyManager.t("오류") + " : " + ex.getMessage());
             dialog.setVisible(false);
         }
     }
     
     protected void onLoadCompleteRequested() {
-        int sel = JOptionPane.showConfirmDialog(dialog, "이 백업을 복원하시겠습니까?\n기존 정착지들이 모두 사라지고 이 백업으로 대체됩니다 !", "확인", JOptionPane.YES_NO_OPTION);
+        int sel = JOptionPane.showConfirmDialog(dialog, ColonyManager.t("이 백업을 복원하시겠습니까?\n기존 정착지들이 모두 사라지고 이 백업으로 대체됩니다 !"), ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
         if(sel != JOptionPane.YES_OPTION) return;
         
         prog.setIndeterminate(true);
@@ -477,7 +478,7 @@ public class BackupManager implements Disposeable {
     }
     
     protected void onLoadConcatRequested() {
-        int sel = JOptionPane.showConfirmDialog(dialog, "이 백업을 복원하시겠습니까?\n기존 정착지들과 더불어 백업된 정착지들이 추가됩니다.\n단, 고유 키가 중복되는 정착지는 사라질 수 있습니다 !", "확인", JOptionPane.YES_NO_OPTION);
+        int sel = JOptionPane.showConfirmDialog(dialog, ColonyManager.t("이 백업을 복원하시겠습니까?\n기존 정착지들과 더불어 백업된 정착지들이 추가됩니다.\n단, 고유 키가 중복되는 정착지는 사라질 수 있습니다 !"), ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
         if(sel != JOptionPane.YES_OPTION) return;
         
         prog.setIndeterminate(true);

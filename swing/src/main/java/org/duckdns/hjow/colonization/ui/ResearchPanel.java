@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -72,7 +73,7 @@ public class ResearchPanel extends JPanel {
         
         lbName.setText(r.getTitle());
         if(r.getLevel() >= 1) lbLevel.setText("(Lv " + r.getLevel() + ")");
-        else                  lbLevel.setText("(연구 중)");
+        else                  lbLevel.setText("(" + ColonyManager.t("연구 중") + ")");
         
         if(r.getMaxProgress() >= (Integer.MAX_VALUE / 10)) {
             prog.setMaximum((int) (r.getMaxProgress() / 10000));

@@ -181,8 +181,8 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         pnFacRoot.add(new JScrollPane(pnFacilities, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         pnCitiRoot.add(new JScrollPane(pnCitizens), BorderLayout.CENTER);
         
-        tab.add("시설", pnFacRoot);
-        tab.add("시민", pnCitiRoot);
+        tab.add(ColonyManager.t("시설"), pnFacRoot);
+        tab.add(ColonyManager.t("시민"), pnCitiRoot);
         
         KeyAdapter eventSearch = new KeyAdapter() {
             @Override
@@ -206,7 +206,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         // pnDown.add(toolbarCity, BorderLayout.CENTER);
         pnTop.add(toolbarCity, BorderLayout.SOUTH);
         
-        btnNewFac = new JButton("새 시설 건설");
+        btnNewFac = new JButton(ColonyManager.t("새 시설 건설"));
         toolbarCity.add(btnNewFac);
         
         btnNewFac.addActionListener(new ActionListener() {
@@ -224,7 +224,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         String msg = null;
         
         if(city.getFacility().size() >= city.getSpaces()) {
-            return "이 도시에는 더 이상 시설을 건설할 수 없습니다.";
+            return ColonyManager.t("이 도시에는 더 이상 시설을 건설할 수 없습니다.");
         }
         
         return msg;

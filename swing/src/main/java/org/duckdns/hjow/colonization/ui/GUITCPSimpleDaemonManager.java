@@ -18,6 +18,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.ui.JLogArea;
@@ -87,7 +88,7 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
         spPort = new JSpinner(intModel);
         toolbar.add(spPort);
         
-        btnToggle = new JButton("시작");
+        btnToggle = new JButton(ColonyManager.t("시작"));
         toolbar.add(btnToggle);
         btnToggle.addActionListener(new ActionListener() {
             @Override
@@ -129,11 +130,11 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
     protected void afterToggled() {
         try { Thread.sleep(200L); } catch(InterruptedException ex) {}
         if(flagToggle) {
-            btnToggle.setText("종료");
+            btnToggle.setText(ColonyManager.t("종료"));
         } else {
             cbxCharset.setEnabled(true);
             spPort.setEnabled(true);
-            btnToggle.setText("시작");
+            btnToggle.setText(ColonyManager.t("시작"));
         }
         btnToggle.setEnabled(true);
     }

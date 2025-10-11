@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 public class BenchmarkManager {
@@ -89,7 +90,7 @@ public class BenchmarkManager {
         taFront.setEditable(false);
         pnUp.add(taFront, BorderLayout.CENTER);
         
-        taFront.setText("Colonization 시뮬레이션 속도를 벤치마킹할 수 있는 도구입니다.\n쓰레드와 사이클(시간) 수를 지정하신 후 버튼을 클릭해 시작하실 수 있습니다.");
+        taFront.setText(ColonyManager.t("Colonization 시뮬레이션 속도를 벤치마킹할 수 있는 도구입니다.\n쓰레드와 사이클(시간) 수를 지정하신 후 버튼을 클릭해 시작하실 수 있습니다."));
         
         pnCenter.setLayout(new BorderLayout());
         
@@ -308,7 +309,7 @@ public class BenchmarkManager {
         list.clear();
         
         StringBuilder res = new StringBuilder("");
-        res = res.append("\n").append("정착지 수 : ").append(String.valueOf(counts));
+        res = res.append("\n").append(ColonyManager.t("정착지 수") + " : ").append(String.valueOf(counts));
         
         BigDecimal sum = BigDecimal.ZERO;
         for(BigDecimal n : results) {
@@ -316,8 +317,8 @@ public class BenchmarkManager {
         }
         sum.setScale(50, RoundingMode.HALF_UP);
         BigDecimal ave = sum.divide(new BigDecimal(String.valueOf(counts)));
-        res = res.append("\n").append("소요시간 합산 : ").append(String.valueOf(sum)).append(" (낮을 수록 우수)");
-        res = res.append("\n").append("평균 소요시간 : ").append(String.valueOf(ave)).append(" (낮을 수록 우수)");
+        res = res.append("\n").append(ColonyManager.t("소요시간 합산") + " : ").append(String.valueOf(sum)).append(" (" + ColonyManager.t("낮을 수록 우수") + ")");
+        res = res.append("\n").append(ColonyManager.t("평균 소요시간") + " : ").append(String.valueOf(ave)).append(" (" + ColonyManager.t("낮을 수록 우수") + ")");
         
         taResult.setText(res.toString().trim());
         card.show(pnCard, "C3");

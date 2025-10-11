@@ -125,9 +125,14 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         return getHomeDir("colonization", "saves");
     }
     
+    /** 정착지 설정 기본 경로 반환 */
+    public File getColonyConfigRootDirectory() {
+        return getHomeDir("colonization", "configs");
+    }
+    
     /** Colonization 기본 설정 불러오기 */
     public void loadLocalConfigs() {
-        File root = getColonySaveRootDirectory();
+        File root = getColonyConfigRootDirectory();
         if(! root.exists()) root.mkdirs();
         
         try {
@@ -137,17 +142,28 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
                 String strJson = FileUtil.readString(conf, "UTF-8"); // 파일 읽고
                 JsonObject json = (JsonObject) JsonObject.parseJson(strJson); // JSON 파싱
                 configs.fromJson(json); // 설정 넣기
+            } else {
+            	JsonObject json = new JsonObject();
+            	FileUtil.writeString(conf, "UTF-8", json.toJSON());
             }
+            configs.setConfigSaveOnNotExistingKeys(true);
             
             // 스트링 테이블 불러오기
             String stringTablePath = configs.getString("StringTableFile");
             File fileStringTable = null;
             if(DataUtil.isNotEmpty(stringTablePath)) {
+            	stringTablePath = stringTablePath.replace("[CONFIGPATH]", root.getAbsolutePath());
             	fileStringTable = new File(stringTablePath.trim());
-            } else {
-            	fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
             }
+            if(fileStringTable == null) {
+            	fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
+            	configs.set("StringTableFile", fileStringTable.getAbsolutePath().replace(root.getAbsolutePath(), "[CONFIGPATH]"));
+            }
+            
             if(! fileStringTable.exists()) {
+            	fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
+            	configs.set("StringTableFile", fileStringTable.getAbsolutePath().replace(root.getAbsolutePath(), "[CONFIGPATH]"));
+            	
         		Properties newProp = new Properties();
         		// TODO : 기본 데이터 불러오기
         		FileUtil.saveProperties(fileStringTable, newProp);
@@ -265,7 +281,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     /** Colonization 기본 설정 저장 */
     public void saveLocalConfigs() {
-        File root = getColonySaveRootDirectory();
+        File root = getColonyConfigRootDirectory();
         if(! root.exists()) root.mkdirs();
         
         try {

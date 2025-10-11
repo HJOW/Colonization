@@ -32,7 +32,7 @@ public class GlobalLogDialog implements GlobalLogUI {
         if(superInstance instanceof GUIColonyManager) dialog = new JDialog(((GUIColonyManager) superInstance).getDialog());
         else dialog = new JDialog();
         dialog.setSize(600, 400);
-        dialog.setTitle("로그");
+        dialog.setTitle(ColonyManager.t("로그"));
         GUIUtil.centerWindow(dialog);
 
         dialog.setLayout(new BorderLayout());
@@ -52,7 +52,7 @@ public class GlobalLogDialog implements GlobalLogUI {
         JToolBar toolbar = new JToolBar();
         pnDown.add(toolbar, BorderLayout.CENTER);
         
-        JButton btnClear = new JButton("비우기");
+        JButton btnClear = new JButton(ColonyManager.t("비우기"));
         toolbar.add(btnClear);
         
         btnClear.addActionListener(new ActionListener() {

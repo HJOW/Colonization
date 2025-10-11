@@ -77,18 +77,18 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         pnCenter.add(tabMain, BorderLayout.CENTER);
         
         tabCities = new JTabbedPane();
-        tabMain.add("도시", tabCities);
+        tabMain.add(ColonyManager.t("도시"), tabCities);
         
         pnResearches = new JPanel();
-        tabMain.add("연구", pnResearches);
+        tabMain.add(ColonyManager.t("연구"), pnResearches);
         
         pnAccountingMain = new JPanel();
-        tabMain.add("예산", pnAccountingMain);
+        tabMain.add(ColonyManager.t("예산"), pnAccountingMain);
         
         tableAccounting = new DefaultTableModel();
-        tableAccounting.addColumn("사유");
-        tableAccounting.addColumn("대상");
-        tableAccounting.addColumn("금액");
+        tableAccounting.addColumn(ColonyManager.t("사유"));
+        tableAccounting.addColumn(ColonyManager.t("대상"));
+        tableAccounting.addColumn(ColonyManager.t("금액"));
         
         tfIncomes = new JTextField();
         tfIncomes.setEditable(false);
@@ -158,7 +158,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         toolbar = new JToolBar();
         pnTopDetail.add(toolbar, BorderLayout.SOUTH);
         
-        btnNewCity = new JButton("새 도시 건설");
+        btnNewCity = new JButton(ColonyManager.t("새 도시 건설"));
         toolbar.add(btnNewCity);
         
         btnNewCity.addActionListener(new ActionListener() {   
@@ -316,20 +316,20 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         
         // 최대 도시 수 제한 체크
         int cityCnt = col.getCityCount();
-        if(cityCnt >= col.getMaxCityCount()) { JOptionPane.showMessageDialog(superInstance.getDialog(), "더 이상 새 도시를 건설할 수 없습니다."); return; }
+        if(cityCnt >= col.getMaxCityCount()) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("더 이상 새 도시를 건설할 수 없습니다.")); return; }
         
         // 예산 체크
         long howMuch = City.getBuildingNewCityFee(col);
         long nowHave = col.getMoney();
-        if(nowHave < howMuch) { JOptionPane.showMessageDialog(superInstance.getDialog(), "새 도시 건설에는 " + (howMuch - nowHave) + " 의 예산이 더 필요합니다."); return; }
+        if(nowHave < howMuch) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(howMuch - nowHave))); return; }
         
         // 인구 체크 (소모는 되지 않지만, 최소 조건으로 적용)
         long population = col.getCitizenCount();
         if(cityCnt >= 1) {
-            if((population / cityCnt) < 1000) { JOptionPane.showMessageDialog(superInstance.getDialog(), "새 도시를 건설하려면, 현재의 도시들의 인구 평균이 1000 을 넘어야 합니다."); return; }
+            if((population / cityCnt) < 1000) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("새 도시를 건설하려면, 현재의 도시들의 인구 평균이 [AVERAGE] 을 넘어야 합니다.").replace("[AVERAGE]", "1000")); return; }
         }
         
-        int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), "새 도시를 건설하시겠습니까?\n" + howMuch + " 의 예산이 필요합니다.", "확인", JOptionPane.YES_NO_OPTION);
+        int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), ColonyManager.t("새 도시를 건설하시겠습니까?\n[MONEY] 의 예산이 필요합니다.").replace("[MONEY]", String.valueOf(howMuch)), ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
         if(sel != JOptionPane.YES_OPTION) return;
         
         newCity();
@@ -341,21 +341,21 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         
         // 최대 도시 수 제한 체크
         int cityCnt = col.getCityCount();
-        if(cityCnt >= col.getMaxCityCount()) throw new RuntimeException("더 이상 새 도시를 건설할 수 없습니다.");
+        if(cityCnt >= col.getMaxCityCount()) throw new RuntimeException(ColonyManager.t("더 이상 새 도시를 건설할 수 없습니다."));
         
         // 예산 체크
         long howMuch = City.getBuildingNewCityFee(col);
         long nowHave = col.getMoney();
-        if(nowHave < howMuch) throw new RuntimeException("새 도시 건설에는 " + (howMuch - nowHave) + " 의 예산이 더 필요합니다.");
+        if(nowHave < howMuch) throw new RuntimeException(ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다."));
         
         // 인구 체크 (소모는 되지 않지만, 최소 조건으로 적용)
         long population = col.getCitizenCount();
         if(cityCnt >= 1) {
-            if((population / cityCnt) < 1000) throw new RuntimeException("새 도시를 건설하려면, 현재의 도시들의 인구 평균이 1000 을 넘어야 합니다.");
+            if((population / cityCnt) < 1000) throw new RuntimeException(ColonyManager.t("새 도시를 건설하려면, 현재의 도시들의 인구 평균이 [AVERAGE] 을 넘어야 합니다.").replace("[AVERAGE]", "1000"));
         }
         
         City c = col.newCity();
-        col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, "신도시 건설");
+        col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, ColonyManager.t("신도시 건설"));
         
         reserveRefresh();
     }

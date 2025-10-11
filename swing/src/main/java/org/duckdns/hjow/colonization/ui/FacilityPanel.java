@@ -105,10 +105,10 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         progHp = new JProgressBar(JProgressBar.HORIZONTAL);
         pnCtrls.add(progHp);
         
-        btnDestroy = new JButton("철거");
+        btnDestroy = new JButton(ColonyManager.t("철거"));
         pnCtrls.add(btnDestroy);
         
-        btnUpgrade = new JButton("증축");
+        btnUpgrade = new JButton(ColonyManager.t("증축"));
         pnCtrls.add(btnUpgrade);
         btnUpgrade.setVisible(false);
         
@@ -221,21 +221,21 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
             	long m = f.getDestructionFee(city, colony);
             	long currentMoney = colony.getMoney();
             	
-            	if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), "예산이 " + ColonyManager.FORMATTER_INT.format( m - currentMoney ) + " 부족합니다."); return; }
+            	if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.FORMATTER_INT.format( m - currentMoney ))); return; }
             	
-            	if(f.getHp() <= 0) { JOptionPane.showMessageDialog(superInstance.getDialog(), "이미 곧 철거될 예정입니다."); return; }
+            	if(f.getHp() <= 0) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("이미 곧 철거될 예정입니다.")); return; }
             	
-            	String msg = "이 시설을 철거하시겠습니까?";
-            	msg += "\n" + ColonyManager.FORMATTER_INT.format(m) + " 예산 필요";
+            	String msg = ColonyManager.t("이 시설을 철거하시겠습니까?");
+            	msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.FORMATTER_INT.format(m));
             	
-                int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, "확인", JOptionPane.YES_NO_OPTION);
+                int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
                 if(sel != JOptionPane.YES_OPTION) return;
                 
                 colony.modifyingMoney(m * (-1L), city, f, "Destruction");
                 
                 f.setHp(0);
                 superInstance.refreshColonyContent();
-                JOptionPane.showMessageDialog(superInstance.getDialog(), "철거 지시가 내려졌습니다. 곧 철거될 것입니다.");
+                JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("철거 지시가 내려졌습니다. 곧 철거될 것입니다."));
             }
         });
         
@@ -246,14 +246,14 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
 				int  c = f.getUpgradeCycle(colony, city);
 				long currentMoney = colony.getMoney();
 				
-				if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), "예산이 " + ColonyManager.FORMATTER_INT.format( m - currentMoney ) + " 부족합니다."); return; }
-				if(f.getLevel() >= f.getMaxLevel()) { JOptionPane.showMessageDialog(superInstance.getDialog(), "더 이상 증축이 불가능합니다."); return; }
-				if(! isUpgradeAvail(f, colony, city)) { JOptionPane.showMessageDialog(superInstance.getDialog(), "증축이 불가능합니다."); return; }
+				if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.FORMATTER_INT.format( m - currentMoney ))); return; }
+				if(f.getLevel() >= f.getMaxLevel()) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("더 이상 증축이 불가능합니다.")); return; }
+				if(! isUpgradeAvail(f, colony, city)) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("증축이 불가능합니다.")); return; }
 				
-				String msg = "이 시설을 증축하시겠습니까?";
-				msg += "\n" + ColonyManager.FORMATTER_INT.format(m) + " 예산 필요";
+				String msg = ColonyManager.t("이 시설을 증축하시겠습니까?");
+				msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.FORMATTER_INT.format(m));
 				
-				int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, "확인", JOptionPane.YES_NO_OPTION);
+				int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
 				if(sel != JOptionPane.YES_OPTION) return;
 				
 				colony.modifyingMoney(m * (-1L), city, f, "Upgrade");
@@ -344,12 +344,12 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         
         if(fac instanceof Home) {
             Home home = (Home) fac;
-            res = res.append("\n").append("거주인원 : ").append(home.getCitizens(city, colony).size()).append(" / ").append(home.getCapacity());
-            res = res.append("\n").append("편안함 : ").append(fac.getComportGrade());
-            res = res.append("\n").append("거주자...");
+            res = res.append("\n").append(ColonyManager.t("거주인원") + " : ").append(home.getCitizens(city, colony).size()).append(" / ").append(home.getCapacity());
+            res = res.append("\n").append(ColonyManager.t("편안함") + " : ").append(fac.getComportGrade());
+            res = res.append("\n").append(ColonyManager.t("거주자") + "...");
             List<Citizen> citizens = home.getCitizens(city, colony);
             if(citizens.isEmpty()) {
-                res = res.append("\n    ").append("거주 인원이 없습니다.");
+                res = res.append("\n    ").append(ColonyManager.t("거주 인원이 없습니다."));
             } else {
                 for(Citizen c : citizens) {
                     res = res.append("\n    ").append(c.getName());
@@ -381,7 +381,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 else rcenter.setResearchKey(research.getKey());
             }
             
-            res = res.append("\n").append("연구 : ");
+            res = res.append("\n").append(ColonyManager.t("연구") + " : ");
             if(research == null) {
                 res = res.append(" -");
             } else {
@@ -415,18 +415,18 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         }
         
         List<Citizen> workers = fac.getWorkingCitizens(city, colony);
-        res = res.append("\n").append("재직자...");
+        res = res.append("\n").append(ColonyManager.t("재직자") + "...");
         if(! workers.isEmpty()) {
             for(Citizen c : workers) {
                 res = res.append("\n    ").append(c.getName());
             }
         } else {
-            res = res.append("\n    ").append("재직 중인 인원이 없습니다.");
+            res = res.append("\n    ").append(ColonyManager.t("재직 중인 인원이 없습니다."));
         }
         
         List<State> states = fac.getStates();
         if(! states.isEmpty()) {
-            res = res.append("\n").append("상태...");
+            res = res.append("\n").append(ColonyManager.t("상태") + "...");
             res = res.append("\n    ");
             for(State st : states) {
                 res = res.append(st.getTitle()).append("\t");

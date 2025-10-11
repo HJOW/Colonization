@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
 
 public class NewColonyManager implements Disposeable {
@@ -35,7 +36,7 @@ public class NewColonyManager implements Disposeable {
         dialog = new JDialog(man.getDialog(), true);
         dialog.setSize(400, 300);
         GUIUtil.centerWindow(dialog);
-        dialog.setTitle("새 정착지 생성");
+        dialog.setTitle(ColonyManager.t("새 정착지 생성"));
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -86,20 +87,20 @@ public class NewColonyManager implements Disposeable {
         
         JButton btn;
         
-        btn = new JButton("개척");
+        btn = new JButton(ColonyManager.t("개척"));
         pnCtrl.add(btn);
         btn.addActionListener(new ActionListener() {   
             @Override
             public void actionPerformed(ActionEvent e) {
                 ColonyInformation info = (ColonyInformation) cbxColTypes.getSelectedItem();
-                if(info == null) { JOptionPane.showMessageDialog(getDialog(), "해당 타입으로 정착지를 만들 수 없습니다."); return; }
+                if(info == null) { JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("해당 타입으로 정착지를 만들 수 없습니다.")); return; }
                 
                 man.onNewColonyTypeDecided(info.getName(), tfName.getText(), getSelf());
                 dispose();
             }
         });
         
-        btn = new JButton("취소");
+        btn = new JButton(ColonyManager.t("취소"));
         pnCtrl.add(btn);
         btn.addActionListener(new ActionListener() {   
             @Override

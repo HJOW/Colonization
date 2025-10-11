@@ -15,6 +15,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 public class ColonyManagerConfig implements Serializable {
     private static final long serialVersionUID = -3527963151987002687L;
     protected Map<String, Object> roots = new HashMap<String, Object>();
+    protected transient boolean flagSaveNoKeys = false;
     public ColonyManagerConfig() { }
     
     /** 설정 값 반환, 해당 키가 없으면 null 이 리턴 */
@@ -80,17 +81,28 @@ public class ColonyManagerConfig implements Serializable {
         }
     }
     
+    /** true 지정 시, 설정값이 없는 키를 기본값으로 입력 */
+    public void setConfigSaveOnNotExistingKeys(boolean flag) {
+    	flagSaveNoKeys = flag;
+    }
+    
     /** 설정 값을 문자열로 취급하여 문자열 반환, 강제 형변환될 수 있음. null 일 경우 공란 반환 */
     public String getString(String key) {
         Object obj = roots.get(key);
-        if(obj == null) return "";
+        if(obj == null) {
+        	if(flagSaveNoKeys) roots.put(key, "");
+        	return "";
+        }
         return obj.toString().trim();
     }
     
     /** 설정 값을 boolean 으로 취급하여 반환, 변환이 불가능한 값의 경우 예외가 발생함. 숫자 타입의 경우 0인 경우만 false, 그외에는 true 리턴 */
     public boolean getBool(String key) {
         Object obj = roots.get(key);
-        if(obj == null) return false;
+        if(obj == null) {
+        	if(flagSaveNoKeys) { roots.put(key, "Y"); }
+        	return false;
+        }
         if(obj instanceof Boolean) return ((Boolean) obj).booleanValue();
         if(obj instanceof Number ) {
             BigDecimal d = new BigDecimal(String.valueOf(obj));
@@ -108,7 +120,10 @@ public class ColonyManagerConfig implements Serializable {
     /** 설정 값을 int 로 취급하여 반환, 변환 불가능한 경우 예외가 발생함 */
     public int getInt(String key) {
         Object obj = roots.get(key);
-        if(obj == null) return 0;
+        if(obj == null) {
+        	if(flagSaveNoKeys) roots.put(key, "0");
+        	return 0;
+        }
         if(obj instanceof Number) {
             return ((Number) obj).intValue();
         }
@@ -119,7 +134,10 @@ public class ColonyManagerConfig implements Serializable {
     /** 설정 값을 double 로 취급하여 반환, 변환 불가능한 경우 예외가 발생함 */
     public double getDouble(String key) {
         Object obj = roots.get(key);
-        if(obj == null) return 0;
+        if(obj == null) {
+        	if(flagSaveNoKeys) roots.put(key, "0");
+        	return 0.0;
+        }
         if(obj instanceof Number) {
             return ((Number) obj).doubleValue();
         }
