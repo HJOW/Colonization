@@ -285,12 +285,25 @@ public class ColonyClassLoader {
         
         for(Object o : packList) {
             try {
-            	ColonyManagerConfig child = new ColonyManagerConfig();
-            	child.fromJson((JsonObject) o);
+            	Object current = o;
+            	Class<?> classObj = null;
+            	if(current instanceof CharSequence) {
+            		String str = current.toString().trim();
+            		if(str.startsWith("{")) {
+            			current = (JsonObject) JsonObject.parseJson(str);
+            		}
+            	}
             	
-                Class<?> classObj = loadClassFrom(child);
-                Pack packOne = (Pack) classObj.newInstance();
-                
+            	if(current instanceof JsonObject) {
+            		ColonyManagerConfig child = new ColonyManagerConfig();
+                	child.fromJson((JsonObject) current);
+                	
+                    classObj = loadClassFrom(child);
+            	} else {
+            		classObj = Class.forName(current.toString().trim());
+            	}
+            	
+            	Pack packOne = (Pack) classObj.newInstance();
                 if(! packs.contains(packOne)) packs.add(packOne);
             } catch(Exception ex) {
                 GlobalLogs.processExceptionOccured(ex, false);

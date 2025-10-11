@@ -24,6 +24,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -272,7 +273,7 @@ public class ConfigManager implements Disposeable {
     	try {
     		arr = (JsonArray) JsonObject.parseJson(val.trim());
     	} catch(Exception ex) {
-    		GUIColonyManager.logGlobals(ColonyManager.t("오류") + " : " + ex.getMessage()); 
+    		GlobalLogs.processExceptionOccured(ex, true); 
     		arr = new JsonArray();
     	}
     	superInstance.getConfig().set("Packs", arr);
@@ -290,8 +291,20 @@ public class ConfigManager implements Disposeable {
     	List<Object> packList = superInstance.getConfig().getList("Packs");
     	JsonArray arr = new JsonArray();
     	for(Object obj : packList) {
-    		JsonObject jsonObj = (JsonObject) obj;
-    		arr.add(jsonObj);
+    		Object current = obj;
+        	if(current instanceof CharSequence) {
+        		String str = current.toString().trim();
+        		if(str.startsWith("{")) {
+        			current = (JsonObject) JsonObject.parseJson(str);
+        		}
+        	}
+        	
+        	if(current instanceof JsonObject) {
+        		JsonObject jsonObj = (JsonObject) obj;
+        		arr.add(jsonObj);
+        	} else {
+        		arr.add(current.toString().trim());
+        	}
     	}
     	taPacks.setText(arr.toJSON());
     	

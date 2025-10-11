@@ -475,6 +475,7 @@ public class GUIColonyManager extends ColonyManager {
         
         menuFileConfig = new JMenuItem(t("설정"));
         menuFile.add(menuFileConfig);
+        menuFileConfig.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.CTRL_MASK));
         menuFileConfig.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
