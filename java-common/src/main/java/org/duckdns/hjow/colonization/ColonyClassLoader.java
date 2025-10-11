@@ -273,19 +273,21 @@ public class ColonyClassLoader {
         // Pack 목록 불러오기
         List<Object> packList = null;
         try {
-            packList = cfg.getList("packs");
+            packList = cfg.getList("Packs");
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
         }
         
         if(packList == null) {
             packList = new ArrayList<Object>();
-            cfg.set("packs", packList);
+            cfg.set("Packs", packList);
         }
         
         for(Object o : packList) {
             try {
-                ColonyManagerConfig child = (ColonyManagerConfig) o;
+            	ColonyManagerConfig child = new ColonyManagerConfig();
+            	child.fromJson((JsonObject) o);
+            	
                 Class<?> classObj = loadClassFrom(child);
                 Pack packOne = (Pack) classObj.newInstance();
                 

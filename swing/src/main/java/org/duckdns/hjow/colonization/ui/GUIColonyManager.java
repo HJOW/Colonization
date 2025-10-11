@@ -79,10 +79,11 @@ public class GUIColonyManager extends ColonyManager {
     protected transient BackupManager backupManager;
     protected transient BenchmarkManager benchManager;
     protected transient GUITCPSimpleDaemonManager daemonManager;
+    protected transient ConfigManager configManager;
     
     protected transient JMenuBar menuBar;
     protected transient JMenu menuFile, menuAction;
-    protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel;
+    protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig;
     
     /** 생성자, 상위 프로그램에서 호출됨 */
     public GUIColonyManager(GUIColonizationMainClass superInstance) {
@@ -467,6 +468,19 @@ public class GUIColonyManager extends ColonyManager {
                 onResetAllRequested();
             }
         });
+        
+        menuFile.addSeparator();
+        
+        configManager = new ConfigManager(this);
+        
+        menuFileConfig = new JMenuItem(t("설정"));
+        menuFile.add(menuFileConfig);
+        menuFileConfig.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				configManager.open();
+			}
+		});
         
         menuFile.addSeparator();
         
@@ -875,11 +889,13 @@ public class GUIColonyManager extends ColonyManager {
         }).start();
     }
 
+    /** 메인 창이 떠 있는지 확인 */
     public boolean isVisible() {
         if(frame == null) return false;
         return frame.isVisible();
     }
 
+    /** 쓰레드 종료 까지 대기 */
     protected void waitThreadShutdown() {
         threadSwitch = false;
         int prevInfinites = 0;
@@ -927,6 +943,9 @@ public class GUIColonyManager extends ColonyManager {
         
         if(daemonManager != null) daemonManager.dispose();
         daemonManager = null;
+        
+        if(configManager != null) configManager.dispose();
+        configManager = null;
 
         if(dialogGlobalLog != null) {
             dialogGlobalLog.dispose();
@@ -1064,6 +1083,7 @@ public class GUIColonyManager extends ColonyManager {
         menuFileReset.setEnabled(true);
         menuFileDel.setEnabled(true);
         menuFileNew.setEnabled(true);
+        menuFileConfig.setEnabled(true);
         
         for(DefaultColonyPanel c : pnColonies) {
             Colony col = c.getColony();
@@ -1113,6 +1133,9 @@ public class GUIColonyManager extends ColonyManager {
         menuFileReset.setEnabled(false);
         menuFileDel.setEnabled(false);
         menuFileNew.setEnabled(false);
+        menuFileConfig.setEnabled(false);
+        if(configManager != null) configManager.close();
+        
         for(DefaultColonyPanel c : pnColonies) { c.setEditable(false); }
         
         btnThrPlay.setEnabled(true);
