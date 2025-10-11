@@ -352,6 +352,11 @@ public class ColonyClassLoader {
         if(pack.getStateClasses()    != null) stateClassList.addAll(pack.getStateClasses());
     }
     
+    /** 기본 제공 Pack 불러오기 */
+    private static void loadDefaultPacks() {
+    	packs.add(new BundledPack());
+    }
+    
     /** 클래스 정보들과, 불러온 Pack 모두 다시 확인 */
     public static synchronized void refresh() {
         colonyInfoListFlag    = false;
@@ -373,6 +378,6 @@ public class ColonyClassLoader {
         stateClassListFlag    = false; stateClassList.clear();
         productClassListFlag  = false; productClassList.clear();
         packs.clear();
-        packs.add(new BundledPack());
+        loadDefaultPacks();
     }
 }
