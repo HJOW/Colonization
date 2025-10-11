@@ -36,7 +36,7 @@ public class NewColonyManager implements Disposeable {
         dialog = new JDialog(man.getDialog(), true);
         dialog.setSize(400, 300);
         GUIUtil.centerWindow(dialog);
-        dialog.setTitle(ColonyManager.t("새 정착지 생성"));
+        dialog.setTitle(ColonyManager.t("새 정착지 개척"));
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -128,6 +128,7 @@ public class NewColonyManager implements Disposeable {
     }
     
     public void open() {
+    	tfName.setText(ColonyManager.t("정착지") + "_" + ColonyManager.generateNaturalNumber());
         dialog.setVisible(true);
     }
     
