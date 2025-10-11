@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 
 /** 기본 제공되는 정착지 시나리오 클래스 */
@@ -31,10 +32,10 @@ public class NormalColony extends AbstractColony {
     }
     
     public static String getColonyClassTitle() {
-        return "일반 정착지 시나리오";
+        return ColonyManager.t("일반 정착지 시나리오");
     }
     
     public static String getColonyClassDescription() {
-        return "일반 정착지 시나리오";
+        return ColonyManager.t("일반 정착지 시나리오");
     }
 }

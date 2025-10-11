@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.research.humanities;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.Research;
 
@@ -28,6 +29,6 @@ public class BasicHumanities extends Research {
 
     @Override
     public String getTitle() {
-        return "기초인문학";
+        return ColonyManager.t("기초인문학");
     }
 }

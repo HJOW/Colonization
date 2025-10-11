@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.research.energy;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -43,6 +44,6 @@ public class EnergyTech extends Research {
 
     @Override
     public String getTitle() {
-        return "에너지";
+        return ColonyManager.t("에너지");
     }
 }

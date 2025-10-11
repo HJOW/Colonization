@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.research.biology;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -48,6 +49,6 @@ public class BasicBiology extends Research {
 
     @Override
     public String getTitle() {
-        return "기초생물학";
+        return ColonyManager.t("기초생물학");
     }
 }

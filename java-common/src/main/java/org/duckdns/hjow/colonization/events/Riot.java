@@ -67,13 +67,13 @@ public class Riot extends TimeEvent {
         }
         
         if(targetted >= 1) {
-            ColonyManager.logGlobals("폭동이 일어났습니다.");
+            ColonyManager.logGlobals(ColonyManager.t("폭동이 일어났습니다."));
         }
     }
 
     @Override
     public String getTitle() {
-        return "폭동";
+        return ColonyManager.t("폭동");
     }
 
 }

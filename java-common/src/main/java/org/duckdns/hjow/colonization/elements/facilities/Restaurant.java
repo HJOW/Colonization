@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
@@ -109,7 +110,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
                 servicingCount++;
                 c.setMoney(c.getMoney() - fee - tax);
                 c.setHunger(c.getHunger() + solvingHunger);
-                colony.modifyingMoney(tax, city, colony, "세금 - " + getFacilityTitle());
+                colony.modifyingMoney(tax, city, colony, ColonyManager.t("세금") + " - " + getFacilityTitle());
                 
                 if(compGrade >= 2) {
                     c.setHappy(c.getHappy() + (compGrade / 2));
@@ -280,7 +281,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     }
     
     public static String getFacilityName() {
-        return "식당";
+        return ColonyManager.t("식당");
     }
     
     public static String getFacilityTitle() {
@@ -288,7 +289,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     }
     
     public static String getFacilityDescription() {
-        return "식당으로, 시민들에게 유상으로 음식을 제공합니다.";
+        return ColonyManager.t("식당으로, 시민들에게 유상으로 음식을 제공합니다.");
     }
     
     public static Long getFacilityPrice() {

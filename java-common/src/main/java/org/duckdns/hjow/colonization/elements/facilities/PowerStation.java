@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 
@@ -8,7 +9,7 @@ public class PowerStation extends PowerPlant {
 
     @Override
     protected String getDefaultNamePrefix() {
-        return "발전소";
+        return ColonyManager.t("발전소");
     }
 
     @Override
@@ -42,7 +43,7 @@ public class PowerStation extends PowerPlant {
     }
     
     public static String getFacilityName() {
-        return "발전 모듈";
+        return ColonyManager.t("발전 모듈");
     }
     
     public static String getFacilityTitle() {
@@ -50,7 +51,7 @@ public class PowerStation extends PowerPlant {
     }
     
     public static String getFacilityDescription() {
-        return "기본적인 전력 생산 시설입니다.";
+        return ColonyManager.t("기본적인 전력 생산 시설입니다.");
     }
     
     public static Long getFacilityPrice() {

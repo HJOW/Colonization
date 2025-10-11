@@ -147,7 +147,7 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
     }
     
     public static String getFacilityName() {
-        return "방어시설";
+        return ColonyManager.t("방어시설");
     }
     
     public static String getFacilityTitle() {
@@ -155,7 +155,7 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
     }
     
     public static String getFacilityDescription() {
-        return "방어 시설";
+        return ColonyManager.t("방어 시설");
     }
     
     public static Long getFacilityPrice() {
@@ -189,8 +189,8 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
             }
         }
         
-        if(! cond1) return "군사학 연구가 부족합니다.";
-        if(! cond2) return "기초건축학 연구가 부족합니다.";
+        if(! cond1) return ColonyManager.t("군사학 연구가 부족합니다.");
+        if(! cond2) return ColonyManager.t("기초건축학 연구가 부족합니다.");
         return null;
     }
 }

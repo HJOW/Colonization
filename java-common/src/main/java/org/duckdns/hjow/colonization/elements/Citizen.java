@@ -19,7 +19,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 public class Citizen implements ColonyElements {
     private static final long serialVersionUID = -6856576686789163067L;
     protected volatile long key = ColonyManager.generateKey();
-    protected String name = "시민_" + ColonyManager.generateNaturalNumber();
+    protected String name = ColonyManager.t("시민") + "_" + ColonyManager.generateNaturalNumber();
     
     protected List<State> states = new Vector<State>();
     
@@ -441,8 +441,8 @@ public class Citizen implements ColonyElements {
         DecimalFormat formatterInt  = new DecimalFormat("#,###,###,###,###,##0");
         
         StringBuilder desc = new StringBuilder("");
-        desc = desc.append("\n").append("자금 : ").append(formatterInt.format(getMoney()));
-        desc = desc.append("\n").append("행복도 : ").append(formatterInt.format(getHappy())).append(" / ").append("100");
+        desc = desc.append("\n").append(ColonyManager.t("자금") + " : ").append(formatterInt.format(getMoney()));
+        desc = desc.append("\n").append(ColonyManager.t("행복도") + " : ").append(formatterInt.format(getHappy())).append(" / ").append("100");
         
         Facility f = null;
         Facility h = null;
@@ -452,9 +452,9 @@ public class Citizen implements ColonyElements {
         if(getLivingHome()       != 0L) h = city.getFacility(getLivingHome());
         if(getBuildingFacility() != 0L) b = city.getFacility(getBuildingFacility());
         
-        if(h != null) desc = desc.append("\n").append("거주 : ").append(h.getName());
-        if(f != null) desc = desc.append("\n").append("직장 : ").append(f.getName());
-        if(b != null) desc = desc.append("\n").append("건설 : ").append(b.getName());
+        if(h != null) desc = desc.append("\n").append(ColonyManager.t("거주") + " : ").append(h.getName());
+        if(f != null) desc = desc.append("\n").append(ColonyManager.t("직장") + " : ").append(f.getName());
+        if(b != null) desc = desc.append("\n").append(ColonyManager.t("건설") + " : ").append(b.getName());
         
         List<State> states = getStates();
         if(! states.isEmpty()) {

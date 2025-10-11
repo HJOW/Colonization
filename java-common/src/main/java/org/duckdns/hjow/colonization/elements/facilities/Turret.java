@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.facilities;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
@@ -17,7 +18,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return "터렛";
+        return ColonyManager.t("터렛");
     }
     
     @Override
@@ -116,7 +117,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     }
     
     public static String getFacilityName() {
-        return "터렛";
+        return ColonyManager.t("터렛");
     }
     
     public static String getFacilityTitle() {
@@ -124,7 +125,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     }
     
     public static String getFacilityDescription() {
-        return "기본적인 방어 시설입니다.";
+        return ColonyManager.t("기본적인 방어 시설입니다.");
     }
     
     public static Long getFacilityPrice() {
@@ -158,8 +159,8 @@ public class Turret extends DefenceFacility implements AttackableObject {
             }
         }
         
-        if(! cond1) return "군사학 연구가 부족합니다.";
-        if(! cond2) return "기초건축학 연구가 부족합니다.";
+        if(! cond1) return ColonyManager.t("군사학 연구가 부족합니다.");
+        if(! cond2) return ColonyManager.t("기초건축학 연구가 부족합니다.");
         return null;
     }
 }

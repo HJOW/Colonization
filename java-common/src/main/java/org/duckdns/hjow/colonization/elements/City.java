@@ -29,7 +29,7 @@ public class City implements ColonyElements {
     private static final long serialVersionUID = -8442328554683565064L;
     protected volatile long key = ColonyManager.generateKey();
     
-    protected String name = "도시_" + ColonyManager.generateNaturalNumber();
+    protected String name = ColonyManager.t("도시") + "_" + ColonyManager.generateNaturalNumber();
     protected List<Facility>   facility = new Vector<Facility>();
     protected List<Citizen>    citizens = new Vector<Citizen>();
     protected List<Enemy>      enemies  = new Vector<Enemy>();
@@ -983,16 +983,16 @@ public class City implements ColonyElements {
         if(col == null && superInstance != null) col = getColony(superInstance);
         
         desc = desc.append("\n").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
-        desc = desc.append("\n").append("전력 : ").append(formatterInt.format(powerConsume)).append(" / ").append(formatterInt.format(getPowerGenerate(col)));
-        desc = desc.append("\n").append("공간 : ").append(formatterInt.format(getUsingSpaces())).append(" / ").append(formatterInt.format(getSpaces()));
-        if(getCalculatedTransPoint() > 0L) desc = desc.append("\n").append("교통 한도 : ").append(formatterInt.format(getCalculatedTransLeftPoint())).append(" / ").append(formatterInt.format(getCalculatedTransPoint()));
-        desc = desc.append("\n").append("인구 : ").append(formatterInt.format(getCitizenCount()));
-        desc = desc.append("\n").append("시설 수 : ").append(formatterInt.format(getFacility().size()));
-        desc = desc.append("\n").append("평균 행복도 : ").append(formatterRate.format(getAverageHappiness()));
-        desc = desc.append("\n").append("거주 수용량 : ").append(formatterInt.format(getHomeCapacity()));
-        desc = desc.append("\n").append("직장 수 : ").append(formatterInt.format(getJobsCount()));
-        desc = desc.append("\n").append("노숙자 : ").append(formatterInt.format(getHomelesses()));
-        desc = desc.append("\n").append("백수 : ").append(formatterInt.format(getJobSeekers()));
+        desc = desc.append("\n").append(ColonyManager.t("전력") + " : ").append(formatterInt.format(powerConsume)).append(" / ").append(formatterInt.format(getPowerGenerate(col)));
+        desc = desc.append("\n").append(ColonyManager.t("공간") + " : ").append(formatterInt.format(getUsingSpaces())).append(" / ").append(formatterInt.format(getSpaces()));
+        if(getCalculatedTransPoint() > 0L) desc = desc.append("\n").append(ColonyManager.t("교통 용량") + " : ").append(formatterInt.format(getCalculatedTransLeftPoint())).append(" / ").append(formatterInt.format(getCalculatedTransPoint()));
+        desc = desc.append("\n").append(ColonyManager.t("인구") + " : ").append(formatterInt.format(getCitizenCount()));
+        desc = desc.append("\n").append(ColonyManager.t("시설 수") + " : ").append(formatterInt.format(getFacility().size()));
+        desc = desc.append("\n").append(ColonyManager.t("평균 행복도") + " : ").append(formatterRate.format(getAverageHappiness()));
+        desc = desc.append("\n").append(ColonyManager.t("거주 수용량") + " : ").append(formatterInt.format(getHomeCapacity()));
+        desc = desc.append("\n").append(ColonyManager.t("직장 수") + " : ").append(formatterInt.format(getJobsCount()));
+        desc = desc.append("\n").append(ColonyManager.t("노숙자") + " : ").append(formatterInt.format(getHomelesses()));
+        desc = desc.append("\n").append(ColonyManager.t("백수") + " : ").append(formatterInt.format(getJobSeekers()));
         
         return desc.toString().trim();
     }

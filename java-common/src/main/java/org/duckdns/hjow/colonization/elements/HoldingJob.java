@@ -67,12 +67,11 @@ public class HoldingJob implements Serializable {
     }
     
     public String getCommandTitle() {
-        if("NewFacility".equals(getCommand())) return "건설";
-        if("NewCitizen".equals(getCommand())) return "이주";
+        if("NewFacility".equals(getCommand()))     return ColonyManager.t("건설");
+        if("NewCitizen".equals(getCommand()))      return ColonyManager.t("이주");
+        if("UpgradeFacility".equals(getCommand())) return ColonyManager.t("증축");
         
-        if("UpgradeFacility".equals(getCommand())) return "증축";
-        
-        return "작업";
+        return ColonyManager.t("작업");
     }
 
     public void setCycleLeft(int cycleLeft) {

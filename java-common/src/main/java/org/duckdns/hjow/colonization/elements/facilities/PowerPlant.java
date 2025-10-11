@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -11,7 +12,7 @@ public abstract class PowerPlant extends DefaultFacility {
 
     @Override
     protected String getDefaultNamePrefix() {
-        return "발전소";
+        return ColonyManager.t("발전소");
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization.elements.facilities;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -16,7 +17,7 @@ public class CargoRailSystem extends DefaultFacility {
 
 	@Override
     protected String getDefaultNamePrefix() {
-        return "화물레일시스템";
+        return ColonyManager.t("화물레일시스템");
     }
 
     @Override
@@ -171,7 +172,7 @@ public class CargoRailSystem extends DefaultFacility {
 	}
     
     public static String getFacilityName() {
-        return "화물 레일 시스템";
+        return ColonyManager.t("화물 레일 시스템");
     }
     
     public static String getFacilityTitle() {
@@ -179,7 +180,7 @@ public class CargoRailSystem extends DefaultFacility {
     }
     
     public static String getFacilityDescription() {
-        return "생산 시설에서 화물을 자동으로 각 필요 시설로 운송합니다.";
+        return ColonyManager.t("생산 시설에서 화물을 자동으로 각 필요 시설로 운송합니다.");
     }
     
     public static Long getFacilityPrice() {

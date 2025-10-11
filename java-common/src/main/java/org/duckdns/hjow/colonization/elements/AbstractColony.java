@@ -61,7 +61,7 @@ public abstract class AbstractColony implements Colony {
     
     /** 기본 이름 앞부분 */
     protected String getDefaultNamePrefix() {
-        return "정착지";
+        return ColonyManager.t("정착지");
     }
     
     /** 객체 타입 반환, JSON 변환 시 type 으로 들어갈 내용 */
@@ -425,7 +425,7 @@ public abstract class AbstractColony implements Colony {
     /** 새 도시를 생성 */
     @Override
     public City newCity() {
-        if(getCityCount() >= getMaxCityCount()) throw new RuntimeException("이 정착지에는 더 이상 도시를 건설할 수 없습니다.");
+        if(getCityCount() >= getMaxCityCount()) throw new RuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
         
         City city = new City();
         int idx;
@@ -504,10 +504,10 @@ public abstract class AbstractColony implements Colony {
         
         StringBuilder desc = new StringBuilder("");
         desc = desc.append("\t").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
-        desc = desc.append("\t").append("예산 : ").append(formatterInt.format(getMoney()));
-        desc = desc.append("\t").append("기술 : ").append(formatterInt.format(getTech()));
-        desc = desc.append("\t").append("도시 수 : ").append(formatterInt.format(getCityCount())).append(" / ").append(formatterInt.format(getMaxCityCount()));
-        desc = desc.append("\t").append("총 인구 : ").append(formatterInt.format(getCitizenCount()));
+        desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(formatterInt.format(getMoney()));
+        desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(formatterInt.format(getTech()));
+        desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(formatterInt.format(getCityCount())).append(" / ").append(formatterInt.format(getMaxCityCount()));
+        desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(formatterInt.format(getCitizenCount()));
         
         return desc.toString().trim();
     }
@@ -724,7 +724,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     public static String getColonyClassTitle() {
-        return "정착지";
+        return ColonyManager.t("정착지");
     }
     
     public static String getColonyClassDescription() {

@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.research.engineering;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -51,6 +52,6 @@ public class BasicEngineering extends Research {
 
     @Override
     public String getTitle() {
-        return "공학기초";
+        return ColonyManager.t("공학기초");
     }
 }

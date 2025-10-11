@@ -51,7 +51,7 @@ public class GlobalLogs implements Serializable {
         
         tx.printStackTrace();
         
-        String msg = "오류 - (" + tx.getClass().getSimpleName() + ") " + tx.getMessage();
+        String msg = ColonyManager.t("오류") + " - (" + tx.getClass().getSimpleName() + ") " + ColonyManager.t(tx.getMessage());
         ByteArrayOutputStream byteCollector = new ByteArrayOutputStream();
         if(isSerious) {
             PrintStream ps = new PrintStream(byteCollector);

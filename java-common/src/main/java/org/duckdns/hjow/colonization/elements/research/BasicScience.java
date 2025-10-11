@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.research;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 
 public class BasicScience extends Research {
@@ -26,7 +27,7 @@ public class BasicScience extends Research {
 
     @Override
     public String getTitle() {
-        return "기초과학";
+        return ColonyManager.t("기초과학");
     }
 
 }

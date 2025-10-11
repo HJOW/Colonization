@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.research.chemical;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -41,6 +42,6 @@ public class Chemical extends Research {
 
     @Override
     public String getTitle() {
-        return "화학";
+        return ColonyManager.t("화학");
     }
 }

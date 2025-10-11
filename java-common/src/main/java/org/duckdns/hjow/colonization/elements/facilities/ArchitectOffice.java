@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -12,7 +13,7 @@ public class ArchitectOffice extends DefaultFacility {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return "건축사무소";
+        return ColonyManager.t("건축사무소");
     }
     
     @Override
@@ -90,7 +91,7 @@ public class ArchitectOffice extends DefaultFacility {
     }
     
     public static String getFacilityName() {
-        return "건설사무소";
+        return ColonyManager.t("건축 사무소");
     }
     
     public static String getFacilityTitle() {
@@ -98,7 +99,7 @@ public class ArchitectOffice extends DefaultFacility {
     }
     
     public static String getFacilityDescription() {
-        return "건설 사무소로, 수리가 필요한 건물에 서비스를 제공합니다.";
+        return ColonyManager.t("건축 사무소로, 수리가 필요한 건물에 서비스를 제공합니다.");
     }
     
     public static Long getFacilityPrice() {

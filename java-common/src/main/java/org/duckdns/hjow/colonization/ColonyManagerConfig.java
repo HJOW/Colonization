@@ -45,7 +45,7 @@ public class ColonyManagerConfig implements Serializable {
             }
             return child;
         } else {
-            throw new RuntimeException("This child " + key + " is not a map !");
+            throw new RuntimeException(ColonyManager.t("[KEY] 설정 항목은 Map 형식이 아닙니다.").replace("[KEY]", key));
         }
     }
     
@@ -76,7 +76,7 @@ public class ColonyManagerConfig implements Serializable {
             }
             return newList;
         } else {
-            throw new RuntimeException("This child " + key + " is not a list !");
+            throw new RuntimeException(ColonyManager.t("[KEY] 설정 항목은 리스트 형식이 아닙니다.").replace("[KEY]", key));
         }
     }
     

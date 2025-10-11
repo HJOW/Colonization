@@ -936,9 +936,14 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 메인 대화상자가 닫힐 때 호출 */
     public void onWindowClosing() {
+        exit();
+    }
+    
+    /** 프로그램 종료 */
+    @Override
+    public void exit() {
         setEditable(false);
         
-        GUIColonizationMainClass superInst = (GUIColonizationMainClass) superInstance;
         if(! flagSaveBeforeClose) return;
         flagSaveBeforeClose = false;
         
@@ -957,7 +962,7 @@ public class GUIColonyManager extends ColonyManager {
             numInfLoopPrev++;
             if(numInfLoopPrev >= 100) break;
         }
-        if(superInst != null) superInst.exit();
+        super.exit();
     }
     
     /** 메인 대화상자 내 모든 입력/버튼 등의 컴포넌트 활성화 여부 일괄 지정 */

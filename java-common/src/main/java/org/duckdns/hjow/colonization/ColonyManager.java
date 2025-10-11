@@ -141,16 +141,19 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
             
             // 스트링 테이블 불러오기
             String stringTablePath = configs.getString("StringTableFile");
+            File fileStringTable = null;
             if(DataUtil.isNotEmpty(stringTablePath)) {
-            	File fileStringTable = new File(stringTablePath.trim());
-            	if(! fileStringTable.exists()) {
-            		Properties newProp = new Properties();
-            		// TODO : 기본 데이터 불러오기
-            		FileUtil.saveProperties(fileStringTable, newProp);
-            	}
-            	FileStringTable stringTable = new FileStringTable(fileStringTable);
-            	STRINGTABLE.setOriginalInstance(stringTable);
+            	fileStringTable = new File(stringTablePath.trim());
+            } else {
+            	fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
             }
+            if(! fileStringTable.exists()) {
+        		Properties newProp = new Properties();
+        		// TODO : 기본 데이터 불러오기
+        		FileUtil.saveProperties(fileStringTable, newProp);
+        	}
+        	FileStringTable stringTable = new FileStringTable(fileStringTable);
+        	STRINGTABLE.setOriginalInstance(stringTable);
             
             // 설정들 중 클래스 관련 설정 적용
             ColonyClassLoader.clearAll();
@@ -465,6 +468,13 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     /** 설정 객체 반환 */
     public ColonyManagerConfig c() {
         return getConfig();
+    }
+    
+    /** 프로그램 종료 */
+    public void exit() {
+    	dispose(false);
+    	if(superInstance != null) superInstance.exit();
+    	else System.exit(0);
     }
     
     /** 홈 디렉토리 반환 */

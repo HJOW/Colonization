@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.research.military;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -58,6 +59,6 @@ public class MilitaryTech extends Research {
 
     @Override
     public String getTitle() {
-        return "군사학";
+        return ColonyManager.t("군사학");
     }
 }

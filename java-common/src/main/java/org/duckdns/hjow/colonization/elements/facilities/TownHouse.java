@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.facilities;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
@@ -15,7 +16,7 @@ public class TownHouse extends Residence {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return "타운하우스";
+        return ColonyManager.t("타운하우스");
     }
 
     @Override
@@ -49,7 +50,7 @@ public class TownHouse extends Residence {
     }
 
     public static String getFacilityName() {
-        return "타운하우스";
+        return ColonyManager.t("타운하우스");
     }
     
     public static String getFacilityTitle() {
@@ -57,7 +58,7 @@ public class TownHouse extends Residence {
     }
     
     public static String getFacilityDescription() {
-        return "규모가 큰 주거 모듈로, 더 많은 시민이 거주할 수 있습니다.";
+        return ColonyManager.t("규모가 큰 주거 모듈로, 더 많은 시민이 거주할 수 있습니다.");
     }
     
     public static Long getFacilityPrice() {
@@ -90,8 +91,8 @@ public class TownHouse extends Residence {
             }
         }
         
-        if(! cond1) return "기초과학 연구가 부족합니다.";
-        if(! cond2) return "기초건축학 연구가 부족합니다.";
+        if(! cond1) return ColonyManager.t("기초과학 연구가 부족합니다.");
+        if(! cond2) return ColonyManager.t("기초건축학 연구가 부족합니다.");
         return null;
     }
 }

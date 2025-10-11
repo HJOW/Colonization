@@ -5,6 +5,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -23,7 +24,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return "아케이드";
+        return ColonyManager.t("아케이드");
     }
 
     @Override
@@ -168,7 +169,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
 	}
 
     public static String getFacilityName() {
-        return "아케이드";
+        return ColonyManager.t("아케이드");
     }
     
     public static String getFacilityTitle() {
@@ -176,7 +177,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     }
     
     public static String getFacilityDescription() {
-        return "시민들의 행복을 위한 기본적인 오락 시설입니다.";
+        return ColonyManager.t("시민들의 행복을 위한 기본적인 오락 시설입니다.");
     }
     
     public static Long getFacilityPrice() {

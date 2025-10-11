@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.pack;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.facilities.Arcade;
 import org.duckdns.hjow.colonization.elements.facilities.ArchitectOffice;
@@ -34,8 +35,8 @@ public class BundledPack extends DefaultPack {
     private static final long serialVersionUID = -1884375631795840563L;
     @Override
     protected void init() {
-        name = "표준 Pack";
-        desc = "Colonization 표준 Pack";
+        name = ColonyManager.t("표준") + " Pack";
+        desc = "Colonization " + ColonyManager.t("표준") + " Pack";
         
         colonyClasses.add(NormalColony.class);
         

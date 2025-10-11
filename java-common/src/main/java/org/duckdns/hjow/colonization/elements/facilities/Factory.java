@@ -27,7 +27,7 @@ public abstract class Factory extends DefaultFacility implements Storage {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return "공장";
+        return ColonyManager.t("공장");
     }
 
     @Override
@@ -274,7 +274,7 @@ public abstract class Factory extends DefaultFacility implements Storage {
     }
     
     public static String getFacilityName() {
-        return "생산 시설";
+        return ColonyManager.t("생산 시설");
     }
     
     public static String getFacilityTitle() {
@@ -282,7 +282,7 @@ public abstract class Factory extends DefaultFacility implements Storage {
     }
     
     public static String getFacilityDescription() {
-        return "기본적인 생산 시설입니다. 이 곳에서 생산된 물품으로 정착지의 재정에 수익이 발생합니다.";
+        return ColonyManager.t("기본적인 생산 시설입니다. 이 곳에서 생산된 물품으로 정착지의 재정에 수익이 발생합니다.");
     }
     
     public static Long getFacilityPrice() {

@@ -26,7 +26,7 @@ public abstract class TimeEvent implements Serializable {
     
     /** 이벤트 처리 */
     public void onEventOccured(ColonyElements target, Colony col, City city, ColonyPanel colPanel) {
-        ColonyManager.logGlobals(getTitle() + " 발생 !");
+        ColonyManager.logGlobals(getTitle() + " " + ColonyManager.t("발생") + " !");
     }
     
     /** 이벤트 명칭 반환 */

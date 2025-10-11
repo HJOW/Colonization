@@ -66,13 +66,13 @@ public class InfluenzaEvent extends TimeEvent {
         }
         
         if(infected >= 1) {
-            ColonyManager.logGlobals("전염병 발생이 감지되었습니다.");
+            ColonyManager.logGlobals(ColonyManager.t("전염병 발생이 감지되었습니다."));
         }
     }
 
     @Override
     public String getTitle() {
-        return "전염병 - 독감";
+        return ColonyManager.t("전염병 - 독감");
     }
     
 }

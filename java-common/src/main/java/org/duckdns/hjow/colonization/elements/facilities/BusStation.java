@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.facilities;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
@@ -13,7 +14,7 @@ public class BusStation extends TransportStation {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return "버스정류장";
+        return ColonyManager.t("버스정류장");
     }
     
     @Override
@@ -42,7 +43,7 @@ public class BusStation extends TransportStation {
     }
     
     public static String getFacilityName() {
-        return "버스 정류장";
+        return ColonyManager.t("버스 정류장");
     }
     
     public static String getFacilityTitle() {
@@ -50,7 +51,7 @@ public class BusStation extends TransportStation {
     }
     
     public static String getFacilityDescription() {
-        return "기본적인 교통 수단입니다.\n2곳 이상을 건설해야 동작합니다.\n교통 한도를 증가시킵니다.\n교통 한도가 부족하면, 일부 시설에 직원이 통근할 수 없게 됩니다.";
+        return ColonyManager.t("기본적인 교통 수단입니다.\n2곳 이상을 건설해야 동작합니다.\n교통 한도를 증가시킵니다.\n교통 한도가 부족하면, 일부 시설에 직원이 통근할 수 없게 됩니다.");
     }
     
     public static Long getFacilityPrice() {
@@ -83,8 +84,8 @@ public class BusStation extends TransportStation {
             }
         }
         
-        if(! cond1) return "기초과학 연구가 부족합니다.";
-        if(! cond2) return "기초건축학 연구가 부족합니다.";
+        if(! cond1) return ColonyManager.t("기초과학 연구가 부족합니다.");
+        if(! cond2) return ColonyManager.t("기초건축학 연구가 부족합니다.");
         return null;
     }
 }

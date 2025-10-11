@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 
@@ -9,7 +10,7 @@ public class ResidenceModule extends Residence {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return "보급형_주거모듈";
+        return ColonyManager.t("보급형_주거모듈");
     }
     
     @Override
@@ -28,7 +29,7 @@ public class ResidenceModule extends Residence {
     }
     
     public static String getFacilityName() {
-        return "보급형 주거 모듈";
+        return ColonyManager.t("보급형 주거 모듈");
     }
     
     public static String getFacilityTitle() {
@@ -36,7 +37,7 @@ public class ResidenceModule extends Residence {
     }
     
     public static String getFacilityDescription() {
-        return "기본적인 주거 모듈로 시민이 거주하는 데 필요한 기본적인 시설이 포함됩니다.";
+        return ColonyManager.t("기본적인 주거 모듈로 시민이 거주하는 데 필요한 기본적인 시설이 포함됩니다.");
     }
     
     public static Long getFacilityPrice() {
