@@ -866,7 +866,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
 				if(infoNow != null) cbxColony.setSelectedItem(infoNow);
 			    fCbxColony = true;
 			    
-			    DefaultColonyPanel pn = new DefaultColonyPanel(colony, superInstance);
+			    DefaultColonyPanel pn = new DefaultColonyPanel(colony, superInstance); // TODO 서블릿 클라이언트용 Colony Panel 구현해야 함 (도시, 시설 건설 시 서버로 요청을 보내야 하기 때문)
 			    pnGameMain.add(pn, BorderLayout.CENTER);
 			    
 			    cardMain.show(pnMain, "Game");
