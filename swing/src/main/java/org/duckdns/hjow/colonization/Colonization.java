@@ -2,7 +2,9 @@ package org.duckdns.hjow.colonization;
 import java.util.Map;
 
 import org.duckdns.hjow.colonization.console.ConsoleColonization;
+import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
+import org.duckdns.hjow.commons.ui.LogComponent;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 
@@ -15,6 +17,7 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     }
     
     protected transient LoadingAWTDialog loadingScreen;
+    protected transient String mode = "gui";
     
     /** 매개변수로 GUI 실행 여부 판단 */
     protected boolean isGUI() {
@@ -27,26 +30,47 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     /** 프로그램 실행 */
     @Override
     public void run() {
-        if(! isGUI()) { super.run(); return; }
-        
-        openLoadingDialog();
-        
-        if(manager != null) {
-            manager.dispose();
-            manager = null;
-        }
-        manager = new GUIColonyManager(this);
-        manager.open(this);
+    	mode = arguments.get("mode");
+    	if(DataUtil.isEmpty(mode)) mode = arguments.get("m");
+    	if(DataUtil.isEmpty(mode)) mode = "gui";
+    	
+    	mode = mode.trim().toLowerCase();
+    	if(mode.equals("console") || mode.equals("c")) {
+    		super.run(); return;
+    	} else if(mode.equals("daemon") || mode.equals("d")) {
+    		String port = arguments.get("port");
+    		if(DataUtil.isEmpty(port)) port = arguments.get("p");
+    		
+    		String charset = "UTF-16";
+    		if(! DataUtil.isEmpty(arguments.get("charset"))) charset = arguments.get("charset").trim();
+    		
+    		TCPSimpleDaemon daemon = new TCPSimpleDaemon(Integer.parseInt(port.trim()), charset, new LogComponent() {
+				@Override
+				public void log(String msg) {
+					System.out.println(msg);
+				}
+			});
+    		daemon.start();
+    	} else if(mode.equals("gui") || mode.equals("g")) {
+    		openLoadingDialog();
+            
+            if(manager != null) {
+            	manager.dispose();
+                manager = null;
+            }
+            manager = new GUIColonyManager(this);
+            manager.open(this);
+    	}
     }
     
     @Override
     public void restart() {
-        if(! isGUI()) { super.restart(); return; }
+        if(mode.equals("gui") || mode.equals("g")) openLoadingDialog();
         
-        openLoadingDialog();
         try { manager.dispose(((GUIColonyManager) manager).isVisible()); } catch(Exception notImportant) { notImportant.printStackTrace(); }
         manager = null;
         try { Thread.sleep(3000L); } catch(InterruptedException ex) { exit(); return; }
+        
         run();
     }
     
