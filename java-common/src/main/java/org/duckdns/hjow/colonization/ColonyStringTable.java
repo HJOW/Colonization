@@ -9,7 +9,6 @@ import org.duckdns.hjow.commons.resource.BrokerStringTable;
 import org.duckdns.hjow.commons.resource.FileStringTable;
 import org.duckdns.hjow.commons.resource.StringTable;
 import org.duckdns.hjow.commons.util.DataUtil;
-import org.duckdns.hjow.commons.util.FileUtil;
 
 /** Colonization 다국어 구현을 위한 스트링 테이블 */
 public class ColonyStringTable extends BrokerStringTable {
@@ -33,12 +32,7 @@ public class ColonyStringTable extends BrokerStringTable {
 				if(! stringList.contains(uniqNo)) {
 					if(originalInstance instanceof FileStringTable) {
 						FileStringTable fileTable = (FileStringTable) originalInstance;
-						
-						// TODO : 공통 lib 버그 수정 후 이곳 간소화 해야 함
-						// fileTable.set(originals, originals);
-						prop = fileTable.getData();
-						prop.setProperty(originals, originals);
-						try { FileUtil.saveProperties(fileTable.getFile(), prop); } catch(Exception ex) { ColonyManager.logGlobals("Error : (" + ex.getClass().getSimpleName() + ") " + ex.getMessage()); }
+						fileTable.set(originals, originals);
 					} else {
 						prop = originalInstance.getData();
 						prop.setProperty(originals, originals);
