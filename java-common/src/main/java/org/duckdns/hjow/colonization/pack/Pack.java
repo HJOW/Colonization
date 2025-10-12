@@ -11,8 +11,11 @@ public interface Pack extends Serializable {
     public List<Class<?>> getEnemyClasses();
     public List<Class<?>> getStateClasses();
     public List<Class<?>> getProductClasses();
+    public long getKey();
     public String getName();
     public String getDesc();
+    public String getAuthor();
+    public String getEmail();
     public boolean isEnabled();
     public void setEnabled(boolean enabled);
 }

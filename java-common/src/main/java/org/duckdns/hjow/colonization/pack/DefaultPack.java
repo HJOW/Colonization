@@ -8,8 +8,11 @@ import org.duckdns.hjow.colonization.ColonyManager;
 /** 기본 형태의 Pack */
 public class DefaultPack implements Pack {
     private static final long serialVersionUID = -8964086871404887882L;
-    protected String name = "Pack_" + ColonyManager.generateKey();
-    protected String desc = "";
+    protected long key = ColonyManager.generateKey();
+    protected String name   = getDefaultName();
+    protected String desc   = getDefaultDesc();
+    protected String author = getDefaultAuthor();
+    protected String email  = getDefaultEmail();
     protected boolean enabled = true;
     
     protected List<Class<?>> colonyClasses   = new ArrayList<Class<?>>();
@@ -21,6 +24,11 @@ public class DefaultPack implements Pack {
     
     public DefaultPack() { init(); }
     protected void init() {}
+    
+    protected String getDefaultName()   { return "Pack_" + ColonyManager.generateNaturalNumber(); }
+    protected String getDefaultDesc()   { return ""; }
+    protected String getDefaultAuthor() { return ""; }
+    protected String getDefaultEmail()  { return ""; }
     
     @Override
     public List<Class<?>> getColonyClasses() {
@@ -75,6 +83,29 @@ public class DefaultPack implements Pack {
     }
     
     @Override
+    public long getKey() {
+		return key;
+	}
+	public void setKey(long key) {
+		this.key = key;
+	}
+	
+	@Override
+	public String getAuthor() {
+		return author;
+	}
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+	
+	@Override
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	@Override
     public List<Class<?>> getProductClasses() {
         return productClasses;
     }

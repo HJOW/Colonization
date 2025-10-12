@@ -31,13 +31,23 @@ import org.duckdns.hjow.colonization.elements.states.Influenza;
 import org.duckdns.hjow.colonization.elements.states.SuperAngry;
 
 /** 기본 제공 Pack */
-public class BundledPack extends DefaultPack {
+public final class BundledPack extends DefaultPack {
     private static final long serialVersionUID = -1884375631795840563L;
+    
+    @Override
+    protected String getDefaultName() { return ColonyManager.t("표준") + " Pack"; }
+    
+    @Override
+    protected String getDefaultDesc() { return "Colonization " + ColonyManager.t("표준") + " Pack"; }
+    
+    @Override
+    protected String getDefaultAuthor() { return "HJOW"; }
+    
+    @Override
+    protected String getDefaultEmail()  { return "hujinone22@naver.com"; }
+    
     @Override
     protected void init() {
-        name = ColonyManager.t("표준") + " Pack";
-        desc = "Colonization " + ColonyManager.t("표준") + " Pack";
-        
         colonyClasses.add(NormalColony.class);
         
         facilityClasses.add(ResidenceModule.class);

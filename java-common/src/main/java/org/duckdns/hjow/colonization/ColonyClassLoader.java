@@ -310,9 +310,9 @@ public class ColonyClassLoader {
             }
         }
         
-        for(Pack p : packs) {
+        for(Pack p : getInstalledPacks()) {
             try {
-                if(! packs.contains(p)) loadPack(p);
+                loadPack(p);
             } catch(Exception ex) {
                 GlobalLogs.processExceptionOccured(ex, false);
             }
@@ -352,9 +352,24 @@ public class ColonyClassLoader {
         if(pack.getStateClasses()    != null) stateClassList.addAll(pack.getStateClasses());
     }
     
+    /** 등록된 Pack 객체들 리턴 (새 List 객체로 리턴) */
+    public static synchronized List<Pack> getInstalledPacks() {
+    	List<Pack> newList = new ArrayList<Pack>();
+    	newList.addAll(packs);
+    	return newList;
+    }
+    
     /** 기본 제공 Pack 불러오기 */
     private static void loadDefaultPacks() {
     	packs.add(new BundledPack());
+    }
+    
+    /** Pack class 를 받아, 그에 해당하는 이미 불러온 Pack 객체를 리턴 */
+    public static Pack getInstalledPackInstance(Class<?> packClass) {
+    	for(Pack p : getInstalledPacks()) {
+    		if(p.getClass() == packClass) return p;
+    	}
+    	return null;
     }
     
     /** 클래스 정보들과, 불러온 Pack 모두 다시 확인 */
