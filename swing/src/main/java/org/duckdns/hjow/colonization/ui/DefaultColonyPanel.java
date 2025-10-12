@@ -347,7 +347,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         // 예산 체크
         long howMuch = City.getBuildingNewCityFee(col);
         long nowHave = col.getMoney();
-        if(nowHave < howMuch) throw new RuntimeException(ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다."));
+        if(nowHave < howMuch) throw new RuntimeException(ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(howMuch - nowHave)));
         
         // 인구 체크 (소모는 되지 않지만, 최소 조건으로 적용)
         long population = col.getCitizenCount();

@@ -1,14 +1,27 @@
 package org.duckdns.hjow.colonization.web.servlets;
 
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.Citizen;
+import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.HoldingJob;
+import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
+import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
+import org.duckdns.hjow.colonization.elements.facilities.Factory;
+import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
+import org.duckdns.hjow.colonization.elements.products.Product;
+import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 
 public class ColonyServlet extends CommonServlet {
 	private static final long serialVersionUID = 4083159248474182017L;
@@ -31,69 +44,22 @@ public class ColonyServlet extends CommonServlet {
         	Account acc = checkLogined(req);
         	
         	if(svSub1.equalsIgnoreCase("list")) {
-        		JsonArray arr = new JsonArray();
-        		
-        		for(Colony c : acc.getColonies()) {
-        			JsonObject row = new JsonObject();
-        			row.put("name", c.getName());
-        			row.put("key" , String.valueOf(c.getKey()));
-        			arr.add(row);
-        		}
-        		
-        		responses.put("success", new Boolean(true));
-                responses.put("message", "");
-                responses.put("list", arr);
+        		serviceList(req, acc, responses);
         	} else if(svSub1.equalsIgnoreCase("detail")) {
-        		String strKey = req.getParameter("key");
-        		long key = Long.parseLong(strKey);
-        		
-        		Colony col = null;
-        		for(Colony c : acc.getColonies()) {
-        			if(key == c.getKey()) { col = c; break; }
-        		}
-        		
-        		if(col == null) {
-        			responses.put("success", new Boolean(false));
-                    responses.put("message", "Not existing colony.");
-        		} else {
-        			responses.put("success", new Boolean(true));
-                    responses.put("message", "");
-                    responses.put("detail", col.toJson(true, col, null));
-        		}
+        		serviceDetail(req, acc, responses);
         	} else if(svSub1.equalsIgnoreCase("cycle")) {
-        		String strKey = req.getParameter("key");
-        		long key = Long.parseLong(strKey);
-        		
-        		String strCyclePass = req.getParameter("cycle");
-        		if(strCyclePass == null || "".equals(strCyclePass)) strCyclePass = "1";
-        		int cyclePass = Integer.parseInt(strCyclePass);
-        		if(cyclePass > 10) cyclePass = 10;
-        		if(cyclePass <  1) cyclePass =  1;
-        		
-        		Colony col = null;
-        		for(Colony c : acc.getColonies()) {
-        			if(key == c.getKey()) { col = c; break; }
-        		}
-        		
-        		BigInteger time = col.getTime();
-                time = time.add(BigInteger.ONE);
-                
-                BigInteger timeMax = new BigInteger(String.valueOf(Integer.MAX_VALUE - 10));
-                while(time.compareTo(timeMax) >= 0) {
-                    time = time.subtract(timeMax);
-                }
-                int cycle = time.intValue();
-                
-                for(int idx=0; idx<cyclePass; idx++) {
-                    cycle++;
-                    col.oneCycle(cycle, null, col, 100, null);
-                }
-                
-                responses.put("success", new Boolean(true));
-                responses.put("message", "");
-                responses.put("detail", col.toJson(true, col, null));
+        		serviceCycle(req, acc, responses);
+        	} else if(svSub1.equalsIgnoreCase("rename")) {
+        		serviceRename(req, acc, responses);
+        	} else if(svSub1.equalsIgnoreCase("new")) {
+        		serviceNew(req, acc, responses);
+        	} else if(svSub1.equalsIgnoreCase("work")) {
+        		serviceWork(req, acc, responses);
         	}
-        } catch(Exception ex) {
+        } catch(RuntimeException ex) {
+            responses.put("success", new Boolean(false));
+            responses.put("message", ex.getMessage());
+        } catch(Throwable ex) {
             logger.error("Error on " + this.getName() + " - " + ex.getMessage(), ex);
             responses.put("success", new Boolean(false));
             responses.put("message", ex.getMessage());
@@ -107,5 +73,297 @@ public class ColonyServlet extends CommonServlet {
 	public String getName() {
 		return "colony"; // URL : /web/json?svName=colony
 	}
+	
+	protected void serviceList(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
+		JsonArray arr = new JsonArray();
+		
+		for(Colony c : acc.getColonies()) {
+			JsonObject row = new JsonObject();
+			row.put("name", c.getName());
+			row.put("key" , String.valueOf(c.getKey()));
+			arr.add(row);
+		}
+		
+		responses.put("success", new Boolean(true));
+        responses.put("message", "");
+        responses.put("list", arr);
+	}
 
+	protected void serviceDetail(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
+		String strKey = req.getParameter("key");
+		long key = Long.parseLong(strKey);
+		
+		Colony col = null;
+		for(Colony c : acc.getColonies()) {
+			if(key == c.getKey()) { col = c; break; }
+		}
+		
+		if(col == null) {
+			responses.put("success", new Boolean(false));
+            responses.put("message", "Not existing colony.");
+		} else {
+			responses.put("success", new Boolean(true));
+            responses.put("message", "");
+            responses.put("detail", col.toJson(true, col, null));
+		}
+	}
+	
+	protected void serviceCycle(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
+		String strKey = req.getParameter("key");
+		long key = Long.parseLong(strKey);
+		
+		String strCyclePass = req.getParameter("cycle");
+		if(strCyclePass == null || "".equals(strCyclePass)) strCyclePass = "1";
+		int cyclePass = Integer.parseInt(strCyclePass);
+		if(cyclePass > 10) cyclePass = 10;
+		if(cyclePass <  1) cyclePass =  1;
+		
+		Colony col = null;
+		for(Colony c : acc.getColonies()) {
+			if(key == c.getKey()) { col = c; break; }
+		}
+		
+		BigInteger time = col.getTime();
+        time = time.add(BigInteger.ONE);
+        
+        BigInteger timeMax = new BigInteger(String.valueOf(Integer.MAX_VALUE - 10));
+        while(time.compareTo(timeMax) >= 0) {
+            time = time.subtract(timeMax);
+        }
+        int cycle = time.intValue();
+        
+        for(int idx=0; idx<cyclePass; idx++) {
+            cycle++;
+            col.oneCycle(cycle, null, col, 100, null);
+        }
+        
+        responses.put("success", new Boolean(true));
+        responses.put("message", "");
+        responses.put("detail", col.toJson(true, col, null));
+	}
+	
+	protected void serviceRename(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
+		String type = req.getParameter("type");
+		String name = req.getParameter("name");
+		String strKey = req.getParameter("key");
+		long key = Long.parseLong(strKey);
+		
+		if("Colony".equalsIgnoreCase(type)) {
+			for(Colony c : acc.getColonies()) {
+				if(c.getKey() == key) {
+					c.setName(name);
+				}
+			}
+			responses.put("success", new Boolean(true));
+            responses.put("message", "");
+		} else if("City".equalsIgnoreCase(type)) {
+			for(Colony c : acc.getColonies()) {
+				for(City ct : c.getCities()) {
+					if(ct.getKey() == key) {
+    					ct.setName(name);
+    				}
+				}
+			}
+			responses.put("success", new Boolean(true));
+            responses.put("message", "");
+		} else if("Facility".equalsIgnoreCase(type)) {
+			for(Colony c : acc.getColonies()) {
+				for(City ct : c.getCities()) {
+					for(Facility f : ct.getFacility()) {
+						if(f.getKey() == key) {
+        					f.setName(name);
+        				}
+					}
+				}
+			}
+			responses.put("success", new Boolean(true));
+            responses.put("message", "");
+		} else if("Citizen".equalsIgnoreCase(type)) {
+			for(Colony c : acc.getColonies()) {
+				for(City ct : c.getCities()) {
+					for(Citizen ctz : ct.getCitizens()) {
+						if(ctz.getKey() == key) {
+        					ctz.setName(name);
+        				}
+					}
+				}
+			}
+			responses.put("success", new Boolean(true));
+            responses.put("message", "");
+		} else {
+			responses.put("success", new Boolean(false));
+            responses.put("message", "Cannot find the type " + type);
+		}
+	}
+	
+	protected void serviceNew(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
+		String strKey = req.getParameter("colony");
+		long colKey = Long.parseLong(strKey);
+		
+		String type  = req.getParameter("type");
+		String name  = req.getParameter("name");
+		
+		if("Facility".equalsIgnoreCase(type)) {
+			strKey = req.getParameter("city");
+			long cityKey = Long.parseLong(strKey);
+			
+			FacilityInformation info = FacilityManager.getFacilityInformation(name);
+			
+			Colony col = null;
+    		for(Colony c : acc.getColonies()) {
+    			if(colKey == c.getKey()) { col = c; break; }
+    		}
+    		if(col == null) throw new RuntimeException("No colony found.");
+    		
+    		City city = null;
+    		for(City ct : col.getCities()) {
+    			if(cityKey == ct.getKey()) { city = ct; break; }
+    		}
+    		if(city == null) throw new RuntimeException("No city found.");
+			
+			if(col.getMoney() < info.getPrice().longValue()) {
+				throw new RuntimeException(ColonyManager.t("예산이 부족합니다.\n[MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(info.getPrice() - col.getMoney())));
+            };
+            
+            if(col.getTech() < info.getTech().longValue()) {
+            	throw new RuntimeException(ColonyManager.t("기술이 부족합니다.\n[TECH] 의 기술이 더 필요합니다.").replace("[TECH]", String.valueOf(info.getTech() - col.getTech())));
+            };
+            
+            int leftSpaces = city.getLeftSpaces();
+            int needSpaces = info.getSpaceSize();
+            if(leftSpaces < needSpaces) {
+            	throw new RuntimeException(ColonyManager.t("잔여 공간이 부족합니다.\n[SPACE] 의 공간이 더 필요합니다.").replace("[SPACE]", String.valueOf(needSpaces - leftSpaces)));
+            }
+            
+            Method mthdChecker = info.getFacilityClass().getMethod("isBuildAvail", Colony.class, City.class);
+            String chkRes = (String) mthdChecker.invoke(null, col, city);
+            if(chkRes != null) {
+            	throw new RuntimeException(chkRes);
+            }
+            
+            HoldingJob job = new HoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
+            job.setUsingSpace(info.getSpaceSize());
+            city.getHoldings().add(job);
+            
+            col.modifyingMoney(info.getPrice() * (-1) , city, city, "Building", info.getTitle());
+			
+            responses.put("success", new Boolean(true));
+            responses.put("message", "");
+            responses.put("detail", col.toJson(true, col, null));
+		} else if("City".equalsIgnoreCase(type)) {
+			Colony col = null;
+    		for(Colony c : acc.getColonies()) {
+    			if(colKey == c.getKey()) { col = c; break; }
+    		}
+    		if(col == null) throw new RuntimeException("No colony found.");
+    		
+    		// 최대 도시 수 제한 체크
+            int cityCnt = col.getCityCount();
+            if(cityCnt >= col.getMaxCityCount()) throw new RuntimeException(ColonyManager.t("더 이상 새 도시를 건설할 수 없습니다."));
+            
+            // 예산 체크
+            long howMuch = City.getBuildingNewCityFee(col);
+            long nowHave = col.getMoney();
+            if(nowHave < howMuch) throw new RuntimeException(ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(howMuch - nowHave)));
+            
+            // 인구 체크 (소모는 되지 않지만, 최소 조건으로 적용)
+            long population = col.getCitizenCount();
+            if(cityCnt >= 1) {
+            	if((population / cityCnt) < 1000) throw new RuntimeException(ColonyManager.t("새 도시를 건설하려면, 현재의 도시들의 인구 평균이 [AVERAGE] 을 넘어야 합니다.").replace("[AVERAGE]", "1000"));
+            }
+            
+            City c = col.newCity();
+            col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, "NewCity", "");
+            
+            responses.put("success", new Boolean(true));
+            responses.put("message", "");
+            responses.put("detail", col.toJson(true, col, null));
+		} else {
+			throw new RuntimeException("Don't know what type do you want to create.");
+		}
+	}
+	
+	protected void serviceWork(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
+		String strKey = req.getParameter("colony");
+		long colKey = Long.parseLong(strKey);
+		
+		strKey = req.getParameter("city");
+		long cityKey = Long.parseLong(strKey);
+		
+		strKey = req.getParameter("facility");
+		long facKey = Long.parseLong(strKey);
+		
+		String name  = req.getParameter("name");
+		
+		Colony col = null;
+		for(Colony c : acc.getColonies()) {
+			if(colKey == c.getKey()) { col = c; break; }
+		}
+		if(col == null) throw new RuntimeException("No colony found.");
+		
+		City city = null;
+		for(City ct : col.getCities()) {
+			if(cityKey == ct.getKey()) { city = ct; break; }
+		}
+		if(city == null) throw new RuntimeException("No city found.");
+		
+		Facility fac = null;
+		for(Facility f : city.getFacility()) {
+			if(facKey == f.getKey()) { fac = f; break; }
+		}
+		if(fac == null) throw new RuntimeException("No facility found.");
+		
+		if(fac instanceof ResearchCenter) {
+			ResearchCenter resCenter = (ResearchCenter) fac;
+			Research research = null;
+			for(Research r : col.getResearches()) {
+				if(name.equals(String.valueOf(r.getKey()))) {
+					research = r;
+					break;
+				}
+			}
+			if(research == null) {
+				for(Research r : col.getResearches()) {
+					if(name.equals(r.getName())) {
+						research = r;
+						break;
+					}
+				}
+			}
+			if(research == null) throw new RuntimeException("No research found.");
+			
+			resCenter.setResearchKey(research.getKey());
+			
+			responses.put("success", new Boolean(true));
+            responses.put("message", "");
+            responses.put("detail", col.toJson(true, col, null));
+		} else if(fac instanceof Factory) {
+			Factory factory = (Factory) fac;
+			
+			if(DataUtil.isEmpty(name)) {
+				factory.setProductType(null);
+			} else {
+				Product prod = null;
+				for(Product p : Product.getProductTypeList()) {
+					if(name.equals(p.getKey())) { prod = p; break; }
+				}
+				if(prod == null) {
+				    for(Product p : Product.getProductTypeList()) {
+						if(name.equals(p.getType())) { prod = p; break; }
+					}
+				}
+				if(prod == null) {
+				    for(Product p : Product.getProductTypeList()) {
+						if(name.equals(p.getName())) { prod = p; break; }
+					}
+				}
+				if(prod == null) throw new RuntimeException("No product found.");
+				factory.setProductType(prod.getType());
+			}
+			
+			responses.put("success", new Boolean(true));
+            responses.put("message", "");
+            responses.put("detail", col.toJson(true, col, null));
+		}
+	}
 }
