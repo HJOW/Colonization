@@ -10,6 +10,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
+import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
@@ -64,10 +65,19 @@ public class LoginServlet extends CommonServlet {
                 jwt = HexUtil.encodeString(jwt);
                 
                 resp.setHeader("jwt", jwt);
+                responses.put("token", jwt);
                 
+                JsonArray arr = new JsonArray();
+                for(Colony c : acc.getColonies()) {
+        			JsonObject row = new JsonObject();
+        			row.put("name", c.getName());
+        			row.put("key" , String.valueOf(c.getKey()));
+        			arr.add(row);
+        		}
+                
+                responses.put("list", arr);
                 responses.put("success", new Boolean(true));
                 responses.put("message", "");
-                responses.put("token", jwt);
         	} else if(svSub1.equals("check")) {
         		String jwtMaybe = req.getHeader("jwt");
         		if(jwtMaybe == null || "".equals(jwtMaybe)) jwtMaybe = req.getParameter("jwt");

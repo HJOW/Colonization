@@ -57,7 +57,7 @@ public class GUIColonyManager extends ColonyManager {
     private static final long serialVersionUID = -2483528821790634383L;
     
     protected transient JFrame frame;
-    protected transient JPanel pnRoot, pnMain, pnFront;
+    protected transient JPanel pnMain, pnLocalRoot, pnFront;
     protected transient JProgressBar progFront;
     protected transient JTabbedPane tabMain;
     protected transient CardLayout cardMain;
@@ -80,6 +80,7 @@ public class GUIColonyManager extends ColonyManager {
     protected transient BenchmarkManager benchManager;
     protected transient GUITCPSimpleDaemonManager daemonManager;
     protected transient ConfigManager configManager;
+    protected transient ServletClientPanel servletClient;
     
     protected transient JMenuBar menuBar;
     protected transient JMenu menuFile, menuAction;
@@ -175,21 +176,24 @@ public class GUIColonyManager extends ColonyManager {
             fileChooser.addChoosableFileFilter(filterColGz);
         }
         
-        pnRoot = new JPanel();
-        frame.add(pnRoot, BorderLayout.CENTER);
+        pnMain = new JPanel();
+        frame.add(pnMain, BorderLayout.CENTER);
         
         tabMain = new JTabbedPane();
-        pnRoot.setLayout(new BorderLayout());
-        pnRoot.add(tabMain, BorderLayout.CENTER);
+        pnMain.setLayout(new BorderLayout());
+        pnMain.add(tabMain, BorderLayout.CENTER);
         
         JPanel pnMainCard1, pnMainCard2;
-        pnMain      = new JPanel();
+        pnLocalRoot = new JPanel();
         pnFront     = new JPanel();
         pnMainCard1 = new JPanel();
         pnMainCard2 = new JPanel();
         
+        servletClient = new ServletClientPanel(this);
+        
         tabMain.add(t("홈"), pnFront);
-        tabMain.add(t("로컬"), pnMain);
+        tabMain.add(t("로컬"), pnLocalRoot);
+        tabMain.add(t("웹"), servletClient);
         
         pnFront.setLayout(new BorderLayout());
         
@@ -246,10 +250,10 @@ public class GUIColonyManager extends ColonyManager {
         });
         
         cardMain = new CardLayout();
-        pnMain.setLayout(cardMain);
+        pnLocalRoot.setLayout(cardMain);
         
-        pnMain.add(pnMainCard1, "C1");
-        pnMain.add(pnMainCard2, "C2");
+        pnLocalRoot.add(pnMainCard1, "C1");
+        pnLocalRoot.add(pnMainCard2, "C2");
         
         pnMainCard1.setLayout(new BorderLayout());
         pnMainCard2.setLayout(new BorderLayout());
@@ -305,12 +309,12 @@ public class GUIColonyManager extends ColonyManager {
         cbxColony.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                cardMain.show(pnMain, "C2");
+                cardMain.show(pnLocalRoot, "C2");
                 SwingUtilities.invokeLater(new Runnable() {   
                     @Override
                     public void run() {
                         refreshColonyContent();
-                        cardMain.show(pnMain, "C1");
+                        cardMain.show(pnLocalRoot, "C1");
                     }
                 });
             }
@@ -384,9 +388,9 @@ public class GUIColonyManager extends ColonyManager {
         btnNewCol.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardMain.show(pnMain, "C2");
+                cardMain.show(pnLocalRoot, "C2");
                 onNewRequested();
-                cardMain.show(pnMain, "C1");
+                cardMain.show(pnLocalRoot, "C1");
             }
         });
         pnNoColCenter.add(btnNewCol);
@@ -511,7 +515,7 @@ public class GUIColonyManager extends ColonyManager {
         menuAction = new JMenu(t("동작"));
         menuBar.add(menuAction);
         
-        menuActionThrPlay = new JMenuItem(t("시뮬레이션 시작"));
+        menuActionThrPlay = new JMenuItem(t("시뮬레이션 시작") + " (" + t("로컬") + ")");
         menuAction.add(menuActionThrPlay);
         menuActionThrPlay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_MASK));
         menuActionThrPlay.addActionListener(new ActionListener() {
@@ -571,7 +575,7 @@ public class GUIColonyManager extends ColonyManager {
         daemonManager = new GUITCPSimpleDaemonManager(frame);
         
         refreshColonyContent();
-        cardMain.show(pnMain, "C2");
+        cardMain.show(pnLocalRoot, "C2");
     }
 
     /** 지원되는 시뮬 속도 목록 반환 */
@@ -725,12 +729,12 @@ public class GUIColonyManager extends ColonyManager {
         Colony newCol = newColony(type, name);
         cbxColony.setSelectedItem(newCol);
         
-        cardMain.show(pnMain, "C2");
+        cardMain.show(pnLocalRoot, "C2");
         SwingUtilities.invokeLater(new Runnable() {   
             @Override
             public void run() {
                 refreshColonyContent();
-                cardMain.show(pnMain, "C1");
+                cardMain.show(pnLocalRoot, "C1");
             }
         });
     }
@@ -741,7 +745,7 @@ public class GUIColonyManager extends ColonyManager {
         int sel = JOptionPane.showConfirmDialog(getDialog(), t("정착지 [COLONY] 을/를 포기하시겠습니까?").replace("[COLONY]", col.getName()), t("확인"), JOptionPane.YES_NO_OPTION);
         if(sel != JOptionPane.YES_OPTION) return;
         
-        cardMain.show(pnMain, "C2");
+        cardMain.show(pnLocalRoot, "C2");
         
         // 리스트에서 삭제
         int idx = 0;
@@ -767,7 +771,7 @@ public class GUIColonyManager extends ColonyManager {
         
         // 새로 고침
         refreshColonyList();
-        cardMain.show(pnMain, "C1");
+        cardMain.show(pnLocalRoot, "C1");
     }
     
     /** 정착지 하나를 별도 파일로 저장 요청 시 호출됨 */
@@ -806,14 +810,14 @@ public class GUIColonyManager extends ColonyManager {
     protected void onResetAllRequested() {
         int sel = JOptionPane.showConfirmDialog(getDialog(), "정착지들을 모두 포기하시겠습니까?\n별도로 저장하지 않은 모든 정착지가 사라집니다 !", "확인", JOptionPane.YES_NO_OPTION);
         if(sel == JOptionPane.YES_OPTION) {
-            cardMain.show(pnMain, "C2");
+            cardMain.show(pnLocalRoot, "C2");
             pauseSimulation();
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     resetAllColony();
                     refreshArenaPanel(0);
-                    cardMain.show(pnMain, "C1");
+                    cardMain.show(pnLocalRoot, "C1");
                 }
             }).start();
         }
@@ -823,7 +827,7 @@ public class GUIColonyManager extends ColonyManager {
     public void applyRestore(List<Colony> colonies, BackupManager backupMan, boolean concat) {
         if(backupManager != backupMan) return;
         
-        cardMain.show(pnMain, "C2");
+        cardMain.show(pnLocalRoot, "C2");
         
         // 파일 다 지워야 함
         File root = getColonySaveRootDirectory();
@@ -864,7 +868,7 @@ public class GUIColonyManager extends ColonyManager {
         reserveSaving = true; // 저장 예약
         refreshColonyList();  // 목록 갱신
         
-        cardMain.show(pnMain, "C1");
+        cardMain.show(pnLocalRoot, "C1");
     }
     
     @Override
@@ -930,8 +934,8 @@ public class GUIColonyManager extends ColonyManager {
         
         cardMain = null;
         
-        if(pnMain != null) pnMain.removeAll();
-        pnMain = null;
+        if(pnLocalRoot != null) pnLocalRoot.removeAll();
+        pnLocalRoot = null;
         
         if(fileChooser != null) fileChooser.setVisible(false);
         fileChooser = null;
@@ -947,6 +951,9 @@ public class GUIColonyManager extends ColonyManager {
         
         if(configManager != null) configManager.dispose();
         configManager = null;
+        
+        if(servletClient != null) servletClient.dispose();
+        servletClient = null;
 
         if(dialogGlobalLog != null) {
             dialogGlobalLog.dispose();
@@ -988,9 +995,9 @@ public class GUIColonyManager extends ColonyManager {
     /** 메인 대화상자 내 모든 입력/버튼 등의 컴포넌트 활성화 여부 일괄 지정 */
     public void setEditable(boolean editable) {
         if(editable) {
-            if(cardMain != null) cardMain.show(pnMain, "C1");
+            if(cardMain != null) cardMain.show(pnLocalRoot, "C1");
         } else {
-            if(cardMain != null) cardMain.show(pnMain, "C2");
+            if(cardMain != null) cardMain.show(pnLocalRoot, "C2");
         }
         
         for(DefaultColonyPanel c : pnColonies) {
@@ -1057,8 +1064,8 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 시뮬레이션 시작/정지 토글 */
     public void toggleSimulationRunning() {
-        threadPaused = (! threadPaused);
-        if(threadPaused) {
+        boolean resv = (! threadPaused);
+        if(resv) {
             pauseSimulation();
         } else {
             resumeSimulation();
@@ -1073,7 +1080,7 @@ public class GUIColonyManager extends ColonyManager {
         menuActionThrPlay.setEnabled(false);
         
         btnThrPlay.setText(t("시뮬레이션 시작"));
-        menuActionThrPlay.setText(t("시뮬레이션 시작"));
+        menuActionThrPlay.setText(t("시뮬레이션 시작") + " (" + t("로컬") + ")");
         btnSaveAs.setEnabled(true);
         btnLoadAs.setEnabled(true);
         cbxColony.setEnabled(true);
@@ -1123,7 +1130,7 @@ public class GUIColonyManager extends ColonyManager {
         } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         btnThrPlay.setText(t("시뮬레이션 정지"));
-        menuActionThrPlay.setText(t("시뮬레이션 정지"));
+        menuActionThrPlay.setText(t("시뮬레이션 정지") + " (" + t("로컬") + ")");
         btnSaveAs.setEnabled(false);
         btnLoadAs.setEnabled(false);
         cbxColony.setEnabled(false);
@@ -1141,6 +1148,8 @@ public class GUIColonyManager extends ColonyManager {
         
         btnThrPlay.setEnabled(true);
         menuActionThrPlay.setEnabled(true);
+        
+        tabMain.setSelectedComponent(pnLocalRoot);
     }
     
     /** 쓰레드에서 1 사이클 당 1회 호출됨 */
