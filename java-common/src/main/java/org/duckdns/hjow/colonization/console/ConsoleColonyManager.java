@@ -25,6 +25,7 @@ public class ConsoleColonyManager extends ColonyManager {
     public void open(ColonizationMainClass superInstance) {
     	try {
     		reader = new BufferedReader(new InputStreamReader(System.in));
+    		loadLocalConfigs();
         } catch(Exception ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
@@ -90,13 +91,16 @@ public class ConsoleColonyManager extends ColonyManager {
                 if(! DataUtil.parseBoolean(whileSwitch.toString().trim())) break;
                 
                 int sel = Integer.parseInt(line.trim()) - 1;
-                if(sel < 0 || sel >= choices.size()) throw new RuntimeException("");
+                if(sel < 0 || sel >= choices.size()) throw new RuntimeException("목록에 없는 선택지입니다.");
                 
+                Choice choosed = choices.get(sel);
+                choosed.action();
     		} catch(Throwable t) {
     			onExceptionOccured(t);
     		}
     	}
     	
+    	System.out.println(t("Bye"));
     	ClassUtil.closeAll(reader);
     	System.exit(0);
     }
@@ -104,6 +108,7 @@ public class ConsoleColonyManager extends ColonyManager {
     /** 오류 처리 */
     protected void onExceptionOccured(Throwable t) {
     	if(t instanceof RuntimeException) { System.out.println(t("오류") + " : " + t(t.getMessage())); }
+    	else if(t instanceof NumberFormatException) { System.out.println(t("오류") + " : " + t("숫자 형식으로 입력해 주세요.")); }
     	else {
     		System.out.println(t("오류") + " : " + t(t.getMessage()));
     		t.printStackTrace();
@@ -132,6 +137,8 @@ public class ConsoleColonyManager extends ColonyManager {
                 	for(File f : lists) {
                 		FileUtil.delete(f);
                 	}
+                	System.out.println(t("작업이 완료되었습니다."));
+                	whileSwitch.setLength(0); whileSwitch.append("N"); break;
                 } else {
                 	whileSwitch.setLength(0); whileSwitch.append("N"); break;
                 }
@@ -169,6 +176,10 @@ public class ConsoleColonyManager extends ColonyManager {
                 	for(File f : lists) {
                 		FileUtil.delete(f);
                 	}
+                	
+                	loadLocalConfigs();
+                	System.out.println(t("작업이 완료되었습니다."));
+                	whileSwitch.setLength(0); whileSwitch.append("N"); break;
                 } else {
                 	whileSwitch.setLength(0); whileSwitch.append("N"); break;
                 }
