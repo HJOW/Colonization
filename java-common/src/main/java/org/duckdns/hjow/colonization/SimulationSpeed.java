@@ -32,6 +32,6 @@ public class SimulationSpeed implements Serializable {
     /** 실제 속도를 좌우하는 값. 작을 수록 빨라지나 너무 작으면 렉이 체감될 수 있음. 밀리초 단위 */
     public long getThreadGap() {
         if(speed <= 0) return 0;
-        return 99L / speed;
+        return 199L / speed;
     }
 }

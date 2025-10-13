@@ -39,7 +39,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     protected transient volatile Vector<Colony> colonies = new Vector<Colony>();
     protected transient volatile int  selectedColony = -1;
     protected transient volatile int  cycle = 0;
-    protected transient volatile long cycleGap = 99L;
+    protected transient volatile long cycleGap = 199L;
     protected transient volatile long cycleRunningTime = 0L;
     
     protected transient volatile boolean flagSaveBeforeClose = true; // 종료 시 저장 플래그
