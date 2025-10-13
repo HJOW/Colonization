@@ -32,10 +32,10 @@ public class NormalColony extends AbstractColony {
     }
     
     public static String getColonyClassTitle() {
-        return ColonyManager.t("일반 정착지 시나리오");
+        return ColonyManager.t("메소 정착지 시나리오");
     }
     
     public static String getColonyClassDescription() {
-        return ColonyManager.t("일반 정착지 시나리오");
+        return ColonyManager.t("메소 연방 자치령 소속으로 새 정착지를 개척합니다.");
     }
 }
