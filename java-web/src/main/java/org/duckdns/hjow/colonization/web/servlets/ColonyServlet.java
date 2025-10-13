@@ -124,8 +124,6 @@ public class ColonyServlet extends CommonServlet {
 		}
 		
 		BigInteger time = col.getTime();
-        time = time.add(BigInteger.ONE);
-        
         BigInteger timeMax = new BigInteger(String.valueOf(2000000000));
         while(time.compareTo(timeMax) >= 0) {
             time = time.subtract(timeMax);

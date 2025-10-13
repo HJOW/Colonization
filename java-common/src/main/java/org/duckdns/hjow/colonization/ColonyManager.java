@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -464,7 +465,18 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     }
     
     /** 사이클 진행에 따른 정착지 화면 내용 갱신 (성능을 위해 항상 전체를 새로고침하지는 않음. 확실히 새로고침하려면 refreshColonyContent 메소드 사용) */
-    public void refreshArenaPanel(int cycle) { }
+    public void refreshArenaPanel(int cycle) {
+        Colony col = getSelectedColony();
+        
+        if(col != null) {
+            BigInteger time = col.getTime();
+            BigInteger timeMax = new BigInteger(String.valueOf(2000000000));
+            while(time.compareTo(timeMax) >= 0) {
+                time = time.subtract(timeMax);
+            }
+            cycle = time.intValue();
+        }
+    }
     
     /** 도시가 속한 정착지 찾기 */
     @Override
