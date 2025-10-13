@@ -26,12 +26,15 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
+import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
-public class NewFacilityManager extends JDialog {
+public class NewFacilityManager extends JDialog implements Disposeable {
     private static final long serialVersionUID = 8433244450809087631L;
     protected ColonyManager colonyManager;
     protected City city;
+    
+    protected transient ServletClientColonyPanel servletPanel = null;
     
     protected JComboBox<FacilityInformation> cbxFacInfos;
     protected JTextArea ta;
@@ -46,16 +49,20 @@ public class NewFacilityManager extends JDialog {
         refresh();
     }
     
+    @Override
     public void dispose() {
         disposeFields();
         setVisible(false);
     }
     
+    /** 순환 참조 우려가 있는 필드만 null 처리 */
     public void disposeFields() {
         this.colonyManager = null;
         this.city          = null;
+        this.servletPanel  = null;
     }
     
+    /** UI 초기화 */
     public void init(ColonyManager colonyManager, City city) {
         if(this.city != null) disposeFields();
         
@@ -159,6 +166,13 @@ public class NewFacilityManager extends JDialog {
                     
                     col.modifyingMoney(info.getPrice() * (-1) , city, city, "Building", info.getTitle());
                     
+                    if(servletPanel != null) {
+                        try { servletPanel.onNewFacilityAdded(info, city, col); } catch(Throwable t) {
+                            JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
+                            return;
+                        }
+                    }
+                    
                     colonyManager.refreshColonyContent();
                     dispose();
                 } catch(Exception ex) {
@@ -171,7 +185,13 @@ public class NewFacilityManager extends JDialog {
     }
     
     public JDialog getDialog() { return this; }
+    
+    /** 서블릿 클라이언트 모드 설정 */
+    public void setServletClientMode(ServletClientColonyPanel servletPanel) {
+        this.servletPanel = servletPanel;
+    }
 
+    /** 시설 목록 새로고침 */
     public void refreshFacilityList() {
         FacilityInformation beforeSelected = (FacilityInformation) cbxFacInfos.getSelectedItem();
         cbxFacInfos.removeAllItems();
@@ -205,6 +225,7 @@ public class NewFacilityManager extends JDialog {
         return true;
     }
     
+    /** 이 대화상자 내 컨텐츠 새로고침 (시설 목록 제외) */
     public void refresh() {
         FacilityInformation info = (FacilityInformation) cbxFacInfos.getSelectedItem();
         

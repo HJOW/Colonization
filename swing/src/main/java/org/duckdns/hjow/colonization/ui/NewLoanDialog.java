@@ -30,11 +30,13 @@ public class NewLoanDialog implements Disposeable {
     protected JTextArea ta;
     
     protected transient Colony colony;
+    protected transient ServletClientColonyPanel servletPanel = null;
     
     public NewLoanDialog(GUIColonyManager man) {
         init(man);
     }
     
+    /** UI 초기화 */
     protected void init(GUIColonyManager man) {
         this.man = man;
         dialog = new JDialog(man.getDialog(), true);
@@ -95,6 +97,14 @@ public class NewLoanDialog implements Disposeable {
                 if(loan == null) { JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("해당 대출을 받을 수 없습니다.")); return; }
                 
                 colony.addLoan(loan);
+                
+                if(servletPanel != null) {
+                    try { servletPanel.onNewLoanAdded(loan, colony); } catch(Throwable t) {
+                        JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
+                        return;
+                    }
+                }
+                
                 JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("대출을 받았습니다."));
                 man.refreshColonyContent();
                 dispose();
@@ -121,6 +131,12 @@ public class NewLoanDialog implements Disposeable {
         return this;
     }
     
+    /** 서블릿 클라이언트 모드 설정 */
+    public void setServletClientMode(ServletClientColonyPanel servletPanel) {
+        this.servletPanel = servletPanel;
+    }
+    
+    /** 설명 텍스트 새로고침 */
     protected void refreshDesc() {
         String desc = "";
         Loan loan = (Loan) cbxLoans.getSelectedItem();
@@ -139,6 +155,7 @@ public class NewLoanDialog implements Disposeable {
         ta.setText(desc);
     }
     
+    /** 대화 상자 오픈 */
     public void open(GUIColonyManager man, Colony colony) {
         if(colony.getLoanAvail().isEmpty()) {
             JOptionPane.showMessageDialog(man.getDialog(), ColonyManager.t("현재 받을 수 있는 대출 상품이 없습니다."));
@@ -168,5 +185,6 @@ public class NewLoanDialog implements Disposeable {
         if(dialog != null) dialog.setVisible(false);
         man    = null;
         dialog = null;
+        servletPanel = null;
     }
 }
