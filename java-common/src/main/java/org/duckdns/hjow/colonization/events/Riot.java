@@ -21,7 +21,7 @@ public class Riot extends TimeEvent {
 
     @Override
     public int getOccurCycle(Colony col, City city) {
-        return 100;
+        return 600;
     }
 
     @Override

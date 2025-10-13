@@ -28,6 +28,7 @@ import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
+import org.duckdns.hjow.colonization.events.EasyGorrdInvasion;
 import org.duckdns.hjow.colonization.events.InfluenzaEvent;
 import org.duckdns.hjow.colonization.events.Riot;
 import org.duckdns.hjow.colonization.events.TimeEvent;
@@ -851,6 +852,7 @@ public abstract class AbstractColony implements Colony {
         
         events.add(new InfluenzaEvent());
         events.add(new Riot());
+        events.add(new EasyGorrdInvasion());
         
         return events;
     }

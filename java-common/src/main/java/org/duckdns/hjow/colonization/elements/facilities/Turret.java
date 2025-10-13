@@ -23,12 +23,12 @@ public class Turret extends DefenceFacility implements AttackableObject {
     
     @Override
     public int getAttackCount() {
-        return 1;
+        return 2;
     }
     
     @Override
     public int getDamage() {
-        return 1;
+        return 10;
     }
     
     @Override

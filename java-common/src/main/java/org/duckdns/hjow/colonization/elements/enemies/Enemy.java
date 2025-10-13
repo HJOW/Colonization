@@ -1,5 +1,8 @@
 package org.duckdns.hjow.colonization.elements.enemies;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -97,7 +100,21 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         
         if(cycle % getAttackCycle() == 0) {
             // 시설 먼저 처리
-            List<Facility> facs = city.getFacility();
+        	
+        	//     시설 목록 불러오기
+        	List<Facility> facs = new ArrayList<Facility>();
+            facs.addAll(city.getFacility());
+            
+            //     순서 랜덤화 시키기
+            Collections.sort(facs, new Comparator<Facility>() {
+				@Override
+				public int compare(Facility o1, Facility o2) {
+					if(Math.random() >= 0.5) return -1;
+					return 1;
+				}
+			});
+            
+            //     순서대로 공격 처리
             for(Facility fac : facs) {
                 if(fac.getHp() >= 1) {
                     naturalized = ColonyManager.naturalizeDamage(this, fac, damages);
@@ -109,7 +126,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                 
             }
             
-            // 시설이 없으면 시민
+            // 시설이 없으면 시민 공격
             if(castLeft >= 1) {
                 List<Citizen> citizens = city.getCitizens();
                 for(Citizen ct : citizens) {
