@@ -737,7 +737,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
 					if(infoNow != null) cbxColony.setSelectedItem(infoNow);
 				    fCbxColony = true;
 				    
-				    pnColony = new DefaultColonyPanel(colony, superInstance);
+				    pnColony = new ServletClientColonyPanel(colony, superInstance);
 				    pnGameMain.add((Component) pnColony.getComponent(), BorderLayout.CENTER);
 				    
 				    cardMain.show(pnMain, "Game");
