@@ -22,7 +22,12 @@ public class ColonyStringTable extends BrokerStringTable {
 
 	@Override
 	public synchronized String t(String originals) {
-		Properties prop = originalInstance.getData();
+		Properties prop = null;
+		if(originalInstance != null) prop = originalInstance.getData();
+		if(prop == null) {
+			prop = new Properties();
+		}
+		
 		String res = null;
 		if(prop.containsKey(originals)) res = prop.getProperty(originals);
 		
