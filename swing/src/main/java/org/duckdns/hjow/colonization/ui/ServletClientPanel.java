@@ -70,7 +70,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
 	
 	protected JTextField     tfLoginId, tfLoginUrl, tfJoinUrl, tfJoinId, tfJoinName;
 	protected JPasswordField tfLoginPw, tfJoinPw;
-	protected JButton btnLoginJoin, btnLoginRun, btnJoinCancel, btnJoinRun, btnThrPlay;
+	protected JButton btnLoginJoin, btnLoginRun, btnJoinCancel, btnJoinRun, btnThrPlay, btnLogout;
 	protected JComboBox<ColonySimpleInfo> cbxColony;
 	
     public ServletClientPanel() { super(); init(); }
@@ -482,6 +482,16 @@ public class ServletClientPanel extends JPanel implements Disposeable {
 			}
 		});
         
+        btnLogout = new JButton(ColonyManager.t("로그아웃"));
+        toolbar.add(btnLogout);
+        
+        btnLogout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onLogoutRequested();
+			}
+		});
+        
         pnGameMain = new JPanel();
         pnGameMain.setLayout(new BorderLayout());
         pnCardGame.add(pnGameMain, BorderLayout.CENTER);
@@ -820,6 +830,32 @@ public class ServletClientPanel extends JPanel implements Disposeable {
     	pnColony.setEditable(false);
     	btnThrPlay.setText(ColonyManager.t("시뮬레이션 정지"));
     	btnThrPlay.setEnabled(true);
+    }
+    
+    /** 로그아웃 요청 시 호출 */
+    protected void onLogoutRequested() {
+    	cardMain.show(pnMain, "Loading");
+    	
+    	new Thread(new Runnable() {
+    		@Override
+    		public void run() {
+    			pauseSimulation();
+    			
+    			token = null;
+    	    	id = null;
+    	    	fThreadLogin      = false;
+    			fThreadJoin       = false;
+    			fThreadDetail     = false;
+    			fThreadMainPaused = true;
+    			
+    			SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						cardMain.show(pnMain, "Login");
+					}
+				});
+    		}
+    	}).start();
     }
     
     /** 메인 쓰레드 */
