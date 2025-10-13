@@ -169,9 +169,8 @@ public class TCPSimpleDaemon implements Disposeable {
         if(logger != null) logger.log("Colony " + col.getName() + " (" + col.getKey() + ") received by " + host + ".");
         
         BigInteger time = col.getTime();
-        BigInteger timeMax = new BigInteger(String.valueOf(2000000000));
-        while(time.compareTo(timeMax) >= 0) {
-            time = time.subtract(timeMax);
+        while(time.compareTo(ColonyManager.TIME_MAX_INT) >= 0) {
+            time = time.subtract(ColonyManager.TIME_MAX_INT);
         }
         int cycle = time.intValue();
         

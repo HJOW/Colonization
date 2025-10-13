@@ -13,7 +13,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -1212,10 +1211,9 @@ public class GUIColonyManager extends ColonyManager {
         
         colPn.refresh(cycle, null, col, this);
         
-        BigInteger time = col.getTime();
-        BigInteger timeMax = new BigInteger(String.valueOf(2000000000));
-        while(time.compareTo(timeMax) >= 0) {
-            time = time.subtract(timeMax);
+        time = col.getTime();
+        while(time.compareTo(TIME_MAX_INT) >= 0) {
+            time = time.subtract(TIME_MAX_INT);
         }
         cycle = time.intValue();
     }

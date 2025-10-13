@@ -45,6 +45,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     protected transient volatile boolean flagSaveBeforeClose = true; // 종료 시 저장 플래그
     protected transient volatile boolean flagAlreadyDisposed = false;
     
+    protected transient BigInteger time;
+    
     /** 기본 생성자 */
     public ColonyManager() {
         threadSwitch        = false;
@@ -470,9 +472,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         
         if(col != null) {
             BigInteger time = col.getTime();
-            BigInteger timeMax = new BigInteger(String.valueOf(2000000000));
-            while(time.compareTo(timeMax) >= 0) {
-                time = time.subtract(timeMax);
+            while(time.compareTo(ColonyManager.TIME_MAX_INT) >= 0) {
+                time = time.subtract(ColonyManager.TIME_MAX_INT);
             }
             cycle = time.intValue();
         }
@@ -640,6 +641,9 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###,###,###,###,##0");
     public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("##0.00");
+    
+    public static final int        TIME_MAX     = 2000000000;
+    public static final BigInteger TIME_MAX_INT = new BigInteger(String.valueOf(TIME_MAX));
     
     protected static final ColonyStringTable STRINGTABLE = new ColonyStringTable();
     
