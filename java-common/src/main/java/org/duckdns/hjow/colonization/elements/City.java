@@ -38,7 +38,7 @@ public class City implements ColonyElements {
     protected List<Enemy>      enemies  = new Vector<Enemy>();
     protected List<HoldingJob> holdings = new Vector<HoldingJob>();
     protected int hp = getMaxHp();
-    protected int spaces = 300 + ((int) ( 300 * Math.random() ));
+    protected int spaces = 500 + ((int) ( 700 * Math.random() ));
     protected int tax = 10;
     
     protected transient long calculatedTransPoint     = 0L;
@@ -678,8 +678,9 @@ public class City implements ColonyElements {
         long now = transPoint;
         
         for(Facility f : getFacility()) {
-            if(now >= 0) now = now - f.getWorkingCitizensCount(this, colony);
-            if(now < 0) {
+        	if((f instanceof Residence) || (f instanceof TransportStation)) continue;
+            if(now >= 1L) now = now - f.getWorkingCitizensCount(this, colony);
+            if(now <= 0L) {
                 for(Citizen c : f.getWorkingCitizens(this, colony)) {
                     c.setWorkingFacility(0L);
                     break; // 1명씩만 구직자 만들기
@@ -1032,7 +1033,7 @@ public class City implements ColonyElements {
         desc = desc.append("\n").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
         desc = desc.append("\n").append(ColonyManager.t("전력") + " : ").append(formatterInt.format(powerConsume)).append(" / ").append(formatterInt.format(getPowerGenerate(col)));
         desc = desc.append("\n").append(ColonyManager.t("공간") + " : ").append(formatterInt.format(getUsingSpaces())).append(" / ").append(formatterInt.format(getSpaces()));
-        if(getCalculatedTransPoint() > 0L) desc = desc.append("\n").append(ColonyManager.t("교통 용량") + " : ").append(formatterInt.format(getCalculatedTransLeftPoint())).append(" / ").append(formatterInt.format(getCalculatedTransPoint()));
+        if(getCalculatedTransPoint() > 0L) desc = desc.append("\n").append(ColonyManager.t("교통 용량") + " : ").append(formatterInt.format(getCalculatedTransPoint() - getCalculatedTransLeftPoint())).append(" / ").append(formatterInt.format(getCalculatedTransPoint()));
         desc = desc.append("\n").append(ColonyManager.t("인구") + " : ").append(formatterInt.format(getCitizenCount()));
         desc = desc.append("\n").append(ColonyManager.t("시설 수") + " : ").append(formatterInt.format(getFacility().size()));
         desc = desc.append("\n").append(ColonyManager.t("평균 행복도") + " : ").append(formatterRate.format(getAverageHappiness()));

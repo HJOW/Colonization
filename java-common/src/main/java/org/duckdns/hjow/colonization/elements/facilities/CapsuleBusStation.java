@@ -9,12 +9,12 @@ import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 
-public class BusStation extends TransportStation {
+public class CapsuleBusStation extends TransportStation {
     private static final long serialVersionUID = 7222508474329385493L;
     
     @Override
     protected String getDefaultNamePrefix() {
-        return ColonyManager.t("버스정류장");
+        return ColonyManager.t("캡슐버스플랫폼");
     }
     
     @Override
@@ -38,12 +38,17 @@ public class BusStation extends TransportStation {
     }
     
     @Override
+    public int getSpaceSize() {
+    	return 1;
+    }
+    
+    @Override
     public long usingFee() {
         return 0L;
     }
     
     public static String getFacilityName() {
-        return ColonyManager.t("버스 정류장");
+        return ColonyManager.t("캡슐 버스 플랫폼");
     }
     
     public static String getFacilityTitle() {

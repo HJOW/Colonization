@@ -40,6 +40,15 @@ public abstract class Factory extends DefaultFacility implements Storage {
     public int getPowerConsume() {
         return 10;
     }
+    
+    @Override
+    public int getWorkerNeeded() {
+        return 5;
+    }
+    @Override
+    public int getWorkerCapacity() {
+        return 10;
+    }
 
     @Override
     public int getWorkerSuitability(Citizen citizen) {

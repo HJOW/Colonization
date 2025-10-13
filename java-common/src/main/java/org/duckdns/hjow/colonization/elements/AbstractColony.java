@@ -15,6 +15,7 @@ import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
 import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
@@ -518,32 +519,41 @@ public abstract class AbstractColony implements Colony {
         City city = new City();
         int idx;
         
-        for(idx=0; idx<30; idx++) {
+        for(idx=0; idx<50; idx++) {
             city.createNewCitizen();
         }
         
         Facility fac;
         
-        for(idx=0; idx<8; idx++) {
+        for(idx=0; idx<12; idx++) {
             fac = new ResidenceModule();
             ((Residence) fac).setComportGrade(0);
             city.getFacility().add(fac);
         }
         
-        fac = new PowerStation();
-        city.getFacility().add(fac);
-        
-        fac = new Restaurant();
-        for(idx=0; idx<10; idx++) {
-            ((Restaurant) fac).store(new NutritionBlock());
+        for(idx=0; idx<3; idx++) {
+            fac = new PowerStation();
+            city.getFacility().add(fac);
         }
-        city.getFacility().add(fac);
+        
+        for(idx=0; idx<2; idx++) {
+            fac = new Restaurant();
+            for(idx=0; idx<10; idx++) {
+                ((Restaurant) fac).store(new NutritionBlock());
+            }
+            city.getFacility().add(fac);
+        }
         
         fac = new ResearchCenter();
         city.getFacility().add(fac);
         
         for(idx=0; idx<2; idx++) {
             fac = new SmallFactory();
+            city.getFacility().add(fac);
+        }
+        
+        for(idx=0; idx<2; idx++) {
+            fac = new CapsuleBusStation();
             city.getFacility().add(fac);
         }
         

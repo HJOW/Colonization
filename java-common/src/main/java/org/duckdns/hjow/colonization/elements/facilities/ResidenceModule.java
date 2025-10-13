@@ -28,6 +28,11 @@ public class ResidenceModule extends Residence {
         return 5;
     }
     
+    @Override
+    public int getSpaceSize() {
+    	return 3;
+    }
+    
     public static String getFacilityName() {
         return ColonyManager.t("보급형 주거 모듈");
     }

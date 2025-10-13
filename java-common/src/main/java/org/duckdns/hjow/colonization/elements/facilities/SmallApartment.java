@@ -5,23 +5,21 @@ import java.util.List;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
+import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 
-public class TownHouse extends Residence {
-    private static final long serialVersionUID = 6619376624827956402L;
-    
-    public TownHouse() {}
-    
-    @Override
+public class SmallApartment extends Residence {
+	private static final long serialVersionUID = 8130774192386570274L;
+
+	@Override
     protected String getDefaultNamePrefix() {
-        return ColonyManager.t("타운하우스");
+        return ColonyManager.t("소형APT");
     }
 
     @Override
     public int increasingCityMaxHP() {
-        return 2;
+        return 5;
     }
 
     @Override
@@ -31,22 +29,22 @@ public class TownHouse extends Residence {
     
     @Override
     public int getMaxHp() {
-        return 2000;
+        return 3000;
     }
     
     @Override
     public int getPowerConsume() {
-        return 2;
-    }
-
-    @Override
-    protected int getDefaultCapacity() {
-        return 12;
+        return 7;
     }
     
     @Override
     public int getSpaceSize() {
-    	return 5;
+    	return 10;
+    }
+
+    @Override
+    protected int getDefaultCapacity() {
+        return 120;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class TownHouse extends Residence {
     }
 
     public static String getFacilityName() {
-        return ColonyManager.t("타운하우스");
+        return ColonyManager.t("소형 APT");
     }
     
     public static String getFacilityTitle() {
@@ -63,19 +61,19 @@ public class TownHouse extends Residence {
     }
     
     public static String getFacilityDescription() {
-        return ColonyManager.t("규모가 큰 주거 모듈로, 더 많은 시민이 거주할 수 있습니다.");
+        return ColonyManager.t("고층으로 된 주거 단지로, 많은 시민이 생활할 수 있습니다.");
     }
     
     public static Long getFacilityPrice() {
-        return new Long(20000L);
+        return new Long(400000L);
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(360);
+        return new Integer(680);
     }
     
     public static Long getTechNeeded() {
-        return new Long(20);
+        return new Long(30);
     }
     
     public static String getImageHex() {
@@ -88,16 +86,16 @@ public class TownHouse extends Residence {
         boolean cond2 = false;
         List<Research> researches = col.getResearches();
         for(Research r : researches) {
-            if(r instanceof BasicScience) {
-                if(r.getLevel() >= 5) cond1 = true;
-            }
             if(r instanceof BasicBuildingTech) {
-                if(r.getLevel() >= 2) cond2 = true;
+                if(r.getLevel() >= 15) cond1 = true;
+            }
+            if(r instanceof BasicHumanities) {
+                if(r.getLevel() >= 30) cond2 = true;
             }
         }
         
-        if(! cond1) return ColonyManager.t("기초과학 연구가 부족합니다.");
-        if(! cond2) return ColonyManager.t("기초건축학 연구가 부족합니다.");
+        if(! cond1) return ColonyManager.t("기초건축학 연구가 부족합니다.");
+        if(! cond2) return ColonyManager.t("기초인문학 연구가 부족합니다.");
         return null;
     }
 }

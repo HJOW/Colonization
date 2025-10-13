@@ -23,6 +23,15 @@ public class SmallFactory extends Factory {
     }
     
     @Override
+    public int getWorkerNeeded() {
+        return 5;
+    }
+    @Override
+    public int getWorkerCapacity() {
+        return 10;
+    }
+    
+    @Override
     protected int getProfitCycle() {
         return 600;
     }
