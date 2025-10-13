@@ -16,6 +16,7 @@ import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
 import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
+import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.web.accounts.Account;
@@ -102,9 +103,41 @@ public class ColonyServlet extends CommonServlet {
 			responses.put("success", new Boolean(false));
             responses.put("message", "Not existing colony.");
 		} else {
-			responses.put("success", new Boolean(true));
-            responses.put("message", "");
-            responses.put("detail", col.toJson(true, col, null));
+		    String strSubType = req.getParameter("subType"); // 정착지가 아닌, 정착지 내 일부 요소만 조회할 경우 지정 (선택사항)
+		    String strSubKey  = req.getParameter("subKey");  // subType 지정 시 같이 지정해야 함. 조회할 요소의 key
+		    long subKey = 0L;
+		    if(DataUtil.isNotEmpty(strSubKey)) subKey = Long.parseLong(strSubKey);
+		    if(subKey != 0L && DataUtil.isNotEmpty(strSubType)) {
+		        // 정착지가 아닌, 정착지 내 일부 요소만 조회하려는 경우 처리
+		        if(strSubType.equalsIgnoreCase("city")) {
+		            City city = null;
+		            for(City ct : col.getCities()) {
+		                if(ct.getKey() == subKey) { city = ct; break; }
+		            }
+		            
+		            if(city == null) {
+		                responses.put("success", new Boolean(false));
+		                responses.put("message", "Not existing city.");
+		            } else {
+		                responses.put("success", new Boolean(true));
+	                    responses.put("message", "");
+	                    responses.put("type", "City");
+	                    responses.put("detail", city.toJson(true, col, city));
+		            }
+		            
+		        } else {
+		            responses.put("success", new Boolean(true));
+	                responses.put("message", "");
+	                responses.put("type", "Colony");
+	                responses.put("detail", col.toJson(true, col, null));
+		        }
+		    } else {
+		        // 정착지 자체 조회
+		        responses.put("success", new Boolean(true));
+	            responses.put("message", "");
+	            responses.put("type", "Colony");
+	            responses.put("detail", col.toJson(true, col, null));
+		    }
 		}
 	}
 	
@@ -272,6 +305,31 @@ public class ColonyServlet extends CommonServlet {
             
             City c = col.newCity();
             col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, "NewCity", "");
+            
+            responses.put("success", new Boolean(true));
+            responses.put("message", "");
+            responses.put("detail", col.toJson(true, col, null));
+		} else if("Loan".equalsIgnoreCase(type)) {
+		    Colony col = null;
+            for(Colony c : acc.getColonies()) {
+                if(colKey == c.getKey()) { col = c; break; }
+            }
+            if(col == null) throw new RuntimeException("No colony found.");
+            
+            strKey = req.getParameter("loan");
+            long loanKey = Long.parseLong(strKey);
+            
+            Loan loan = null;
+            for(Loan l : col.getLoanAvail()) {
+                if(l.getKey() == loanKey) {
+                    loan = l;
+                    break;
+                }
+            }
+            
+            if(loan == null) throw new RuntimeException("No loan found.");
+		    
+            col.addLoan(loan);
             
             responses.put("success", new Boolean(true));
             responses.put("message", "");
