@@ -42,6 +42,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     protected transient volatile long cycleGap = 199L;
     protected transient volatile long cycleRunningTime = 0L;
     protected transient volatile int  cycleRunCount = -1;
+    protected transient volatile int  cycleSkipRefr = 5; // 컨텐츠 새로고침 주기 (값이 크면 성능 개선 but 화면 내 값 변화 속도가 느리다고 느껴지게 됨)
     
     protected transient volatile boolean flagSaveBeforeClose = true; // 종료 시 저장 플래그
     protected transient volatile boolean flagAlreadyDisposed = false;
@@ -498,6 +499,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
             }
             cycle = time.intValue();
         }
+        
+        // Do Nothing
     }
     
     /** 도시가 속한 정착지 찾기 */

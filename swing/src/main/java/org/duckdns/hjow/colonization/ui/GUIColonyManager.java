@@ -1116,6 +1116,8 @@ public class GUIColonyManager extends ColonyManager {
         menuFileNew.setEnabled(true);
         menuFileConfig.setEnabled(true);
         
+        refreshArenaPanelIn(0);
+        
         for(DefaultColonyPanel c : pnColonies) {
             Colony col = c.getColony();
             if(col == null) return;
@@ -1257,7 +1259,7 @@ public class GUIColonyManager extends ColonyManager {
             if(cpNow != null) pnCols.add(colPn, BorderLayout.CENTER);
         }
         
-        colPn.refresh(cycle, null, col, this);
+        if(cycle == 0 || cycleSkipRefr <= 1 || cycle % cycleSkipRefr == 0) colPn.refresh(cycle, null, col, this);
     }
     
     /** 서블릿(웹) 패널 내 정착지 영역 새로고침 요청 */
