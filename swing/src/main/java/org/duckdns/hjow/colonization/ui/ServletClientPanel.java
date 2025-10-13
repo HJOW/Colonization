@@ -113,12 +113,16 @@ public class ServletClientPanel extends JPanel implements Disposeable {
     	cardMain.show(pnMain, "Login");
     	
     	JPanel pnLoginMain = new JPanel();
-    	pnLoginMain.setLayout(new GridBagLayout());
+    	pnLoginMain.setLayout(new FlowLayout(FlowLayout.CENTER));
     	pnCardLogin.add(pnLoginMain, BorderLayout.CENTER);
     	pnCardLogin.add(new JPanel(), BorderLayout.SOUTH);
     	pnCardLogin.add(new JPanel(), BorderLayout.NORTH);
     	pnCardLogin.add(new JPanel(), BorderLayout.EAST);
     	pnCardLogin.add(new JPanel(), BorderLayout.WEST);
+    	
+    	JPanel pnLoginCenter = new JPanel();
+    	pnLoginCenter.setLayout(new GridBagLayout());
+    	pnLoginMain.add(pnLoginCenter);
     	
     	GridBagConstraints gridBagConst;
     	JLabel lb;
@@ -138,7 +142,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new FlowLayout(FlowLayout.RIGHT));
         lb = new JLabel(ColonyManager.t("URL"));
         pn.add(lb);
-        pnLoginMain.add(pn, gridBagConst);
+        pnLoginCenter.add(pn, gridBagConst);
         
         
         
@@ -153,9 +157,9 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         
         pn = new JPanel();
         pn.setLayout(new BorderLayout());
-        tfLoginUrl = new JTextField();
+        tfLoginUrl = new JTextField(20);
         pn.add(tfLoginUrl, BorderLayout.CENTER);
-        pnLoginMain.add(pn, gridBagConst);
+        pnLoginCenter.add(pn, gridBagConst);
         
         rowNo++;
     	
@@ -173,7 +177,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new FlowLayout(FlowLayout.RIGHT));
         lb = new JLabel(ColonyManager.t("ID"));
         pn.add(lb);
-        pnLoginMain.add(pn, gridBagConst);
+        pnLoginCenter.add(pn, gridBagConst);
         
         
         
@@ -190,7 +194,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new BorderLayout());
         tfLoginId = new JTextField();
         pn.add(tfLoginId, BorderLayout.CENTER);
-        pnLoginMain.add(pn, gridBagConst);
+        pnLoginCenter.add(pn, gridBagConst);
         
         rowNo++;
         
@@ -208,7 +212,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new FlowLayout(FlowLayout.RIGHT));
         lb = new JLabel(ColonyManager.t("Password"));
         pn.add(lb);
-        pnLoginMain.add(pn, gridBagConst);
+        pnLoginCenter.add(pn, gridBagConst);
         
         
         
@@ -225,7 +229,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new BorderLayout());
         tfLoginPw = new JPasswordField();
         pn.add(tfLoginPw, BorderLayout.CENTER);
-        pnLoginMain.add(pn, gridBagConst);
+        pnLoginCenter.add(pn, gridBagConst);
         
         rowNo++;
         
@@ -241,7 +245,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         
         pn = new JPanel();
         pn.setLayout(new FlowLayout(FlowLayout.CENTER));
-        pnLoginMain.add(pn, gridBagConst);
+        pnLoginCenter.add(pn, gridBagConst);
         
         btnLoginJoin = new JButton(ColonyManager.t("가입"));
         btnLoginRun  = new JButton(ColonyManager.t("접속"));
@@ -264,7 +268,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         
         
         JPanel pnJoinMain = new JPanel();
-        pnJoinMain.setLayout(new GridBagLayout());
+        pnJoinMain.setLayout(new FlowLayout(FlowLayout.CENTER));
     	pnCardJoin.add(pnJoinMain, BorderLayout.CENTER);
     	pnCardJoin.add(new JPanel(), BorderLayout.SOUTH);
     	pnCardJoin.add(new JPanel(), BorderLayout.NORTH);
@@ -272,6 +276,9 @@ public class ServletClientPanel extends JPanel implements Disposeable {
     	pnCardJoin.add(new JPanel(), BorderLayout.WEST);
         rowNo = 0;
         
+        JPanel pnJoinCenter = new JPanel();
+        pnJoinCenter.setLayout(new GridBagLayout());
+        pnJoinMain.add(pnJoinCenter);
         
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 0;
@@ -286,7 +293,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new FlowLayout(FlowLayout.RIGHT));
         lb = new JLabel(ColonyManager.t("URL"));
         pn.add(lb);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 1;
@@ -299,9 +306,9 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         
         pn = new JPanel();
         pn.setLayout(new BorderLayout());
-        tfJoinUrl = new JTextField();
+        tfJoinUrl = new JTextField(20);
         pn.add(tfJoinUrl, BorderLayout.CENTER);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         rowNo++;
         
@@ -319,7 +326,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new FlowLayout(FlowLayout.RIGHT));
         lb = new JLabel(ColonyManager.t("ID"));
         pn.add(lb);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 1;
@@ -334,7 +341,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new BorderLayout());
         tfJoinId = new JTextField();
         pn.add(tfJoinId, BorderLayout.CENTER);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         rowNo++;
         
@@ -352,7 +359,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new FlowLayout(FlowLayout.RIGHT));
         lb = new JLabel(ColonyManager.t("Password"));
         pn.add(lb);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 1;
@@ -367,7 +374,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new BorderLayout());
         tfJoinPw = new JPasswordField();
         pn.add(tfJoinPw, BorderLayout.CENTER);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         rowNo++;
         
@@ -385,7 +392,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new FlowLayout(FlowLayout.RIGHT));
         lb = new JLabel(ColonyManager.t("이름"));
         pn.add(lb);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 1;
@@ -400,7 +407,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.setLayout(new BorderLayout());
         tfJoinName = new JTextField();
         pn.add(tfJoinName, BorderLayout.CENTER);
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         rowNo++;
         
@@ -416,7 +423,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         
         pn = new JPanel();
         pn.setLayout(new FlowLayout(FlowLayout.CENTER));
-        pnJoinMain.add(pn, gridBagConst);
+        pnJoinCenter.add(pn, gridBagConst);
         
         
         btnJoinCancel = new JButton(ColonyManager.t("취소"));
