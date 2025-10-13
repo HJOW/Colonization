@@ -389,7 +389,7 @@ public class GUIColonyManager extends ColonyManager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardMain.show(pnLocalRoot, "C2");
-                onNewRequested();
+                onNewColonyRequested();
                 cardMain.show(pnLocalRoot, "C1");
             }
         });
@@ -408,7 +408,7 @@ public class GUIColonyManager extends ColonyManager {
         menuFileNew.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                onNewRequested();
+                onNewColonyRequested();
             }
         });
         
@@ -713,7 +713,7 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 정착지 생성 요청 시 호출됨 */
-    protected void onNewRequested() {
+    protected void onNewColonyRequested() {
         NewColonyManager dialogNewCol = new NewColonyManager(this);
         dialogNewCol.open();
     }
@@ -1169,7 +1169,7 @@ public class GUIColonyManager extends ColonyManager {
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         cycle++;
-        if(cycle >= Integer.MAX_VALUE - 10) cycle = 0;
+        if(cycle >= 2000000000) cycle = 0;
     }
     
     /** 정착지 목록과 화면 내용 갱신 */

@@ -29,6 +29,7 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.commons.util.DataUtil;
 
@@ -39,14 +40,14 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     protected Colony colony;
     
     protected transient List<CityPanel> pnCities = new Vector<CityPanel>();
-    protected transient JPanel pnColonyBasics, pnAccountingMain, pnHoldings, pnResearches;
+    protected transient JPanel pnColonyBasics, pnAccountingMain, pnHoldings, pnResearches, pnLoanHaves;
     protected transient DefaultTableModel tableAccounting;
     protected transient JTabbedPane tabMain, tabCities;
     protected transient JProgressBar progHp;
     protected transient JTextField tfColonyName, tfColonyTime, tfIncomes;
-    protected transient JTextArea taStatus;
+    protected transient JTextArea taStatus, taLoans;
     protected transient JToolBar toolbar;
-    protected transient JButton btnNewCity;
+    protected transient JButton btnNewCity, btnNewLoan;
     
     protected transient boolean flagEditable = true;
     
@@ -85,6 +86,9 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         
         pnAccountingMain = new JPanel();
         tabMain.add(ColonyManager.t("예산"), pnAccountingMain);
+        
+        pnLoanHaves = new JPanel();
+        tabMain.add(ColonyManager.t("남은 대출"), pnLoanHaves);
         
         tableAccounting = new DefaultTableModel();
         tableAccounting.addColumn(ColonyManager.t("사유"));
@@ -169,6 +173,21 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             }
         });
         
+        btnNewLoan = new JButton(ColonyManager.t("대출"));
+        toolbar.add(btnNewLoan);
+        
+        btnNewLoan.addActionListener(new ActionListener() {   
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onNewLoanRequested();
+            }
+        });
+        
+        pnLoanHaves.setLayout(new BorderLayout());
+        taLoans = new JTextArea();
+        taLoans.setEditable(false);
+        pnLoanHaves.add(new JScrollPane(taLoans), BorderLayout.CENTER);
+        
         JPanel pnLog = new JPanel();
         pnLog.setLayout(new BorderLayout());
         pnMain.add(pnLog, BorderLayout.SOUTH);
@@ -194,6 +213,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         flagEditable = editable;
         tfColonyName.setEditable(editable);
         btnNewCity.setEnabled(editable);
+        btnNewLoan.setEnabled(editable);
         for(CityPanel c : pnCities) {
             if(c.getCity().getHp() <= 0) c.setEditable(false);
             else c.setEditable(editable);
@@ -276,6 +296,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         pnResearches.add(new JPanel(), gridBagConst);
         
         refreshAccoutingTable();
+        refreshLoanHaveList();
         setEditable(flagEditable);
     }
     
@@ -361,6 +382,12 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         reserveRefresh();
     }
     
+    /** 새 대출 요청 시 호출 */
+    protected void onNewLoanRequested() {
+        NewLoanDialog dialog = new NewLoanDialog(superInstance);
+        dialog.open(superInstance, colony);
+    }
+    
     /** 회계 정보 새로고침 */
     public void refreshAccoutingTable() {
         // 모든 행 삭제
@@ -383,30 +410,34 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                 
                 rows.add(data.getReason());
                 
-                City cityCurrent = null;
-                for(City ct : col.getCities()) {
-                    if(ct.getKey() == data.getCityKey()) {
-                        cityCurrent = ct;
-                        break;
-                    }
-                }
-                if(cityCurrent == null) continue;
-                
                 String sourceName = null;
-                for(Facility f : cityCurrent.getFacility()) {
-                    if(f.getKey() == data.getSourceKey()) {
-                        sourceName = f.getName();
-                        break;
-                    }
-                }
-                if(sourceName == null) {
-                    for(Citizen c : cityCurrent.getCitizens()) {
-                        if(c.getKey() == data.getSourceKey()) {
-                            sourceName = c.getName();
+                
+                City cityCurrent = null;
+                if(data.getCityKey() != 0L) {
+                    for(City ct : col.getCities()) {
+                        if(ct.getKey() == data.getCityKey()) {
+                            cityCurrent = ct;
                             break;
                         }
                     }
                 }
+                if(DataUtil.isNotEmpty(cityCurrent)) {
+                    for(Facility f : cityCurrent.getFacility()) {
+                        if(f.getKey() == data.getSourceKey()) {
+                            sourceName = f.getName();
+                            break;
+                        }
+                    }
+                    if(sourceName == null) {
+                        for(Citizen c : cityCurrent.getCitizens()) {
+                            if(c.getKey() == data.getSourceKey()) {
+                                sourceName = c.getName();
+                                break;
+                            }
+                        }
+                    }
+                }
+                
                 if(sourceName == null) sourceName = "UNKNOWN";
                 
                 String mores = data.getMoreString();
@@ -439,5 +470,28 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             }
             idx++;
         }
+    }
+    
+    /** 대출 목록 새로고침 */
+    protected void refreshLoanHaveList() {
+        taLoans.setText("");
+        Colony col = getColony();
+        
+        StringBuilder res = new StringBuilder("");
+        List<Loan> list = col.getLoanHave();
+        if(list.isEmpty()) {
+            res = res.append(ColonyManager.t("남아 있는 대출이 없습니다."));
+        } else {
+            res = res.append("\n");
+            for(Loan l : list) {
+                res = res.append("\n").append(l.getName());
+                res = res.append("\n    ").append(ColonyManager.t("원금")).append(" : ").append(ColonyManager.FORMATTER_INT.format(l.getOriginals()));
+                res = res.append("\n    ").append(ColonyManager.t("기간(월)")).append(" : ").append(ColonyManager.FORMATTER_INT.format(l.getInterestLeft())).append(" / ").append(ColonyManager.FORMATTER_INT.format(l.getInterestCount()));
+                res = res.append("\n    ").append(ColonyManager.t("이자율(연)")).append(" : ").append(ColonyManager.FORMATTER_RATE.format(l.getInterestRate100())).append(" %");
+                res = res.append("\n    ").append(ColonyManager.t("이자(월당)")).append(" : ").append(ColonyManager.FORMATTER_INT.format(l.getInterestOnce(1)));
+            }
+        }
+        
+        taLoans.setText(res.toString().trim());
     }
 }

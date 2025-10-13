@@ -6,6 +6,7 @@ import java.util.List;
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
+import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
@@ -31,6 +32,10 @@ public interface Colony extends ColonyElements {
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String reasonTarget);
     public int getCredit();
     public void setCredit(int credit);
+    public void resetAvailLoans();
+    public List<Loan> getLoanAvail();
+    public List<Loan> getLoanHave();
+    public void addLoan(Loan l);
     public long getTech();
     public void setTech(long tech);
     public BigInteger getTime();

@@ -28,10 +28,13 @@ public class Loan implements ColonyElements {
     public Loan() {}
     public Loan(long amount, int interestCount, int interestRate100) {
         this();
+        
         this.originals = amount;
-        this.amount = amount;
+        this.amount    = amount;
+        
         this.interestCount = interestCount;
-        this.interestLeft = interestCount;
+        this.interestLeft  = interestCount;
+        
         this.interestRate100 = interestRate100;
     }
 
@@ -81,12 +84,14 @@ public class Loan implements ColonyElements {
     }
     
     /** 1회 이자 금액 계산 */
-    protected long getInterestOnce(int multiply) {
+    public long getInterestOnce(int multiply) {
         if(getInterestCount() <= 0) return 0;
         
         BigDecimal bigAmount = new BigDecimal(String.valueOf(getOriginals())); // 원금
         bigAmount = bigAmount.multiply( new BigDecimal(String.valueOf( getInterestRate100() * multiply )).divide(new BigDecimal("100")) ); // 이자율 곱셈
-        bigAmount = bigAmount.divide(new BigDecimal(String.valueOf(getInterestCount())), 50, RoundingMode.FLOOR); // 이자 발생일만큼 분할
+        // bigAmount = bigAmount.divide(new BigDecimal(String.valueOf(getInterestCount())), 50, RoundingMode.FLOOR); // 이자 발생일만큼 분할 - 월 이자이므로 횟수로 분할할 필요가 없음
+        bigAmount = bigAmount.divide(new BigDecimal(String.valueOf(12)), 50, RoundingMode.FLOOR); // 월 이자이므로 연 이자를 12로 나눠야 함
+        bigAmount = bigAmount.setScale(0, RoundingMode.FLOOR); // 소수 버림
         
         return bigAmount.longValue();
     }
@@ -111,6 +116,9 @@ public class Loan implements ColonyElements {
                     
                     // 신용도도 하락
                     colony.setCredit( (int) (colony.getCredit() * 0.75) );
+                    
+                    // 제안 중인 대출상품 목록 모두 리셋
+                    colony.resetAvailLoans();
                 } else {
                     // 원금 상환
                     colony.modifyingMoney(money * (-1L), city, colony, "Loan", ColonyManager.t("대출원금"));
@@ -198,6 +206,11 @@ public class Loan implements ColonyElements {
     }
     public void setAmount(long amount) {
         this.amount = amount;
+    }
+    
+    @Override
+    public String toString() {
+        return getName();
     }
     
     /** 사용 가능한 대출 목록 만들기 */

@@ -322,6 +322,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     /** 새 정착지 생성 후반부 동작 */
     protected void newColonyAfterJobs(Colony col) {
         col.newCity();
+        col.resetAvailLoans();
         colonies.add(col);
         refreshColonyList();
     }
@@ -442,7 +443,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         cycle++;
-        if(cycle >= Integer.MAX_VALUE - 10) cycle = 0;
+        if(cycle >= 2000000000) cycle = 0;
     }
     
     /** 화면 새로고침 예약 */

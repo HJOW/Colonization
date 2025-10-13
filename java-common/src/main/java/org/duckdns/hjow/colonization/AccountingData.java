@@ -25,7 +25,8 @@ public class AccountingData implements Serializable {
         this.time = time;
         this.amount = amount;
         this.reason = reason;
-        this.cityKey = city.getKey();
+        if(city != null) this.cityKey = city.getKey();
+        else this.cityKey = 0L;
         this.sourceKey = sources.getKey();
     }
     public AccountingData(BigInteger time, long amount, String reason, City city, ColonyElements sources, String moreString) {

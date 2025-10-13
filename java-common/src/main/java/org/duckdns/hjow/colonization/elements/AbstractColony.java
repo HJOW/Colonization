@@ -335,10 +335,12 @@ public abstract class AbstractColony implements Colony {
         getAccountingData().add(data);
     }
 
+    @Override
     public List<Loan> getLoanAvail() {
         return loanAvail;
     }
 
+    @Override
     public List<Loan> getLoanHave() {
         return loanHave;
     }
@@ -349,6 +351,29 @@ public abstract class AbstractColony implements Colony {
 
     public void setLoanHave(List<Loan> loanHave) {
         this.loanHave = loanHave;
+    }
+    
+    @Override
+    public void addLoan(Loan l) {
+        if(! loanAvail.contains(l)) throw new RuntimeException(ColonyManager.t("이 대출은 현재 사용할 수 없습니다."));
+        loanAvail.remove(l);
+        modifyingMoney(l.getAmount(), null, l, "Loan", ColonyManager.t("대출금"));
+        loanHave.add(l);
+        
+        // 신용도 하락
+        double lowerRate = 0.9;
+        if(l.getInterestRate100() >= 10) lowerRate = 0.75;
+        if(l.getInterestRate100() >= 15) lowerRate = 0.5;
+        setCredit( (int) (getCredit() * lowerRate) );
+        
+        // 대출 상품 목록 초기화
+        resetAvailLoans();
+    }
+    
+    @Override
+    public void resetAvailLoans() {
+        loanAvail.clear();
+        loanAvail.addAll(Loan.makeAvailableLoanListRandom(this));
     }
 
     @Override
@@ -399,8 +424,7 @@ public abstract class AbstractColony implements Colony {
         
         // 1년 지날 때마다, 사용 가능한 대출 목록 갱신
         if(cycle % 60 * 24 * 30 * 12 == 0) {
-            loanAvail.clear();
-            loanAvail.addAll(Loan.makeAvailableLoanListRandom(colony));
+            resetAvailLoans();
         }
         
         // 도시별 사이클 처리
