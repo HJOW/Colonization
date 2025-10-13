@@ -233,7 +233,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public String getDateString() {
-        BigInteger originals = new BigInteger(getTime().toByteArray()).divide(BigInteger.TEN); // 10 으로 나눠야 1초 단위가 됨
+        BigInteger originals = new BigInteger(getTime().toByteArray()).divide(BigInteger.TEN); // 10 으로 나눠야 1분 단위가 됨
         BigInteger minutes, hour, date, month, year;
         // seconds = new BigInteger(originals.toByteArray());
         // minutes = new BigInteger(BigInteger.ZERO.toByteArray());

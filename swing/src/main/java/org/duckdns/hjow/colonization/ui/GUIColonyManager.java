@@ -68,6 +68,7 @@ public class GUIColonyManager extends ColonyManager {
     protected transient JPanel pnCols, pnNoColonies;
     protected transient DefaultColonyPanel cpNow;
     protected transient JComboBox<Colony> cbxColony;
+    protected transient JComboBox<String> cbxSimuCount;
     protected transient List<DefaultColonyPanel> pnColonies = new Vector<DefaultColonyPanel>();
     
     protected transient JProgressBar progThreadStatus;
@@ -320,6 +321,13 @@ public class GUIColonyManager extends ColonyManager {
                 });
             }
         });
+        
+        Vector<String> vCounts = new Vector<String>();
+        vCounts.add(t("수동"));
+        vCounts.add(t("1분 후 자동 정지"));
+        vCounts.add(t("10분 후 자동 정지"));
+        cbxSimuCount = new JComboBox<String>(vCounts);
+        toolbarNorth.add(cbxSimuCount);
 
         Vector<SimulationSpeed> strSpeeds = getSpeedList();
         JComboBox<SimulationSpeed> cbxSpeed = new JComboBox<SimulationSpeed>(strSpeeds);
@@ -680,6 +688,12 @@ public class GUIColonyManager extends ColonyManager {
         
         // 쓰레드에서 수행할 실질 작업 수행
         try { if(! threadPaused) { bCheckerPauseCompleted = false; oneCycle(); } } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        
+        // 실행 횟수 제한이 있는 경우 차감 (단, 음수인 경우는 무제한이라고 판단)
+        if(cycleRunCount > 0 && (! threadPaused)) {
+        	cycleRunCount--;
+        	if(cycleRunCount <= 0) pauseSimulation();
+        }
         
         // 저장 요청 수행
         if(reserveSaving) { try { saveColonies(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); } reserveSaving = false; }
@@ -1066,10 +1080,18 @@ public class GUIColonyManager extends ColonyManager {
     /** 시뮬레이션 시작/정지 토글 */
     public void toggleSimulationRunning() {
         boolean resv = (! threadPaused);
+        
         if(resv) {
             pauseSimulation();
         } else {
-            resumeSimulation();
+        	int selOptIndex = cbxSimuCount.getSelectedIndex();
+            int resumeCycle = -1;
+            
+            if(selOptIndex == 0)      resumeCycle =  -1;
+            else if(selOptIndex == 1) resumeCycle =  10;
+            else                      resumeCycle = 100;
+            
+            resumeSimulation(resumeCycle);
         }
     }
     
@@ -1107,17 +1129,20 @@ public class GUIColonyManager extends ColonyManager {
                 try { Thread.sleep(500L); } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
                 btnThrPlay.setEnabled(true);
                 menuActionThrPlay.setEnabled(true);
+                cbxSimuCount.setEnabled(true);
             }
         }).start();
     }
     
     @Override
-    public void resumeSimulation() {
+    public void resumeSimulation(int cycleCount) {
         threadPaused = false;
         reserveSaving = true;
+        cycleRunCount = cycleCount;
         
         btnThrPlay.setEnabled(false);
         menuActionThrPlay.setEnabled(false);
+        cbxSimuCount.setEnabled(false);
         if(backupManager != null) backupManager.close();
         
         // 쓰레드가 완전히 종료될 때까지 대기

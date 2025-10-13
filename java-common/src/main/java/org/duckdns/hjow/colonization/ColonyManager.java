@@ -41,6 +41,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     protected transient volatile int  cycle = 0;
     protected transient volatile long cycleGap = 199L;
     protected transient volatile long cycleRunningTime = 0L;
+    protected transient volatile int  cycleRunCount = -1;
     
     protected transient volatile boolean flagSaveBeforeClose = true; // 종료 시 저장 플래그
     protected transient volatile boolean flagAlreadyDisposed = false;
@@ -94,6 +95,12 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         
         // 쓰레드에서 수행할 실질 작업 수행
         try { if(! threadPaused) { bCheckerPauseCompleted = false; oneCycle(); } } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        
+        // 실행 횟수 제한이 있는 경우 차감 (단, 음수인 경우는 무제한이라고 판단)
+        if(cycleRunCount > 0 && (! threadPaused)) {
+        	cycleRunCount--;
+        	if(cycleRunCount <= 0) pauseSimulation();
+        }
         
         // 저장 요청 수행
         if(reserveSaving) { try { saveColonies(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); } reserveSaving = false; }
@@ -421,8 +428,14 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     /** 시뮬레이션 재개 */
     public void resumeSimulation() {
+    	resumeSimulation(-1);
+    }
+    
+    /** 시뮬레이션 재개 (사이클 수 지정, 음수를 넣으면 일시 정지 따로 할 때까지 무제한) */
+    public void resumeSimulation(int cycleCount) {
         threadPaused = false;
         reserveSaving = true;
+        cycleRunCount = cycleCount;
         
         // 쓰레드가 완전히 종료될 때까지 대기
         try {
