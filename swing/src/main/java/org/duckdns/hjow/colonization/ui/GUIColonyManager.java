@@ -1220,6 +1220,11 @@ public class GUIColonyManager extends ColonyManager {
         cycle = time.intValue();
     }
     
+    /** 서블릿(웹) 패널 내 정착지 영역 새로고침 요청 */
+    public void requestLoadServletColony() {
+        if(servletClient != null) servletClient.requestLoadColony();
+    }
+    
     /** 해당 정착지를 출력하는 영역 반환 */
     public DefaultColonyPanel getColonyPanel(Colony col) {
         for(DefaultColonyPanel cp : pnColonies) {

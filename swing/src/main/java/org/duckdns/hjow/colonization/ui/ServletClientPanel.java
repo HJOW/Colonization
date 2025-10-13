@@ -461,7 +461,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(! fCbxColony) return;
-				onLoadColonyRequested(((ColonySimpleInfo) cbxColony.getSelectedItem()).getKey());
+				requestLoadColony();
 			}
 		});
         
@@ -676,6 +676,11 @@ public class ServletClientPanel extends JPanel implements Disposeable {
     	} finally {
     		fThreadJoin = false;
     	}
+    }
+    
+    /** 정착지 로드 요청하기 */
+    public void requestLoadColony() {
+        onLoadColonyRequested(((ColonySimpleInfo) cbxColony.getSelectedItem()).getKey());
     }
     
     /** 정착지 로드 요청 */

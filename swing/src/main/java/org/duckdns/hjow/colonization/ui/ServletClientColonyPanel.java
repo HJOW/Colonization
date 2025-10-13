@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
@@ -48,10 +49,11 @@ public class ServletClientColonyPanel extends DefaultColonyPanel {
             boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
             if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
             
-            this.superInstance.refreshColonyContent();
         } catch(Throwable t) {
             throw new RuntimeException(t.getMessage(), t);
         }
+        
+        this.superInstance.requestLoadServletColony();
     }
     
     /** 새 대출 선택이 완료된 경우 호출 */
@@ -72,9 +74,51 @@ public class ServletClientColonyPanel extends DefaultColonyPanel {
             boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
             if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
             
-            this.superInstance.refreshColonyContent();
         } catch(Throwable t) {
             throw new RuntimeException(t.getMessage(), t);
         }
+        
+        this.superInstance.requestLoadServletColony();
+    }
+    
+    @Override
+    public void newCity() {
+        Colony col = getColony();
+        
+        // 최대 도시 수 제한 체크
+        int cityCnt = col.getCityCount();
+        if(cityCnt >= col.getMaxCityCount()) throw new RuntimeException(ColonyManager.t("더 이상 새 도시를 건설할 수 없습니다."));
+        
+        // 예산 체크
+        long howMuch = City.getBuildingNewCityFee(col);
+        long nowHave = col.getMoney();
+        if(nowHave < howMuch) throw new RuntimeException(ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(howMuch - nowHave)));
+        
+        // 인구 체크 (소모는 되지 않지만, 최소 조건으로 적용)
+        long population = col.getCitizenCount();
+        if(cityCnt >= 1) {
+            if((population / cityCnt) < 1000) throw new RuntimeException(ColonyManager.t("새 도시를 건설하려면, 현재의 도시들의 인구 평균이 [AVERAGE] 을 넘어야 합니다.").replace("[AVERAGE]", "1000"));
+        }
+        
+        try {
+            URL urls = new URL(this.url);
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("svName", "colony");
+            parameters.put("svSub" , "new");
+            parameters.put("jwt"   , this.token);
+            parameters.put("type"  , "City");
+            parameters.put("colony", String.valueOf(colony.getKey()));
+            
+            String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
+            JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
+            
+            boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
+            if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
+            
+        } catch(Throwable t) {
+            throw new RuntimeException(t.getMessage(), t);
+        }
+        
+        this.superInstance.requestLoadServletColony();
     }
 }
