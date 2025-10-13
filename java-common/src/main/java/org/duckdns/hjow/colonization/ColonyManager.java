@@ -440,13 +440,21 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         Colony col = getSelectedColony();
         if(col == null) return;
         
+        if(time == null) {
+            time = col.getTime();
+            while(time.compareTo(TIME_MAX_INT) >= 0) {
+                time = time.subtract(TIME_MAX_INT);
+            }
+            cycle = time.intValue();
+        }
+        
         try { col.oneCycle(cycle, null, col, 100, null); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         try {
             refreshArenaPanel(cycle);
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         cycle++;
-        if(cycle >= 2000000000) cycle = 0;
+        if(cycle >= TIME_MAX) cycle = 0;
     }
     
     /** 화면 새로고침 예약 */

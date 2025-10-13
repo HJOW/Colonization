@@ -310,6 +310,7 @@ public class GUIColonyManager extends ColonyManager {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 cardMain.show(pnLocalRoot, "C2");
+                time = null;
                 SwingUtilities.invokeLater(new Runnable() {   
                     @Override
                     public void run() {
@@ -1158,6 +1159,14 @@ public class GUIColonyManager extends ColonyManager {
         Colony col = getSelectedColony();
         if(col == null) return;
         
+        if(time == null) {
+            time = col.getTime();
+            while(time.compareTo(TIME_MAX_INT) >= 0) {
+                time = time.subtract(TIME_MAX_INT);
+            }
+            cycle = time.intValue();
+        }
+        
         try { col.oneCycle(cycle, null, col, 100, getColonyPanel(col)); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         try {
             SwingUtilities.invokeLater(new Runnable() { 
@@ -1169,27 +1178,41 @@ public class GUIColonyManager extends ColonyManager {
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         cycle++;
-        if(cycle >= 2000000000) cycle = 0;
+        if(cycle >= TIME_MAX) cycle = 0;
     }
     
     /** 정착지 목록과 화면 내용 갱신 */
     @Override
     public void refreshColonyList() {
         cbxColony.setModel(new DefaultComboBoxModel<Colony>(colonies));
-        selectedColony = cbxColony.getSelectedIndex();
+        int s = cbxColony.getSelectedIndex();
+        if(s != selectedColony) time = null;
+        selectedColony = s;
         refreshColonyContent();
     }
     
     /** 정착지 화면 내용 갱신 */
     @Override
     public void refreshColonyContent() {
-        selectedColony = cbxColony.getSelectedIndex();
+    	int s = cbxColony.getSelectedIndex();
+    	if(s != selectedColony) time = null;
+        selectedColony = s;
         assureMainThreadRunning();
         refreshArenaPanel(0);
     }
     
     /** 사이클 진행에 따른 정착지 화면 내용 갱신 (성능을 위해 항상 전체를 새로고침하지는 않음. 확실히 새로고침하려면 refreshColonyContent 메소드 사용) */
-    public synchronized void refreshArenaPanel(int cycle) {
+    public void refreshArenaPanel(final int cycle) {
+    	SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				refreshArenaPanelIn(cycle);
+			}
+		});
+    }
+    
+    /** 사이클 진행에 따른 정착지 화면 내용 갱신 */
+    protected synchronized void refreshArenaPanelIn(int cycle) {
         Colony col = getSelectedColony();
         if(col == null) {
             pnCols.removeAll();
@@ -1210,12 +1233,6 @@ public class GUIColonyManager extends ColonyManager {
         }
         
         colPn.refresh(cycle, null, col, this);
-        
-        time = col.getTime();
-        while(time.compareTo(TIME_MAX_INT) >= 0) {
-            time = time.subtract(TIME_MAX_INT);
-        }
-        cycle = time.intValue();
     }
     
     /** 서블릿(웹) 패널 내 정착지 영역 새로고침 요청 */
