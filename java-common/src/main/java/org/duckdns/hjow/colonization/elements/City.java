@@ -13,6 +13,7 @@ import java.util.Vector;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.elements.facilities.BusinessCenter;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.facilities.NetworkFacility;
@@ -249,7 +250,9 @@ public class City implements ColonyElements {
             if(! ((f instanceof NetworkFacility) || (f instanceof Residence))) {
                 if(networks <= 0L) {
                     // 네트워크 용량 초과 시 효율 저하
-                    efficiencyNetwork = (int) Math.round(efficiencyNetwork * 0.8);
+                	double lowerRate = 0.8;
+                	if(f instanceof BusinessCenter) lowerRate = 0.25; 
+                    efficiencyNetwork = (int) Math.round(efficiencyNetwork * lowerRate);
                 } else {
                     networks = networks - 1L;
                 }

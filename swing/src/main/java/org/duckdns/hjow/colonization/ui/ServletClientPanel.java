@@ -461,6 +461,16 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         JToolBar toolbar = new JToolBar();
         pnCardGame.add(toolbar, BorderLayout.NORTH);
         
+        btnLogout = new JButton(ColonyManager.t("로그아웃"));
+        toolbar.add(btnLogout);
+        
+        btnLogout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				onLogoutRequested();
+			}
+		});
+        
         cbxColony = new JComboBox<ColonySimpleInfo>();
         toolbar.add(cbxColony);
         
@@ -479,16 +489,6 @@ public class ServletClientPanel extends JPanel implements Disposeable {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				toggleSimulationRunning();
-			}
-		});
-        
-        btnLogout = new JButton(ColonyManager.t("로그아웃"));
-        toolbar.add(btnLogout);
-        
-        btnLogout.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onLogoutRequested();
 			}
 		});
         
