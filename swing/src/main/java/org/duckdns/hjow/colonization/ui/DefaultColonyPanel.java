@@ -173,7 +173,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             }
         });
         
-        btnNewLoan = new JButton(ColonyManager.t("대출"));
+        btnNewLoan = new JButton(ColonyManager.t("새 대출 받기"));
         toolbar.add(btnNewLoan);
         
         btnNewLoan.addActionListener(new ActionListener() {   
