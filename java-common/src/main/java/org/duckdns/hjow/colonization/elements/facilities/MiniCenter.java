@@ -5,51 +5,55 @@ import java.util.List;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
-import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
-import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
+import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
+import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 
-public class SolarStation extends PowerPlant {
-    private static final long serialVersionUID = 4079646708867981024L;
-
+/** 소형 오피스 센터 */
+public class MiniCenter extends BusinessCenter {
+    private static final long serialVersionUID = 1850152318642086894L;
     @Override
     protected String getDefaultNamePrefix() {
-        return ColonyManager.t("광학_발전소");
-    }
-
-    @Override
-    protected int getDefaultCapacity() {
-        return 250;
+        return ColonyManager.t("소형_비지니스센터");
     }
     
     @Override
-    public String getStatusDescription(City city, Colony colony) {
-        return ""; // TODO
-    }
-    @Override
     public int getPowerConsume() {
-        return 0;
+        return 20;
     }
-    public int getPowerGenerate(Colony col, City city) {
-        return getCapacity();
+
+    /** 여기서의 Capacity 는 수익 발생량 */
+    @Override
+    protected int getDefaultCapacity() {
+        return 20;
+    }
+
+    @Override
+    public int increasingCityMaxHP() {
+        return 5;
+    }
+
+    @Override
+    public int getComportGrade() {
+        return 0;
     }
 
     @Override
     public int getMaxHp() {
-        return 500;
+        return 600;
     }
     @Override
     public int getWorkerNeeded() {
-        return 1;
+        return 10;
     }
     @Override
     public int getWorkerCapacity() {
-        return 2;
+        return 20;
     }
     
     public static String getFacilityName() {
-        return ColonyManager.t("광학 발전소");
+        return ColonyManager.t("소형 비지니스센터");
     }
     
     public static String getFacilityTitle() {
@@ -57,7 +61,7 @@ public class SolarStation extends PowerPlant {
     }
     
     public static String getFacilityDescription() {
-        return ColonyManager.t("항성 빛과 열복사 에너지를 이용한 대형 전력 생산 시설입니다.\n내장 배터리를 통해 빛이 닿지 않는 시간대에서도 전력 공급이 가능합니다.");
+        return ColonyManager.t("소형 오피스 센터로, 네트워크를 통해 서비스를 제공하여 수익을 발생시킵니다. 네트워크 시설이 부족하면 효율이 상당히 저하됩니다.");
     }
     
     public static Long getFacilityPrice() {
@@ -69,7 +73,7 @@ public class SolarStation extends PowerPlant {
     }
     
     public static Long getTechNeeded() {
-        return new Long(20);
+        return new Long(0);
     }
     
     public static String getImageHex() {
@@ -83,20 +87,20 @@ public class SolarStation extends PowerPlant {
         boolean cond3 = false;
         List<Research> researches = col.getResearches();
         for(Research r : researches) {
-            if(r instanceof EnergyTech) {
-                if(r.getLevel() >= 2) cond1 = true;
+            if(r instanceof BasicScience) {
+                if(r.getLevel() >= 10) cond1 = true;
             }
-            if(r instanceof LightTech) {
-                if(r.getLevel() >= 1) cond2 = true;
+            if(r instanceof BasicHumanities) {
+                if(r.getLevel() >= 10) cond2 = true;
             }
-            if(r instanceof BasicBuildingTech) {
-                if(r.getLevel() >= 3) cond3 = true;
+            if(r instanceof BasicEngineering) {
+                if(r.getLevel() >= 1) cond3 = true;
             }
         }
         
-        if(! cond1) return ColonyManager.t("에너지 연구가 부족합니다.");
-        if(! cond2) return ColonyManager.t("광학 연구가 부족합니다.");
-        if(! cond3) return ColonyManager.t("기초건축학 연구가 부족합니다.");
+        if(! cond1) return ColonyManager.t("기초과학 연구가 부족합니다.");
+        if(! cond2) return ColonyManager.t("기초인문학 연구가 부족합니다.");
+        if(! cond3) return ColonyManager.t("공학기초 연구가 부족합니다.");
         return null;
     }
 }

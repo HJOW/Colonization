@@ -10,46 +10,80 @@ import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
 import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 
-public class SolarStation extends PowerPlant {
-    private static final long serialVersionUID = 4079646708867981024L;
+public class SmallAntenna extends NetworkFacility {
+    private static final long serialVersionUID = -7296133463450746092L;
+
+    @Override
+    public int getPowerConsume() {
+        return 5;
+    }
 
     @Override
     protected String getDefaultNamePrefix() {
-        return ColonyManager.t("광학_발전소");
+        return ColonyManager.t("소형_안테나_시설");
     }
 
     @Override
     protected int getDefaultCapacity() {
-        return 250;
+        return 1000;
     }
     
     @Override
     public String getStatusDescription(City city, Colony colony) {
         return ""; // TODO
     }
-    @Override
-    public int getPowerConsume() {
-        return 0;
-    }
-    public int getPowerGenerate(Colony col, City city) {
-        return getCapacity();
-    }
-
+    
     @Override
     public int getMaxHp() {
-        return 500;
+        return 300;
     }
+    
     @Override
     public int getWorkerNeeded() {
         return 1;
     }
     @Override
     public int getWorkerCapacity() {
-        return 2;
+        return 1;
+    }
+    
+    @Override
+    public int getSpaceSize() {
+        return 1;
+    }
+    
+    /** 업그레이드 비용 시작 금액 */
+    @Override
+    protected long startUpgradePrice() {
+        return 5000L;
+    }
+    
+    /** 업그레이드 비용의 레벨 당 증가율 */
+    @Override
+    protected double increateUpgradePriceRate() {
+        return 0.2;
+    }
+    
+    /** 업그레이드 비용 시작 금액 */
+    @Override
+    protected int startUpgradeCycle() {
+        return 200;
+    }
+    
+    /** 업그레이드 비용의 레벨 당 증가율 */
+    @Override
+    protected double increaseUpgradeCycleRate() {
+        return 0.2;
+    }
+    
+    /** 레벨 당 Capacity 증가율 */
+    @Override
+    protected double increateCapacityRate() {
+        return 0.1;
     }
     
     public static String getFacilityName() {
-        return ColonyManager.t("광학 발전소");
+        return ColonyManager.t("소형 안테나 시설");
     }
     
     public static String getFacilityTitle() {
@@ -57,19 +91,19 @@ public class SolarStation extends PowerPlant {
     }
     
     public static String getFacilityDescription() {
-        return ColonyManager.t("항성 빛과 열복사 에너지를 이용한 대형 전력 생산 시설입니다.\n내장 배터리를 통해 빛이 닿지 않는 시간대에서도 전력 공급이 가능합니다.");
+        return ColonyManager.t("도시 내에 무선 네트워크망을 서비스하는 소형 시설입니다.");
     }
     
     public static Long getFacilityPrice() {
-        return new Long(50000L);
+        return new Long(20000L);
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(600);
+        return new Integer(300);
     }
     
     public static Long getTechNeeded() {
-        return new Long(20);
+        return new Long(0);
     }
     
     public static String getImageHex() {
@@ -84,13 +118,13 @@ public class SolarStation extends PowerPlant {
         List<Research> researches = col.getResearches();
         for(Research r : researches) {
             if(r instanceof EnergyTech) {
-                if(r.getLevel() >= 2) cond1 = true;
+                if(r.getLevel() >= 1) cond1 = true;
             }
             if(r instanceof LightTech) {
                 if(r.getLevel() >= 1) cond2 = true;
             }
             if(r instanceof BasicBuildingTech) {
-                if(r.getLevel() >= 3) cond3 = true;
+                if(r.getLevel() >= 1) cond3 = true;
             }
         }
         

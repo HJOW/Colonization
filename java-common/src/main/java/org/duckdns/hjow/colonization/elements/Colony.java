@@ -29,6 +29,8 @@ public interface Colony extends ColonyElements {
     public int getDifficulty();
     public long getMoney();
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String reasonTarget);
+    public int getCredit();
+    public void setCredit(int credit);
     public long getTech();
     public void setTech(long tech);
     public BigInteger getTime();

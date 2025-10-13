@@ -15,7 +15,9 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
+import org.duckdns.hjow.colonization.elements.facilities.NetworkFacility;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
+import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.TransportStation;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
@@ -210,8 +212,9 @@ public class City implements ColonyElements {
         processMoveOutChance(cycle, colony, efficiency100);
         
         // 전력 생산량 및 교통점수 계산
-        long power = getPowerGenerate(colony);
-        long trans = getDefaultTransportPoint(); 
+        long power    = getPowerGenerate(colony);
+        long trans    = getDefaultTransportPoint(); 
+        long networks = getNetworkCapacity(colony);
         
         // 시설 파워 및 효율성 계산, 효과 처리
         for(Facility f : getFacility()) {
@@ -232,16 +235,27 @@ public class City implements ColonyElements {
                 power = 0L;
             }
             
-            // Calculates worker
+            // 직원 부족 시 효율 저하 (절반으로)
             int efficiencyWorker = efficiency100;
             if(f.getWorkerNeeded() >= 1) {
                 int working = f.getWorkingCitizensCount(city, colony);
                 if(f.getWorkerNeeded() > working) {
-                    efficiencyWorker = efficiencyWorker / 2;
+                    efficiencyWorker = (int) Math.round(efficiencyWorker * 0.5);
                 }
             }
             
-            efficiency = (int) Math.round(   ((efficiencyPow / 100.0) * (efficiencyWorker / 100.0)) * 100  );
+            // 네트워크 사용 시설 계산
+            int efficiencyNetwork = efficiency100;
+            if(! ((f instanceof NetworkFacility) || (f instanceof Residence))) {
+                if(networks <= 0L) {
+                    // 네트워크 용량 초과 시 효율 저하
+                    efficiencyNetwork = (int) Math.round(efficiencyNetwork * 0.8);
+                } else {
+                    networks = networks - 1L;
+                }
+            }
+            
+            efficiency = (int) Math.round(   ((efficiencyPow / 100.0) * (efficiencyWorker / 100.0) * (efficiencyNetwork / 100.0)) * 100  );
             
             if(cycle % (colony.getAccountingPeriod()) == 0) {
                 // 시설의 비용 처리
@@ -252,7 +266,7 @@ public class City implements ColonyElements {
             f.oneCycle(cycle, this, colony, efficiency, colPanel);
             
             // 교통시설인 경우 교통점수 계산
-            if(f instanceof TransportStation) {
+            if(f instanceof TransportStation) {    
                 TransportStation t = (TransportStation) f;
                 
                 // 두 쌍 이상이 되어야 효력 발생
@@ -275,6 +289,12 @@ public class City implements ColonyElements {
         // 시민 처리
         for(Citizen ct : getCitizens()) {
             ct.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            
+            if(networks <= 0L) {
+                if(ct.getHappy() > 70) ct.setHappy(70); // 네트워크 사용 불가 시 행복도 상한 적용
+            } else {
+                networks = networks - 1L;
+            }
         }
         
         // 적 사이클 처리
@@ -430,6 +450,22 @@ public class City implements ColonyElements {
         }
         
         return power;
+    }
+    
+    /** 총 네트워크 지원량 반환 (사용량 미반영) */
+    public long getNetworkCapacity(Colony col) {
+        long capa = 10L;
+        
+        for(Facility f : facility) {
+            if(! (f instanceof NetworkFacility)) continue;
+            int working = f.getWorkingCitizensCount(this, col);
+            if(working >= 1) {
+                if(working >= f.getWorkerNeeded()) capa += ((NetworkFacility) f).getCapacity();
+                else                               capa += (((NetworkFacility) f).getCapacity()) / 2;
+            }
+        }
+        
+        return capa;
     }
     
     /** HP가 0인 시민과 시설, 적 제거 */

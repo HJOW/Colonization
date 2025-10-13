@@ -23,6 +23,7 @@ import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.ResidenceModule;
 import org.duckdns.hjow.colonization.elements.facilities.Restaurant;
 import org.duckdns.hjow.colonization.elements.facilities.SmallFactory;
+import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
@@ -41,9 +42,13 @@ public abstract class AbstractColony implements Colony {
     protected List<Enemy>      enemies    = new Vector<Enemy>();
     protected List<HoldingJob> holdings   = new Vector<HoldingJob>();
     protected List<Research>   researches = new Vector<Research>();
+    protected List<Loan>       loanAvail  = new Vector<Loan>();
+    protected List<Loan>       loanHave   = new Vector<Loan>();
+    
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
     protected int  difficulty = 0;
     protected int  hp         = getMaxHp();
+    protected int  credit     = 500;
     protected long money      = 1000000L;
     protected long tech       = 0L;
     
@@ -190,6 +195,18 @@ public abstract class AbstractColony implements Colony {
     }
     
     @Override
+    public int getCredit() {
+        return credit;
+    }
+
+    @Override
+    public void setCredit(int credit) {
+        this.credit = credit;
+        if(this.credit <    0) this.credit =    0;
+        if(this.credit > 1000) this.credit = 1000;
+    }
+
+    @Override
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String moreString) {
         setMoney(getMoney() + money);
         
@@ -318,9 +335,26 @@ public abstract class AbstractColony implements Colony {
         getAccountingData().add(data);
     }
 
+    public List<Loan> getLoanAvail() {
+        return loanAvail;
+    }
+
+    public List<Loan> getLoanHave() {
+        return loanHave;
+    }
+
+    public void setLoanAvail(List<Loan> loanAvail) {
+        this.loanAvail = loanAvail;
+    }
+
+    public void setLoanHave(List<Loan> loanHave) {
+        this.loanHave = loanHave;
+    }
+
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { // parameters are null
         int idx;
+        colony = this;
         
         // 체력이 없는 도시 삭제
         idx = 0;
@@ -344,6 +378,29 @@ public abstract class AbstractColony implements Colony {
                 continue;
             }
             idx++;
+        }
+        
+        // 잔액이 없는 대출 삭제
+        idx = 0;
+        while(idx < getLoanHave().size()) {
+            Loan en = getLoanHave().get(idx);
+            if(en.getAmount() <= 0) {
+                en.dispose();
+                getLoanHave().remove(idx);
+                continue;
+            }
+            idx++;
+        }
+        
+        // 대출 사이클 처리
+        for(Loan l : getLoanHave()) {
+            l.oneCycle(cycle, city, colony, efficiency100, colPanel);
+        }
+        
+        // 1년 지날 때마다, 사용 가능한 대출 목록 갱신
+        if(cycle % 60 * 24 * 30 * 12 == 0) {
+            loanAvail.clear();
+            loanAvail.addAll(Loan.makeAvailableLoanListRandom(colony));
         }
         
         // 도시별 사이클 처리
@@ -515,6 +572,7 @@ public abstract class AbstractColony implements Colony {
         desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(formatterInt.format(getTech()));
         desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(formatterInt.format(getCityCount())).append(" / ").append(formatterInt.format(getMaxCityCount()));
         desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(formatterInt.format(getCitizenCount()));
+        desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(formatterInt.format(getCredit()));
         
         return desc.toString().trim();
     }
@@ -543,6 +601,7 @@ public abstract class AbstractColony implements Colony {
         json.put("money", String.valueOf(getMoney()));
         json.put("tech", String.valueOf(getTech()));
         json.put("time", getTime().toString());
+        json.put("credit", new Integer(getCredit()));
         json.put("version", getClientVersion());
         
         JsonArray list = new JsonArray();
@@ -560,6 +619,14 @@ public abstract class AbstractColony implements Colony {
         list = new JsonArray();
         for(Research d : getResearches()) { list.add(d.toJson(details, col, city)); }
         json.put("researches", list);
+        
+        list = new JsonArray();
+        for(Loan l : getLoanAvail()) { list.add(l.toJson(details, col, city)); }
+        json.put("loanAvail", list);
+        
+        list = new JsonArray();
+        for(Loan l : getLoanHave()) { list.add(l.toJson(details, col, city)); }
+        json.put("loanHave", list);
         
         if(checked) json.put("checker", getCheckerValue().toString());
         else        json.put("checker", "0");
@@ -593,6 +660,7 @@ public abstract class AbstractColony implements Colony {
         try { setMoney(Long.parseLong(json.get("money").toString()));                 } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); money      = 0;               }
         try { setTech(Long.parseLong(json.get("tech").toString()));                   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); tech       = 0;               }
         try { setTime(new BigInteger(json.get("time").toString()));                   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); time       = BigInteger.ZERO; }
+        try { setCredit(Integer.parseInt(json.get("credit").toString()));             } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); credit     = 500;             }
         try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.0.0"; }
         
         JsonArray list = null;
@@ -664,6 +732,43 @@ public abstract class AbstractColony implements Colony {
                 }
             }
         }
+        
+        list = null;
+        try { list = (JsonArray) json.get("loanAvail"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        loanAvail.clear();
+        if(list != null) {
+            for(Object o : list) {
+                if(o instanceof String) o = JsonObject.parseJson(o.toString());
+                if(o instanceof JsonObject) {
+                    try {
+                        Loan loan = new Loan();
+                        loan.fromJson((JsonObject) o);
+                        loanAvail.add(loan);
+                    } catch(Exception ex) {
+                        GlobalLogs.processExceptionOccured(ex, false);
+                    }
+                }
+            }
+        }
+        
+        list = null;
+        try { list = (JsonArray) json.get("loanHave"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        loanHave.clear();
+        if(list != null) {
+            for(Object o : list) {
+                if(o instanceof String) o = JsonObject.parseJson(o.toString());
+                if(o instanceof JsonObject) {
+                    try {
+                        Loan loan = new Loan();
+                        loan.fromJson((JsonObject) o);
+                        loanHave.add(loan);
+                    } catch(Exception ex) {
+                        GlobalLogs.processExceptionOccured(ex, false);
+                    }
+                }
+            }
+        }
+        
         // 포함 안된 연구 넣기
         for(Research oth : ResearchManager.initList(this)) {
             boolean exists = false;
@@ -688,7 +793,9 @@ public abstract class AbstractColony implements Colony {
         BigInteger res = new BigInteger(String.valueOf(getKey()));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
         res = res.add(new BigInteger(String.valueOf(getHp())));
-        for(City c : getCities()) { res = res.add(c.getCheckerValue()); }
+        for(City c : getCities())    { res = res.add(c.getCheckerValue()); }
+        for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue()); }
+        for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); }
         
         return res;
     }
