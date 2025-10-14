@@ -193,7 +193,6 @@ public class GUIColonyManager extends ColonyManager {
         pnFront     = new JPanel();
         pnMainCard1 = new JPanel();
         pnMainCard2 = new JPanel();
-        pnLocalSecond = pnMainCard1;
         
         servletClient = new ServletClientPanel(this);
         
@@ -265,7 +264,7 @@ public class GUIColonyManager extends ColonyManager {
         
         cardLocalLoading1.show(pnLocalRoot, "C2");
         
-        pnMainCard1.setLayout(cardLocalLoading2);
+        pnMainCard1.setLayout(new BorderLayout());
         pnMainCard2.setLayout(new BorderLayout());
         
         JPanel pnHide = new JPanel();
@@ -279,26 +278,6 @@ public class GUIColonyManager extends ColonyManager {
         progHide.setIndeterminate(true);
         pnHide.add(progHide);
         
-        JPanel pnMainCard1First, pnMainCard1Second;
-        pnMainCard1First  = new JPanel();
-        pnMainCard1Second = new JPanel();
-        pnMainCard1First.setLayout(new BorderLayout());
-        pnMainCard1Second.setLayout(new BorderLayout());
-        
-        pnMainCard1.add(pnMainCard1First , "C1F");
-        pnMainCard1.add(pnMainCard1Second, "C1S");
-        
-        pnHide = new JPanel();
-        pnMainCard1Second.add(pnHide, BorderLayout.CENTER);
-        pnMainCard1Second.add(new JPanel(), BorderLayout.NORTH);
-        pnMainCard1Second.add(new JPanel(), BorderLayout.SOUTH);
-        
-        progHide = new JProgressBar();
-        progHide.setIndeterminate(true);
-        pnHide.add(progHide);
-        
-        cardLocalLoading2.show(pnMainCard1, "C1S");
-        
         JPanel pnSouth, pnCenter, pnNorth;
         pnSouth  = new JPanel();
         pnCenter = new JPanel();
@@ -308,9 +287,9 @@ public class GUIColonyManager extends ColonyManager {
         pnCenter.setLayout(new BorderLayout());
         pnNorth.setLayout( new BorderLayout());
         
-        pnMainCard1First.add(pnSouth , BorderLayout.SOUTH);
-        pnMainCard1First.add(pnCenter, BorderLayout.CENTER);
-        pnMainCard1First.add(pnNorth , BorderLayout.NORTH);
+        pnMainCard1.add(pnSouth , BorderLayout.SOUTH);
+        pnMainCard1.add(pnCenter, BorderLayout.CENTER);
+        pnMainCard1.add(pnNorth , BorderLayout.NORTH);
         
         JToolBar toolbarNorth = new JToolBar();
         pnNorth.add(toolbarNorth, BorderLayout.NORTH);
@@ -391,6 +370,32 @@ public class GUIColonyManager extends ColonyManager {
         pnCols       = new JPanel();
         pnNoColonies = new JPanel();
         
+        JPanel pnArenaRoot = new JPanel();
+        pnArenaRoot.setLayout(cardLocalLoading2);
+        pnLocalSecond = pnArenaRoot;
+        pnCenter.add(pnArenaRoot, BorderLayout.CENTER);
+        
+        JPanel pnArenaFirst, pnArenaSecond;
+        pnArenaFirst  = new JPanel();
+        pnArenaSecond = new JPanel();
+        pnArenaFirst.setLayout(new BorderLayout());
+        pnArenaSecond.setLayout(new BorderLayout());
+        
+        pnArenaRoot.add(pnArenaFirst , "C1F");
+        pnArenaRoot.add(pnArenaSecond, "C1S");
+        
+        pnHide = new JPanel();
+        pnArenaSecond.add(pnHide, BorderLayout.CENTER);
+        pnArenaSecond.add(new JPanel(), BorderLayout.NORTH);
+        pnArenaSecond.add(new JPanel(), BorderLayout.SOUTH);
+        
+        progHide = new JProgressBar();
+        progHide.setIndeterminate(true);
+        pnHide.add(progHide);
+        
+        cardLocalLoading2.show(pnArenaRoot, "C1S");
+        
+        
         JPanel pnArena = new JPanel();
         JPanel pnCtrl  = new JPanel();
         
@@ -398,7 +403,7 @@ public class GUIColonyManager extends ColonyManager {
         pnCtrl.setLayout( new BorderLayout());
         pnCols.setLayout( new BorderLayout());
         pnNoColonies.setLayout( new BorderLayout());
-        pnCenter.add(pnArena, BorderLayout.CENTER);
+        pnArenaFirst.add(pnArena, BorderLayout.CENTER);
         
         pnArena.add(pnCols, BorderLayout.CENTER);
         pnArena.add(pnCtrl , BorderLayout.NORTH);
@@ -1172,6 +1177,8 @@ public class GUIColonyManager extends ColonyManager {
         threadPaused = false;
         reserveSaving = true;
         cycleRunCount = cycleCount;
+        
+        cardLocalLoading2.show(pnLocalSecond, "C1S");
         
         btnThrPlay.setEnabled(false);
         menuActionThrPlay.setEnabled(false);

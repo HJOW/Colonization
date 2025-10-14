@@ -120,9 +120,13 @@ public class CitizenPanel extends JPanel implements ColonyElementPanel {
         flagEditable = editable;
         tfName.setEditable(editable);
     }
-
-    @Override
+    
+    @Override    
     public void refresh(int cycle, City city, Colony colony, ColonyManager superInstance) {
+    	refresh(cycle, city, colony, superInstance, false);
+    }
+
+    public void refresh(int cycle, City city, Colony colony, ColonyManager superInstance, boolean force) {
         Citizen c = getCitizen(city);
         if(c == null) { tfName.setName(""); ta.setText(""); return; }
         setTargetName(c.getName());

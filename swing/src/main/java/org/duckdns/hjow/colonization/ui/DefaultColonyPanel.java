@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.ui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -40,7 +41,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     protected Colony colony;
     
     protected transient List<CityPanel> pnCities = new Vector<CityPanel>();
-    protected transient JPanel pnColonyBasics, pnAccountingMain, pnHoldings, pnResearches, pnLoanHaves;
+    protected transient JPanel pnColonyBasics, pnColonyCardCity, pnAccountingMain, pnHoldings, pnResearches, pnLoanHaves;
+    protected transient CardLayout cardCity;
     protected transient DefaultTableModel tableAccounting;
     protected transient JTabbedPane tabMain, tabCities;
     protected transient JProgressBar progHp;
@@ -78,8 +80,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         tabMain = new JTabbedPane();
         pnCenter.add(tabMain, BorderLayout.CENTER);
         
-        tabCities = new JTabbedPane();
-        tabMain.add(ColonyManager.t("도시"), tabCities);
+        pnColonyCardCity = new JPanel();
+        tabMain.add(ColonyManager.t("도시"), pnColonyCardCity);
         
         pnResearches = new JPanel();
         tabMain.add(ColonyManager.t("연구"), pnResearches);
@@ -89,6 +91,28 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         
         pnLoanHaves = new JPanel();
         tabMain.add(ColonyManager.t("남은 대출"), pnLoanHaves);
+        
+        cardCity = new CardLayout();
+        pnColonyCardCity.setLayout(cardCity);
+        
+        tabCities = new JTabbedPane();
+        pnColonyCardCity.add(tabCities, "CITY");
+        
+        JPanel pnLoading, pnLoadingIn;
+        JProgressBar prog;
+        
+        pnLoading = new JPanel();
+        pnLoading.setLayout(new BorderLayout());
+        pnLoadingIn = new JPanel();
+        pnLoadingIn.setLayout(new FlowLayout(FlowLayout.CENTER));
+        pnLoading.add(pnLoadingIn, BorderLayout.CENTER);
+        pnLoading.add(new JPanel(), BorderLayout.NORTH);
+        pnLoading.add(new JPanel(), BorderLayout.SOUTH);
+        prog = new JProgressBar();
+        prog.setIndeterminate(true);
+        pnLoadingIn.add(prog);
+        pnColonyCardCity.add(pnLoading, "LOADING");
+        cardCity.show(pnColonyCardCity, "LOADING");
         
         tableAccounting = new DefaultTableModel();
         tableAccounting.addColumn(ColonyManager.t("사유"));
@@ -232,6 +256,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             tfColonyName.setText("");
             tfColonyTime.setText("");
             taStatus.setText("");
+            cardCity.show(pnColonyCardCity, "CITY");
             return;
         }
         
@@ -242,6 +267,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         
         List<City> cities = colony.getCities();
         if(cycle == 0 || cycle % 36000 == 0 || tabCities.getTabCount() != cities.size()) {
+        	cardCity.show(pnColonyCardCity, "LOADING");
+        	
             tabCities.removeAll();
             for(CityPanel c : pnCities) { c.dispose(); }
             pnCities.clear();
@@ -306,6 +333,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         setEditable(flagEditable);
         
         colony.markAsRefreshChildren(false);
+        cardCity.show(pnColonyCardCity, "CITY");
     }
     
     public CityPanel getCityPanel(City city) {

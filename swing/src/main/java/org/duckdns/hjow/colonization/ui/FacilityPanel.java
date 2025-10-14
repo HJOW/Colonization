@@ -293,7 +293,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
 			}
 		});
         
-        refresh(f, city, colony, superInstance);
+        refresh(f, city, colony, superInstance, true);
     }
     
     public long getFacilityKey() {
@@ -319,8 +319,14 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         }
         return null;
     }
-
+    
+    /** 화면 새로고침 */
     public void refresh(Facility fac, City city, Colony colony, ColonyManager superInstance) {
+    	refresh(fac, city, colony, superInstance, false);
+    }
+
+    /** 화면 새로고침 */
+    public void refresh(Facility fac, City city, Colony colony, ColonyManager superInstance, boolean force) {
         if(fac == null) {
             tfName.setText("");
             ta.setText("");
@@ -332,6 +338,14 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         
         tfName.setText(fac.getName());
         setTargetName(fac.getName());
+        
+        if(! force) {
+        	if(! fac.isMarkedAsRefresh()) {
+        		if(fac.getHp() <= 0) setEditable(false);
+                else setEditable(flagEditable);
+        		return;
+        	}
+        }
         
         StringBuilder res = new StringBuilder("");
         res = res.append("\n").append("Type : ").append(fac.getType());
