@@ -566,16 +566,6 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         return flagDebugMode;
     }
     
-    /** 개체별 쓰레드 슬립 적용 */
-    public static void sleepOn(int cycleIn, long gap) {
-    	try { 
-    		if(     gap >= 20L) Thread.sleep(gap);
-    		else if(gap >= 10L && (cycleIn %  2 == 0)) Thread.sleep(gap *  2L);
-    		else if(gap >=  5L && (cycleIn %  4 == 0)) Thread.sleep(gap *  4L);
-    		else if(gap >=  1L && (cycleIn % 20 == 0)) Thread.sleep(gap * 20L);
-    	} catch(InterruptedException ex) { throw new RuntimeException(ex.getMessage(), ex); }
-    }
-
     /** 전역 로그 출력 */
     public static void logGlobals(String msg) {
         System.err.println(msg);

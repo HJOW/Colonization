@@ -38,6 +38,8 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.facilities.SupportGUIFacility;
+import org.duckdns.hjow.commons.stream.SimultaneousWork;
+import org.duckdns.hjow.commons.stream.SingleAction;
 
 public class CityPanel extends JPanel implements ColonyElementPanel {
     private static final long serialVersionUID = 3475480727850203183L;
@@ -271,10 +273,8 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         progHp.setMaximum(city.getMaxHp());
         progHp.setValue(city.getHp());
         
-        long gap = superInstance.getCycleGapEachFacility();
-        
         // 시설 목록 출력
-        List<Facility> facList = city.getFacility();
+        final List<Facility> facList = city.getFacility();
         int columns = 1;
         int idx = 0;
         int rowNo = 0;
@@ -364,24 +364,29 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             pnFacilities.add(pnEmpty, gridBagConst);
         }
         
+        Vector<SingleAction> workList = new Vector<SingleAction>();
         for(idx=0; idx<sizes; idx++) {
-            FacilityPanel pn = facilityPns.get(idx);
-            Facility fac = facList.get(idx);
-            
-            if(fac instanceof SupportGUIFacility) {
-            	SupportGUIFacility guiFac = (SupportGUIFacility) fac;
-                if(! guiFac.checkPanelAccept(pn) ) {
-                    facilityPns.clear();
-                    refresh(cycle, city, colony, superInstance);
-                    return;
-                }
-            }
-            
-            pn.refresh(fac, city, colony, superInstance);
-            ColonyManager.sleepOn(idx, gap);
+        	SingleFacilityLoadAction act = new SingleFacilityLoadAction(idx, city) {	
+				@Override
+				public void run(int r) throws Throwable {
+					FacilityPanel pn = facilityPns.get(this.index);
+		            Facility fac = facList.get(this.index);
+		            
+		            if(fac instanceof SupportGUIFacility) {
+		            	SupportGUIFacility guiFac = (SupportGUIFacility) fac;
+		                if(! guiFac.checkPanelAccept(pn) ) {
+		                    superInstance.reserveRefresh();
+		                }
+		            }
+		            
+		            pn.refresh(fac, this.city, colony, superInstance);
+				}
+			};
+        	
+        	workList.add(act);
         }
-        
-        facList = null;
+        SimultaneousWork simulWork = new SimultaneousWork(workList);
+        simulWork.start();
         
         List<Citizen> citizens = city.getCitizens();
         sizes = citizens.size();
@@ -586,5 +591,11 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     @Override
     public Object getComponent() {
         return this;
+    }
+    
+    abstract class SingleFacilityLoadAction implements SingleAction {
+        protected int index = -1;
+        protected City city;
+        public SingleFacilityLoadAction(int index, City city) { this.index = index; this.city = city; }
     }
 }
