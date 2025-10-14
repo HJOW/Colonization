@@ -39,6 +39,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 public abstract class AbstractColony implements Colony {
     private static final long serialVersionUID = -3144963237818493111L;
     protected volatile long key = ColonyManager.generateKey();
+    protected transient boolean fNeedRefresh = true;
     
     protected List<City>       cities     = new Vector<City>();
     protected List<Enemy>      enemies    = new Vector<Enemy>();
@@ -867,6 +868,16 @@ public abstract class AbstractColony implements Colony {
             en.dispose();
         }
         enemies.clear();
+    }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
     }
     
     public static String getColonyClassName() {

@@ -25,6 +25,8 @@ public class Loan implements ColonyElements {
     protected int  interestLeft    = 0;
     protected int  interestRate100 = 5;
     
+    protected transient boolean fNeedRefresh = true;
+    
     public Loan() {}
     public Loan(long amount, int interestCount, int interestRate100) {
         this();
@@ -211,6 +213,16 @@ public class Loan implements ColonyElements {
     @Override
     public String toString() {
         return getName();
+    }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
     }
     
     /** 사용 가능한 대출 목록 만들기 */

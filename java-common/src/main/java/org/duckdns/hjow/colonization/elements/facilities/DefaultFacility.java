@@ -21,6 +21,8 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 public abstract class DefaultFacility implements Facility {
     private static final long serialVersionUID = 8012568139388326869L;
     protected volatile long key = ColonyManager.generateKey();
+    protected transient boolean fNeedRefresh = true;
+    
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
     protected int hp = getMaxHp();
     protected int level = 1;
@@ -368,6 +370,16 @@ public abstract class DefaultFacility implements Facility {
     /** 레벨 당 Capacity 증가율 */
     protected double increateCapacityRate() {
         return 0.1;
+    }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
     }
     
     public static String getFacilityName() {

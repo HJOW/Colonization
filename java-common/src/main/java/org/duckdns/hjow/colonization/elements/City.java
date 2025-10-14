@@ -31,6 +31,7 @@ import org.duckdns.hjow.commons.util.HexUtil;
 public class City implements ColonyElements {
     private static final long serialVersionUID = -8442328554683565064L;
     protected volatile long key = ColonyManager.generateKey();
+    protected transient boolean fNeedRefresh = true;
     
     protected String name = ColonyManager.t("도시") + "_" + ColonyManager.generateNaturalNumber();
     protected List<Facility>   facility = new Vector<Facility>();
@@ -1087,6 +1088,16 @@ public class City implements ColonyElements {
             en.dispose();
         }
         enemies.clear();
+    }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
     }
     
     /** 도시 건설 비용 */

@@ -16,6 +16,8 @@ public abstract class Research implements ColonyElements {
     protected volatile long    key = ColonyManager.generateKey();
     protected volatile long    progress = 0;
     protected volatile int     level    = 0;
+    
+    protected transient boolean fNeedRefresh = true;
 
     @Override
     public long getKey() {
@@ -196,4 +198,14 @@ public abstract class Research implements ColonyElements {
     
     @Override
     public void dispose() { }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
+    }
 }

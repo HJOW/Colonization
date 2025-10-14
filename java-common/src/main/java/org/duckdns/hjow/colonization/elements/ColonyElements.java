@@ -47,4 +47,9 @@ public interface ColonyElements extends Serializable, Disposeable {
     
     /** 변조방지값 계산 */
     public BigInteger getCheckerValue();
+    
+    /** UI 상에 새로고침이 필요한 지 표시되었는지를 반환 */
+    public boolean isMarkedAsRefresh();
+    /** UI 새로고침 필요 표시 혹은 표시 제거 */
+    public void markAsRefresh(boolean f);
 }

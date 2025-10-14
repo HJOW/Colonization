@@ -19,6 +19,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 public class Citizen implements ColonyElements {
     private static final long serialVersionUID = -6856576686789163067L;
     protected volatile long key = ColonyManager.generateKey();
+    protected transient boolean fNeedRefresh = true;
     protected String name = ColonyManager.t("시민") + "_" + ColonyManager.generateNaturalNumber();
     
     protected List<State> states = new Vector<State>();
@@ -501,5 +502,15 @@ public class Citizen implements ColonyElements {
             st.dispose();
         }
         states.clear();
+    }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
     }
 }

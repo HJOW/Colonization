@@ -16,6 +16,8 @@ public abstract class State implements ColonyElements {
     protected volatile long key = ColonyManager.generateKey();
     protected volatile int  hp = getMaxHp();
     protected volatile long lefts = getDefaultLefts();
+    
+    protected transient boolean fNeedRefresh = true;
 
     @Override
     public long getKey() {
@@ -114,6 +116,16 @@ public abstract class State implements ColonyElements {
     @Override
     public void dispose() {
         
+    }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
     }
 
     protected static List<Class<?>> stateClasses = ColonyClassLoader.stateClasses();

@@ -16,6 +16,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 public abstract class Product implements ColonyElements {
     private static final long serialVersionUID = -6737394925448600561L;
     protected volatile long key = ColonyManager.generateKey();
+    protected transient boolean fNeedRefresh = true;
     
     protected abstract String getDefaultNamePrefix();
     
@@ -108,6 +109,16 @@ public abstract class Product implements ColonyElements {
     @Override
     public String toString() {
     	return getTitle();
+    }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
     }
     
     private static final List<Product> productTypeList = new Vector<Product>();

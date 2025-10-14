@@ -57,10 +57,10 @@ public class GUIColonyManager extends ColonyManager {
     private static final long serialVersionUID = -2483528821790634383L;
     
     protected transient JFrame frame;
-    protected transient JPanel pnMain, pnLocalRoot, pnFront;
+    protected transient JPanel pnMain, pnLocalRoot, pnLocalSecond, pnFront;
     protected transient JProgressBar progFront;
     protected transient JTabbedPane tabMain;
-    protected transient CardLayout cardMain;
+    protected transient CardLayout cardMain, cardLoading;
     protected transient JButton btnSaveAs, btnLoadAs, btnThrPlay, btnGotoGame;
     
     protected transient JEditorPane webNotice;
@@ -189,6 +189,7 @@ public class GUIColonyManager extends ColonyManager {
         pnFront     = new JPanel();
         pnMainCard1 = new JPanel();
         pnMainCard2 = new JPanel();
+        pnLocalSecond = pnMainCard1;
         
         servletClient = new ServletClientPanel(this);
         
@@ -250,13 +251,17 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        cardMain = new CardLayout();
+        cardMain    = new CardLayout(); // 카드 레이아웃 1층 (로딩이 중복으로 걸리는 경우 혼란을 방지)
+        cardLoading = new CardLayout(); // 카드 레이아웃 2층
+        
         pnLocalRoot.setLayout(cardMain);
         
         pnLocalRoot.add(pnMainCard1, "C1");
         pnLocalRoot.add(pnMainCard2, "C2");
         
-        pnMainCard1.setLayout(new BorderLayout());
+        cardMain.show(pnLocalRoot, "C2");
+        
+        pnMainCard1.setLayout(cardLoading);
         pnMainCard2.setLayout(new BorderLayout());
         
         JPanel pnHide = new JPanel();
@@ -270,6 +275,26 @@ public class GUIColonyManager extends ColonyManager {
         progHide.setIndeterminate(true);
         pnHide.add(progHide);
         
+        JPanel pnMainCard1First, pnMainCard1Second;
+        pnMainCard1First  = new JPanel();
+        pnMainCard1Second = new JPanel();
+        pnMainCard1First.setLayout(new BorderLayout());
+        pnMainCard1Second.setLayout(new BorderLayout());
+        
+        pnMainCard1.add(pnMainCard1First , "C1F");
+        pnMainCard1.add(pnMainCard1Second, "C1S");
+        
+        pnHide = new JPanel();
+        pnMainCard1Second.add(pnHide, BorderLayout.CENTER);
+        pnMainCard1Second.add(new JPanel(), BorderLayout.NORTH);
+        pnMainCard1Second.add(new JPanel(), BorderLayout.SOUTH);
+        
+        progHide = new JProgressBar();
+        progHide.setIndeterminate(true);
+        pnHide.add(progHide);
+        
+        cardLoading.show(pnMainCard1, "C1S");
+        
         JPanel pnSouth, pnCenter, pnNorth;
         pnSouth  = new JPanel();
         pnCenter = new JPanel();
@@ -279,9 +304,9 @@ public class GUIColonyManager extends ColonyManager {
         pnCenter.setLayout(new BorderLayout());
         pnNorth.setLayout( new BorderLayout());
         
-        pnMainCard1.add(pnSouth , BorderLayout.SOUTH);
-        pnMainCard1.add(pnCenter, BorderLayout.CENTER);
-        pnMainCard1.add(pnNorth , BorderLayout.NORTH);
+        pnMainCard1First.add(pnSouth , BorderLayout.SOUTH);
+        pnMainCard1First.add(pnCenter, BorderLayout.CENTER);
+        pnMainCard1First.add(pnNorth , BorderLayout.NORTH);
         
         JToolBar toolbarNorth = new JToolBar();
         pnNorth.add(toolbarNorth, BorderLayout.NORTH);
@@ -905,6 +930,9 @@ public class GUIColonyManager extends ColonyManager {
                 try { Thread.sleep(500L); } catch(InterruptedException ex) { return; }
                 ((GUIColonizationMainClass) superInstance).closeLoadingDialog();
                 refreshArenaPanel(0);
+                
+                cardMain.show(pnLocalRoot, "C1");
+                cardLoading.show(pnLocalSecond, "C1F");
             }
         }).start();
     }
@@ -1230,6 +1258,23 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 사이클 진행에 따른 정착지 화면 내용 갱신 (성능을 위해 항상 전체를 새로고침하지는 않음. 확실히 새로고침하려면 refreshColonyContent 메소드 사용) */
     public void refreshArenaPanel(final int cycle) {
+        // 전체 새로고침 여부 판단
+        boolean refreshFull = false;
+        
+        if(cycle == 0) { refreshFull = true; }
+        else {
+            Colony col = getSelectedColony();
+            if(col == null) { refreshFull = true; }
+            else {
+                DefaultColonyPanel colPn = getColonyPanel(col);
+                if(cpNow == null || cpNow != colPn) {
+                    refreshFull = true;
+                }
+            }
+        }
+        
+        if(refreshFull) cardLoading.show(pnLocalSecond, "C1S");
+        
     	SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -1242,8 +1287,10 @@ public class GUIColonyManager extends ColonyManager {
     protected synchronized void refreshArenaPanelIn(int cycle) {
         Colony col = getSelectedColony();
         if(col == null) {
+            cardLoading.show(pnLocalSecond, "C1S");
             pnCols.removeAll();
             pnCols.add(pnNoColonies, BorderLayout.CENTER);
+            cardLoading.show(pnLocalSecond, "C1F");
             return;
         }
         
@@ -1254,12 +1301,14 @@ public class GUIColonyManager extends ColonyManager {
         }
         
         if(cpNow == null || cpNow != colPn) {
+            cardLoading.show(pnLocalSecond, "C1S");
             pnCols.removeAll();
             cpNow = colPn;
             if(cpNow != null) pnCols.add(colPn, BorderLayout.CENTER);
         }
         
         if(cycle == 0 || cycleSkipRefr <= 1 || cycle % cycleSkipRefr == 0) colPn.refresh(cycle, null, col, this);
+        cardLoading.show(pnLocalSecond, "C1F");
     }
     
     /** 서블릿(웹) 패널 내 정착지 영역 새로고침 요청 */
