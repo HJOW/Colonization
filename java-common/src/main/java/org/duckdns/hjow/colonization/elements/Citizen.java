@@ -513,4 +513,10 @@ public class Citizen implements ColonyElements {
     public void markAsRefresh(boolean f) {
         fNeedRefresh = f;
     }
+    
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+        for(State s : getStates()) { s.markAsRefreshChildren(f); }
+    }
 }

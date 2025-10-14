@@ -127,6 +127,11 @@ public abstract class State implements ColonyElements {
     public void markAsRefresh(boolean f) {
         fNeedRefresh = f;
     }
+    
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+    }
 
     protected static List<Class<?>> stateClasses = ColonyClassLoader.stateClasses();
     

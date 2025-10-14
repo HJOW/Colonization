@@ -439,6 +439,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         else setEditable(flagEditable);
         
         btnUpgrade.setVisible(isUpgradeAvail(fac, colony, city));
+        fac.markAsRefreshChildren(false);
     }
     
     @Override

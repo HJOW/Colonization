@@ -121,6 +121,11 @@ public abstract class Product implements ColonyElements {
         fNeedRefresh = f;
     }
     
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+    }
+    
     private static final List<Product> productTypeList = new Vector<Product>();
     private static synchronized void prepareProductTypeList() {
         productTypeList.clear();

@@ -1261,9 +1261,11 @@ public class GUIColonyManager extends ColonyManager {
         // 전체 새로고침 여부 판단
         boolean refreshFull = false;
         
+        Colony col = null;
+        
         if(cycle == 0) { refreshFull = true; }
         else {
-            Colony col = getSelectedColony();
+            col = getSelectedColony();
             if(col == null) { refreshFull = true; }
             else {
                 DefaultColonyPanel colPn = getColonyPanel(col);
@@ -1273,7 +1275,10 @@ public class GUIColonyManager extends ColonyManager {
             }
         }
         
-        if(refreshFull) cardLoading.show(pnLocalSecond, "C1S");
+        if(refreshFull) {
+            cardLoading.show(pnLocalSecond, "C1S");
+            if(col != null) col.markAsRefreshChildren(true);
+        }
         
     	SwingUtilities.invokeLater(new Runnable() {
 			@Override

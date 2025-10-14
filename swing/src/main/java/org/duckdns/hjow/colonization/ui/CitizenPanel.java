@@ -135,6 +135,8 @@ public class CitizenPanel extends JPanel implements ColonyElementPanel {
         
         if(c.getHp() <= 0) setEditable(false);
         else setEditable(flagEditable);
+        
+        c.markAsRefreshChildren(false);
     }
     
     @Override

@@ -298,6 +298,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         refreshAccoutingTable();
         refreshLoanHaveList();
         setEditable(flagEditable);
+        
+        colony.markAsRefreshChildren(false);
     }
     
     public CityPanel getCityPanel(City city) {

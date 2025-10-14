@@ -880,6 +880,16 @@ public abstract class AbstractColony implements Colony {
         fNeedRefresh = f;
     }
     
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+        for(City     ct : getCities() )    { ct.markAsRefreshChildren(f); }
+        for(Enemy    en : getEnemies())    { en.markAsRefreshChildren(f); }
+        for(Research r  : getResearches()) { r.markAsRefreshChildren(f);  }
+        for(Loan     l  : getLoanAvail())  { l.markAsRefreshChildren(f);  }
+        for(Loan     l  : getLoanHave())   { l.markAsRefreshChildren(f);  }
+    }
+    
     public static String getColonyClassName() {
         return "Colony";
     }

@@ -382,6 +382,12 @@ public abstract class DefaultFacility implements Facility {
         fNeedRefresh = f;
     }
     
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+        for(State s : getStates()) { s.markAsRefreshChildren(f); }
+    }
+    
     public static String getFacilityName() {
         return "";
     }

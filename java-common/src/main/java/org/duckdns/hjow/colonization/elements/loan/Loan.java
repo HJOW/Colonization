@@ -225,6 +225,11 @@ public class Loan implements ColonyElements {
         fNeedRefresh = f;
     }
     
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+    }
+    
     /** 사용 가능한 대출 목록 만들기 */
     public static List<Loan> makeAvailableLoanListRandom(Colony col) {
         List<Loan> loans = new ArrayList<Loan>();

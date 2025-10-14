@@ -1100,6 +1100,14 @@ public class City implements ColonyElements {
         fNeedRefresh = f;
     }
     
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+        for(Citizen  c  : getCitizens()) { c.markAsRefreshChildren(f); }
+        for(Facility t  : getFacility()) { t.markAsRefreshChildren(f); }
+        for(Enemy    en : getEnemies() ) { en.markAsRefreshChildren(f); }
+    }
+    
     /** 도시 건설 비용 */
     public static long getBuildingNewCityFee(Colony col) { return 1000000L; };
 }

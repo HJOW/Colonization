@@ -453,6 +453,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         }
         
         cbxTax.setSelectedItem(city.getTax() + " %");
+        city.markAsRefreshChildren(false);
     }
     
     /** 작업중 항목 출력 */

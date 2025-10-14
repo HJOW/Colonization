@@ -26,6 +26,8 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     protected volatile int  hp  = getMaxHp();
     protected List<State> states = new Vector<State>();
     
+    protected transient boolean fNeedRefresh = true;
+    
     public Enemy() {}
 
     public long getKey() {
@@ -226,4 +228,20 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     
     @Override
     public void dispose() { }
+    
+    @Override
+    public boolean isMarkedAsRefresh() {
+        return fNeedRefresh;
+    }
+
+    @Override
+    public void markAsRefresh(boolean f) {
+        fNeedRefresh = f;
+    }
+    
+    @Override
+    public void markAsRefreshChildren(boolean f) {
+        markAsRefresh(f);
+        for(State s : getStates()) { s.markAsRefreshChildren(f); }
+    }
 }
