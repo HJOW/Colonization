@@ -335,7 +335,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         
         StringBuilder res = new StringBuilder("");
         res = res.append("\n").append("Type : ").append(fac.getType());
-        if(fac instanceof Home) res = res.append(" (").append("Home").append(")");
+        if(fac instanceof Home) res = res.append(" (").append(ColonyManager.t("Home")).append(")");
         
         res = res.append("\n").append("HP : ").append(fac.getHp()).append(" / ").append(fac.getMaxHp());
         
