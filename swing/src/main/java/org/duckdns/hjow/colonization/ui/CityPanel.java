@@ -271,6 +271,8 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         progHp.setMaximum(city.getMaxHp());
         progHp.setValue(city.getHp());
         
+        long gap = superInstance.getCycleGapEachFacility();
+        
         // 시설 목록 출력
         List<Facility> facList = city.getFacility();
         int columns = 1;
@@ -367,7 +369,8 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             Facility fac = facList.get(idx);
             
             if(fac instanceof SupportGUIFacility) {
-                if(! ((SupportGUIFacility) fac).checkPanelAccept(pn) ) {
+            	SupportGUIFacility guiFac = (SupportGUIFacility) fac;
+                if(! guiFac.checkPanelAccept(pn) ) {
                     facilityPns.clear();
                     refresh(cycle, city, colony, superInstance);
                     return;
@@ -375,6 +378,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             }
             
             pn.refresh(fac, city, colony, superInstance);
+            ColonyManager.sleepOn(idx, gap);
         }
         
         facList = null;

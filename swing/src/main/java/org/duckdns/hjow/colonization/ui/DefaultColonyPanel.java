@@ -225,7 +225,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     public void reserveRefresh() {
         if(superInstance != null) superInstance.reserveRefresh();
     }
-
+    
     @Override
     public void refresh(int cycle, City city, Colony colony, ColonyManager superInstance) { // city is null
         if(colony == null) {
@@ -238,6 +238,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         progHp.setMaximum(colony.getMaxHp());
         progHp.setValue(colony.getHp());
         
+        long gap = superInstance.getCycleGapEachCity();
+        
         List<City> cities = colony.getCities();
         if(cycle == 0 || cycle % 36000 == 0 || tabCities.getTabCount() != cities.size()) {
             tabCities.removeAll();
@@ -248,6 +250,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                 CityPanel c = new CityPanel(cities.get(idx), colony, (GUIColonyManager) superInstance);
                 pnCities.add(c);
                 tabCities.add(cities.get(idx).getName(), c);
+                
+                ColonyManager.sleepOn(idx, gap);
             }
         } else {
             for(int idx=0; idx<pnCities.size(); idx++) {
@@ -256,6 +260,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                 
                 tabCities.setTitleAt(idx, cityCurrent == null ? "" : cityCurrent.getName());
                 p.refresh(cycle, cityCurrent, colony, superInstance);
+                
+                ColonyManager.sleepOn(idx, gap);
             }
         }
         

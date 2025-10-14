@@ -14,7 +14,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -86,6 +88,8 @@ public class GUIColonyManager extends ColonyManager {
     protected transient JMenuBar menuBar;
     protected transient JMenu menuFile, menuAction;
     protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig;
+    
+    protected transient Queue<RefreshRequest> queueRefreshes = new LinkedList<RefreshRequest>();
     
     /** 생성자, 상위 프로그램에서 호출됨 */
     public GUIColonyManager(GUIColonizationMainClass superInstance) {
@@ -740,14 +744,11 @@ public class GUIColonyManager extends ColonyManager {
         // 리프레시 요청 수행
         if(reserveRefresh) {
             try {
-                SwingUtilities.invokeLater(new Runnable() {   
-                    @Override
-                    public void run() {
-                        refreshColonyContent();
-                    }
-                });
+            	refreshColonyContent();
             } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
             reserveRefresh = false;
+        } else {
+        	handleRefreshRequests();
         }
         
         // 일시정지 후 쓰레드가 실제 정지 중인지 판단하는 플래그
@@ -1280,12 +1281,26 @@ public class GUIColonyManager extends ColonyManager {
         if(refreshFull) {
             cardLocalLoading2.show(pnLocalSecond, "C1S");
             if(col != null) col.markAsRefreshChildren(true);
+            
+            queueRefreshes.clear();
         }
         
-    	SwingUtilities.invokeLater(new Runnable() {
+        queueRefreshes.add(new RefreshRequest("refreshArenaPanelIn", cycle));
+        handleRefreshRequests();
+    }
+    
+    /** 화면 새로고침 요청 처리 */
+    protected synchronized void handleRefreshRequests() {
+    	SwingUtilities.invokeLater(new Runnable() {	
 			@Override
 			public void run() {
-				refreshArenaPanelIn(cycle);
+				while(! queueRefreshes.isEmpty()) {
+					RefreshRequest r = queueRefreshes.poll();
+					int cycle = r.getCycle();
+					if(cycle == 0) cardLocalLoading2.show(pnLocalSecond, "C1S");
+					refreshArenaPanelIn(cycle);
+					if(cycle == 0) queueRefreshes.clear();
+				}
 			}
 		});
     }

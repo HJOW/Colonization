@@ -40,6 +40,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     protected transient volatile int  selectedColony = -1;
     protected transient volatile int  cycle = 0;
     protected transient volatile long cycleGap = 199L;
+    protected transient volatile long cycleGapEachCity     = 0L;
+    protected transient volatile long cycleGapEachFacility = 0L;
     protected transient volatile long cycleRunningTime = 0L;
     protected transient volatile int  cycleRunCount = -1;
     protected transient volatile int  cycleSkipRefr = 5; // 컨텐츠 새로고침 주기 (값이 크면 성능 개선 but 화면 내 값 변화 속도가 느리다고 느껴지게 됨)
@@ -524,6 +526,9 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         return getConfig();
     }
     
+    public long getCycleGapEachCity()     { return cycleGapEachCity;     }
+    public long getCycleGapEachFacility() { return cycleGapEachFacility; }
+    
     /** 프로그램 종료 */
     public void exit() {
     	dispose(false);
@@ -559,6 +564,16 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
 
     public static boolean isDebugModeEnabled() {
         return flagDebugMode;
+    }
+    
+    /** 개체별 쓰레드 슬립 적용 */
+    public static void sleepOn(int cycleIn, long gap) {
+    	try { 
+    		if(     gap >= 20L) Thread.sleep(gap);
+    		else if(gap >= 10L && (cycleIn %  2 == 0)) Thread.sleep(gap *  2L);
+    		else if(gap >=  5L && (cycleIn %  4 == 0)) Thread.sleep(gap *  4L);
+    		else if(gap >=  1L && (cycleIn % 20 == 0)) Thread.sleep(gap * 20L);
+    	} catch(InterruptedException ex) { throw new RuntimeException(ex.getMessage(), ex); }
     }
 
     /** 전역 로그 출력 */
