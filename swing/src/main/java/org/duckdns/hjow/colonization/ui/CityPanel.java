@@ -256,7 +256,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     }
     
     @Override
-    public void refresh(int cycle, City city, Colony colony, ColonyManager superInstance) {
+    public void refresh(final int cycle, City city, final Colony colony, final ColonyManager superInstance) {
         if(city == null) { city = getCity(); }
         if(city == null) {
             tfName.setText("");
@@ -366,7 +366,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         
         Vector<SingleAction> workList = new Vector<SingleAction>();
         for(idx=0; idx<sizes; idx++) {
-        	SingleFacilityLoadAction act = new SingleFacilityLoadAction(idx, city) {	
+        	SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {	
 				@Override
 				public void run(int r) throws Throwable {
 					FacilityPanel pn = facilityPns.get(this.index);
@@ -385,10 +385,10 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         	
         	workList.add(act);
         }
-        SimultaneousWork simulWork = new SimultaneousWork(workList); // TODO : SwingWorker 클래스 지원하는 버전으로 변경해야 함
+        SimultaneousWork simulWork = new SimultaneousWork(workList);
         simulWork.start();
         
-        List<Citizen> citizens = city.getCitizens();
+        final List<Citizen> citizens = city.getCitizens();
         sizes = citizens.size();
         
         if(citizens.size() != citizenPns.size() || cycle == 0 || cycle % 36000 == 0) {
@@ -401,7 +401,6 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 CitizenPanel p = new CitizenPanel(c, city, colony, superInstance);
                 citizenPns.add(p);
             }
-            citizens = null;
             rowNo = 0;
             colNo = 0;
             // pnCitizens.setLayout(new GridLayout(citizenPns.size(), 1));
@@ -431,10 +430,21 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             gridBagConst.weighty = 1.0;
             
             pnCitizens.add(pnEmpty, gridBagConst);
-        } else {
-        	for(CitizenPanel p : citizenPns) {
-        		p.refresh(cycle, city, colony, superInstance);
-        	}
+        } else if(sizes >= 1) {
+        	workList = new Vector<SingleAction>();
+            for(idx=0; idx<sizes; idx++) {
+            	SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {	
+    				@Override
+    				public void run(int r) throws Throwable {
+    					CitizenPanel pn = citizenPns.get(r);
+    		            pn.refresh(cycle, city, colony, superInstance);
+    				}
+    			};
+            	
+            	workList.add(act);
+            }
+            simulWork = new SimultaneousWork(workList);
+            simulWork.start();
         }
         
         // 작업중 항목 출력
@@ -593,9 +603,9 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         return this;
     }
     
-    abstract class SingleFacilityLoadAction implements SingleAction {
+    abstract class SingleCityElementLoadAction implements SingleAction {
         protected int index = -1;
         protected City city;
-        public SingleFacilityLoadAction(int index, City city) { this.index = index; this.city = city; }
+        public SingleCityElementLoadAction(int index, City city) { this.index = index; this.city = city; }
     }
 }
