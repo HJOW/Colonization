@@ -29,6 +29,11 @@ public class ColonyServlet extends CommonServlet {
 	
 	@Override
 	protected boolean isLoginNeeded() { return true; }
+	
+	@Override
+	public String getName() {
+		return "colony"; // URL : /web/json?svName=colony
+	}
 
 	@Override
 	protected void doCommon(HttpServletRequest req, HttpServletResponse resp) throws Throwable {
@@ -68,11 +73,6 @@ public class ColonyServlet extends CommonServlet {
         
         response(resp, responses);
         doAfter(req, resp);
-	}
-
-	@Override
-	public String getName() {
-		return "colony"; // URL : /web/json?svName=colony
 	}
 	
 	protected void serviceList(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {

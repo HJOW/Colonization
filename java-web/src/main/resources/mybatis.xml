@@ -20,17 +20,19 @@
         <environment id="dev">
             <transactionManager type="JDBC" />
             <dataSource type="POOLED">
-                <property name="driver"   value="org.h2.Driver"   />
-                <property name="url"      value="jdbc.h2.mem:coldb;DB_CLOSE_DELAY=-1" />
+                <property name="driver"   value="org.hsqldb.jdbc.JDBCDriver"   />
+                <property name="url"      value="jdbc.hsqldb.hsql://localhost" />
                 <property name="username" value="sa"              />
                 <property name="password" value=""                />
-                <property name="poolMaximumActiveConnections" value="2"/>
-                <property name="poolMaximumIdleConnections"   value="2"/>
+                <property name="poolMaximumActiveConnections" value="10"/>
+                <property name="poolMaximumIdleConnections"   value="5"/>
+                <property name="poolPingEnabled" value="true"/>
+                <property name="poolPingQuery" value="SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS"/>
             </dataSource>
         </environment>
     </environments>
     
     <mappers>
-        <mapper resource="mapper/member.xml"/>
+        <mapper resource="mapper/colonization.xml"/>
     </mappers>
 </configuration>

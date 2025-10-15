@@ -22,6 +22,9 @@ public class MainServlet extends CommonServlet {
         
         sv = new ColonyServlet();
         children.put(sv.getName(), sv);
+        
+        sv = new AdminServlet();
+        children.put(sv.getName(), sv);
     }
     
     @Override

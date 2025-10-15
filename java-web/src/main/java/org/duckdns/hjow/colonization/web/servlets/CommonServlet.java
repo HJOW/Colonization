@@ -17,6 +17,7 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
+import org.duckdns.hjow.colonization.web.db.DBUtil;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
@@ -41,6 +42,8 @@ public abstract class CommonServlet extends HttpServlet {
                 JsonObject json = (JsonObject) JsonObject.parseJson(strJson); // JSON 파싱
                 configs.fromJson(json); // 설정 넣기
             }
+            
+            DBUtil.init();
             
             // 설정들 중 클래스 관련 설정 적용
             ColonyClassLoader.clearAll();
