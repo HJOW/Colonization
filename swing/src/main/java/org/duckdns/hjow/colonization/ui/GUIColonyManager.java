@@ -938,6 +938,7 @@ public class GUIColonyManager extends ColonyManager {
     }
 
     /** 메인 대화 상자를 연다. */
+    @Override
     public void open(ColonizationMainClass superInstance) {
         onBeforeOpened((GUIColonizationMainClass) superInstance);
         frame.setVisible(true);
