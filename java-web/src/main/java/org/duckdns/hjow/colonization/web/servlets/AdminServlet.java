@@ -16,7 +16,10 @@ public class AdminServlet extends CommonServlet {
 	private static final long serialVersionUID = -2017938310629250602L;
 
 	@Override
-	protected boolean isLoginNeeded() { return false; }
+	protected boolean isLoginNeeded() { return true; }
+	
+	@Override
+	protected int getMinimumGradeRequired() { return 9; }
 	
 	@Override
 	public String getName() {
