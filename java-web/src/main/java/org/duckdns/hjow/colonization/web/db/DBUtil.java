@@ -13,6 +13,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+import org.apache.ibatis.type.JdbcType;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.commons.util.ClassUtil;
 
@@ -50,6 +51,10 @@ public class DBUtil {
         	dataSource.setUrl(jdbcUrl);
         	dataSource.setUsername("sa");
         	dataSource.setPassword("");
+        	dataSource.setPoolMaximumActiveConnections(10);
+        	dataSource.setPoolMaximumIdleConnections(5);
+        	dataSource.setPoolPingEnabled(true);
+        	dataSource.setPoolPingQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
         	
         	Resources.setCharset(Charset.forName("UTF-8"));
             inp1 = Resources.getResourceAsStream("/mapper/colonization.xml");
@@ -57,19 +62,13 @@ public class DBUtil {
         	Environment env = new Environment("development", new JdbcTransactionFactory(), dataSource);
         	Configuration conf = new Configuration(env);
         	conf.addMapper(ColonizationMapper.class);
+        	conf.setMapUnderscoreToCamelCase(true);
+        	conf.setJdbcTypeForNull(JdbcType.NULL);
         	XMLMapperBuilder mapperParser = new XMLMapperBuilder(inp1, conf, "/mapper/colonization.xml", conf.getSqlFragments());
         	mapperParser.parse();
         	
         	SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
         	sessionFactory = builder.build(conf);
-        	
-        	/*
-            Resources.setCharset(Charset.forName("UTF-8"));
-            rd = Resources.getResourceAsReader("mybatis.xml");
-            SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-            sessionFactory = builder.build(rd);
-            rd.close(); rd = null;
-            */
         } catch(Throwable t) {
             t.printStackTrace();
             throw new RuntimeException(t.getMessage(), t);
