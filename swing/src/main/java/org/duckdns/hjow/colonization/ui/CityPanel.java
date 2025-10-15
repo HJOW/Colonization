@@ -385,7 +385,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         	
         	workList.add(act);
         }
-        SimultaneousWork simulWork = new SimultaneousWork(workList);
+        SimultaneousWork simulWork = new SimultaneousWork(workList); // TODO : SwingWorker 클래스 지원하는 버전으로 변경해야 함
         simulWork.start();
         
         List<Citizen> citizens = city.getCitizens();
