@@ -2,11 +2,16 @@
 GUI 요소들로 간단히 만드는 우주시대 정착지 개척 시뮬레이션 게임   
 여러 플랫폼 연습 겸해 손대고 있는 토이 프로젝트입니다.
 
-# 빌드
-## colonization-java-common
-Java 기반 빌드의 공통 파트입니다.
+# 실행
+Swing 빌드를 데스크톱 PC에서 실행해 플레이할 수 있습니다.
+Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 설치가 필요합니다.
 
-## Swing 빌드
+# 빌드
+## colonization-java-common (java-common)
+Java 기반 빌드의 공통 파트입니다.
+Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
+
+## Swing 빌드 (swing)
 Java 의 Swing API 를 활용한 GUI 환경 빌드입니다.   
 Java 8 (OpenJDK 1.8 사용 가능) 이상 버전에서 구동되며, GUI 환경이 필요합니다.   
 Maven 구동 시 실행 가능한 jar 환경으로 빌드됩니다.   
@@ -18,7 +23,7 @@ OpenJDK 8, Tomcat 9 기반 하에 동작하는 웹 서비스입니다.
 
 계정 및 회원가입 개념이 존재하며, Swing 빌드에서도 로그인 및 접속이 가능하도록 개발될 예정입니다.
 
-## Daemon
+## Daemon (daemon)
 Java 기반 Daemon 입니다.
 구동 시 시뮬레이션 서버가 Daemon 형태로 구동됩니다.
 시뮬레이션 성능이 나오지 않는 클라이언트가, 서버에 접속해 정착지 시뮬레이션을 요청해 사용하는 방식입니다.
@@ -27,6 +32,9 @@ Java 기반 Daemon 입니다.
 
 (Swing 빌드에 클라이언트 기능 아직 미완성, 작업 우선순위 낮음)
 
+## 추가 Pack 개발용 샘플 프로젝트 (java-addpacks)
+추가 Pack (새로운 문명 타입, 새 시설과 연구 등 포함) 개발을 위한 샘플 프로젝트입니다.
+Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.
 
 # License
 
@@ -51,6 +59,7 @@ Java 기반 Daemon 입니다.
 ## 공통
 - OpenJDK 8          (See https://openjdk.org/legal/                                       )
 - Apache Tomcat 9    (See https://tomcat.apache.org/legal.html                             )
+- Maven 3.8          (See https://maven.apache.org/index.html                              )
 
 ## Servlet 빌드만 해당
 - Servlet API 2.5    (See https://javaee.github.io/servlet-spec/LICENSE                    )
