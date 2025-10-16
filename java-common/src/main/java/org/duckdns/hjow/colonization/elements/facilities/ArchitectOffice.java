@@ -114,6 +114,10 @@ public class ArchitectOffice extends DefaultFacility {
         return new Long(0);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static String getImageHex() {
         return null;
     }

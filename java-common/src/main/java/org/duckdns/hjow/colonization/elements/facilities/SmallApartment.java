@@ -72,6 +72,10 @@ public class SmallApartment extends Residence {
         return new Integer(680);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(30);
     }

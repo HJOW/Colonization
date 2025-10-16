@@ -104,6 +104,10 @@ public abstract class NetworkFacility extends DefaultFacility {
         return new Integer(300);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(0);
     }

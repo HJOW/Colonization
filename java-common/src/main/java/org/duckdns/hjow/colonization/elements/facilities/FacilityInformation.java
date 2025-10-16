@@ -3,10 +3,12 @@ package org.duckdns.hjow.colonization.elements.facilities;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 시설 정보 */
 public class FacilityInformation implements Serializable {
@@ -16,6 +18,7 @@ public class FacilityInformation implements Serializable {
     protected Long price = new Long(0L);
     protected Long tech  = new Long(0L);
     protected int buildingCycle = 1200;
+    protected int uniqueGrade = DefaultFacility.FACILITY_UNIQUE_GRADE_NONE;
     protected Class<?> facilityClass;
     public FacilityInformation() {}
     public FacilityInformation(Class<?> facilityClass) {
@@ -40,12 +43,31 @@ public class FacilityInformation implements Serializable {
             method = facilityClass.getMethod("getFacilityBuildingCycle");
             setBuildingCycle((Integer) method.invoke(null));
             
+            method = facilityClass.getMethod("getUniqueFacilityGrade");
+            setUniqueGrade((Integer) method.invoke(null));
+            
             method = facilityClass.getMethod("getImageHex");
             Object obj = method.invoke(null);
             if(obj != null) setImageHex(obj.toString());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+    
+    /** JSON 정보 생성 */
+    public JsonObject toJson() {
+    	JsonObject json = new JsonObject();
+    	
+    	json.put("name", getName());
+    	json.put("title", getTitle());
+    	json.put("desc", getDescription());
+    	json.put("class", getFacilityClass().getName());
+    	json.put("price", String.valueOf(getPrice()));
+    	json.put("buildingCycle", new Integer(getBuildingCycle()));
+    	json.put("tech", String.valueOf(getTech()));
+    	json.put("imageHex", getImageHex());
+    	
+    	return json;
     }
     public String getName() {
         return name;
@@ -104,7 +126,19 @@ public class FacilityInformation implements Serializable {
     public String isBuildAvail(Colony col, City city) {
         try {
             Method mthd = facilityClass.getMethod("isBuildAvail", Colony.class, City.class);
-            return (String) mthd.invoke(null, col, city);
+            String reason = (String) mthd.invoke(null, col, city);
+            if(reason != null) return reason;
+            
+            int uniqGrade = getUniqueGrade();
+            if(uniqGrade == DefaultFacility.FACILITY_UNIQUE_GRADE_NONE) return null;
+            
+            if(uniqGrade == DefaultFacility.FACILITY_UNIQUE_GRADE_CITY) {
+            	if(! city.getFacilities(getFacilityClass()).isEmpty()) return ColonyManager.t("도시 당 하나만 건설할 수 있는 시설입니다.");
+            } else if(uniqGrade == DefaultFacility.FACILITY_UNIQUE_GRADE_COLONY) {
+            	if(! col.getFacilities(getFacilityClass()).isEmpty()) return ColonyManager.t("정착지 당 하나만 건설할 수 있는 시설입니다.");
+            }
+            
+            return null;
         } catch(NoSuchMethodException ex) {
             GlobalLogs.processExceptionOccured(ex, false);
             return null;
@@ -117,4 +151,10 @@ public class FacilityInformation implements Serializable {
     public int getSpaceSize() {
     	try { return ((Facility) facilityClass.newInstance()).getSpaceSize(); } catch(Exception ex) { throw new RuntimeException(ex.getMessage(), ex); }
     }
+	public int getUniqueGrade() {
+		return uniqueGrade;
+	}
+	public void setUniqueGrade(int uniqueGrade) {
+		this.uniqueGrade = uniqueGrade;
+	}
 }

@@ -58,4 +58,6 @@ public interface Colony extends ColonyElements {
     public String getStatusString(ColonyManagerUI superInstance);
     /** 발생할 수 있는 이벤트 유형들 반환 */
     public List<TimeEvent> getEvents();
+    /** 특정 타입의 시설 목록 반환 (모든 소속 도시들 다 스캔) */
+    public List<Facility> getFacilities(Class<?> facilityClass);
 }

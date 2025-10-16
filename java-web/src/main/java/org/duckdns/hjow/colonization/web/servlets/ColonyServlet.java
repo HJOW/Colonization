@@ -2,6 +2,8 @@ package org.duckdns.hjow.colonization.web.servlets;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,13 +79,57 @@ public class ColonyServlet extends CommonServlet {
 	
 	protected void serviceList(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
 		JsonArray arr = new JsonArray();
+		String type = req.getParameter("type");
+		if(DataUtil.isEmpty(type)) type = "Colony";
 		
-		for(Colony c : acc.getColonies()) {
-			JsonObject row = new JsonObject();
-			row.put("name", c.getName());
-			row.put("key" , String.valueOf(c.getKey()));
-			arr.add(row);
+		if("Colony".equalsIgnoreCase(type)) {
+		    for(Colony c : acc.getColonies()) {
+				JsonObject row = new JsonObject();
+				row.put("name", c.getName());
+				row.put("key" , String.valueOf(c.getKey()));
+				arr.add(row);
+			}
+		} else {
+			String strKey = req.getParameter("colonyKey");
+			long key = Long.parseLong(strKey);
+			
+			Colony col = null;
+			City city = null;
+			
+			for(Colony c : acc.getColonies()) {
+				if(key == c.getKey()) { col = c; break; }
+			}
+			
+			if(col == null) {
+				responses.put("success", new Boolean(false));
+	            responses.put("message", "Not existing colony.");
+	            return;
+			}
+			
+			strKey = req.getParameter("cityKey");
+			key = Long.parseLong(strKey);
+			
+			for(City ct : col.getCities()) {
+				if(key == ct.getKey()) { city = ct; break; }
+			}
+			
+			if(city == null) {
+				responses.put("success", new Boolean(false));
+	            responses.put("message", "Not existing city.");
+	            return;
+			}
+			
+			if("FacilitiesAvailable".equalsIgnoreCase(type)) {
+				List<FacilityInformation> lists = new ArrayList<FacilityInformation>();
+				lists.addAll(FacilityManager.getFacilityInformations());
+	            for(FacilityInformation info : lists) {
+	                if(! col.supportedFacility(info)) continue;
+	                if(info.isBuildAvail(col, city) != null) continue;
+	                arr.add(info.toJson());
+	            }
+			}
 		}
+		
 		
 		responses.put("success", new Boolean(true));
         responses.put("message", "");
@@ -269,6 +315,10 @@ public class ColonyServlet extends CommonServlet {
             String chkRes = (String) mthdChecker.invoke(null, col, city);
             if(chkRes != null) {
             	throw new RuntimeException(chkRes);
+            }
+            
+            if(! col.supportedFacility(info)) {
+            	throw new RuntimeException(ColonyManager.t("이 정착지에는 설치할 수 없는 시설입니다."));
             }
             
             HoldingJob job = new HoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());

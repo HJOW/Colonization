@@ -216,6 +216,10 @@ public abstract class Residence extends DefaultFacility implements Home {
         return new Integer(180);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(0);
     }

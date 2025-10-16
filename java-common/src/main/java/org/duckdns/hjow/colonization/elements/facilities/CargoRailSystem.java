@@ -187,6 +187,10 @@ public class CargoRailSystem extends DefaultFacility {
         return new Long(10000L);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_CITY;
+    }
+    
     public static Integer getFacilityBuildingCycle() {
         return new Integer(240);
     }

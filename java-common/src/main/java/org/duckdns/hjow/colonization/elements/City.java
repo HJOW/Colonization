@@ -75,11 +75,22 @@ public class City implements ColonyElements {
         }
         return null;
     }
+    /** 특정 타입의 시설 목록 반환 */
+    public List<Facility> getFacilities(Class<?> facilityClass) {
+    	List<Facility> list = new ArrayList<Facility>();
+    	for(Facility f : getFacility()) {
+    		if(f.getClass() == facilityClass && (! list.contains(f))) list.add(f);
+    	}
+    	return list;
+    }
+    /** 도시 이름 변경 */
     public void setName(String name) {
         this.name = name;
+        markAsRefresh(true);
     }
     public void setFacility(List<Facility> facility) {
         this.facility = facility;
+        markAsRefresh(true);
     }
     public List<Citizen> getCitizens() {
         return citizens;
@@ -87,6 +98,7 @@ public class City implements ColonyElements {
 
     public void setCitizens(List<Citizen> citizens) {
         this.citizens = citizens;
+        markAsRefresh(true);
     }
     
     public Citizen getCitizen(long citizenKey) {
@@ -121,6 +133,7 @@ public class City implements ColonyElements {
     
     public void addHoldingJob(HoldingJob job) {
     	holdings.add(job);
+    	markAsRefresh(true);
     }
 
     @Override
@@ -129,6 +142,7 @@ public class City implements ColonyElements {
         int mx = getMaxHp();
         if(hp >= mx) hp = mx;
         if(hp <   0) hp = 0;
+        markAsRefresh(true);
     }
 
     @Override
@@ -142,6 +156,7 @@ public class City implements ColonyElements {
         int mx = getMaxHp();
         if(hp >= mx) hp = mx;
         if(hp <   0) hp = 0;
+        markAsRefresh(true);
     }
     
     @Override
@@ -161,6 +176,7 @@ public class City implements ColonyElements {
 
     public void setSpaces(int spaces) {
         this.spaces = spaces;
+        markAsRefresh(true);
     }
     
     /** 사용 중인 공간량 반환 */
@@ -197,6 +213,7 @@ public class City implements ColonyElements {
 
     public void setTax(int tax) {
         this.tax = tax;
+        markAsRefresh(true);
     }
     
     /** 기본 제공 교통 점수 */

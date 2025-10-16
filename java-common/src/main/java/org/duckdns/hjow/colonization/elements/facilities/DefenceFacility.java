@@ -166,6 +166,10 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
         return new Integer(400);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(10);
     }

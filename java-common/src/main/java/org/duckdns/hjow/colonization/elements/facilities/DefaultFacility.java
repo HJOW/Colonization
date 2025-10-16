@@ -412,10 +412,18 @@ public abstract class DefaultFacility implements Facility {
         return new Long(0);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static String getImageHex() {
         return null;
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
     public static String isBuildAvail(Colony col, City city) { return null; }
+    
+    public static final int FACILITY_UNIQUE_GRADE_NONE   =   0; // 고유하지 않은, 예산과 공간만 있으면 얼마든지 지을 수 있는 시설
+    public static final int FACILITY_UNIQUE_GRADE_CITY   =  10; // 도시 당 하나만 건설이 가능한 시설
+    public static final int FACILITY_UNIQUE_GRADE_COLONY = 100; // 정착지 당 하나만 건설이 가능한 시설
 }

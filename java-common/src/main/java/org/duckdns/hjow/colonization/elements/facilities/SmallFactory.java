@@ -56,6 +56,10 @@ public class SmallFactory extends Factory {
         return new Integer(1200);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(0);
     }

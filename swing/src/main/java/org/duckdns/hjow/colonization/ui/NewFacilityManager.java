@@ -129,55 +129,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         btnOk.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                FacilityInformation info;
-                Colony col;
-                
-                try {
-                    info = (FacilityInformation) cbxFacInfos.getSelectedItem();
-                    col = city.getColony(colonyManager);
-                    
-                    if(col.getMoney() < info.getPrice().longValue()) {
-                        JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("예산이 부족합니다.\n[MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(info.getPrice() - col.getMoney())));
-                        return;
-                    };
-                    
-                    if(col.getTech() < info.getTech().longValue()) {
-                        JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("기술이 부족합니다.\n[TECH] 의 기술이 더 필요합니다.").replace("[TECH]", String.valueOf(info.getTech() - col.getTech())));
-                        return;
-                    };
-                    
-                    int leftSpaces = city.getLeftSpaces();
-                    int needSpaces = info.getSpaceSize();
-                    if(leftSpaces < needSpaces) {
-                    	JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("잔여 공간이 부족합니다.\n[SPACE] 의 공간이 더 필요합니다.").replace("[SPACE]", String.valueOf(needSpaces - leftSpaces)));
-                        return;
-                    }
-                    
-                    Method mthdChecker = info.getFacilityClass().getMethod("isBuildAvail", Colony.class, City.class);
-                    String chkRes = (String) mthdChecker.invoke(null, col, city);
-                    if(chkRes != null) {
-                        JOptionPane.showMessageDialog(getDialog(), chkRes);
-                        return;
-                    }
-                    
-                    HoldingJob job = new HoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
-                    job.setUsingSpace(info.getSpaceSize());
-                    city.getHoldings().add(job);
-                    
-                    col.modifyingMoney(info.getPrice() * (-1) , city, city, "Building", info.getTitle());
-                    
-                    if(servletPanel != null) {
-                        try { servletPanel.onNewFacilityAdded(info, city, col); } catch(Throwable t) {
-                            JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
-                            return;
-                        }
-                    }
-                    
-                    colonyManager.refreshColonyContent();
-                    dispose();
-                } catch(Exception ex) {
-                    JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류가 발생하였습니다.") + "\n" + ex.getMessage());
-                }
+            	onOkRequested();
             }
         });
         
@@ -223,6 +175,64 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         if(! col.supportedFacility(info))  return false;
         if(info.isBuildAvail(col, city) != null) return false;
         return true;
+    }
+    
+    /** 설치 요청 시 호출 */
+    protected void onOkRequested() {
+    	FacilityInformation info;
+        Colony col;
+        
+        try {
+            info = (FacilityInformation) cbxFacInfos.getSelectedItem();
+            col = city.getColony(colonyManager);
+            
+            if(col.getMoney() < info.getPrice().longValue()) {
+                JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("예산이 부족합니다.\n[MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(info.getPrice() - col.getMoney())));
+                return;
+            };
+            
+            if(col.getTech() < info.getTech().longValue()) {
+                JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("기술이 부족합니다.\n[TECH] 의 기술이 더 필요합니다.").replace("[TECH]", String.valueOf(info.getTech() - col.getTech())));
+                return;
+            };
+            
+            int leftSpaces = city.getLeftSpaces();
+            int needSpaces = info.getSpaceSize();
+            if(leftSpaces < needSpaces) {
+            	JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("잔여 공간이 부족합니다.\n[SPACE] 의 공간이 더 필요합니다.").replace("[SPACE]", String.valueOf(needSpaces - leftSpaces)));
+                return;
+            }
+            
+            Method mthdChecker = info.getFacilityClass().getMethod("isBuildAvail", Colony.class, City.class);
+            String chkRes = (String) mthdChecker.invoke(null, col, city);
+            if(chkRes != null) {
+                JOptionPane.showMessageDialog(getDialog(), chkRes);
+                return;
+            }
+            
+            if(! col.supportedFacility(info)) {
+            	JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("이 정착지에는 설치할 수 없는 시설입니다."));
+                return;
+            }
+            
+            HoldingJob job = new HoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
+            job.setUsingSpace(info.getSpaceSize());
+            city.getHoldings().add(job);
+            
+            col.modifyingMoney(info.getPrice() * (-1) , city, city, "Building", info.getTitle());
+            
+            if(servletPanel != null) {
+                try { servletPanel.onNewFacilityAdded(info, city, col); } catch(Throwable t) {
+                    JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
+                    return;
+                }
+            }
+            
+            colonyManager.refreshColonyContent();
+            dispose();
+        } catch(Exception ex) {
+            JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류가 발생하였습니다.") + "\n" + ex.getMessage());
+        }
     }
     
     /** 이 대화상자 내 컨텐츠 새로고침 (시설 목록 제외) */

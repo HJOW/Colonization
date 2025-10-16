@@ -122,6 +122,7 @@ class Communicates {
         const params = {};
         params.svName = 'colony';
         params.svSub  = 'list';
+        params.type   = 'Colony';
         params.jwt    = jwts;
 
         const responses = await this.ajax({

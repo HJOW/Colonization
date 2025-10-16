@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization.elements;
 import java.io.File;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
@@ -103,6 +104,18 @@ public abstract class AbstractColony implements Colony {
             if(c.getKey() == key) return c;
         }
         return null;
+    }
+    
+    /** 특정 타입의 시설 목록 반환 (모든 소속 도시들 다 스캔) */
+    @Override
+    public List<Facility> getFacilities(Class<?> facilityClass) {
+    	List<Facility> list = new ArrayList<Facility>();
+    	for(City c : getCities()) {
+    		for(Facility f : c.getFacility()) {
+        		if(f.getClass() == facilityClass && (! list.contains(f))) list.add(f);
+        	}
+    	}
+    	return list;
     }
 
     public void setCities(List<City> cities) {

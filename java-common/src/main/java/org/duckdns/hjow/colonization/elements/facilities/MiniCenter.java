@@ -72,6 +72,10 @@ public class MiniCenter extends BusinessCenter {
         return new Integer(600);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(0);
     }

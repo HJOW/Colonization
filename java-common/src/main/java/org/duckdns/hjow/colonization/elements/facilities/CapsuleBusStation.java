@@ -67,6 +67,10 @@ public class CapsuleBusStation extends TransportStation {
         return new Integer(120);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(0);
     }

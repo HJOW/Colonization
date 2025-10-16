@@ -62,6 +62,10 @@ public class PowerStation extends PowerPlant {
         return new Integer(300);
     }
     
+    public static int getUniqueFacilityGrade() {
+    	return FACILITY_UNIQUE_GRADE_NONE;
+    }
+    
     public static Long getTechNeeded() {
         return new Long(0);
     }
