@@ -270,8 +270,9 @@ public class ColonyClassLoader {
     }
     
     /** 공통 로컬 설정 정보 적용 */
-    public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
-        // Pack 목록 불러오기
+    @SuppressWarnings("unchecked")
+	public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
+        // 설정 파일에서 Pack 목록 불러오기
         List<Object> packList = null;
         try {
             packList = cfg.getList("Packs");
@@ -309,6 +310,21 @@ public class ColonyClassLoader {
             } catch(Exception ex) {
                 GlobalLogs.processExceptionOccured(ex, false);
             }
+        }
+        
+        // addpacks 불러오기 (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어가야 함)
+        try {
+        	Class<?> addPackClass = Class.forName("org.duckdns.hjow.colonization.addpack.AddPackInfo");
+        	Object instances = addPackClass.newInstance();
+        	Method mthd = addPackClass.getMethod("getPacks");
+        	List<Pack> addPacks = (List<Pack>) mthd.invoke(instances);
+        	for(Pack packOne : addPacks) {
+        		if(! packs.contains(packOne)) packs.add(packOne);
+        	}
+        } catch(ClassNotFoundException ex) {
+        	// DO Nothing
+        } catch(Exception ex) {
+        	GlobalLogs.processExceptionOccured(ex, false);
         }
         
         for(Pack p : getInstalledPacks()) {
