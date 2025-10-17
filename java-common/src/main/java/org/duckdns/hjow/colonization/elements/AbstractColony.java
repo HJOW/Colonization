@@ -1014,9 +1014,10 @@ public abstract class AbstractColony implements Colony {
     public BigInteger getCheckerValue() {
         BigInteger res = new BigInteger(String.valueOf(getKey()));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
+        res = res.add(getMoneyTotals()).multiply(Constants.BIGINTEGER_23);
         res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
         res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17));
-        res = res.add(getMoneyTotals());
+        
         for(City c : getCities())    { res = res.add(c.getCheckerValue()); }
         for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue()); }
         for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); }
