@@ -501,7 +501,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         if(listJobs.isEmpty()) {
         	pnHoldingOne = new JPanel();
         	pnHoldingOne.setLayout(new FlowLayout(FlowLayout.LEFT));
-        	pnHoldingOne.add(new JLabel(ColonyManager.t("-")));
+        	pnHoldingOne.add(new JLabel(ColonyManager.t("진행 중인 작업이 없습니다.")));
         	
         	gridBagConst = new GridBagConstraints();
             gridBagConst.gridx = 0;

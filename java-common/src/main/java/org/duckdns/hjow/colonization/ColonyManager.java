@@ -670,8 +670,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     public static final long CYCLEGAP_DEFAULT = 249L;
     
-    public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###,###,###,###,##0");
-    public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("##0.00");
+    public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");
+    public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("#,##0.00");
     
     public static final int        TIME_MAX     = 2000000000;
     public static final BigInteger TIME_MAX_INT = new BigInteger(String.valueOf(TIME_MAX));

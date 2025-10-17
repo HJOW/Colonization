@@ -30,6 +30,7 @@ public interface Colony extends ColonyElements {
     public int getDifficulty();
     public long getMoney();
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String reasonTarget);
+    public BigInteger getMoneyTotals();
     public int getCredit();
     public void setCredit(int credit);
     public void resetAvailLoans();

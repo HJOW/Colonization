@@ -2,7 +2,6 @@ package org.duckdns.hjow.colonization.elements;
 
 import java.io.File;
 import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -56,6 +55,8 @@ public abstract class AbstractColony implements Colony {
     protected int  credit     = getStartCredit();
     protected long money      = getStartMoney();
     protected long tech       = 0L;
+    
+    protected BigInteger moneyOvers = BigInteger.ZERO; // 예산, long 타입 범위 초과분 저장 용도
     
     protected volatile BigInteger time   = BigInteger.ZERO;
     protected volatile BigInteger income = BigInteger.ZERO; // 1시간 (600 사이클) 당 인컴
@@ -296,7 +297,21 @@ public abstract class AbstractColony implements Colony {
         this.money = money;
     }
     
+    public BigInteger getMoneyOvers() {
+		return moneyOvers;
+	}
+    
+    /** 실질 금액을 반환 */
     @Override
+    public BigInteger getMoneyTotals() {
+    	return getMoneyOvers().add(new BigInteger(String.valueOf(getMoney())));
+    }
+
+	public void setMoneyOvers(BigInteger moneyOvers) {
+		this.moneyOvers = moneyOvers;
+	}
+
+	@Override
     public int getCredit() {
         return credit;
     }
@@ -311,10 +326,43 @@ public abstract class AbstractColony implements Colony {
     @Override
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String moreString) {
     	BigInteger calculates = new BigInteger(String.valueOf(getMoney()));
-    	BigInteger max        = new BigInteger(String.valueOf(Long.MAX_VALUE - 1));
+    	BigInteger max        = new BigInteger(String.valueOf(getMaxMoney1()));
     	
-    	calculates = calculates.add(new BigInteger(String.valueOf(money))); // 더하기
-    	if(calculates.compareTo(max) >= 0) calculates = max;                // long 최대값 도달 시 조치
+    	// 더하기
+    	calculates = calculates.add(new BigInteger(String.valueOf(money)));
+    	
+    	// 예산이 늘어나서 long 최대값 초과 시 예산2 필드로 절반 넘기기
+    	if(calculates.compareTo(max) >= 0) {
+    		// 합산 결과가 예산 1 (long 필드) 초과 위험으로 예산 2로 일부 금액 넘기기
+    		BigInteger halfs = calculates.divide(Constants.BIGINTEGER_2); // 계산 결과의 절반
+    		if(moneyOvers == null) moneyOvers = BigInteger.ZERO;
+    		
+    		// 예산2로 옮기기
+    		moneyOvers = moneyOvers.add(halfs);
+    		calculates = calculates.subtract(halfs); // 예산1 에서는 빼기
+    	}
+    	
+    	// 예산이 줄어들어서 long 필드의 절반 이하로 떨어졌으나, 예산2필드에 금액이 남아있는 경우
+    	//     long 필드 지원 가능한 값까지 옮기기
+    	if(calculates.compareTo(max.divide(Constants.BIGINTEGER_2)) >= 0 && getMoneyOvers().compareTo(BigInteger.ONE) > 0) {
+    		// 비교대상 1 - 예산1 -- 예산1 필드 최대값에서 예산1 현재 값을 뺄셈 (즉 예산1에 얼마나 더 들어갈 수 있는지의 값)
+    	    BigInteger comp1 = new BigInteger(String.valueOf( getMaxMoney1() )).subtract(new BigInteger(String.valueOf(getMoney())));
+    	    
+    	    BigInteger lefts = null;
+    	    if(getMoneyOvers().compareTo(comp1) >= 0) {
+    	    	// 예산2 값이 예산1 남은 공간보다 크면 - 예산1의 남은 공간만큼 최대한 옮기기
+    	    	lefts = comp1;
+    	    } else {
+    	    	// 예산2 값이 예산1 남은 공간보다 작으면 - 예산2 전부 예산1로 옮기기
+    	    	lefts = getMoneyOvers();
+    	    }
+    	    if(lefts != null) {
+    	    	// 예산1로 옮기기
+    	    	calculates = calculates.add(lefts);
+    	    	setMoneyOvers(getMoneyOvers().subtract(lefts));
+    	    }
+    	    
+    	}
     	
         setMoney(calculates.longValue());
         income = income.add(calculates);
@@ -701,6 +749,11 @@ public abstract class AbstractColony implements Colony {
     	return 1000;
     }
     
+    /** 예산 1 의 최대값 (이를 넘어가면 예산 2로 넘김) */
+    public final long getMaxMoney1() {
+    	return 9000000000000000000L;
+    }
+    
     @Override
     public short getDefenceType() {
         return ColonyManager.DEFENCETYPE_BUILDING;
@@ -729,16 +782,13 @@ public abstract class AbstractColony implements Colony {
     /** 상세 내역 */
     @Override
     public String getStatusString(ColonyManagerUI superInstance) {
-        DecimalFormat formatterInt  = new DecimalFormat("#,###,###,###,###,##0");
-        // DecimalFormat formatterRate = new DecimalFormat("##0.00");
-        
         StringBuilder desc = new StringBuilder("");
-        desc = desc.append("\t").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
-        desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(formatterInt.format(getMoney()));
-        desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(formatterInt.format(getTech()));
-        desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(formatterInt.format(getCityCount())).append(" / ").append(formatterInt.format(getMaxCityCount()));
-        desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(formatterInt.format(getCitizenCount()));
-        desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(formatterInt.format(getCredit())).append(" / ").append(formatterInt.format(getMaxCredit()));
+        desc = desc.append("\t").append("HP : ").append(ColonyManager.FORMATTER_INT.format(getHp())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxHp()));
+        desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(ColonyManager.FORMATTER_INT.format(getMoneyTotals()));
+        desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(ColonyManager.FORMATTER_INT.format(getTech()));
+        desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(ColonyManager.FORMATTER_INT.format(getCityCount())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxCityCount()));
+        desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(ColonyManager.FORMATTER_INT.format(getCitizenCount()));
+        desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(ColonyManager.FORMATTER_INT.format(getCredit())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxCredit()));
         
         return desc.toString().trim();
     }
@@ -769,6 +819,7 @@ public abstract class AbstractColony implements Colony {
         json.put("time", getTime().toString());
         json.put("credit", new Integer(getCredit()));
         json.put("version", getClientVersion());
+        if(getMoneyOvers() != null) json.put("money2", getMoneyOvers().toString());
         
         JsonArray list = new JsonArray();
         for(City c : getCities()) { list.add(c.toJson(details, col, c)); }
@@ -827,6 +878,11 @@ public abstract class AbstractColony implements Colony {
         try { setTech(Long.parseLong(json.get("tech").toString()));                   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); tech       = 0;               }
         try { setTime(new BigInteger(json.get("time").toString()));                   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); time       = BigInteger.ZERO; }
         try { setCredit(Integer.parseInt(json.get("credit").toString()));             } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); credit     = 500;             }
+        try {
+            if(json.containsKey("money2")) {
+            	moneyOvers = new BigInteger(json.get("money2").toString());
+            }
+        } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); moneyOvers = BigInteger.ZERO;             }
         try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.0.0"; }
         
         JsonArray list = null;
@@ -960,6 +1016,7 @@ public abstract class AbstractColony implements Colony {
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
         res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
         res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17));
+        res = res.add(getMoneyTotals());
         for(City c : getCities())    { res = res.add(c.getCheckerValue()); }
         for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue()); }
         for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); }
