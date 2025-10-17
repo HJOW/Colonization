@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.duckdns.hjow.colonization.stringtables.StringTableBuffer;
 import org.duckdns.hjow.commons.resource.BrokerStringTable;
 import org.duckdns.hjow.commons.resource.FileStringTable;
 import org.duckdns.hjow.commons.resource.StringTable;
@@ -19,18 +20,20 @@ public class ColonyStringTable extends BrokerStringTable {
 	public ColonyStringTable(String name, StringTable stringTable) { super(name, stringTable); }
 	
 	protected List<BigInteger> stringList = new Vector<BigInteger>();
+	protected StringTableBuffer buffer = new StringTableBuffer();
 
 	@Override
 	public synchronized String t(String originals) {
+		String res = buffer.work(originals);
+		if(res != null) return res;
+		
 		Properties prop = null;
 		if(originalInstance != null) prop = originalInstance.getData();
 		if(prop == null) {
 			prop = new Properties();
 		}
 		
-		String res = null;
 		if(prop.containsKey(originals)) res = prop.getProperty(originals);
-		
 		if(res == null) {
 			if(originalInstance != null) {
 				BigInteger uniqNo = DataUtil.getStringUniqueNumber(originals);
@@ -49,6 +52,7 @@ public class ColonyStringTable extends BrokerStringTable {
 			}
 		}
 		
+		buffer.register(originals, res);
 		return res;
 	}
 	

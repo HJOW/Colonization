@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization.ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -145,6 +146,10 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         pnHoldings.setLayout(new GridBagLayout());
         pnLeftStatus.add(new JScrollPane(pnHoldings));
         pnCenterSplit.add(pnLeftStatus, BorderLayout.WEST);
+        
+        Dimension dim = new Dimension(300, this.getHeight());
+        pnHoldings.setMinimumSize(dim);
+        pnHoldings.setPreferredSize(dim);
         
         pnGrid = new JPanel();
         pnGrid.setLayout(new BorderLayout());
@@ -484,41 +489,21 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     /** 작업중 항목 출력 */
     protected void refreshHoldingJobs() {
         pnHoldings.removeAll();
-        List<HoldingJob> listJobs = city.getHoldings();
+        List<HoldingJob> listJobs = new ArrayList<HoldingJob>();
+        listJobs.addAll(city.getHoldings());
         // pnHoldings.setLayout(new GridLayout(listJobs.size(), 1));
         GridBagConstraints gridBagConst;
         int rowNo = 0;
         
-        for(HoldingJob j : listJobs) {
-            JPanel pnHoldingOne = new JPanel();
-            pnHoldingOne.setLayout(new BorderLayout());
-            
-            JPanel pnLabel, pnStatus;
-            pnLabel  = new JPanel();
-            pnStatus = new JPanel();
-            pnLabel.setLayout(new FlowLayout(FlowLayout.LEFT));
-            pnStatus.setLayout(new FlowLayout(FlowLayout.RIGHT));
-            
-            pnHoldingOne.add(pnLabel , BorderLayout.CENTER);
-            pnHoldingOne.add(pnStatus, BorderLayout.EAST);
-            
-            String str = j.getCommandTitle();
-            if(str == null) str = j.getCommand();
-            if(j.getParameter() != null) str += " - " + j.getParameter();
-            
-            pnLabel.add(new JLabel(str));
-            
-            JProgressBar prog = new JProgressBar();
-            if(j.getCycleMax() <= 0 || j.getCycleLeft() < 0) {
-                prog.setIndeterminate(true);
-            } else {
-                prog.setMaximum(j.getCycleMax());
-                prog.setValue(j.getCycleMax() - j.getCycleLeft());
-            }
-            
-            pnStatus.add(prog);
-            
-            gridBagConst = new GridBagConstraints();
+        JPanel pnHoldingOne;
+        JPanel pnLabel, pnStatus;
+        JProgressBar prog;
+        if(listJobs.isEmpty()) {
+        	pnHoldingOne = new JPanel();
+        	pnHoldingOne.setLayout(new FlowLayout(FlowLayout.LEFT));
+        	pnHoldingOne.add(new JLabel(ColonyManager.t("-")));
+        	
+        	gridBagConst = new GridBagConstraints();
             gridBagConst.gridx = 0;
             gridBagConst.gridy = rowNo; rowNo++;
             gridBagConst.gridwidth = 1;
@@ -528,6 +513,46 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             gridBagConst.anchor = GridBagConstraints.NORTH;
             
             pnHoldings.add(pnHoldingOne, gridBagConst);
+        } else {
+        	for(HoldingJob j : listJobs) {
+                pnHoldingOne = new JPanel();
+                pnHoldingOne.setLayout(new BorderLayout());
+                
+                pnLabel  = new JPanel();
+                pnStatus = new JPanel();
+                pnLabel.setLayout(new FlowLayout(FlowLayout.LEFT));
+                pnStatus.setLayout(new FlowLayout(FlowLayout.RIGHT));
+                
+                pnHoldingOne.add(pnLabel , BorderLayout.CENTER);
+                pnHoldingOne.add(pnStatus, BorderLayout.EAST);
+                
+                String str = j.getCommandTitle();
+                if(str == null) str = j.getCommand();
+                if(j.getParameter() != null) str += " - " + j.getParameter();
+                
+                pnLabel.add(new JLabel(str));
+                
+                prog = new JProgressBar();
+                if(j.getCycleMax() <= 0 || j.getCycleLeft() < 0) {
+                    prog.setIndeterminate(true);
+                } else {
+                    prog.setMaximum(j.getCycleMax());
+                    prog.setValue(j.getCycleMax() - j.getCycleLeft());
+                }
+                
+                pnStatus.add(prog);
+                
+                gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = 0;
+                gridBagConst.gridy = rowNo; rowNo++;
+                gridBagConst.gridwidth = 1;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 1.0;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                pnHoldings.add(pnHoldingOne, gridBagConst);
+            }
         }
         
         gridBagConst = new GridBagConstraints();
