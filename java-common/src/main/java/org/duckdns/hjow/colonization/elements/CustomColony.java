@@ -43,6 +43,6 @@ public class CustomColony extends AbstractColony {
     }
     
     public static String getColonyClassDescription() {
-        return ColonyManager.t("모든 시설과 연구를 지원하는 커스텀 시나리오로, 정착지가 공식 인증되지 않습니다.");
+        return ColonyManager.t("모든 시설과 연구를 지원하는 커스텀 시나리오로,\n정착지가 공식 인증되지 않습니다.");
     }
 }

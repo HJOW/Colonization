@@ -67,24 +67,87 @@ public abstract class AbstractColony implements Colony {
     
     /** 기본 밸런스로 초기세팅하여 정착지 객체 생성 */
     public AbstractColony() {
-        checked = true;
-        resetResearches();
-        
-        hp     = getMaxHp();
-        credit = getStartCredit();
-        money  = getStartMoney();
+    	resetAll(0);
     }
     
     /** 배수를 적용하여 정착지 객체 생성, 초기 예산과 신용도에 배수 적용 */
-    public AbstractColony(double multiplyRate) {
+    public AbstractColony(int difficulty) {
         super();
+        resetAll(difficulty);
+    }
+    
+    /** 완전히 초기화, 난이도 지정 */
+    public void resetAll(int difficulty) {
+    	checked = true;
+        hp = getMaxHp();
+    	accountingData.clear();
+    	cities.clear();    
+    	enemies.clear();   
+    	holdings.clear(); 
+    	loanAvail.clear(); 
+    	loanHave.clear();  
+    	resetResearches();
+    	
+        setDifficulty(difficulty);    // 값 세팅하면서, 최대/최소도 이 메소드에서 적용
+        difficulty = getDifficulty(); // 다시 꺼내기 (값이 변경됨)
         
-        if(multiplyRate < 0.1) multiplyRate = 0.1;
+        double multiplyRate = 1.0;
+        Loan startLoan = null;
         
-        credit = (int)  Math.round(getStartCredit() * multiplyRate);
-        money  = (long) Math.round(getStartMoney()  * multiplyRate);
+        switch(difficulty) {
+        case 1:
+        	multiplyRate = 1.0;
+        	break;
+        case 2:
+        	multiplyRate = 0.5;
+        	break;
+        case 3:
+        	multiplyRate = 0.375;
+        	break;
+        case 4:
+        	multiplyRate = 0.25;
+        	break;
+        case 5:
+        	multiplyRate = 0.2;
+        	break;
+        case 6:
+        	multiplyRate = 0.15;
+        	break;
+        default:
+        	multiplyRate = 0.1;
+        	break;
+        }
+        
+        if(difficulty > 1) {
+            credit = (int)  Math.round(getStartCredit() * multiplyRate);
+            money  = (long) Math.round(getStartMoney()  * multiplyRate);
+        } else {
+        	credit = getStartCredit();
+            money  = getStartMoney();
+        }
+        
+        if(difficulty >= 4) {
+        	switch(difficulty) {
+            case 4:
+            	startLoan = new Loan(money / 2L, 36, 6);
+            case 5:
+            	startLoan = new Loan(money, 36, 7);
+            case 6:
+            	startLoan = new Loan(money + Math.round(money * 1.5), 36, 7);
+            case 7:
+            	startLoan = new Loan(money + Math.round(money * 1.75), 36, 9);
+            case 8:
+            	startLoan = new Loan(money * 2L, 36, 9);
+            default:
+            	startLoan = new Loan(money * 4L, 36, 9);
+            }
+        }
         
         if(credit > getMaxCredit()) credit = getMaxCredit();
+        if(startLoan != null) {
+        	loanHave.add(startLoan);
+        }
+        markAsRefresh(true);
     }
     
     /** 기본 이름 앞부분 */
@@ -217,6 +280,9 @@ public abstract class AbstractColony implements Colony {
     }
 
     public void setDifficulty(int difficulty) {
+    	if(difficulty < 1) difficulty = 1;
+        if(difficulty > 9) difficulty = 9;
+    	
         this.difficulty = difficulty;
     }
 
@@ -264,6 +330,8 @@ public abstract class AbstractColony implements Colony {
 
     @Override
     public void setTech(long tech) {
+    	if(tech >= Long.MAX_VALUE - Integer.MAX_VALUE - 1) tech = Long.MAX_VALUE - Integer.MAX_VALUE - 1;
+    	if(tech < 0L) tech = 0L;
         this.tech = tech;
     }
 
@@ -281,7 +349,7 @@ public abstract class AbstractColony implements Colony {
     /** 시작 예산 변환 */
     @Override
     public long getStartMoney() {
-    	return 1000000L;
+    	return 5000000L;
     }
     
     /** 시작 신용도 반환 */
@@ -890,7 +958,8 @@ public abstract class AbstractColony implements Colony {
     public BigInteger getCheckerValue() {
         BigInteger res = new BigInteger(String.valueOf(getKey()));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
-        res = res.add(new BigInteger(String.valueOf(getHp())));
+        res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
+        res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17));
         for(City c : getCities())    { res = res.add(c.getCheckerValue()); }
         for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue()); }
         for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); }

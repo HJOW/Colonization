@@ -779,12 +779,7 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 새 정착지 대화상자 응답 시 호출 */
-    public void onNewColonyTypeDecided(String type, NewColonyManager decider) {
-        onNewColonyTypeDecided(type, null, decider);
-    }
-    
-    /** 새 정착지 대화상자 응답 시 호출 */
-    public void onNewColonyTypeDecided(String type, String name, NewColonyManager decider) {
+    public void onNewColonyTypeDecided(String type, String name, int difficulty, NewColonyManager decider) {
         if(decider == null) return;
         Colony newCol = newColony(type, name);
         cbxColony.setSelectedItem(newCol);

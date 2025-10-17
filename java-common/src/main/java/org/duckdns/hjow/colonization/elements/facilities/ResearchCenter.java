@@ -85,7 +85,9 @@ public class ResearchCenter extends DefaultFacility {
         increases = (int) (increases * ( efficiency100 / 100.0 ));
         
         // 테크 수치 올리기
-        if(cycle % getTechPointIncreaseCycle() == 0) colony.setTech(colony.getTech() + increases);
+        if(cycle % getTechPointIncreaseCycle() == 0) {
+        	colony.setTech(colony.getTech() + increases);
+        }
         
         // 진행 중인 연구 처리
         if(getResearchKey() != 0L) {

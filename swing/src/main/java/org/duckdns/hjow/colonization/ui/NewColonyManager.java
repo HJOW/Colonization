@@ -12,6 +12,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,6 +29,7 @@ public class NewColonyManager implements Disposeable {
     protected GUIColonyManager man;
     protected JDialog dialog;
     protected JComboBox<ColonyInformation> cbxColTypes;
+    protected JComboBox<String> cbxDifficulty;
     protected JTextField tfName;
     protected JTextArea ta;
     
@@ -65,9 +67,9 @@ public class NewColonyManager implements Disposeable {
         tfName = new JTextField();
         pnUp.add(tfName, BorderLayout.NORTH);
         
-        Vector<ColonyInformation> list = new Vector<ColonyInformation>();
-        list.addAll(ColonyClassLoader.colonyInfos());
-        cbxColTypes = new JComboBox<ColonyInformation>(list);
+        Vector<ColonyInformation> listColTypes = new Vector<ColonyInformation>();
+        listColTypes.addAll(ColonyClassLoader.colonyInfos());
+        cbxColTypes = new JComboBox<ColonyInformation>(listColTypes);
         pnUp.add(cbxColTypes, BorderLayout.CENTER);
         
         cbxColTypes.addItemListener(new ItemListener() {   
@@ -80,6 +82,21 @@ public class NewColonyManager implements Disposeable {
         ta = new JTextArea();
         ta.setEditable(false);
         pnCenter.add(new JScrollPane(ta), BorderLayout.CENTER);
+        
+        JPanel pnDiff = new JPanel();
+        pnDiff.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pnDown.add(pnDiff, BorderLayout.WEST);
+        
+        JLabel lb = new JLabel(ColonyManager.t("난이도"));
+        pnDiff.add(lb);
+        
+        Vector<String> listDiff = new Vector<String>();
+        for(int idx=1; idx<=9; idx++) {
+        	listDiff.add(String.valueOf(idx));
+        }
+        cbxDifficulty = new JComboBox<String>(listDiff);
+        
+        pnDiff.add(cbxDifficulty);
         
         JPanel pnCtrl = new JPanel();
         pnCtrl.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -95,7 +112,10 @@ public class NewColonyManager implements Disposeable {
                 ColonyInformation info = (ColonyInformation) cbxColTypes.getSelectedItem();
                 if(info == null) { JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("해당 타입으로 정착지를 만들 수 없습니다.")); return; }
                 
-                man.onNewColonyTypeDecided(info.getName(), tfName.getText(), getSelf());
+                String strDiff = cbxDifficulty.getSelectedItem().toString();
+                int diff = Integer.parseInt(strDiff.trim());
+                
+                man.onNewColonyTypeDecided(info.getName(), tfName.getText(), diff, getSelf());
                 dispose();
             }
         });
