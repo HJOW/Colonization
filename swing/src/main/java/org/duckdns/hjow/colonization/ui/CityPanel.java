@@ -6,13 +6,13 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -24,7 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -45,20 +44,20 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     private static final long serialVersionUID = 3475480727850203183L;
     protected transient GUIColonyManager colonyManager;
     protected transient City city;
+    protected transient JTabbedPane tab;
     protected transient JProgressBar progHp;
     protected transient JTextArea ta;
     protected transient JTextField tfName, tfSearchCitizen, tfSearchFacility;
+    protected transient JPanel pnFrontRoot, pnFacRoot, pnCitiRoot;
     protected transient JPanel pnGrid, pnCitizens, pnFacilities, pnHoldings;
     protected transient JToolBar toolbarCity;
     protected transient JButton btnNewFac;
     protected transient JComboBox<String> cbxTax;
-    protected transient JSplitPane splits;
     protected transient GridBagLayout layoutFacility, layoutCitizen;
     protected transient NewFacilityManager dialogNewFac;
     protected transient List<FacilityPanel> facilityPns = new Vector<FacilityPanel>();
     protected transient List<CitizenPanel>  citizenPns  = new Vector<CitizenPanel>();
     
-    protected transient boolean flagSplitMoved = false;
     protected transient boolean flagEditable = true;
     
     public CityPanel() {
@@ -135,35 +134,40 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         progHp = new JProgressBar(JProgressBar.HORIZONTAL);
         pnHp.add(progHp);
         
-        splits = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        pnCenter.add(splits, BorderLayout.CENTER);
+        JPanel pnCenterSplit = new JPanel();
+        pnCenterSplit.setLayout(new BorderLayout());
+        pnCenter.add(pnCenterSplit, BorderLayout.CENTER);
         
-        pnGrid = new JPanel();
-        pnGrid.setLayout(new BorderLayout());
-        splits.setRightComponent(pnGrid);
-        
-        JPanel pnTextStatus = new JPanel();
-        pnTextStatus.setLayout(new GridLayout(2, 1));
-        
-        ta = new JTextArea();
-        ta.setEditable(false);
-        pnTextStatus.add(new JScrollPane(ta));
+        JPanel pnLeftStatus = new JPanel();
+        pnLeftStatus.setLayout(new BorderLayout());
         
         pnHoldings = new JPanel();
         pnHoldings.setLayout(new GridBagLayout());
-        pnTextStatus.add(new JScrollPane(pnHoldings));
+        pnLeftStatus.add(new JScrollPane(pnHoldings));
+        pnCenterSplit.add(pnLeftStatus, BorderLayout.WEST);
         
-        splits.setLeftComponent(pnTextStatus);
+        pnGrid = new JPanel();
+        pnGrid.setLayout(new BorderLayout());
+        pnCenterSplit.add(pnGrid, BorderLayout.CENTER);
         
-        JTabbedPane tab = new JTabbedPane();
+        tab = new JTabbedPane();
         pnGrid.add(tab, BorderLayout.CENTER);
         
-        JPanel pnFacRoot, pnCitiRoot;
-        pnFacRoot  = new JPanel();
-        pnCitiRoot = new JPanel();
+        pnFrontRoot = new JPanel();
+        pnFacRoot   = new JPanel();
+        pnCitiRoot  = new JPanel();
         
+        pnFrontRoot.setLayout(new BorderLayout());
         pnFacRoot.setLayout(new BorderLayout());
         pnCitiRoot.setLayout(new BorderLayout());
+        
+        JPanel pnTextStatus = new JPanel();
+        pnTextStatus.setLayout(new BorderLayout());
+        
+        ta = new JTextArea();
+        ta.setEditable(false);
+        pnTextStatus.add(new JScrollPane(ta), BorderLayout.CENTER);
+        pnFrontRoot.add(pnTextStatus, BorderLayout.CENTER);
         
         tfSearchCitizen  = new JTextField();
         tfSearchFacility = new JTextField();
@@ -183,8 +187,11 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         pnFacRoot.add(new JScrollPane(pnFacilities, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         pnCitiRoot.add(new JScrollPane(pnCitizens), BorderLayout.CENTER);
         
+        tab.add(ColonyManager.t("홈")  , pnFrontRoot);
         tab.add(ColonyManager.t("시설"), pnFacRoot);
         tab.add(ColonyManager.t("시민"), pnCitiRoot);
+        
+        tab.setSelectedComponent(pnFrontRoot);
         
         KeyAdapter eventSearch = new KeyAdapter() {
             @Override
@@ -257,6 +264,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     
     @Override
     public void refresh(final int cycle, City city, final Colony colony, final ColonyManager superInstance) {
+    	tab.setSelectedComponent(pnFrontRoot);
         if(city == null) { city = getCity(); }
         if(city == null) {
             tfName.setText("");
@@ -301,7 +309,9 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         rowNo = 0;
         colNo = 0;
         
-        if(sizes != facilityPns.size() || cycle == 0 || cycle % 36000 == 0) {
+        boolean fullRefresh = (sizes != facilityPns.size() || cycle == 0 || cycle % 36000 == 0);
+        
+        if(fullRefresh) {
             for(FacilityPanel p : facilityPns) { p.dispose(); }
             facilityPns.clear();
             pnFacilities.removeAll();
@@ -365,33 +375,35 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         }
         
         Vector<SingleAction> workList = new Vector<SingleAction>();
-        for(idx=0; idx<sizes; idx++) {
-        	SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {	
-				@Override
-				public void run(int r) throws Throwable {
-					FacilityPanel pn = facilityPns.get(this.index);
-		            Facility fac = facList.get(this.index);
-		            
-		            if(fac instanceof SupportGUIFacility) {
-		            	SupportGUIFacility guiFac = (SupportGUIFacility) fac;
-		                if(! guiFac.checkPanelAccept(pn) ) {
-		                    superInstance.reserveRefresh();
-		                }
-		            }
-		            
-		            pn.refresh(fac, this.city, colony, superInstance);
-				}
-			};
-        	
-        	workList.add(act);
+        if(fullRefresh) {
+            for(idx=0; idx<sizes; idx++) {
+            	SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {	
+    				@Override
+    				public void run(int r) throws Throwable {
+    					FacilityPanel pn = facilityPns.get(this.index);
+    		            Facility fac = facList.get(this.index);
+    		            
+    		            if(fac instanceof SupportGUIFacility) {
+    		            	SupportGUIFacility guiFac = (SupportGUIFacility) fac;
+    		                if(! guiFac.checkPanelAccept(pn) ) {
+    		                    superInstance.reserveRefresh();
+    		                }
+    		            }
+    		            
+    		            pn.refresh(fac, this.city, colony, superInstance);
+    				}
+    			};
+            	
+            	workList.add(act);
+            }
+            SimultaneousWork simulWork = new SimultaneousWork(workList);
+            simulWork.start();
         }
-        SimultaneousWork simulWork = new SimultaneousWork(workList);
-        simulWork.start();
         
         final List<Citizen> citizens = city.getCitizens();
         sizes = citizens.size();
         
-        if(citizens.size() != citizenPns.size() || cycle == 0 || cycle % 36000 == 0) {
+        if(fullRefresh) {
         	pnCitizens.removeAll();
             for(CitizenPanel p : citizenPns) { p.dispose(); }
             citizenPns.clear();
@@ -430,7 +442,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             gridBagConst.weighty = 1.0;
             
             pnCitizens.add(pnEmpty, gridBagConst);
-        } else if(sizes >= 1) {
+        }/* else if(sizes >= 1) {
         	workList = new Vector<SingleAction>();
             for(idx=0; idx<sizes; idx++) {
             	SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {	
@@ -445,19 +457,13 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             }
             simulWork = new SimultaneousWork(workList);
             simulWork.start();
-        }
+        } */
         
         // 작업중 항목 출력
         refreshHoldingJobs();
         
         // 도시 정보 출력
         ta.setText(city.getStatusString(colony, superInstance));
-        
-        // 가로 경계선 위치 조절
-        if(((GUIColonyManager) superInstance).isVisible()) {
-            if(! flagSplitMoved) splits.setDividerLocation(0.3);
-            flagSplitMoved = true;
-        }
         
         // 이 도시 HP가 0이면 전부 비활성화
         if(city.getHp() <= 0) {
@@ -537,10 +543,6 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     
     public void setEditable(boolean editable) {
         flagEditable = editable;
-        for(FacilityPanel p : facilityPns) {
-            if(p.getFacility(city).getHp() <= 0) p.setEditable(false);
-            else p.setEditable(editable); 
-        }
         
         cbxTax.setEnabled(editable);
         tfName.setEditable(editable);
@@ -549,6 +551,15 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         toolbarCity.setEnabled(editable);
         toolbarCity.setVisible(editable);
         // btnNewFac.setEnabled(editable);
+        tab.setEnabled(editable);
+        
+        List<FacilityPanel> pns = new ArrayList<FacilityPanel>();
+        pns.addAll(facilityPns);
+        for(FacilityPanel p : pns) {
+        	if(p == null) continue;
+            if(p.getFacility(city).getHp() <= 0) p.setEditable(false);
+            else p.setEditable(editable); 
+        }
         
         if(! editable) {
             if(dialogNewFac != null) dialogNewFac.dispose();
