@@ -250,6 +250,16 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         if(superInstance != null) superInstance.reserveRefresh();
     }
     
+    /** 정착지 기본정보만 새로고침 */
+    @Override
+    public void refreshColonyBasicMeta(Colony colony, ColonyManager superInstance) {
+    	progHp.setMaximum(colony.getMaxHp());
+        progHp.setValue(colony.getHp());
+    	tfColonyName.setText(colony.getName());
+    	tfColonyTime.setText(colony.getDateString());
+    	taStatus.setText(colony.getStatusString(superInstance));
+    }
+    
     @Override
     public void refresh(int cycle, City city, Colony colony, ColonyManager superInstance) { // city is null
         if(colony == null) {
@@ -260,8 +270,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             return;
         }
         
-        progHp.setMaximum(colony.getMaxHp());
-        progHp.setValue(colony.getHp());
+        refreshColonyBasicMeta(colony, superInstance);
         
         List<City> cities = colony.getCities();
         if(cycle == 0 || cycle % 36000 == 0 || tabCities.getTabCount() != cities.size()) {
@@ -285,10 +294,6 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                 p.refresh(cycle, cityCurrent, colony, superInstance);
             }
         }
-        
-        tfColonyName.setText(colony.getName());
-        tfColonyTime.setText(colony.getDateString());
-        taStatus.setText(colony.getStatusString(superInstance));
         
         pnHoldings.removeAll();
         pnResearches.removeAll();

@@ -1333,6 +1333,7 @@ public class GUIColonyManager extends ColonyManager {
         }
         
         if(cycle == 0 || cycleSkipRefr <= 1 || cycle % cycleSkipRefr == 0) colPn.refresh(cycle, null, col, this);
+        else colPn.refreshColonyBasicMeta(col, this);
         cardLocalLoading2.show(pnLocalSecond, "C1F");
     }
     
