@@ -12,19 +12,19 @@ import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.duckdns.hjow.commons.core.Disposeable;
-import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.resource.FileStringTable;
-import org.duckdns.hjow.commons.util.DataUtil;
-import org.duckdns.hjow.commons.util.FileUtil;
+import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
-import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
+import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
+import org.duckdns.hjow.commons.util.DataUtil;
+import org.duckdns.hjow.commons.util.FileUtil;
 
 /** Colonization 프로그램 핵심 클래스 */
 public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Serializable {
@@ -181,7 +181,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         		// TODO : 기본 데이터 불러오기
         		FileUtil.saveProperties(fileStringTable, newProp);
         	}
-        	FileStringTable stringTable = new FileStringTable(fileStringTable);
+        	BufferedFileStringTable stringTable = new BufferedFileStringTable(fileStringTable);
         	STRINGTABLE.setOriginalInstance(stringTable);
             
             // 설정들 중 클래스 관련 설정 적용
