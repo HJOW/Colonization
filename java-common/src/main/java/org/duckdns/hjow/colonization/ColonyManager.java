@@ -39,7 +39,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     protected transient volatile Vector<Colony> colonies = new Vector<Colony>();
     protected transient volatile int  selectedColony = -1;
     protected transient volatile int  cycle = 0;
-    protected transient volatile long cycleGap = 199L;
+    protected transient volatile long cycleGap = CYCLEGAP_DEFAULT;
     protected transient volatile long cycleGapEachCity     = 0L;
     protected transient volatile long cycleGapEachFacility = 0L;
     protected transient volatile long cycleRunningTime = 0L;
@@ -667,6 +667,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     public static final short DEFENCETYPE_NORMAL   = 0;
     public static final short DEFENCETYPE_SMALL    = 1;
     public static final short DEFENCETYPE_BUILDING = 9;
+    
+    public static final long CYCLEGAP_DEFAULT = 249L;
     
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###,###,###,###,##0");
     public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("##0.00");

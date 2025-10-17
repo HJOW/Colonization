@@ -344,7 +344,7 @@ public class GUIColonyManager extends ColonyManager {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 SimulationSpeed spd = (SimulationSpeed) cbxSpeed.getSelectedItem();
-                if(spd == null) cycleGap = 99L;
+                if(spd == null) cycleGap = CYCLEGAP_DEFAULT;
                 else cycleGap = spd.getThreadGap();
             }
         });

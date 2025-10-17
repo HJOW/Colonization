@@ -15,6 +15,7 @@ import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
 import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
@@ -52,20 +53,38 @@ public abstract class AbstractColony implements Colony {
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
     protected int  difficulty = 0;
     protected int  hp         = getMaxHp();
-    protected int  credit     = 500;
-    protected long money      = 1000000L;
+    protected int  credit     = getStartCredit();
+    protected long money      = getStartMoney();
     protected long tech       = 0L;
     
-    protected volatile BigInteger time = new BigInteger("0");
+    protected volatile BigInteger time   = BigInteger.ZERO;
+    protected volatile BigInteger income = BigInteger.ZERO; // 1시간 (600 사이클) 당 인컴
     protected transient List<AccountingData> accountingData = new Vector<AccountingData>();
     protected transient String originalFileName;
     protected transient boolean checked = false;
     
     protected transient String clientVersion = ColonyManager.getVersionString();
     
+    /** 기본 밸런스로 초기세팅하여 정착지 객체 생성 */
     public AbstractColony() {
         checked = true;
         resetResearches();
+        
+        hp     = getMaxHp();
+        credit = getStartCredit();
+        money  = getStartMoney();
+    }
+    
+    /** 배수를 적용하여 정착지 객체 생성, 초기 예산과 신용도에 배수 적용 */
+    public AbstractColony(double multiplyRate) {
+        super();
+        
+        if(multiplyRate < 0.1) multiplyRate = 0.1;
+        
+        credit = (int)  Math.round(getStartCredit() * multiplyRate);
+        money  = (long) Math.round(getStartMoney()  * multiplyRate);
+        
+        if(credit > getMaxCredit()) credit = getMaxCredit();
     }
     
     /** 기본 이름 앞부분 */
@@ -206,6 +225,7 @@ public abstract class AbstractColony implements Colony {
         return money;
     }
 
+    /** 낮은 단계의 setter 로 내부 사용 용도, 외부에서는 직접 호출 자제 ! */
     public void setMoney(long money) {
         this.money = money;
     }
@@ -218,13 +238,20 @@ public abstract class AbstractColony implements Colony {
     @Override
     public void setCredit(int credit) {
         this.credit = credit;
-        if(this.credit <    0) this.credit =    0;
-        if(this.credit > 1000) this.credit = 1000;
+        if(this.credit < 0) this.credit = 0;
+        if(this.credit > getMaxCredit()) this.credit = getMaxCredit();
     }
 
     @Override
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String moreString) {
-        setMoney(getMoney() + money);
+    	BigInteger calculates = new BigInteger(String.valueOf(getMoney()));
+    	BigInteger max        = new BigInteger(String.valueOf(Long.MAX_VALUE - 1));
+    	
+    	calculates = calculates.add(new BigInteger(String.valueOf(money))); // 더하기
+    	if(calculates.compareTo(max) >= 0) calculates = max;                // long 최대값 도달 시 조치
+    	
+        setMoney(calculates.longValue());
+        income = income.add(calculates);
         
         AccountingData data = new AccountingData(getTime(), money, reason, city, objType, moreString);
         addAccountingData(data);
@@ -245,71 +272,83 @@ public abstract class AbstractColony implements Colony {
         return time;
     }
     
+    /** 시작 년도 반환 */
+    @Override
+    public BigInteger getStartYear() {
+    	return Constants.BIGINTEGER_3000;
+    }
+    
+    /** 시작 예산 변환 */
+    @Override
+    public long getStartMoney() {
+    	return 1000000L;
+    }
+    
+    /** 시작 신용도 반환 */
+    @Override
+    public int getStartCredit() {
+    	return 500;
+    }
+    
     @Override
     public String getDateString() {
-        BigInteger originals = new BigInteger(getTime().toByteArray()).divide(BigInteger.TEN); // 10 으로 나눠야 1분 단위가 됨
-        BigInteger minutes, hour, date, month, year;
-        // seconds = new BigInteger(originals.toByteArray());
+        BigInteger originals = new BigInteger(getTime().toByteArray());
+        BigInteger seconds, minutes, hour, date, month, year;
+        seconds = new BigInteger(originals.toByteArray());
         // minutes = new BigInteger(BigInteger.ZERO.toByteArray());
-        minutes = new BigInteger(originals.toByteArray());
+        minutes = new BigInteger(BigInteger.ZERO.toByteArray());
         hour    = new BigInteger(BigInteger.ZERO.toByteArray());
         date    = new BigInteger(BigInteger.ONE.toByteArray());
         month   = new BigInteger(BigInteger.ONE.toByteArray());
-        year    = new BigInteger("3000");
-        
-        BigInteger std60, std30, std24, std12;
-        std60 = new BigInteger("60");
-        std30 = new BigInteger("30");
-        std24 = new BigInteger("24");
-        std12 = new BigInteger("12");
+        year    = getStartYear();
         
         // DIVIDE - MOD Calculation
-        // // Seconds
-        // if(seconds.compareTo(std60) >= 0) {
-        //     minutes = minutes.add(new BigInteger(seconds.toByteArray()).divide(std60));
-        //     seconds = seconds.mod(std60);
-        // }
+        // Seconds
+        if(seconds.compareTo(Constants.BIGINTEGER_10) >= 0) { // 여기서는 10초에 1분으로 계산
+            minutes = minutes.add(new BigInteger(seconds.toByteArray()).divide(Constants.BIGINTEGER_10));
+            seconds = seconds.mod(Constants.BIGINTEGER_10);
+        }
         
         // Minutes (Once again)
-        if(minutes.compareTo(std60) >= 0) {
-            hour = hour.add(new BigInteger(minutes.toByteArray()).divide(std60));
-            minutes = minutes.mod(std60);
+        if(minutes.compareTo(Constants.BIGINTEGER_60) >= 0) {
+            hour = hour.add(new BigInteger(minutes.toByteArray()).divide(Constants.BIGINTEGER_60));
+            minutes = minutes.mod(Constants.BIGINTEGER_60);
         }
         
         // Hour
-        if(hour.compareTo(std24) >= 0) {
-            date = date.add(new BigInteger(hour.toByteArray()).divide(std24));
-            hour = hour.mod(std24);
+        if(hour.compareTo(Constants.BIGINTEGER_24) >= 0) {
+            date = date.add(new BigInteger(hour.toByteArray()).divide(Constants.BIGINTEGER_24));
+            hour = hour.mod(Constants.BIGINTEGER_24);
         }
         
         // DIVIDE - Loop Calculation
         // Seconds
-        // while(seconds.compareTo(std60) >= 0) {
-        //     seconds = seconds.subtract(std60);
-        //     minutes = minutes.add(BigInteger.ONE);
-        // }
+        while(seconds.compareTo(Constants.BIGINTEGER_10) >= 0) {
+            seconds = seconds.subtract(Constants.BIGINTEGER_10);
+            minutes = minutes.add(BigInteger.ONE);
+        }
         
         // Minutes (Once again)
-        while(minutes.compareTo(std60) >= 0) {
-            minutes = minutes.subtract(std60);
+        while(minutes.compareTo(Constants.BIGINTEGER_60) >= 0) {
+            minutes = minutes.subtract(Constants.BIGINTEGER_60);
             hour = hour.add(BigInteger.ONE);
         }
         
         // Hour
-        while(hour.compareTo(std24) >= 0) {
-            hour = hour.subtract(std24);
+        while(hour.compareTo(Constants.BIGINTEGER_24) >= 0) {
+            hour = hour.subtract(Constants.BIGINTEGER_24);
             date = date.add(BigInteger.ONE);
         }
         
         // Date
-        while(date.compareTo(std30) > 0) {
-            date = date.subtract(std30);
+        while(date.compareTo(Constants.BIGINTEGER_30) > 0) {
+            date = date.subtract(Constants.BIGINTEGER_30);
             month = month.add(BigInteger.ONE);
         }
         
         // Month
-        while(month.compareTo(std12) > 0) {
-            month = month.subtract(std12);
+        while(month.compareTo(Constants.BIGINTEGER_12) > 0) {
+            month = month.subtract(Constants.BIGINTEGER_12);
             year = year.add(BigInteger.ONE);
         }
         
@@ -317,7 +356,7 @@ public abstract class AbstractColony implements Colony {
         StringBuilder res = new StringBuilder("");
         res = res.append(year.toString()).append("-").append(String.format("%02d", month.intValue())).append("-").append(String.format("%02d", date.intValue()));
         res = res.append(" ");
-        res = res.append(String.format("%02d", hour.intValue())).append(":").append(String.format("%02d", minutes.intValue())); // .append(":").append(String.format("%02d", seconds.intValue()));
+        res = res.append(String.format("%02d", hour.intValue())).append(":").append(String.format("%02d", minutes.intValue())).append(":").append(String.format("%02d", seconds.intValue()));
         
         return res.toString().trim();
     }
@@ -491,6 +530,11 @@ public abstract class AbstractColony implements Colony {
         	}
         }
         
+        // 1시간 마다 수익량 초기화
+        if(income.mod(Constants.BIGINTEGER_600).equals(BigInteger.ZERO)) {
+        	income = BigInteger.ZERO;
+        }
+        
         // 시간 지남
         time = time.add(BigInteger.ONE);
     }
@@ -584,6 +628,11 @@ public abstract class AbstractColony implements Colony {
         return 1000000;
     }
     
+    /** 신용도 최대값 반환 */
+    public final int getMaxCredit() {
+    	return 1000;
+    }
+    
     @Override
     public short getDefenceType() {
         return ColonyManager.DEFENCETYPE_BUILDING;
@@ -621,7 +670,7 @@ public abstract class AbstractColony implements Colony {
         desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(formatterInt.format(getTech()));
         desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(formatterInt.format(getCityCount())).append(" / ").append(formatterInt.format(getMaxCityCount()));
         desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(formatterInt.format(getCitizenCount()));
-        desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(formatterInt.format(getCredit())).append(" / ").append(formatterInt.format(1000));
+        desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(formatterInt.format(getCredit())).append(" / ").append(formatterInt.format(getMaxCredit()));
         
         return desc.toString().trim();
     }

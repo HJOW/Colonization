@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization;
 import java.util.Map;
 
 import org.duckdns.hjow.colonization.console.ConsoleColonization;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.commons.ui.LogComponent;
@@ -11,6 +12,8 @@ import org.duckdns.hjow.commons.util.DataUtil;
 public class Colonization extends ConsoleColonization implements GUIColonizationMainClass {
     private static final Colonization INSTANCES = new Colonization();
     public static void main(String[] args) {
+    	Constants.prepare();
+    	
         Map<String, String> argMap = ClassUtil.convertAppParams(args);
         INSTANCES.prepare(argMap);
         INSTANCES.run();
