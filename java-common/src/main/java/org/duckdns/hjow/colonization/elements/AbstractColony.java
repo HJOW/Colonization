@@ -68,6 +68,9 @@ public abstract class AbstractColony implements Colony {
     
     protected transient String clientVersion = ColonyManager.getVersionString();
     
+    protected transient Vector<SingleAction> actionsOnCycle = new Vector<SingleAction>();
+    protected transient SimultaneousWork workOnCycle;
+    
     /** 기본 밸런스로 초기세팅하여 정착지 객체 생성 */
     public AbstractColony() {
     	resetAll(0);
@@ -602,17 +605,17 @@ public abstract class AbstractColony implements Colony {
         }
         
         // 도시별 사이클 처리 (멀티쓰레드 처리)
-        Vector<SingleAction> actions = new Vector<SingleAction>();
+        actionsOnCycle.clear();
         for(final City c : getCities()) {
-            actions.add(new SingleAction() {	
+        	actionsOnCycle.add(new SingleAction() {	
 		        @Override
 		        public void run(int index) throws Throwable {
 		        	c.oneCycle(cycle, c, getSelf(), 100, colPanel);
 		        }
 		    });
         }
-        SimultaneousWork works = new SimultaneousWork(actions);
-        works.start();
+        workOnCycle = new SimultaneousWork(actionsOnCycle);
+        workOnCycle.start();
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
