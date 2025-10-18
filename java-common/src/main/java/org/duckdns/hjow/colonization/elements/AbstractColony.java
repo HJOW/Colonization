@@ -279,7 +279,8 @@ public abstract class AbstractColony implements Colony {
     public int getDifficulty() {
         return difficulty;
     }
-
+    
+    @Override
     public void setDifficulty(int difficulty) {
     	if(difficulty < 1) difficulty = 1;
         if(difficulty > 9) difficulty = 9;
@@ -1081,6 +1082,22 @@ public abstract class AbstractColony implements Colony {
     
     public static String getColonyClassName() {
         return "Colony";
+    }
+    
+    /** 난이도 배열 생성 */
+    protected static int[] createAvailableDifficulties(int min, int max) {
+    	int[] arr = new int[max - min+1];
+    	int now = min;
+    	for(int idx=0; idx<arr.length; idx++) {
+    		arr[idx] = now;
+    		now++;
+    	}
+    	return arr;
+    }
+    
+    /** 사용 가능한 난이도 목록 반환 */
+    public static int[] getAvailableDifficulties() {
+    	return createAvailableDifficulties(1, 9);
     }
     
     public static String getColonyClassTitle() {

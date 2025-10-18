@@ -7,8 +7,12 @@ public class ColonyInformation implements Serializable {
     private static final long serialVersionUID = -764866136990865870L;
     protected String name, description, title;
     protected Class<?> colonyClass;
+    protected int[] difficulties;
     
-    public ColonyInformation() {}
+    public ColonyInformation() {
+    	difficulties = new int[9];
+    	for(int idx=0; idx<difficulties.length; idx++) {  difficulties[idx] = (idx + 1); }
+    }
 
     public String getName() {
         return name;
@@ -42,7 +46,15 @@ public class ColonyInformation implements Serializable {
         this.colonyClass = colonyClass;
     }
     
-    @Override
+    public int[] getDifficulties() {
+		return difficulties;
+	}
+
+	public void setDifficulties(int[] difficulties) {
+		this.difficulties = difficulties;
+	}
+
+	@Override
     public String toString() {
         return getTitle();
     }

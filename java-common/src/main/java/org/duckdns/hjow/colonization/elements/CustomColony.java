@@ -38,6 +38,11 @@ public class CustomColony extends AbstractColony {
         return "CustomColony";
     }
     
+    /** 사용 가능한 난이도 목록 반환 */
+    public static int[] getAvailableDifficulties() {
+    	return createAvailableDifficulties(1, 9);
+    }
+    
     public static String getColonyClassTitle() {
         return ColonyManager.t("커스텀 정착지 시나리오");
     }

@@ -75,7 +75,7 @@ public class NewColonyManager implements Disposeable {
         cbxColTypes.addItemListener(new ItemListener() {   
             @Override
             public void itemStateChanged(ItemEvent e) {
-                refreshDesc();
+                refreshColonyInfo();
             }
         });
         
@@ -129,7 +129,7 @@ public class NewColonyManager implements Disposeable {
             }
         });
         
-        refreshDesc();
+        refreshColonyInfo();
     }
     
     protected JDialog getDialog() {
@@ -140,11 +140,25 @@ public class NewColonyManager implements Disposeable {
         return this;
     }
     
-    protected void refreshDesc() {
+    protected void refreshColonyInfo() {
         String desc = "";
         ColonyInformation info = (ColonyInformation) cbxColTypes.getSelectedItem();
         if(info != null) desc = info.getDescription();
         ta.setText(desc);
+        
+        
+        int[] diffs = info.getDifficulties();
+        String beforeDiff = cbxDifficulty.getSelectedItem() == null ? "1" : cbxDifficulty.getSelectedItem().toString();
+        boolean beforeValueExists = false;
+        
+        cbxDifficulty.removeAllItems();
+        for(int idx=0; idx<diffs.length; idx++) {
+        	String now = String.valueOf(diffs[idx]);
+        	cbxDifficulty.addItem(now);
+        	if(now.equals(beforeDiff)) beforeValueExists = true;
+        }
+        if(beforeValueExists) cbxDifficulty.setSelectedItem(beforeDiff);
+        else                  cbxDifficulty.setSelectedIndex(0);
     }
     
     public void open() {

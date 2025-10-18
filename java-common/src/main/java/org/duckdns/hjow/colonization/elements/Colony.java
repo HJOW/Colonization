@@ -28,6 +28,7 @@ public interface Colony extends ColonyElements {
     /** 총 인구 수 구하기 */
     public long getCitizenCount();
     public int getDifficulty();
+    public void setDifficulty(int difficulty);
     public long getMoney();
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String reasonTarget);
     public BigInteger getMoneyTotals();

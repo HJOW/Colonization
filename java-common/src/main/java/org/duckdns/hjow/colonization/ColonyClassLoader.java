@@ -46,6 +46,9 @@ public class ColonyClassLoader {
                 method = classOne.getMethod("getColonyClassDescription");
                 info.setDescription((String) method.invoke(null));
                 
+                method = classOne.getMethod("getAvailableDifficulties");
+                info.setDifficulties((int[]) method.invoke(null));
+                
                 info.setColonyClass(classOne);
                 if(! colonyInfoList.contains(info)) colonyInfoList.add(info);
             } catch (Exception e) {
