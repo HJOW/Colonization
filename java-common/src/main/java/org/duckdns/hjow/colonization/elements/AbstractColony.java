@@ -9,6 +9,8 @@ import java.util.zip.GZIPOutputStream;
 
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.stream.SimultaneousWork;
+import org.duckdns.hjow.commons.stream.SingleAction;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.AccountingData;
@@ -549,7 +551,7 @@ public abstract class AbstractColony implements Colony {
     }
 
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { // parameters are null
+    public void oneCycle(final int cycle, City city, Colony colony, int efficiency100, final ColonyPanel colPanel) { // city may be null
         int idx;
         colony = this;
         
@@ -599,10 +601,18 @@ public abstract class AbstractColony implements Colony {
             resetAvailLoans();
         }
         
-        // 도시별 사이클 처리
-        for(City c : getCities()) {
-            c.oneCycle(cycle, c, this, 100, colPanel);
+        // 도시별 사이클 처리 (멀티쓰레드 처리)
+        Vector<SingleAction> actions = new Vector<SingleAction>();
+        for(final City c : getCities()) {
+            actions.add(new SingleAction() {	
+		        @Override
+		        public void run(int index) throws Throwable {
+		        	c.oneCycle(cycle, c, getSelf(), 100, colPanel);
+		        }
+		    });
         }
+        SimultaneousWork works = new SimultaneousWork(actions);
+        works.start();
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
@@ -1078,6 +1088,11 @@ public abstract class AbstractColony implements Colony {
         for(Research r  : getResearches()) { r.markAsRefreshChildren(f);  }
         for(Loan     l  : getLoanAvail())  { l.markAsRefreshChildren(f);  }
         for(Loan     l  : getLoanHave())   { l.markAsRefreshChildren(f);  }
+    }
+    
+    /** 자기자신 반환 */
+    public Colony getSelf() {
+    	return this;
     }
     
     public static String getColonyClassName() {
