@@ -1,12 +1,12 @@
 package org.duckdns.hjow.colonization.elements.research.engineering;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class BasicEngineering extends Research {
     private static final long serialVersionUID = -2727850120481565932L;
@@ -25,29 +25,13 @@ public class BasicEngineering extends Research {
 
     public long   getMaxProgressStarts()       { return 900L; }
     public double getMaxProgressIncreaseRate() { return 1.5;  }
-
+    
     @Override
-    public boolean isResearchAvail(Colony col) {
-        boolean cond1 = false;
-        boolean cond2 = false;
-        
-        List<Research> researches = col.getResearches();
-        for(Research one : researches) {
-            
-            // 기초과학 레벨이 이 공학 레벨의 2배가 되어야 연구가능
-            if(one instanceof BasicScience) {
-                if(one.getLevel() >= (int)(getLevel() * 2)) cond1 = true;
-            }
-            
-            if(getLevel() >= 30) { // 레벨 30부터
-                // 기초인문학 레벨이 이 공학 레벨만큼 되어야 연구가능
-                if(one instanceof BasicHumanities) {
-                    if(one.getLevel() >= getLevel()) cond2 = true;
-                }
-            }
-        }
-        
-        return cond1 && cond2;
+    public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("BasicScience", 1, 2.0));
+    	list.add(new ResearchCondition("BasicHumanities", 1, 1.0, 30));
+    	return list;
     }
 
     @Override

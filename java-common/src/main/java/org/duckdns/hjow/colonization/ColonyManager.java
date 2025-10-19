@@ -568,8 +568,13 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     /** 전역 로그 출력 */
     public static void logGlobals(String msg) {
-        System.err.println(msg);
-        if(dialogGlobalLog != null) dialogGlobalLog.log(msg);
+        logGlobals(msg, 2);
+    }
+    
+    /** 전역 로그 출력 */
+    public static void logGlobals(String msg, int detailLevel) {
+        if(dialogGlobalLog != null) dialogGlobalLog.log(msg, detailLevel);
+        if(detailLevel <= 1 && dialogGlobalLog == null) System.err.println(msg);
     }
     
     /** 공격자의 대미지에 추가 연산 (랜덤성 부여, 속성 및 방어력, 상태 적용) */

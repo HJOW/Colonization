@@ -165,6 +165,11 @@ public abstract class AbstractColony implements Colony {
     public String getType() {
         return getColonyClassName();
     }
+    
+    @Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
 
     @Override
     public String getName() {

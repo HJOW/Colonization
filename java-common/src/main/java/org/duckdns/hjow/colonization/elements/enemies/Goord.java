@@ -11,6 +11,11 @@ public class Goord extends Enemy {
 	public String getName() {
 		return ColonyManager.t("고드");
 	}
+	
+	@Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
 
 	@Override
 	public short getDefenceType() {

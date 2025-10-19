@@ -27,6 +27,11 @@ public abstract class State implements ColonyElements {
     public void setKey(long key) {
         this.key = key;
     }
+    
+    @Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
 
     @Override
     public int getHp() {

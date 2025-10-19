@@ -38,6 +38,11 @@ public abstract class Product implements ColonyElements {
     public String getType() {
         return this.getClass().getSimpleName();
     }
+    
+    @Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
 
     @Override
     public int getHp() {

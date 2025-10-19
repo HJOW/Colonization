@@ -21,11 +21,6 @@ public class BasicScience extends Research {
     public double getMaxProgressIncreaseRate() { return 1.5;  }
 
     @Override
-    public boolean isResearchAvail(Colony col) {
-        return true;
-    }
-
-    @Override
     public String getTitle() {
         return ColonyManager.t("기초과학");
     }

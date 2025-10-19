@@ -1,12 +1,12 @@
 package org.duckdns.hjow.colonization.elements.research.energy;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class LightTech extends Research {
     private static final long serialVersionUID = -6737998466808533544L;
@@ -23,35 +23,16 @@ public class LightTech extends Research {
 
     public long   getMaxProgressStarts()       { return 600L; }
     public double getMaxProgressIncreaseRate() { return 1.7;  }
-
+    
     @Override
-    public boolean isResearchAvail(Colony col) {
-        boolean cond1 = false;
-        boolean cond2 = false;
-        boolean cond3 = false;
-        
-        List<Research> researches = col.getResearches();
-        for(Research one : researches) {
-            
-            // 기초과학 레벨이 이 연구 레벨의 5배가 되어야 연구가능 (최소 10)
-            if(one instanceof BasicScience) {
-                if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 5)) cond1 = true;
-                if(one.getLevel() < 10) cond1 = false;
-            }
-            
-            // 공학기초 레벨이 이 연구 레벨의 3배가 되어야 연구가능 (최소 6)
-            if(one instanceof BasicEngineering) {
-                if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 3)) cond2 = true;
-                if(one.getLevel() < 6) cond2 = false;
-            }
-            
-            // 에너지 레벨이 이 연구 레벨만큼 되어야 연구 가능
-            if(one instanceof EnergyTech) {
-                if(one.getLevel() >= (int) chooseMaxInt(getLevel(), 1)) cond3 = true;
-            }
-        }
-        
-        return cond1 && cond2 && cond3;
+    public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("BasicScience", 1, 5.0));
+    	list.add(new ResearchCondition("BasicScience", 10, 0.0));
+    	list.add(new ResearchCondition("BasicEngineering", 1, 3.0));
+    	list.add(new ResearchCondition("BasicEngineering", 6, 0.0));
+    	list.add(new ResearchCondition("EnergyTech", 1, 1.0));
+    	return list;
     }
 
     @Override

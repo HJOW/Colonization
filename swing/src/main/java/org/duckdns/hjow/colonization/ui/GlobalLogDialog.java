@@ -22,6 +22,7 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 public class GlobalLogDialog implements GlobalLogUI {
     protected JLogArea taLog;
     protected JDialog dialog;
+    protected int detailLevel = 0;
     protected boolean threadSwitch = true;
     
     public GlobalLogDialog(ColonyManager superInstance) {
@@ -77,7 +78,12 @@ public class GlobalLogDialog implements GlobalLogUI {
 
     @Override
     public void log(String msg) {
-        taLog.log(msg);
+        log(msg, 1);
+    }
+    
+    @Override
+    public void log(String msg, int level) {
+        if(detailLevel <= level) taLog.log(msg);
     }
 
     @Override
@@ -126,4 +132,12 @@ public class GlobalLogDialog implements GlobalLogUI {
         dialog.removeAll();
         dialog = null;
     }
+
+	public int getDetailLevel() {
+		return detailLevel;
+	}
+
+	public void setDetailLevel(int detailLevel) {
+		this.detailLevel = detailLevel;
+	}
 }

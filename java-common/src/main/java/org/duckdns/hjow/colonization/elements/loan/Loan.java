@@ -48,6 +48,11 @@ public class Loan implements ColonyElements {
         return key;
     }
     
+    @Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
+    
     public void setKey(long key) { this.key = key; }
 
     @Override

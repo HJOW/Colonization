@@ -1,7 +1,6 @@
 package org.duckdns.hjow.colonization.elements.research.humanities;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.Research;
 
 public class BasicHumanities extends Research {
@@ -22,10 +21,6 @@ public class BasicHumanities extends Research {
     public long   getMaxProgressStarts()       { return 600L; }
     public double getMaxProgressIncreaseRate() { return 1.5;  }
 
-    @Override
-    public boolean isResearchAvail(Colony col) {
-        return true;
-    }
 
     @Override
     public String getTitle() {

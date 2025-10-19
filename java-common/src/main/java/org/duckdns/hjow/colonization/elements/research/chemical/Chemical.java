@@ -1,11 +1,12 @@
 package org.duckdns.hjow.colonization.elements.research.chemical;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class Chemical extends Research {
     private static final long serialVersionUID = -5288682651598045570L;
@@ -22,24 +23,15 @@ public class Chemical extends Research {
 
     public long   getMaxProgressStarts()       { return 600L; }
     public double getMaxProgressIncreaseRate() { return 1.5;  }
-
+    
     @Override
-    public boolean isResearchAvail(Colony col) {
-        boolean cond1 = false;
-        
-        List<Research> researches = col.getResearches();
-        for(Research one : researches) {
-            
-            // 기초과학 레벨이 이 연구 레벨의 3배가 되어야 연구가능 (최소 6)
-            if(one instanceof BasicScience) {
-                if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 5)) cond1 = true;
-                if(one.getLevel() < 6) cond1 = false;
-            }
-        }
-        
-        return cond1;
+    public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("BasicScience", 1, 5.0));
+    	list.add(new ResearchCondition("BasicScience", 6, 1.0));
+    	return list;
     }
-
+    
     @Override
     public String getTitle() {
         return ColonyManager.t("화학");

@@ -71,6 +71,11 @@ public class Citizen implements ColonyElements {
     public void setName(String name) {
         this.name = name;
     }
+    
+    @Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {

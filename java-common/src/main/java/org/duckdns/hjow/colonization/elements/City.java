@@ -66,6 +66,11 @@ public class City implements ColonyElements {
     public String getName() {
         return name;
     }
+    @Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
+    
     public List<Facility> getFacility() {
         return facility;
     }

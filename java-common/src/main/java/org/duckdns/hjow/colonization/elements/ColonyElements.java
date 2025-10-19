@@ -15,6 +15,9 @@ public interface ColonyElements extends Serializable, Disposeable {
     /** 이 객체의 이름 반환. */
     public String getName();
     
+    /** 이 객체의 클래스 이름 반환 */
+    public String getClassName();
+    
     /** 현재의 HP 반환 */
     public int getHp();
     

@@ -1,12 +1,12 @@
 package org.duckdns.hjow.colonization.elements.research.chemical;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class NewMetals extends Research {
     private static final long serialVersionUID = -6806613925102489640L;
@@ -23,35 +23,15 @@ public class NewMetals extends Research {
 
     public long   getMaxProgressStarts()       { return 600L; }
     public double getMaxProgressIncreaseRate() { return 1.7;  }
-
+    
     @Override
-    public boolean isResearchAvail(Colony col) {
-        boolean cond1 = false;
-        boolean cond2 = false;
-        boolean cond3 = false;
-        
-        List<Research> researches = col.getResearches();
-        for(Research one : researches) {
-            
-            // 기초과학 레벨이 이 연구 레벨의 5배가 되어야 연구가능 (최소 10)
-            if(one instanceof BasicScience) {
-                if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 5)) cond1 = true;
-                if(one.getLevel() < 10) cond1 = false;
-            }
-            
-            // 화학 레벨이 이 연구 레벨의 2배가 되어야 연구가능
-            if(one instanceof Chemical) {
-                if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 2)) cond2 = true;
-            }
-            
-            // 공학기초 레벨이 이 연구 레벨의 7배가 되어야 연구가능 (최소 10)
-            if(one instanceof BasicEngineering) {
-                if(one.getLevel() >= (int)(chooseMaxInt(getLevel(), 1) * 7)) cond3 = true;
-                if(one.getLevel() < 10) cond3 = false;
-            }
-        }
-        
-        return cond1 && cond2 && cond3;
+    public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("BasicScience", 1, 5.0));
+    	list.add(new ResearchCondition("Chemical", 1, 2.0));
+    	list.add(new ResearchCondition("BasicEngineering", 1, 7.0));
+    	list.add(new ResearchCondition("BasicEngineering", 10, 0.0));
+    	return list;
     }
 
     @Override

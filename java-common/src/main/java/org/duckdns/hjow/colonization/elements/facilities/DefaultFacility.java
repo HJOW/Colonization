@@ -34,6 +34,11 @@ public abstract class DefaultFacility implements Facility {
         return getClass().getSimpleName();
     }
     
+    @Override
+    public final String getClassName() {
+    	return getClass().getSimpleName();
+    }
+    
     /** 이름 앞부분 */
     protected abstract String getDefaultNamePrefix();
     

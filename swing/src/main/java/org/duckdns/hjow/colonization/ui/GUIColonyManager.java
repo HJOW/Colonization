@@ -575,6 +575,11 @@ public class GUIColonyManager extends ColonyManager {
             public void itemStateChanged(ItemEvent e) {
                 flagDebugMode = ((JCheckBoxMenuItem)e.getSource()).isSelected();
                 lbRunningTime.setVisible(isDebugModeEnabled());
+                
+                if(dialogGlobalLog != null) {
+                	if(flagDebugMode) dialogGlobalLog.setDetailLevel(1);
+                    else              dialogGlobalLog.setDetailLevel(2);
+                }
             }
         });
         ((JCheckBoxMenuItem)menuItem).setSelected(isDebugModeEnabled());
@@ -660,7 +665,10 @@ public class GUIColonyManager extends ColonyManager {
         
         setEditable(true);
         
-        if(dialogGlobalLog == null) dialogGlobalLog = new GlobalLogDialog(this);
+        if(dialogGlobalLog == null) {
+        	dialogGlobalLog = new GlobalLogDialog(this);
+        	dialogGlobalLog.setDetailLevel(2);
+        }
         refreshArenaPanelIn(0);
     }
 
