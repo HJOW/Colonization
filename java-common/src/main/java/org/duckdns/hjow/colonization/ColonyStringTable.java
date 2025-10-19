@@ -22,6 +22,8 @@ public class ColonyStringTable extends BrokerStringTable {
 
 	@Override
 	public synchronized String t(String originals) {
+		if(originals == null) originals = "";
+		
 		Properties prop = null;
 		if(originalInstance != null) prop = originalInstance.getData();
 		if(prop == null) {
@@ -48,7 +50,6 @@ public class ColonyStringTable extends BrokerStringTable {
 				return originals;
 			}
 		}
-		
 		return res;
 	}
 	

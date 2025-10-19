@@ -13,7 +13,7 @@ public class Money extends Product {
 
 	@Override
 	public String getTitle() {
-		return ColonyManager.t("기타 재화");
+		return ColonyManager.t("자율 생산 (예산 수급)");
 	}
 
 }

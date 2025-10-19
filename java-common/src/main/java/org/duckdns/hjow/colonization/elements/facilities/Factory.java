@@ -12,6 +12,7 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
@@ -210,6 +211,19 @@ public abstract class Factory extends DefaultFacility implements Storage {
     /** 생산 중인 Product 의 Type 반환 */
     public String getProductType() {
         return productType;
+    }
+    
+    /** 생산 중인 Product 의 이름(Title) 반환 */
+    public String getProducingName() {
+    	Product p = getProducingSample();
+    	if(p == null) p = new Money();
+    	return p.getTitle();
+    }
+    
+    /** 생산 중인 Product 의 샘플 객체 만들어 반환 */
+    public Product getProducingSample() {
+    	if(getProductType() == null) return null;
+    	return Product.createProductInstance(getProductType());
     }
     
     /** 생산 중인 Product 의 원재료 리스트 반환 */

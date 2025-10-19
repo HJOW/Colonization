@@ -7,12 +7,6 @@ import java.util.List;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
-import org.duckdns.hjow.commons.json.JsonArray;
-import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.stream.SimultaneousWork;
-import org.duckdns.hjow.commons.stream.SingleAction;
-import org.duckdns.hjow.commons.util.FileUtil;
-import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -22,11 +16,11 @@ import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
 import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
-import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.ResidenceModule;
 import org.duckdns.hjow.colonization.elements.facilities.Restaurant;
 import org.duckdns.hjow.colonization.elements.facilities.SmallFactory;
+import org.duckdns.hjow.colonization.elements.facilities.SmallResearchCenter;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -37,6 +31,12 @@ import org.duckdns.hjow.colonization.events.Riot;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
+import org.duckdns.hjow.commons.json.JsonArray;
+import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.stream.SimultaneousWork;
+import org.duckdns.hjow.commons.stream.SingleAction;
+import org.duckdns.hjow.commons.util.FileUtil;
+import org.duckdns.hjow.commons.util.HexUtil;
 
 /** 정착지 구현 공통 클래스 */
 public abstract class AbstractColony implements Colony {
@@ -738,7 +738,7 @@ public abstract class AbstractColony implements Colony {
             city.getFacility().add(fac);
         }
         
-        fac = new ResearchCenter();
+        fac = new SmallResearchCenter();
         city.getFacility().add(fac);
         
         for(idx=0; idx<2; idx++) {

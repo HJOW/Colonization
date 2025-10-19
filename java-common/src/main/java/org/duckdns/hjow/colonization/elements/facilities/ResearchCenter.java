@@ -8,7 +8,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class ResearchCenter extends DefaultFacility {
+public abstract class ResearchCenter extends DefaultFacility {
     private static final long serialVersionUID = 9084689175126703785L;
     protected long researchKey = 0L;
     
@@ -76,13 +76,17 @@ public class ResearchCenter extends DefaultFacility {
         return 120;
     }
     
+    /** 기본 연구 진행 증가폭 */
+    protected int defaultIncreaseResearchProgress() {
+    	return 10;
+    }
+    
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
         super.oneCycle(cycle, city, colony, efficiency100, colPanel);
         
         // 업무 처리
-        int increases = 10;
-        increases = (int) (increases * ( efficiency100 / 100.0 ));
+        int increases = (int) (defaultIncreaseResearchProgress() * ( efficiency100 / 100.0 ));
         
         // 테크 수치 올리기
         if(cycle % getTechPointIncreaseCycle() == 0) {

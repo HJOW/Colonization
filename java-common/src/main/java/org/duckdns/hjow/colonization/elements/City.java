@@ -15,11 +15,14 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.BusinessCenter;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
+import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.facilities.NetworkFacility;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
+import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.TransportStation;
+import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -1064,6 +1067,25 @@ public class City implements ColonyElements {
         desc = desc.append("\n").append(ColonyManager.t("직장 수") + " : ").append(formatterInt.format(getJobsCount()));
         desc = desc.append("\n").append(ColonyManager.t("노숙자") + " : ").append(formatterInt.format(getHomelesses()));
         desc = desc.append("\n").append(ColonyManager.t("백수") + " : ").append(formatterInt.format(getJobSeekers()));
+        desc = desc.append("\n");
+        for(Facility f : getFacility()) {
+        	if(f instanceof Factory) {
+        		Factory fc = (Factory) f;
+        		if(fc.getProductType() != null) desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 [PRODUCTTYPE] 생산 중.").replace("[FACILITYNAME]", f.getName()).replace("[PRODUCTTYPE]", fc.getProducingName() ));
+        	}
+        }
+        desc = desc.append("\n");
+        for(Facility f : getFacility()) {
+        	if(f instanceof ResearchCenter) {
+        		ResearchCenter rc = (ResearchCenter) f;
+        		
+        		Research rNow = rc.getResearch(col);
+        		String rsName = " - ";
+        		if(rNow != null) rsName = rNow.getTitle();
+        		
+        		desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 연구 진행 중 : [RESEARCH] ([PROGRESS])").replace("[FACILITYNAME]", f.getName()).replace("[RESEARCH]", rsName).replace("[PROGRESS]", ColonyManager.FORMATTER_RATE.format(rNow.getProgressPercents()) + "%"));
+        	}
+        }
         
         return desc.toString().trim();
     }
