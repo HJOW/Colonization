@@ -365,6 +365,8 @@ public class GUIColonyManager extends ColonyManager {
         lbRunningTime = new JLabel();
         toolbarNorth.add(lbRunningTime);
         
+        toolbarNorth.add(new JPanel()); // 특정 LookAndFeel 에서 우측에 공간 남기기 위함
+        
         lbRunningTime.setVisible(false);
         
         pnCols       = new JPanel();

@@ -21,7 +21,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableModel;
 
 import org.duckdns.hjow.colonization.AccountingData;
@@ -48,7 +47,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     protected transient JProgressBar progHp;
     protected transient JTextField tfColonyName, tfColonyTime, tfIncomes;
     protected transient JTextArea taStatus, taLoans;
-    protected transient JToolBar toolbar;
+    protected transient JPanel toolbar;
     protected transient JButton btnNewCity, btnNewLoan;
     
     protected transient boolean flagEditable = true;
@@ -176,16 +175,9 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         progHp = new JProgressBar(JProgressBar.HORIZONTAL);
         pnTopRight.add(progHp);
         
-        JPanel pnTopDetail = new JPanel();
-        pnTopDetail.setLayout(new BorderLayout());
-        pnTopSouth.add(pnTopDetail, BorderLayout.CENTER);
-        
-        taStatus = new JTextArea();
-        taStatus.setEditable(false);
-        pnTopDetail.add(taStatus, BorderLayout.CENTER);
-        
-        toolbar = new JToolBar();
-        pnTopDetail.add(toolbar, BorderLayout.SOUTH);
+        toolbar = new JPanel();
+        toolbar.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pnTopCenter.add(toolbar, BorderLayout.CENTER);
         
         btnNewCity = new JButton(ColonyManager.t("새 도시 건설"));
         toolbar.add(btnNewCity);
@@ -206,6 +198,14 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                 onNewLoanRequested();
             }
         });
+        
+        JPanel pnTopDetail = new JPanel();
+        pnTopDetail.setLayout(new BorderLayout());
+        pnTopSouth.add(pnTopDetail, BorderLayout.CENTER);
+        
+        taStatus = new JTextArea();
+        taStatus.setEditable(false);
+        pnTopDetail.add(taStatus, BorderLayout.CENTER);
         
         pnLoanHaves.setLayout(new BorderLayout());
         taLoans = new JTextArea();

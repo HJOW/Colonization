@@ -51,7 +51,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     protected transient JTextField tfName, tfSearchCitizen, tfSearchFacility;
     protected transient JPanel pnFrontRoot, pnFacRoot, pnCitiRoot;
     protected transient JPanel pnGrid, pnCitizens, pnFacilities, pnHoldings;
-    protected transient JToolBar toolbarCity;
+    protected transient JPanel toolbarCity;
     protected transient JButton btnNewFac;
     protected transient JComboBox<String> cbxTax;
     protected transient GridBagLayout layoutFacility, layoutCitizen;
@@ -93,7 +93,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         
         JPanel pnTopInfos = new JPanel();
         pnTopInfos.setLayout(new FlowLayout(FlowLayout.LEFT));
-        pnTop.add(pnTopInfos, BorderLayout.CENTER);
+        pnTop.add(pnTopInfos, BorderLayout.WEST);
         
         JPanel pnHp = new JPanel();
         pnHp.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -216,9 +216,9 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         tfSearchCitizen.addActionListener(eventEnter);
         tfSearchFacility.addActionListener(eventEnter);
         
-        toolbarCity = new JToolBar();
-        // pnDown.add(toolbarCity, BorderLayout.CENTER);
-        pnTop.add(toolbarCity, BorderLayout.SOUTH);
+        toolbarCity = new JPanel();
+        toolbarCity.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pnTop.add(toolbarCity, BorderLayout.CENTER);
         
         btnNewFac = new JButton(ColonyManager.t("새 시설 건설"));
         toolbarCity.add(btnNewFac);
