@@ -31,7 +31,7 @@ public class BasicBuildingTech extends Research {
     	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
     	list.add(new ResearchCondition("BasicScience", 1, 3.0));
     	list.add(new ResearchCondition("BasicEngineering", 1, 2.0));
-    	list.add(new ResearchCondition("NewMetals", 1, 0.0, 10));
+    	list.add(new ResearchCondition("NewMetals", 10, 0.0));
     	list.add(new ResearchCondition("NewMetals", 1, 1.0, 25));
     	list.add(new ResearchCondition("BasicHumanities", 1, 1.0, 15));
     	return list;

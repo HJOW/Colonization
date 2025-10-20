@@ -3,5 +3,10 @@
         "name" : "개요",
         "contentType" : "text/html",
         "file" : "intro.html"
+    },
+    {
+        "name" : "연구",
+        "contentType" : "text/html",
+        "file" : "researches.html"
     }
 ]
