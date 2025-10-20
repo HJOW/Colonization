@@ -22,9 +22,12 @@ import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.biology.BasicBiology;
 import org.duckdns.hjow.colonization.elements.research.biology.BasicMedicalScience;
+import org.duckdns.hjow.colonization.elements.research.biology.GeneTech;
 import org.duckdns.hjow.colonization.elements.research.chemical.Chemical;
 import org.duckdns.hjow.colonization.elements.research.chemical.NewMetals;
+import org.duckdns.hjow.colonization.elements.research.chemical.Plasteel;
 import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
+import org.duckdns.hjow.colonization.elements.research.energy.FissionReactor;
 import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
@@ -82,6 +85,9 @@ public final class BundledPack extends DefaultPack {
         researchClasses.add(NewMetals.class);
         researchClasses.add(LightTech.class);
         researchClasses.add(Chemical.class);
+        researchClasses.add(GeneTech.class);
+        researchClasses.add(FissionReactor.class);
+        researchClasses.add(Plasteel.class);
         
         stateClasses.add(Influenza.class);
         stateClasses.add(ImmuneInfluenza.class);
