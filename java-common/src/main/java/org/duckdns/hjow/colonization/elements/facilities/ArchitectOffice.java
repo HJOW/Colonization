@@ -50,6 +50,11 @@ public class ArchitectOffice extends DefaultFacility {
     public int getDefaultCapacity() {
         return 0;
     }
+    
+    @Override
+    public int getSpaceSize() {
+    	return 3;
+    }
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {

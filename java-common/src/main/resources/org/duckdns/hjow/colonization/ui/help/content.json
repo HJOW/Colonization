@@ -8,5 +8,10 @@
         "name" : "연구",
         "contentType" : "text/html",
         "file" : "researches.html"
+    },
+    {
+        "name" : "시설",
+        "contentType" : "text/html",
+        "file" : "facilities.html"
     }
 ]

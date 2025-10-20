@@ -42,6 +42,11 @@ public class PowerStation extends PowerPlant {
         return 2;
     }
     
+    @Override
+    public int getSpaceSize() {
+    	return 10;
+    }
+    
     public static String getFacilityName() {
         return ColonyManager.t("발전 모듈");
     }

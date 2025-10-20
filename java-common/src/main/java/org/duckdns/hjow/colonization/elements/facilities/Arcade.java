@@ -31,6 +31,11 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     public int getPowerConsume() {
         return 10;
     }
+    
+    @Override
+    public int getSpaceSize() {
+    	return 5;
+    }
 
     @Override
     public int getWorkerSuitability(Citizen citizen) {

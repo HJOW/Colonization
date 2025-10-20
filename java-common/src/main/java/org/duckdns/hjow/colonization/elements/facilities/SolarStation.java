@@ -48,6 +48,11 @@ public class SolarStation extends PowerPlant {
         return 2;
     }
     
+    @Override
+    public int getSpaceSize() {
+    	return 20;
+    }
+    
     public static String getFacilityName() {
         return ColonyManager.t("광학 발전소");
     }

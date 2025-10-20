@@ -143,6 +143,11 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     public int getPowerConsume() {
         return 1;
     }
+    
+    @Override
+    public int getSpaceSize() {
+    	return 5;
+    }
 
     @Override
     public int getComportGrade() {

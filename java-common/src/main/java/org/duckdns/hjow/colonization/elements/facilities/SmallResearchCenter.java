@@ -23,6 +23,11 @@ public class SmallResearchCenter extends ResearchCenter {
         return 15;
     }
     
+    @Override
+    public int getSpaceSize() {
+    	return 7;
+    }
+    
     /** 기본 연구 진행 증가폭 */
     @Override
     protected int defaultIncreaseResearchProgress() {

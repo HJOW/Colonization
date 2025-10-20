@@ -32,6 +32,11 @@ public class SmallFactory extends Factory {
     }
     
     @Override
+    public int getSpaceSize() {
+    	return 10;
+    }
+    
+    @Override
     protected int getProfitCycle() {
         return 600;
     }
@@ -45,7 +50,7 @@ public class SmallFactory extends Factory {
     }
     
     public static String getFacilityDescription() {
-        return ColonyManager.t("기본적인 생산 시설입니다. 이 곳에서 생산된 물품으로 정착지의 재정에 수익이 발생합니다.");
+        return ColonyManager.t("기본적인 생산 시설입니다. 재료나 상품을 생산할 수도 있고, 외주 계약을 유치하여 수익을 낼 수도 있습니다.");
     }
     
     public static Long getFacilityPrice() {
