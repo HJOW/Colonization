@@ -11,6 +11,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
@@ -69,9 +71,28 @@ public class HelpDialog implements Disposeable {
     		taContent.setText("");
     	} else {
     		taContent.setContentType(sels.getContentType() == null ? "text/plain" : sels.getContentType());
+    		processStyle(sels);
     		taContent.setText(sels.getContent() == null ? "" : sels.getContent().trim());
     	}
     	taContent.setCaretPosition(0); // 맨 위로
+    }
+    
+    /** 스타일 적용 */
+    protected void processStyle(HelpContent content) {
+    	if(content.getContentType() == null) return;
+    	if(! content.getContentType().startsWith("text/html")) return;
+    	
+    	HTMLEditorKit kit = (HTMLEditorKit) taContent.getEditorKitForContentType(content.getContentType());
+    	if(kit == null) {
+    		kit = new HTMLEditorKit();
+    		taContent.setEditorKit(kit);
+    	}
+    	
+    	StyleSheet styles = kit.getStyleSheet();
+    	styles.addRule("h2 { font-size: 20px; font-family: 'NanumGothic'; }");
+    	styles.addRule("h3 { font-size: 16px; font-family: 'NanumGothic'; }");
+    	styles.addRule("div { font-size: 11px; margin-bottom: 20px; font-family: 'NanumGothic'; }");
+    	styles.addRule("p { font-size: 11px; font-family: 'NanumGothic'; }");
     }
     
     /** 대화 상자 열기 */

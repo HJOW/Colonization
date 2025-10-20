@@ -5,6 +5,11 @@
         "file" : "intro.html"
     },
     {
+        "name" : "시스템",
+        "contentType" : "text/html",
+        "file" : "system.html"
+    },
+    {
         "name" : "연구",
         "contentType" : "text/html",
         "file" : "researches.html"
