@@ -26,6 +26,7 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.HexUtil;
@@ -972,7 +973,7 @@ public class City implements ColonyElements {
     
     @Override
     public void fromJson(JsonObject json) {
-        if(! "City".equals(json.get("type"))) throw new RuntimeException("This object is not City type.");
+        if(! "City".equals(json.get("type"))) throw new KnownRuntimeException("This object is not City type.");
         try { setName(json.get("name").toString());                       } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setName("");  }
         try { key = Long.parseLong(json.get("key").toString());           } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setKey(ColonyManager.generateKey()); }
         try { setHp(Integer.parseInt(json.get("hp").toString()));         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setHp(0);     }

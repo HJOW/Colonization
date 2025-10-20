@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization;
 import java.io.Serializable;
 import java.math.BigInteger;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
@@ -95,7 +96,7 @@ public class AccountingData implements Serializable {
     }
     
     public void fromJson(JsonObject json) {
-        if(! "AccountingHistory".equals(json.get("type"))) throw new RuntimeException("This object is not AccountingHistory type.");
+        if(! "AccountingHistory".equals(json.get("type"))) throw new KnownRuntimeException("This object is not AccountingHistory type.");
         
         setTime(new BigInteger(json.get("time").toString()));
         setReason(json.get("reason").toString());

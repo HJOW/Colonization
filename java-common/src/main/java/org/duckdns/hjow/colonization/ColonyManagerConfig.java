@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -46,7 +47,7 @@ public class ColonyManagerConfig implements Serializable {
             }
             return child;
         } else {
-            throw new RuntimeException(ColonyManager.t("[KEY] 설정 항목은 Map 형식이 아닙니다.").replace("[KEY]", key));
+            throw new KnownRuntimeException(ColonyManager.t("[KEY] 설정 항목은 Map 형식이 아닙니다.").replace("[KEY]", key));
         }
     }
     
@@ -77,7 +78,7 @@ public class ColonyManagerConfig implements Serializable {
             }
             return newList;
         } else {
-            throw new RuntimeException(ColonyManager.t("[KEY] 설정 항목은 리스트 형식이 아닙니다.").replace("[KEY]", key));
+            throw new KnownRuntimeException(ColonyManager.t("[KEY] 설정 항목은 리스트 형식이 아닙니다.").replace("[KEY]", key));
         }
     }
     
@@ -114,7 +115,7 @@ public class ColonyManagerConfig implements Serializable {
         if(str.equals("y") || str.equals("yes") || str.equals("t") || str.equals("true" )) return true;
         if(str.equals("n") || str.equals("no" ) || str.equals("f") || str.equals("false")) return false;
         
-        throw new RuntimeException("This value " + obj + " is not a boolean !");
+        throw new KnownRuntimeException("This value " + obj + " is not a boolean !");
     }
     
     /** 설정 값을 int 로 취급하여 반환, 변환 불가능한 경우 예외가 발생함 */

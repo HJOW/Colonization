@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.states;
 import java.math.BigInteger;
 import java.util.List;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
@@ -87,7 +88,7 @@ public abstract class State implements ColonyElements {
     @Override
     public void fromJson(JsonObject json) {
         String clsName = getClass().getSimpleName();
-        if(! clsName.equals(json.get("type"))) throw new RuntimeException("This object is not " + clsName + " type.");
+        if(! clsName.equals(json.get("type"))) throw new KnownRuntimeException("This object is not " + clsName + " type.");
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
         setLefts(Long.parseLong(json.get("lefts").toString()));

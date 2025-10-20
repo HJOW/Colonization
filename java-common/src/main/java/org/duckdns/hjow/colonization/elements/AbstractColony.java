@@ -31,6 +31,7 @@ import org.duckdns.hjow.colonization.events.Riot;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.stream.SimultaneousWork;
@@ -537,7 +538,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public void addLoan(Loan l) {
-        if(! loanAvail.contains(l)) throw new RuntimeException(ColonyManager.t("이 대출은 현재 사용할 수 없습니다."));
+        if(! loanAvail.contains(l)) throw new KnownRuntimeException(ColonyManager.t("이 대출은 현재 사용할 수 없습니다."));
         loanAvail.remove(l);
         modifyingMoney(l.getAmount(), null, l, "Loan", ColonyManager.t("대출금"));
         loanHave.add(l);
@@ -708,7 +709,7 @@ public abstract class AbstractColony implements Colony {
     /** 새 도시를 생성 */
     @Override
     public City newCity() {
-        if(getCityCount() >= getMaxCityCount()) throw new RuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
+        if(getCityCount() >= getMaxCityCount()) throw new KnownRuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
         
         City city = new City();
         int idx;
@@ -889,7 +890,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public void fromJson(JsonObject json) {
-        if(! ("Colony".equals(json.get("type")) || getType().equals(json.get("type")))) throw new RuntimeException("This object is not Colony type.");
+        if(! ("Colony".equals(json.get("type")) || getType().equals(json.get("type")))) throw new KnownRuntimeException("This object is not Colony type.");
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         try { setHp(Integer.parseInt(json.get("hp").toString()));                     } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); hp         = 10;              }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
@@ -174,7 +175,7 @@ public abstract class Residence extends DefaultFacility implements Home {
 	}
 
 	@Override
-	public void store(Product p) { throw new RuntimeException("Cannot store here !"); }
+	public void store(Product p) { throw new KnownRuntimeException("Cannot store here !"); }
 
 	@Override
 	public int getStoredCount(String productType) {

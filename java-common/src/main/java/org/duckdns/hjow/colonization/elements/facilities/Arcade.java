@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 import java.util.ArrayList;
@@ -151,7 +152,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
 	}
 
 	@Override
-	public void store(Product p) { throw new RuntimeException("Cannot store here !"); }
+	public void store(Product p) { throw new KnownRuntimeException("Cannot store here !"); }
 
 	@Override
 	public int getStoredCount(String productType) {

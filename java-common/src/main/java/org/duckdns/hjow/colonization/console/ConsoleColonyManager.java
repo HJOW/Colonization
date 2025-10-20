@@ -10,6 +10,7 @@ import java.util.List;
 import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.commons.console.Choice;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
@@ -91,7 +92,7 @@ public class ConsoleColonyManager extends ColonyManager {
                 if(! DataUtil.parseBoolean(whileSwitch.toString().trim())) break;
                 
                 int sel = Integer.parseInt(line.trim()) - 1;
-                if(sel < 0 || sel >= choices.size()) throw new RuntimeException("목록에 없는 선택지입니다.");
+                if(sel < 0 || sel >= choices.size()) throw new KnownRuntimeException("목록에 없는 선택지입니다.");
                 
                 Choice choosed = choices.get(sel);
                 choosed.action();

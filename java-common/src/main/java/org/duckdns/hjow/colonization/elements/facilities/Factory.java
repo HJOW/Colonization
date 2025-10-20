@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -174,7 +175,7 @@ public abstract class Factory extends DefaultFacility implements Storage {
     
     @Override
     public void store(Product p) {
-        if(! isStoreAvail(p)) throw new RuntimeException("Cannot store here !");
+        if(! isStoreAvail(p)) throw new KnownRuntimeException("Cannot store here !");
         stored.add(p);
     }
     

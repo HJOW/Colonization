@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyManager;
 
@@ -125,7 +126,7 @@ public class HoldingJob implements Serializable {
     }
     
     public void fromJson(JsonObject json) {
-        if(! "HoldingJob".equals(json.get("type"))) throw new RuntimeException("This object is not HoldingJob type.");
+        if(! "HoldingJob".equals(json.get("type"))) throw new KnownRuntimeException("This object is not HoldingJob type.");
         key = Long.parseLong(json.get("key").toString());
         setCycleMax(Integer.parseInt(json.get("cycleMax").toString()));
         setCycleLeft(Integer.parseInt(json.get("cycleLeft").toString()));

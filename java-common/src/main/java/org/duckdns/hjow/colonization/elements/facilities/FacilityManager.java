@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 public class FacilityManager {
@@ -21,7 +22,7 @@ public class FacilityManager {
     
     public static Facility fromJson(JsonObject json) {
         String type = String.valueOf(json.get("type"));
-        if(type.equals("City") || type.equals("Colony")) throw new RuntimeException("This object is not a Facility type.");
+        if(type.equals("City") || type.equals("Colony")) throw new KnownRuntimeException("This object is not a Facility type.");
         
         Facility fac = null;
         

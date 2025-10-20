@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Vector;
 
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.HexUtil;
@@ -398,7 +399,7 @@ public class Citizen implements ColonyElements {
     }
     
     public void fromJson(JsonObject json) {
-        if(! "Citizen".equals(json.get("type"))) throw new RuntimeException("This object is not Citizen type.");
+        if(! "Citizen".equals(json.get("type"))) throw new KnownRuntimeException("This object is not Citizen type.");
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
