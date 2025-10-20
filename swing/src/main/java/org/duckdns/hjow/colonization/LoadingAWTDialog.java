@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -15,7 +16,7 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 /** 로딩용 임시 대화상자 팝업, AWT로 구현 (Swing과 동시사용 가능) */
 public class LoadingAWTDialog implements Runnable {
     protected Dialog dialog;
-    protected Label lbTitle, lbSub;
+    protected Label lbTitle, lbSub, lbVer;
     protected AWTProgressBar pnProg;
     protected volatile boolean threadSwitch = false;
     
@@ -24,8 +25,12 @@ public class LoadingAWTDialog implements Runnable {
     }
     
     public LoadingAWTDialog(String title, String sub) {
+    	this(title, sub, "");
+    }
+    
+    public LoadingAWTDialog(String title, String sub, String ver) {
         dialog = new Dialog(null, false);
-        dialog.setSize(300, 150);
+        dialog.setSize(300, 170);
         dialog.setTitle(title);
         dialog.setLayout(new BorderLayout());
         GUIUtil.centerWindow(dialog);
@@ -38,6 +43,7 @@ public class LoadingAWTDialog implements Runnable {
         
         lbTitle = new Label(title);
         lbSub   = new Label(sub);
+        lbVer   = new Label(ver);
         
         lbTitle.setFont(new Font("Consolas", Font.BOLD, 20));
         
@@ -50,26 +56,40 @@ public class LoadingAWTDialog implements Runnable {
         Panel pnMain = new Panel();
         dialog.add(pnMain, BorderLayout.CENTER);
         
+        pnMain.setBackground(new Color(50, 50, 50));
         pnMain.setLayout(new BorderLayout());
         
         Panel pnCenter, pnDown;
         pnCenter = new Panel();
         pnDown   = new Panel();
+        pnCenter.setBackground(new Color(50, 50, 50));
+        pnDown.setBackground(new Color(50, 50, 50));
         pnCenter.setLayout(new BorderLayout());
         pnDown.setLayout(new BorderLayout());
         pnMain.add(pnCenter, BorderLayout.CENTER);
         pnMain.add(pnDown  , BorderLayout.SOUTH);
         
-        Panel pnTitle, pnSub;
+        Panel pnTitle, pnSub, pnSub1, pnSub2;
         pnTitle = new Panel();
         pnSub   = new Panel();
         pnTitle.setLayout(new FlowLayout(FlowLayout.CENTER));
-        pnSub.setLayout(new FlowLayout(FlowLayout.CENTER));
+        pnSub.setLayout(new BorderLayout());
         pnCenter.add(pnTitle, BorderLayout.CENTER);
         pnCenter.add(pnSub, BorderLayout.SOUTH);
         
+        pnSub1 = new Panel();
+        pnSub2 = new Panel();
+        pnSub1.setLayout(new FlowLayout(FlowLayout.CENTER));
+        pnSub2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pnSub.add(pnSub1, BorderLayout.CENTER);
+        pnSub.add(pnSub2, BorderLayout.SOUTH);
+        
+        lbTitle.setForeground(new Color(200, 200, 200));
+        lbSub.setForeground(new Color(200, 200, 200));
+        lbVer.setForeground(new Color(170, 170, 170));
         pnTitle.add(lbTitle);
-        pnSub.add(lbSub);
+        pnSub1.add(lbSub);
+        pnSub2.add(lbVer);
         
         pnDown.add(pnProg, BorderLayout.CENTER);
     }

@@ -808,6 +808,7 @@ public abstract class AbstractColony implements Colony {
         desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(ColonyManager.FORMATTER_INT.format(getCityCount())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxCityCount()));
         desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(ColonyManager.FORMATTER_INT.format(getCitizenCount()));
         desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(ColonyManager.FORMATTER_INT.format(getCredit())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxCredit()));
+        if(checked) desc = desc.append("\t").append(ColonyManager.t("인증됨"));
         
         return desc.toString().trim();
     }

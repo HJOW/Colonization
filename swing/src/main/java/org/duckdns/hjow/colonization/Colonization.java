@@ -79,7 +79,7 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     
     /** 로딩 대화상자 열기 */
     public void openLoadingDialog() {
-        if(loadingScreen == null) loadingScreen = new LoadingAWTDialog("Colonization", "");
+        if(loadingScreen == null) loadingScreen = new LoadingAWTDialog("Colonization", "", "v" + ColonyManager.getVersionString());
         if(! loadingScreen.isVisible()) loadingScreen.open();
     }
     
