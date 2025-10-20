@@ -97,6 +97,13 @@
                                 <minVersion>1.8.0</minVersion>
                             </jre>
                             <outfile>${project.build.directory}/colonization.exe</outfile>
+                            <versionInfo>
+                                <productName>Colonization</productName>
+                                <originalFilename>colonization.exe</originalFilename>
+                                <language>KOREAN</language>
+                                <copyright>Copyright HJOW 2025</copyright>
+                                <fileDescription>Colonization game launcher for Windows.</fileDescription>
+                            </versionInfo>
                         </configuration>
                     </execution>
                 </executions>
