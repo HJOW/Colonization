@@ -51,6 +51,7 @@ import org.duckdns.hjow.colonization.SimulationSpeed;
 import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
 import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.ui.help.HelpDialog;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -83,10 +84,11 @@ public class GUIColonyManager extends ColonyManager {
     protected transient BenchmarkManager benchManager;
     protected transient GUITCPSimpleDaemonManager daemonManager;
     protected transient ConfigManager configManager;
+    protected transient HelpDialog helpDialog;
     protected transient ServletClientPanel servletClient;
     
     protected transient JMenuBar menuBar;
-    protected transient JMenu menuFile, menuAction;
+    protected transient JMenu menuFile, menuAction, menuHelp;
     protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig;
     
     protected transient Queue<RefreshRequest> queueRefreshes = new LinkedList<RefreshRequest>();
@@ -518,8 +520,6 @@ public class GUIColonyManager extends ColonyManager {
         
         menuFile.addSeparator();
         
-        configManager = new ConfigManager(this);
-        
         menuFileConfig = new JMenuItem(t("설정"));
         menuFile.add(menuFileConfig);
         menuFileConfig.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.CTRL_MASK));
@@ -618,9 +618,24 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
+        menuHelp = new JMenu(t("도움말"));
+        menuBar.add(menuHelp);
+        
+        menuItem = new JMenuItem(t("도움말"));
+        menuHelp.add(menuItem);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, KeyEvent.CTRL_MASK));
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	helpDialog.open();
+            }
+        });
+        
         benchManager  = new BenchmarkManager(frame);
         backupManager = new BackupManager(this);
         daemonManager = new GUITCPSimpleDaemonManager(frame);
+        helpDialog    = new HelpDialog(this);
+        configManager = new ConfigManager(this);
         
         refreshColonyContent();
     }
@@ -1008,6 +1023,9 @@ public class GUIColonyManager extends ColonyManager {
         
         if(configManager != null) configManager.dispose();
         configManager = null;
+        
+        if(helpDialog != null) helpDialog.dispose();
+        helpDialog = null;
         
         if(servletClient != null) servletClient.dispose();
         servletClient = null;
