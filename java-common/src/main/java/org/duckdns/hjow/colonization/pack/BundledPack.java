@@ -31,6 +31,8 @@ import org.duckdns.hjow.colonization.elements.research.energy.FissionReactor;
 import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
+import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionDrones;
+import org.duckdns.hjow.colonization.elements.research.engineering.Printing3DStructure;
 import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 import org.duckdns.hjow.colonization.elements.research.military.MilitaryTech;
 import org.duckdns.hjow.colonization.elements.states.ImmuneInfluenza;
@@ -88,6 +90,8 @@ public final class BundledPack extends DefaultPack {
         researchClasses.add(GeneTech.class);
         researchClasses.add(FissionReactor.class);
         researchClasses.add(Plasteel.class);
+        researchClasses.add(Printing3DStructure.class);
+        researchClasses.add(ConstructionDrones.class);
         
         stateClasses.add(Influenza.class);
         stateClasses.add(ImmuneInfluenza.class);
