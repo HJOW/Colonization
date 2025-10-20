@@ -1,11 +1,13 @@
-package org.duckdns.hjow.colonization.elements;
+package org.duckdns.hjow.colonization.elements.custom;
 
 import java.math.BigInteger;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.AbstractColony;
+import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 
-/** 커스텀 정착지 시나라오로, 모든 종류의 시설과 연구 지원 */
+/** 사용자 정의 정착지 시나라오로, 모든 종류의 시설과 연구 지원 */
 public class CustomColony extends AbstractColony {
 	private static final long serialVersionUID = -4732649232228406754L;
 

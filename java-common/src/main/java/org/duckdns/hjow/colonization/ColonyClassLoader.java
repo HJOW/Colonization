@@ -17,7 +17,7 @@ import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
-import org.duckdns.hjow.colonization.elements.CustomColony;
+import org.duckdns.hjow.colonization.elements.custom.CustomColony;
 import org.duckdns.hjow.colonization.pack.BundledPack;
 import org.duckdns.hjow.colonization.pack.Pack;
 
