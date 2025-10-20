@@ -77,6 +77,30 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.6.0</version>
+                <executions>
+                    <execution>
+                        <id>l4j</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <jar>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</jar>
+                            <dontWrapJar>false</dontWrapJar>
+                            <headerType>gui</headerType>
+                            <mainClass>org.duckdns.hjow.colonization.Colonization</mainClass>
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                            </jre>
+                            <outfile>${project.build.directory}/colonization.exe</outfile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 	    </plugins>
 	</build>
 </project>
