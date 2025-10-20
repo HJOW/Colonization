@@ -71,6 +71,7 @@ public class HelpDialog implements Disposeable {
     		taContent.setContentType(sels.getContentType() == null ? "text/plain" : sels.getContentType());
     		taContent.setText(sels.getContent() == null ? "" : sels.getContent().trim());
     	}
+    	taContent.setCaretPosition(0); // 맨 위로
     }
     
     /** 대화 상자 열기 */
@@ -80,8 +81,8 @@ public class HelpDialog implements Disposeable {
     	if(listHelp.getModel().getSize() >= 1) listHelp.setSelectedIndex(0);
     	onListSelected();
     	
-    	splits.setDividerLocation(0.3);
     	dialog.setVisible(true);
+    	splits.setDividerLocation(0.3);
     }
 
 	@Override
