@@ -46,9 +46,8 @@ public class ColonyStringTable extends BrokerStringTable {
 					}
 					stringList.add(uniqNo);
 				}
-				
-				return originals;
 			}
+			return originals;
 		}
 		return res;
 	}

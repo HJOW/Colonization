@@ -7,4 +7,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+      <servlet-name>ColonizationWeb</servlet-name>
+      <servlet-class>org.duckdns.hjow.colonization.web.servlets.MainServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>ColonizationWeb</servlet-name>
+      <url-pattern>/webjson</url-pattern>
+  </servlet-mapping>
 </web-app>

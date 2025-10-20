@@ -1083,7 +1083,10 @@ public class City implements ColonyElements {
         		String rsName = " - ";
         		if(rNow != null) rsName = rNow.getTitle();
         		
-        		desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 연구 진행 중 : [RESEARCH] ([PROGRESS])").replace("[FACILITYNAME]", f.getName()).replace("[RESEARCH]", rsName).replace("[PROGRESS]", ColonyManager.FORMATTER_RATE.format(rNow.getProgressPercents()) + "%"));
+        		String percents = "";
+        		if(rNow != null) percents = ColonyManager.FORMATTER_RATE.format(rNow.getProgressPercents()) + "%";
+        		
+        		desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 연구 진행 중 : [RESEARCH] ([PROGRESS])").replace("[FACILITYNAME]", f.getName()).replace("[RESEARCH]", rsName).replace("[PROGRESS]", percents));
         	}
         }
         

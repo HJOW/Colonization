@@ -3,11 +3,9 @@ package org.duckdns.hjow.colonization.web.servlets;
 import java.util.Hashtable;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/web/json")
 public class MainServlet extends CommonServlet {
     private static final long serialVersionUID = -1479626510774035644L;
     protected Hashtable<String, CommonServlet> children = new Hashtable<String, CommonServlet>();
@@ -15,6 +13,7 @@ public class MainServlet extends CommonServlet {
     @Override
     public void init() throws ServletException {
         super.init();
+        System.out.println("Colonization Web Servlet initializing...");
         
         CommonServlet sv;
         sv = new LoginServlet();
@@ -40,7 +39,7 @@ public class MainServlet extends CommonServlet {
         try {
             String remote = req.getRemoteAddr();
             
-            String svName = req.getParameter("svName");
+            String svName = getParameter(req, "svName");
             if(svName == null) { resp.sendError(404); return; }
             
             CommonServlet sv = children.get(svName);

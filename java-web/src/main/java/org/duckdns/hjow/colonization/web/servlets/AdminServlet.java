@@ -35,7 +35,7 @@ public class AdminServlet extends CommonServlet {
         responses.put("message", "");
         
         try {
-        	String svSub1 = req.getParameter("svSub");
+        	String svSub1 = getParameter(req, "svSub");
         	if(svSub1 == null) throw new RuntimeException("No sub keyword !");
         	
         	Account acc = checkLogined(req);
@@ -58,7 +58,7 @@ public class AdminServlet extends CommonServlet {
 	}
 
 	protected void sql(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
-		String sql = req.getParameter("sql");
+		String sql = getParameter(req, "sql");
 		if(sql == null) sql = "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS";
 		
 		ColonizationMapper mapper = DBUtil.openMapper();

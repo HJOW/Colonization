@@ -46,7 +46,7 @@ public class ColonyServlet extends CommonServlet {
         responses.put("message", "");
         
         try {
-        	String svSub1 = req.getParameter("svSub");
+        	String svSub1 = getParameter(req, "svSub");
         	if(svSub1 == null) throw new RuntimeException("No sub keyword !");
         	
         	Account acc = checkLogined(req);
@@ -79,7 +79,7 @@ public class ColonyServlet extends CommonServlet {
 	
 	protected void serviceList(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
 		JsonArray arr = new JsonArray();
-		String type = req.getParameter("type");
+		String type = getParameter(req, "type");
 		if(DataUtil.isEmpty(type)) type = "Colony";
 		
 		if("Colony".equalsIgnoreCase(type)) {
@@ -90,7 +90,7 @@ public class ColonyServlet extends CommonServlet {
 				arr.add(row);
 			}
 		} else {
-			String strKey = req.getParameter("colonyKey");
+			String strKey = getParameter(req, "colonyKey");
 			long key = Long.parseLong(strKey);
 			
 			Colony col = null;
@@ -106,7 +106,7 @@ public class ColonyServlet extends CommonServlet {
 	            return;
 			}
 			
-			strKey = req.getParameter("cityKey");
+			strKey = getParameter(req, "cityKey");
 			key = Long.parseLong(strKey);
 			
 			for(City ct : col.getCities()) {
@@ -137,7 +137,7 @@ public class ColonyServlet extends CommonServlet {
 	}
 
 	protected void serviceDetail(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
-		String strKey = req.getParameter("key");
+		String strKey = getParameter(req, "key");
 		long key = Long.parseLong(strKey);
 		
 		Colony col = null;
@@ -149,8 +149,8 @@ public class ColonyServlet extends CommonServlet {
 			responses.put("success", new Boolean(false));
             responses.put("message", "Not existing colony.");
 		} else {
-		    String strSubType = req.getParameter("subType"); // 정착지가 아닌, 정착지 내 일부 요소만 조회할 경우 지정 (선택사항)
-		    String strSubKey  = req.getParameter("subKey");  // subType 지정 시 같이 지정해야 함. 조회할 요소의 key
+		    String strSubType = getParameter(req, "subType"); // 정착지가 아닌, 정착지 내 일부 요소만 조회할 경우 지정 (선택사항)
+		    String strSubKey  = getParameter(req, "subKey");  // subType 지정 시 같이 지정해야 함. 조회할 요소의 key
 		    long subKey = 0L;
 		    if(DataUtil.isNotEmpty(strSubKey)) subKey = Long.parseLong(strSubKey);
 		    if(subKey != 0L && DataUtil.isNotEmpty(strSubType)) {
@@ -188,10 +188,10 @@ public class ColonyServlet extends CommonServlet {
 	}
 	
 	protected void serviceCycle(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
-		String strKey = req.getParameter("key");
+		String strKey = getParameter(req, "key");
 		long key = Long.parseLong(strKey);
 		
-		String strCyclePass = req.getParameter("cycle");
+		String strCyclePass = getParameter(req, "cycle");
 		if(strCyclePass == null || "".equals(strCyclePass)) strCyclePass = "1";
 		int cyclePass = Integer.parseInt(strCyclePass);
 		if(cyclePass > 10) cyclePass = 10;
@@ -219,9 +219,9 @@ public class ColonyServlet extends CommonServlet {
 	}
 	
 	protected void serviceRename(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
-		String type = req.getParameter("type");
-		String name = req.getParameter("name");
-		String strKey = req.getParameter("key");
+		String type = getParameter(req, "type");
+		String name = getParameter(req, "name");
+		String strKey = getParameter(req, "key");
 		long key = Long.parseLong(strKey);
 		
 		if("Colony".equalsIgnoreCase(type)) {
@@ -273,14 +273,14 @@ public class ColonyServlet extends CommonServlet {
 	}
 	
 	protected void serviceNew(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
-		String strKey = req.getParameter("colony");
+		String strKey = getParameter(req, "colony");
 		long colKey = Long.parseLong(strKey);
 		
-		String type  = req.getParameter("type");
-		String name  = req.getParameter("name");
+		String type  = getParameter(req, "type");
+		String name  = getParameter(req, "name");
 		
 		if("Facility".equalsIgnoreCase(type)) {
-			strKey = req.getParameter("city");
+			strKey = getParameter(req, "city");
 			long cityKey = Long.parseLong(strKey);
 			
 			FacilityInformation info = FacilityManager.getFacilityInformation(name);
@@ -365,7 +365,7 @@ public class ColonyServlet extends CommonServlet {
             }
             if(col == null) throw new RuntimeException("No colony found.");
             
-            strKey = req.getParameter("loan");
+            strKey = getParameter(req, "loan");
             long loanKey = Long.parseLong(strKey);
             
             Loan loan = null;
@@ -389,16 +389,16 @@ public class ColonyServlet extends CommonServlet {
 	}
 	
 	protected void serviceWork(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
-		String strKey = req.getParameter("colony");
+		String strKey = getParameter(req, "colony");
 		long colKey = Long.parseLong(strKey);
 		
-		strKey = req.getParameter("city");
+		strKey = getParameter(req, "city");
 		long cityKey = Long.parseLong(strKey);
 		
-		strKey = req.getParameter("facility");
+		strKey = getParameter(req, "facility");
 		long facKey = Long.parseLong(strKey);
 		
-		String name  = req.getParameter("name");
+		String name  = getParameter(req, "name");
 		
 		Colony col = null;
 		for(Colony c : acc.getColonies()) {

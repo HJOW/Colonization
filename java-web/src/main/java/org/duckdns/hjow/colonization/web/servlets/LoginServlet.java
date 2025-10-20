@@ -31,10 +31,10 @@ public class LoginServlet extends CommonServlet {
         responses.put("result", new Boolean(false));
         
         try {
-        	String svSub1 = req.getParameter("svSub");
+        	String svSub1 = getParameter(req, "svSub");
         	if(svSub1 == null) throw new RuntimeException("No sub keyword !");
         	if(svSub1.equalsIgnoreCase("login")) {
-        		String strLoginPacket1 = req.getParameter("login");
+        		String strLoginPacket1 = getParameter(req, "login");
                 String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
                 
                 JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
@@ -80,7 +80,7 @@ public class LoginServlet extends CommonServlet {
                 responses.put("message", "");
         	} else if(svSub1.equals("check")) {
         		String jwtMaybe = req.getHeader("jwt");
-        		if(jwtMaybe == null || "".equals(jwtMaybe)) jwtMaybe = req.getParameter("jwt");
+        		if(jwtMaybe == null || "".equals(jwtMaybe)) jwtMaybe = getParameter(req, "jwt");
         		if(jwtMaybe == null || "".equals(jwtMaybe)) {
         			responses.put("success", new Boolean(false));
                     responses.put("message", "No JWT token !");
@@ -102,7 +102,7 @@ public class LoginServlet extends CommonServlet {
         			}
         		}
         	} else if(svSub1.equals("join")) {
-        		String strLoginPacket1 = req.getParameter("login");
+        		String strLoginPacket1 = getParameter(req, "login");
                 String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
                 
                 JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);

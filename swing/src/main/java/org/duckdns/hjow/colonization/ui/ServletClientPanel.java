@@ -35,6 +35,7 @@ import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
+import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.commons.util.NetUtil;
 
 public class ServletClientPanel extends JPanel implements Disposeable {
@@ -541,12 +542,17 @@ public class ServletClientPanel extends JPanel implements Disposeable {
     		parameters.put("svName", "login");
     		parameters.put("svSub" , "login");
     		
+    		JsonObject loginPacket = new JsonObject();
+    		
     		this.id = tfLoginId.getText();
-    		parameters.put("id" , this.id);
+    		loginPacket.put("id", this.id);
     		
     		char[] charPw = tfLoginPw.getPassword();
     		String strPw  = new String(charPw);
-    		parameters.put("pw" , strPw);
+    		loginPacket.put("pw", strPw);
+    		
+    		String loginPacketContent = loginPacket.toJSON();
+    		parameters.put("login" , HexUtil.encodeString(loginPacketContent));
     		    	
     		String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
     		JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
@@ -642,15 +648,20 @@ public class ServletClientPanel extends JPanel implements Disposeable {
     		parameters.put("svName", "login");
     		parameters.put("svSub" , "join");
     		
+    		JsonObject loginPacket = new JsonObject();
+    		
     		this.id = tfJoinId.getText();
-    		parameters.put("id" , this.id);
+    		loginPacket.put("id", this.id);
     		
     		char[] charPw = tfJoinPw.getPassword();
     		String strPw  = new String(charPw);
-    		parameters.put("pw" , strPw);
+    		loginPacket.put("pw", strPw);
     		
     		String nm = tfJoinName.getText();
-    		parameters.put("name" , nm);
+    		loginPacket.put("name", nm);
+    		
+    		String loginPacketContent = loginPacket.toJSON();
+    		parameters.put("login" , HexUtil.encodeString(loginPacketContent));
     		    	
     		String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
     		JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
