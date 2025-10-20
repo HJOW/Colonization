@@ -215,6 +215,7 @@ public class City implements ColonyElements {
         }
         return max;
     }
+    /** 세금 수치 반환 (%) */
     public int getTax() {
         return tax;
     }
@@ -405,6 +406,13 @@ public class City implements ColonyElements {
         // 임금 처리
         for(Citizen c : f.getWorkingCitizens(this, colony)) {
             long sal = f.getSalary(this, colony);
+            
+            // 세금 떼기
+            double tax = getTax() / 100.0;
+            long taxAmount = (long) Math.floor(sal * tax);
+            sal -= taxAmount;
+            
+            // 예산에서 빼서 시민에게 주기
             colony.modifyingMoney( sal * (-1), this, f, "Salary", c.getName());
             c.setMoney(c.getMoney() + sal);
         }
