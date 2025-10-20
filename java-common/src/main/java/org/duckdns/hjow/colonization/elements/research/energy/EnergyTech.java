@@ -19,7 +19,7 @@ public class EnergyTech extends Research {
     }
 
     public long   getMaxProgressStarts()       { return 600L; }
-    public double getMaxProgressIncreaseRate() { return 1.5;  }
+    public double getMaxProgressIncreaseRate() { return 1.1;  }
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {

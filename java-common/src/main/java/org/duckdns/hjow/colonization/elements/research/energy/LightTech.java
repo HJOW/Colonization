@@ -22,7 +22,7 @@ public class LightTech extends Research {
     }
 
     public long   getMaxProgressStarts()       { return 600L; }
-    public double getMaxProgressIncreaseRate() { return 1.7;  }
+    public double getMaxProgressIncreaseRate() { return 1.2;  }
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {

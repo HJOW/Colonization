@@ -24,7 +24,7 @@ public class MilitaryTech extends Research {
     }
 
     public long   getMaxProgressStarts()       { return 800L; }
-    public double getMaxProgressIncreaseRate() { return 1.5;  }
+    public double getMaxProgressIncreaseRate() { return 1.1;  }
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
