@@ -166,6 +166,7 @@ public class CDOCViewer implements Disposeable {
     
     /** 창 띄우기 */
     public void open() {
+    	file = null;
     	ta.setText("");
     	taPreview.setText("");
     	cbx.setSelectedIndex(0);
@@ -175,6 +176,7 @@ public class CDOCViewer implements Disposeable {
     
     /** 창 닫기 */
     public void close() {
+    	file = null;
     	dialog.setVisible(false);
     	ta.setText("");
     	taPreview.setText("");
@@ -190,6 +192,11 @@ public class CDOCViewer implements Disposeable {
     	}
     	
     	try {
+    		String nameLower = file.getName().toLowerCase();
+	        if(! nameLower.endsWith("." + CompressedDocument.FILE_EXT)) {
+	        	file = new File(file.getAbsolutePath() + "." + CompressedDocument.FILE_EXT);
+	        }
+    		
     	    CompressedDocument doc = new CompressedDocument();
     	    doc.setContentType(cbx.getSelectedItem().toString());
     	    doc.setContent(ta.getText());
@@ -206,6 +213,11 @@ public class CDOCViewer implements Disposeable {
 		file = chooserCDoc.getSelectedFile();
     	
     	try {
+    		String nameLower = file.getName().toLowerCase();
+	        if(! nameLower.endsWith("." + CompressedDocument.FILE_EXT)) {
+	        	file = new File(file.getAbsolutePath() + "." + CompressedDocument.FILE_EXT);
+	        }
+    		
     	    CompressedDocument doc = new CompressedDocument();
     	    doc.setContentType(cbx.getSelectedItem().toString());
     	    doc.setContent(ta.getText());
