@@ -5,9 +5,9 @@ import java.lang.reflect.Method;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 시설 정보 */

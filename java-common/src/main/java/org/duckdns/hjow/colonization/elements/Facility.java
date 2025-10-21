@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.states.State;
 
 /** 시설 클래스임을 나타내는 인터페이스 */

@@ -1,4 +1,4 @@
-package org.duckdns.hjow.colonization.elements;
+package org.duckdns.hjow.colonization.elements.city;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -12,6 +12,11 @@ import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.elements.Citizen;
+import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.BusinessCenter;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
@@ -32,7 +37,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.HexUtil;
 
 /** 도시 구현 클래스 */
-public class City implements ColonyElements {
+public abstract class City implements ColonyElements {
     private static final long serialVersionUID = -8442328554683565064L;
     protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;
@@ -945,6 +950,7 @@ public class City implements ColonyElements {
         json.put("hp", String.valueOf(getHp()));
         json.put("tax", new Integer(getTax()));
         json.put("spaces", new Integer(getSpaces()));
+        json.put("className", getClassName());
         
         JsonArray list = new JsonArray();
         for(Facility f : getFacility()) { list.add(f.toJson(details, col, city)); }

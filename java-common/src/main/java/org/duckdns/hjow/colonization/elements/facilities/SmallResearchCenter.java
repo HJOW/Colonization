@@ -2,8 +2,8 @@ package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 
 public class SmallResearchCenter extends ResearchCenter {
 	private static final long serialVersionUID = -6131743828237724751L;

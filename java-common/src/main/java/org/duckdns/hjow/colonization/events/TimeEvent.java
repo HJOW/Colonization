@@ -3,9 +3,9 @@ package org.duckdns.hjow.colonization.events;
 import java.io.Serializable;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 /** 랜덤 발생 이벤트 공통 부분을 정의하는 상위 클래스 */

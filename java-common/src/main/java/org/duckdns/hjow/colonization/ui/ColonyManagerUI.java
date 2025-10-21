@@ -1,8 +1,8 @@
 package org.duckdns.hjow.colonization.ui;
 
 import org.duckdns.hjow.colonization.ColonizationMainClass;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 
 public interface ColonyManagerUI {
     /** 해당 키를 갖는 정착지 찾아 반환 (목록에 없으면 null 반환) */

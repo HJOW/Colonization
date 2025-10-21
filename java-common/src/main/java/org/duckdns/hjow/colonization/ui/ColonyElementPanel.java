@@ -1,8 +1,8 @@
 package org.duckdns.hjow.colonization.ui;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 
 public interface ColonyElementPanel {
     public void setEditable(boolean editable);

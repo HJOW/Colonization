@@ -8,6 +8,7 @@ import java.util.List;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.city.City;
 
 /** 진행중인 작업 하나를 나타내는 객체를 위한 클래스 */
 public class HoldingJob implements Serializable {

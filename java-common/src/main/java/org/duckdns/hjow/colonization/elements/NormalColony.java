@@ -1,11 +1,16 @@
 package org.duckdns.hjow.colonization.elements;
 
+import java.io.IOException;
+
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.city.NormalCity;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
 import org.duckdns.hjow.colonization.pack.BundledPack;
 import org.duckdns.hjow.colonization.pack.Pack;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 기본 제공되는 정착지 시나리오 클래스 */
 public final class NormalColony extends AbstractColony {
@@ -16,8 +21,14 @@ public final class NormalColony extends AbstractColony {
         super();
     }
     
+    @Override
     public String getType() {
         return NormalColony.getColonyClassName();
+    }
+    
+    @Override
+    protected City createCityInstance(JsonObject json) throws IOException {
+    	return new NormalCity(json);
     }
     
     @Override

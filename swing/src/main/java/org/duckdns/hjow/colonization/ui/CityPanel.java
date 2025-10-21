@@ -32,10 +32,10 @@ import javax.swing.border.EtchedBorder;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.SupportGUIFacility;
 import org.duckdns.hjow.commons.stream.SimultaneousWork;
 import org.duckdns.hjow.commons.stream.SingleAction;

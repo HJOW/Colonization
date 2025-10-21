@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.elements;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,8 @@ import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
+import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.city.NormalCity;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
 import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
@@ -714,7 +717,7 @@ public abstract class AbstractColony implements Colony {
     public City newCity() {
         if(getCityCount() >= getMaxCityCount()) throw new KnownRuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
         
-        City city = new City();
+        City city = new NormalCity();
         int idx;
         
         for(idx=0; idx<50; idx++) {
@@ -821,6 +824,11 @@ public abstract class AbstractColony implements Colony {
     public String toString() {
         return getName();
     }
+    
+    /** Json 데이터를 읽어 City 불러오기 */
+    protected City createCityInstance(JsonObject json) throws IOException {
+    	return new NormalCity(json);
+    }
 
     @Override
     public JsonObject toJson() {
@@ -917,7 +925,7 @@ public abstract class AbstractColony implements Colony {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        City city = new City((JsonObject) o);
+                    	City city = createCityInstance((JsonObject) o);
                         cities.add(city);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);

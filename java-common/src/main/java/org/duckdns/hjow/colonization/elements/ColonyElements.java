@@ -5,6 +5,7 @@ import java.math.BigInteger;
 
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 /** Colonization 내 소속 클래스임을 나타내는 인터페이스 */

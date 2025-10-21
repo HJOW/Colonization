@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.commons.json.JsonObject;

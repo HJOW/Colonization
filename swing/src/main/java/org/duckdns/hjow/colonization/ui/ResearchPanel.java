@@ -9,8 +9,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.Research;
 
 /** 연구 하나의 상태를 출력하는 컴포넌트 */

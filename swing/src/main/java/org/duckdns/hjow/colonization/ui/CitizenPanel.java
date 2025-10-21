@@ -15,8 +15,8 @@ import javax.swing.JTextField;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 
 public class CitizenPanel extends JPanel implements ColonyElementPanel {
     private static final long serialVersionUID = 8988684923024941632L;

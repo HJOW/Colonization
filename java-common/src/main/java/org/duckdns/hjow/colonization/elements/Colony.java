@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.AccountingData;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.loan.Loan;

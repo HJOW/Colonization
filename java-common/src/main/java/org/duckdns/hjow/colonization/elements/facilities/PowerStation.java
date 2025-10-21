@@ -1,8 +1,8 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.City;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 
 public class PowerStation extends PowerPlant {
     private static final long serialVersionUID = 4079646708867981024L;
