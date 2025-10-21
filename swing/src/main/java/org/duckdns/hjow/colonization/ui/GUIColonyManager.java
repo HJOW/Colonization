@@ -111,6 +111,8 @@ public class GUIColonyManager extends ColonyManager {
         
         // JFrame 생성
         frame = new JFrame();
+    	
+    	// JFrame 설정
         Dimension winSize = GUIUtil.getScreenSize();
         int w, h;
         w = (int) (winSize.getWidth()  * 0.8);
@@ -142,8 +144,26 @@ public class GUIColonyManager extends ColonyManager {
             }
         });*/
         
-        if(dialogGlobalLog == null) dialogGlobalLog = new GlobalLogDialog(this);
-        GlobalLogDialog logDiag = (GlobalLogDialog) dialogGlobalLog;
+        initializeUI();
+    }
+    
+    /** UI 파트 초기화 */
+    public void initializeUI() {
+    	Dimension winSize = GUIUtil.getScreenSize();
+        int w, h;
+        w = (int) (winSize.getWidth()  * 0.8);
+        h = (int) (winSize.getHeight() * 0.8);
+        
+        if(w >= winSize.getWidth()  - 50) w = (int) (winSize.getWidth()  - 50);
+        if(h >= winSize.getHeight() - 50) h = (int) (winSize.getHeight() - 80);
+        
+        if(w < 800) w = 800;
+        if(h < 600) h = 600;
+        int logHeight = 250;
+        
+        if(dialogGlobalLog != null) dialogGlobalLog.dispose();
+        GlobalLogDialog logDiag = new GlobalLogDialog(this);
+        dialogGlobalLog = logDiag;
         logDiag.setSize(w, logHeight);
         logDiag.setLocationBottom(frame);
         logDiag.setDetailLevel(2);
@@ -184,8 +204,13 @@ public class GUIColonyManager extends ColonyManager {
             fileChooser.addChoosableFileFilter(filterColGz);
         }
         
-        pnMain = new JPanel();
-        frame.add(pnMain, BorderLayout.CENTER);
+        if(pnMain == null) {
+        	pnMain = new JPanel();
+            frame.add(pnMain, BorderLayout.CENTER);
+        } else {
+        	pnMain.removeAll();
+        }
+        
         
         tabMain = new JTabbedPane();
         pnMain.setLayout(new BorderLayout());
@@ -1017,7 +1042,6 @@ public class GUIColonyManager extends ColonyManager {
         fileChooser = null;
         
         if(frame != null && closeDialog) frame.setVisible(false);
-        frame = null;
         
         if(backupManager != null) backupManager.dispose();
         backupManager = null;

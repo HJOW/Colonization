@@ -71,10 +71,18 @@ public class Colonization extends ConsoleColonization implements GUIColonization
         if(mode.equals("gui") || mode.equals("g")) openLoadingDialog();
         
         try { manager.dispose(((GUIColonyManager) manager).isVisible()); } catch(Exception notImportant) { notImportant.printStackTrace(); }
-        manager = null;
-        try { Thread.sleep(3000L); } catch(InterruptedException ex) { exit(); return; }
-        
-        run();
+        if(manager instanceof GUIColonyManager) {
+            try { Thread.sleep(3000L); } catch(InterruptedException ex) { exit(); return; }
+            GUIColonyManager guiMan = (GUIColonyManager) manager;
+            guiMan.loadLocalConfigs();
+            guiMan.initializeUI();
+            guiMan.open(this);
+            closeLoadingDialog();
+        } else {
+        	manager = null;
+            try { Thread.sleep(3000L); } catch(InterruptedException ex) { exit(); return; }
+            run();
+        }
     }
     
     /** 로딩 대화상자 열기 */
