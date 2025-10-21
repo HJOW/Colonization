@@ -6,7 +6,9 @@ import java.io.Serializable;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -18,17 +20,18 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
-import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 
 /** Colonization 프로그램 핵심 클래스 */
-public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Serializable {
+public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInterface, Serializable {
     private static final long serialVersionUID = -5740844908011980260L;
     
     protected transient ColonizationMainClass superInstance;
@@ -52,6 +55,10 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     
     protected transient BigInteger time;
     
+    protected transient List<Mod> modsList    = new ArrayList<Mod>();
+    protected transient List<Mod> modsEnabled = new ArrayList<Mod>();
+    protected transient ColonyManagerBroker broker;
+    
     /** 기본 생성자 */
     public ColonyManager() {
         threadSwitch        = false;
@@ -60,6 +67,7 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         reserveSaving       = false;
         reserveRefresh      = false;
         flagAlreadyDisposed = false;
+        broker = new ColonyManagerBroker(this);
     }
 
     /** 자기자신 객체 반환 (익명클래스 내부에서 활용 용도) */
@@ -188,6 +196,9 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
             // 설정들 중 클래스 관련 설정 적용
             ColonyClassLoader.clearAll();
             ColonyClassLoader.applyLocalConfigs(configs, this);
+            
+            // MODS 불러오기
+            loadMods();
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
         }
@@ -349,6 +360,31 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         colonies.add(col);
         refreshColonyList();
     }
+    
+    /** Mods 불러오기 (활성화는 아직) */
+    protected void loadMods() {
+    	modsList.clear();
+    	modsEnabled.clear();
+    	
+    	String strMods = configs.getString("Mods");
+    	StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
+    	while(commaTokenizer.hasMoreTokens()) {
+    		String classNames = commaTokenizer.nextToken().trim();
+    		
+    		try {
+    			Class<?> modClass = Class.forName(classNames);
+    			Mod mod = (Mod) modClass.newInstance();
+    		    if(! modsList.contains(mod)) modsList.add(mod);
+    		} catch(Throwable tx) {
+    			logGlobals(t("Error") + " : " + tx.getMessage(), 2);
+    		}
+    	}
+    	
+    	// TODO
+    }
+    
+    /** 활성화된 모드들을 UI에 반영 */
+    protected void applyModOnUI() {};
 
     /** 로그 출력 */
     public void log(String msg) {
@@ -387,11 +423,28 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         if(! flagAlreadyDisposed) saveLocalConfigs();
         if((! flagAlreadyDisposed) && (! colonies.isEmpty())) saveColonies();
         ColonyClassLoader.clearAll();
+        broker = null;
     }
     
     /** 메시지 출력 */
     public void alert(String msg) {
         System.out.println(msg);
+    }
+    
+    /** 불러온 모든 정착지 정보 반환 */
+    public JsonArray getAllColonies() {
+    	JsonArray arr = new JsonArray();
+    	for(Colony c : colonies) {
+    		arr.add(c.toJson());
+    	}
+    	return arr;
+    }
+    
+    /** 현재 선택된 정착지 정보 반환 */
+    public JsonObject getSelectColonyInfo() {
+    	Colony c = getSelectedColony();
+    	if(c == null) return null;
+    	return c.toJson();
     }
     
     /** 현재 선택된 정착지 반환 */

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
@@ -52,8 +51,8 @@ import org.duckdns.hjow.colonization.SimulationSpeed;
 import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
-import org.duckdns.hjow.colonization.ui.mod.Mod;
 import org.duckdns.hjow.colonization.ui.tools.CDOCViewer;
 import org.duckdns.hjow.colonization.ui.tools.GUITCPSimpleDaemonManager;
 import org.duckdns.hjow.commons.data.CompressedDocument;
@@ -94,12 +93,11 @@ public class GUIColonyManager extends ColonyManager {
     protected transient CDOCViewer cdocViewer;
     
     protected transient JMenuBar menuBar;
-    protected transient JMenu menuFile, menuAction, menuView, menuHelp;
+    protected transient JMenu menuFile, menuAction, menuView, menuHelp, menuMods;
     protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig;
     
     protected transient Queue<RefreshRequest> queueRefreshes = new LinkedList<RefreshRequest>();
-    protected transient List<Mod> modsList    = new ArrayList<Mod>();
-    protected transient List<Mod> modsEnabled = new ArrayList<Mod>();
+    protected transient List<ModDialog> modDialogs = new ArrayList<ModDialog>();
     
     /** 생성자, 상위 프로그램에서 호출됨 */
     public GUIColonyManager(GUIColonizationMainClass superInstance) {
@@ -111,12 +109,6 @@ public class GUIColonyManager extends ColonyManager {
     public void init(GUIColonizationMainClass superInstance) {
         // 설정 파일 읽기
         loadLocalConfigs();
-        
-        // MODS 불러오기
-        loadMods();
-        
-        // 설정 값 읽어서 MODS 활성화
-        applyModUsing();
         
         // LookAndFeel 설정
         String lookAndFeel = configs.getString("LookAndFeel");
@@ -677,6 +669,11 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
+        menuView.addSeparator();
+        
+        menuMods = new JMenu(t("MOD"));
+        menuView.add(menuMods);
+        
         menuHelp = new JMenu(t("도움말"));
         menuBar.add(menuHelp);
         
@@ -716,7 +713,10 @@ public class GUIColonyManager extends ColonyManager {
         cardLocalLoading1.show(pnLocalRoot, "C2");
         cardLocalLoading2.show(pnLocalSecond, "C1S");
         
+        // 정착지 목록 불러오기
         loadColonies();
+        
+        // 공지사항 등 웹 설정 불러오기
         loadWebConfigs();
         
         btnThrPlay.setEnabled(false);
@@ -727,24 +727,33 @@ public class GUIColonyManager extends ColonyManager {
         reserveRefresh = false;
         flagAlreadyDisposed = false;
         
+        // 쓰레드 가동 시작
         assureMainThreadRunning();
         
         btnThrPlay.setText("시뮬레이션 시작");
         btnThrPlay.setEnabled(true);
         menuActionThrPlay.setEnabled(true);
         
+        // 공지사항 미리 화면에 로딩
         try { webNotice.setPage(ColonyClassLoader.htmlNoticeUrl()); } catch(java.net.UnknownHostException ex) {
             webNotice.setText(ColonyClassLoader.htmlNoticeEmpty());
         } catch(Exception ex) { 
             GlobalLogs.processExceptionOccured(ex, false); 
         }
         
+        // UI 에 MODS 반영
+        applyModOnUI();
+        
+        // 모두 활성화
         setEditable(true);
         
+        // 전역 로그 대화상자 세팅
         if(dialogGlobalLog == null) {
         	dialogGlobalLog = new GlobalLogDialog(this);
         	dialogGlobalLog.setDetailLevel(2);
         }
+        
+        // 전체 새로고침
         refreshArenaPanelIn(0);
     }
 
@@ -1093,15 +1102,16 @@ public class GUIColonyManager extends ColonyManager {
             dialogGlobalLog = null;
         }
         
-        for(Mod mod : modsEnabled) {
-        	mod.dispose();
+        for(ModDialog diag : modDialogs) {
+        	diag.dispose();
         }
-        modsEnabled.clear();
+        modDialogs.clear();
         
         for(Mod mod : modsList) {
         	mod.dispose();
         }
         modsList.clear();
+        modsEnabled.clear();
     }
     
     /** 메인 대화상자가 닫힐 때 호출 */
@@ -1143,6 +1153,8 @@ public class GUIColonyManager extends ColonyManager {
             if(cardLocalLoading1 != null) cardLocalLoading1.show(pnLocalRoot, "C2");
         }
         
+        menuMods.setEnabled(editable);
+        
         for(DefaultColonyPanel c : pnColonies) {
             Colony col = c.getColony();
             
@@ -1182,6 +1194,14 @@ public class GUIColonyManager extends ColonyManager {
     /** 대화상자 세로 길이 반환 */
     public int getDialogHeight() {
         return getDialog().getHeight();
+    }
+    
+    public int getDialogX() {
+    	return getDialog().getX();
+    }
+    
+    public int getDialogY() {
+    	return getDialog().getY();
     }
     
     /** 현재 선택된 정착지 반환 */
@@ -1404,8 +1424,12 @@ public class GUIColonyManager extends ColonyManager {
         else colPn.refreshColonyBasicMeta(col, this);
         
         for(Mod mod : modsEnabled) {
-        	mod.refresh(cycle, col, this);
-        	col.disableChecked(); // MOD 사용 시 인증 비활성화
+        	if(mod.isReadOnly()) {
+        		if(cycle % 4 == 0) mod.refresh(cycle, col.toJson(), broker); // 읽기 전용인 경우 JSON으로 변환해 반환
+        	} else {
+        		col.disableChecked(); // 쓰기 허용 MOD 사용 시 인증 비활성화
+        	    mod.refresh(cycle, col, this);
+        	}
         }
         
         cardLocalLoading2.show(pnLocalSecond, "C1F");
@@ -1446,30 +1470,28 @@ public class GUIColonyManager extends ColonyManager {
         return null;
     }
     
-    /** Mods 불러오기 (활성화는 아직) */
-    protected void loadMods() {
-    	// TODO modsList 에 추가
-    }
-    
-    /** 설정 값 읽어서 MODS 활성화 */
-    protected void applyModUsing() {
-    	modsEnabled.clear();
-    	String modEnabled = configs.getString("UsingMods");
-        if(DataUtil.isNotEmpty(modEnabled)) {
-        	StringTokenizer commaTokenizer = new StringTokenizer(modEnabled, ",");
-        	while(commaTokenizer.hasMoreTokens()) {
-        		String nameOne = commaTokenizer.nextToken().trim();
-        		Mod mod = null;
-        		
-        		for(Mod m : modsList) {
-        			if(m.getName().equals(nameOne)) { mod = m; break; }
-        		}
-        		
-        		if(mod == null) continue;
-        		if(modsEnabled.contains(mod)) continue;
-        		
-        		modsEnabled.add(mod);
-        	}
-        }
+    @Override
+    protected void applyModOnUI() {
+    	menuMods.removeAll();
+    	
+    	for(final Mod mod : modsList) {
+    		JMenuItem menuItem = new JMenuItem(t(mod.getName()));
+    		menuMods.add(menuItem);
+    		
+    		final ModDialog dialog = new ModDialog(getDialog(), mod);
+    		modDialogs.add(dialog);
+    		
+    		menuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(! dialog.isOpenedOnce()) {
+						if(mod.isReadOnly()) mod.init(broker);
+			    		else                 mod.init(getSelf());
+						if(! modsEnabled.contains(mod)) modsEnabled.add(mod);
+					}
+					dialog.open();
+				}
+			});
+    	}
     }
 }
