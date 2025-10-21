@@ -68,6 +68,9 @@ public abstract class State implements ColonyElements {
     public void setLefts(long lefts) {
         this.lefts = lefts;
     }
+    
+    @Override
+    public int cycleGap(Colony colony) { return 1; }
 
     @Override
     public final void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {

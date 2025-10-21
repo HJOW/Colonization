@@ -203,8 +203,8 @@ public class ColonyServlet extends CommonServlet {
 		}
 		
 		BigInteger time = col.getTime();
-        while(time.compareTo(ColonyManager.TIME_MAX_INT) >= 0) {
-            time = time.subtract(ColonyManager.TIME_MAX_INT);
+        while(time.compareTo(ColonyManager.CYCLE_NO_MAXIMUM_BIG) >= 0) {
+            time = time.subtract(ColonyManager.CYCLE_NO_MAXIMUM_BIG);
         }
         int cycle = time.intValue();
         

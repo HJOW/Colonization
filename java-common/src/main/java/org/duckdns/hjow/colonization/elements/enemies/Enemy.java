@@ -91,6 +91,9 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     
     /** 대미지 처리 후 추가 작업 (상태를 부여한다거나 등등) 이 메소드에서 구현 */
     protected void processAfterAttack(int cycle, ColonyElements element, int finalDamage) { }
+    
+    @Override
+    public int cycleGap(Colony colony) { return 1; }
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {

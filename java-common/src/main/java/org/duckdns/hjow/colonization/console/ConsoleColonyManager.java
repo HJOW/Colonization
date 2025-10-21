@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.commons.console.Choice;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.util.ClassUtil;
@@ -36,6 +37,16 @@ public class ConsoleColonyManager extends ColonyManager {
     	final StringBuilder whileSwitch = new StringBuilder("Y");
     	List<Choice> choices = new ArrayList<Choice>();
     	int idx;
+    	
+    	//    로컬 정착지 사이클 수행
+    	
+    	choices.add(new Choice() {
+			private static final long serialVersionUID = -6755695907655992414L;
+			@Override
+			public String getText() { return t("로컬 정착지 모두 사이클 진행"); }
+			@Override
+			public void action() throws Throwable { onRunCycleRequested(); }
+		});
     	
     	//    로컬 정착지 모두 포기
     	
@@ -113,6 +124,49 @@ public class ConsoleColonyManager extends ColonyManager {
     	else {
     		System.out.println(t("오류") + " : " + t(t.getMessage()));
     		t.printStackTrace();
+    	}
+    }
+    
+    /** 메인 메뉴 - 모든 정착지 사이클 수행 */
+    protected void onRunCycleRequested() {
+    	final StringBuilder whileSwitch = new StringBuilder("Y");
+    	while(DataUtil.parseBoolean(whileSwitch.toString().trim())) {
+    		try {
+    			String strSel;
+    			System.out.println();
+    	        System.out.println(t("몇 초를 시뮬레이션 하겠습니까? (1 ~ 100)"));
+    	        System.out.print(t("Input") + " >> ");
+    	        
+    	        String line = reader.readLine();
+                if(line == null) line = "";
+                
+                if(DataUtil.isEmpty(line)) return;
+                
+                strSel = line.trim();
+                int counts = Integer.parseInt(strSel);
+                System.out.println();
+                
+                if(counts <= 0 || counts >= 101) throw new KnownRuntimeException(t("1 ~ 100 사이의 숫자를 입력해 주세요."));
+                
+                System.out.println(t("정착지 모두 불러오는 중..."));
+                loadColonies();
+                
+                for(int idx=0; idx<colonies.size(); idx++) {
+                	selectedColony = idx;
+                	for(int jdx=0; jdx<counts; jdx++) {
+                		Colony col = getSelectedColony();
+                		System.out.println(t("정착지 [COLONYNAME] 시간 [TIME] 시뮬레이션...").replace("[COLONYNAME]", col.getName()).replace("[TIME]", col.getDateString()));
+                	    oneCycle();
+                	}
+                }
+                
+                System.out.println(t("정착지 모두 저장하는 중..."));
+                saveColonies();
+                
+                System.out.println(t("작업이 완료되었습니다."));
+    		} catch(Throwable t) {
+    			onExceptionOccured(t);
+    		}
     	}
     }
     

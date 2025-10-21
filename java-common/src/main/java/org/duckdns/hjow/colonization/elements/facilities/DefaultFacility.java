@@ -155,15 +155,18 @@ public abstract class DefaultFacility implements Facility {
     }
     
     @Override
+    public int cycleGap(Colony colony) { return 1; }
+    
+    @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
         // State 영향력 동작
         for(State st : getStates()) {
-            st.oneCycle(cycle, this, city, colony, colPanel);
+        	if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, this, city, colony, colPanel);
         }
         
         // State 수명 동작
         for(State st : getStates()) {
-            st.oneCycle(cycle, city, colony, efficiency100, colPanel);
+        	if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, city, colony, efficiency100, colPanel);
         }
         
         // 수명 다된 state 제거

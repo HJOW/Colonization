@@ -102,6 +102,9 @@ public class Loan implements ColonyElements {
         
         return bigAmount.longValue();
     }
+    
+    @Override
+    public int cycleGap(Colony colony) { return 1; }
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {

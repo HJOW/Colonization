@@ -73,6 +73,9 @@ public abstract class Product implements ColonyElements {
     public int getDefencePoint() {
         return 0;
     }
+    
+    @Override
+    public int cycleGap(Colony colony) { return 1; }
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { }

@@ -146,6 +146,7 @@ public class GUIColonyManager extends ColonyManager {
         GlobalLogDialog logDiag = (GlobalLogDialog) dialogGlobalLog;
         logDiag.setSize(w, logHeight);
         logDiag.setLocationBottom(frame);
+        logDiag.setDetailLevel(2);
         
         if(fileChooser == null) {
             fileChooser = new JFileChooser();
@@ -1242,34 +1243,6 @@ public class GUIColonyManager extends ColonyManager {
         tabMain.setSelectedComponent(pnLocalRoot);
     }
     
-    /** 쓰레드에서 1 사이클 당 1회 호출됨 */
-    @Override
-    public void oneCycle() {
-        Colony col = getSelectedColony();
-        if(col == null) return;
-        
-        if(time == null) {
-            time = col.getTime();
-            while(time.compareTo(TIME_MAX_INT) >= 0) {
-                time = time.subtract(TIME_MAX_INT);
-            }
-            cycle = time.intValue();
-        }
-        
-        try { col.oneCycle(cycle, null, col, 100, getColonyPanel(col)); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
-        try {
-            SwingUtilities.invokeLater(new Runnable() { 
-                @Override
-                public void run() {
-                    refreshArenaPanel(cycle);
-                }
-            });
-        } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
-        
-        cycle++;
-        if(cycle >= TIME_MAX) cycle = 0;
-    }
-    
     /** 정착지 목록과 화면 내용 갱신 */
     @Override
     public void refreshColonyList() {
@@ -1302,7 +1275,7 @@ public class GUIColonyManager extends ColonyManager {
             col = getSelectedColony();
             if(col == null) { refreshFull = true; }
             else {
-                DefaultColonyPanel colPn = getColonyPanel(col);
+                DefaultColonyPanel colPn = (DefaultColonyPanel) getColonyPanel(col);
                 if(cpNow == null || cpNow != colPn) {
                     refreshFull = true;
                 }
@@ -1347,7 +1320,7 @@ public class GUIColonyManager extends ColonyManager {
             return;
         }
         
-        DefaultColonyPanel colPn = getColonyPanel(col);
+        DefaultColonyPanel colPn = (DefaultColonyPanel) getColonyPanel(col);
         if(colPn == null) {
             colPn = new DefaultColonyPanel(col, this);
             pnColonies.add(colPn);
@@ -1371,7 +1344,8 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 해당 정착지를 출력하는 영역 반환 */
-    public DefaultColonyPanel getColonyPanel(Colony col) {
+    @Override
+    public ColonyPanel getColonyPanel(Colony col) {
         for(DefaultColonyPanel cp : pnColonies) {
             if(cp.getColony().getKey() == col.getKey()) {
                 return cp;
@@ -1383,7 +1357,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 해당 도시를 출력하는 도시 영역 반환 */
     public CityPanel getCityPanel(City city) {
         Colony col = getSelectedColony();
-        DefaultColonyPanel colPn = getColonyPanel(col);
+        DefaultColonyPanel colPn = (DefaultColonyPanel) getColonyPanel(col);
         if(colPn == null) return null;
         return colPn.getCityPanel(city);
     }

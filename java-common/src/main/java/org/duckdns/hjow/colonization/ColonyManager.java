@@ -19,6 +19,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -451,6 +452,11 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
     }
     
+    /** 해당 정착지를 출력하는 영역 반환 */
+    public ColonyPanel getColonyPanel(Colony col) {
+    	return null;
+    }
+    
     /** 쓰레드에서 1 사이클 당 1회 호출됨 */
     public void oneCycle() {
         Colony col = getSelectedColony();
@@ -458,19 +464,26 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         
         if(time == null) {
             time = col.getTime();
-            while(time.compareTo(TIME_MAX_INT) >= 0) {
-                time = time.subtract(TIME_MAX_INT);
+            while(time.compareTo(CYCLE_NO_MAXIMUM_BIG) >= 0) {
+                time = time.subtract(CYCLE_NO_MAXIMUM_BIG);
             }
             cycle = time.intValue();
         }
         
-        try { col.oneCycle(cycle, null, col, 100, null); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        logGlobals("Running main cycle " + cycle, 1);
+        
+        if(cycle % col.cycleGap(col) == 0) {
+            try { col.oneCycle(cycle, null, col, 100, getColonyPanel(col)); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        }
+        
+        logGlobals("Running refreshing UI cycle " + cycle, 1);
+        
         try {
             refreshArenaPanel(cycle);
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         cycle++;
-        if(cycle >= TIME_MAX) cycle = 0;
+        if(cycle >= CYCLE_NO_MAXIMUM) cycle = 0;
     }
     
     /** 화면 새로고침 예약 */
@@ -496,8 +509,8 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         
         if(col != null) {
             BigInteger time = col.getTime();
-            while(time.compareTo(ColonyManager.TIME_MAX_INT) >= 0) {
-                time = time.subtract(ColonyManager.TIME_MAX_INT);
+            while(time.compareTo(ColonyManager.CYCLE_NO_MAXIMUM_BIG) >= 0) {
+                time = time.subtract(ColonyManager.CYCLE_NO_MAXIMUM_BIG);
             }
             cycle = time.intValue();
         }
@@ -656,11 +669,13 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
         return num[0] + "." + num[1] + "." + num[2] + "." + num[3];
     }
     
+    /** 버전 코드 */
     public static final int VERSION_MAIN = 0;
     public static final int VERSION_SUB1 = 0;
     public static final int VERSION_SUB2 = 0;
     public static final int VERSION_SUB3 = 1;
     
+    /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
     public static final short ATTACKTYPE_NORMAL = 0;
     public static final short ATTACKTYPE_THIN_BULLET = 1;
     public static final short ATTACKTYPE_THIN_RAY    = 2;
@@ -673,16 +688,23 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     public static final short DEFENCETYPE_SMALL    = 1;
     public static final short DEFENCETYPE_BUILDING = 9;
     
+    /** 기본 1사이클 쓰레드 간격, 밀리초 단위로, 매 사이클 연산이 끝날 때마다 이 밀리초만큼 쓰레드 Sleep */
     public static final long CYCLEGAP_DEFAULT = 249L;
     
+    /** 숫자 형식 맞추기 위한 객체들 */
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");
     public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("#,##0.00");
     
-    public static final int        TIME_MAX     = 2000000000;
-    public static final BigInteger TIME_MAX_INT = new BigInteger(String.valueOf(TIME_MAX));
+    /** cycle 값 제한 (TIME 의 최대값 개념이 아님) - TIME 값이 이 값보다 커지면, 이 값으로 나눈 나머지로 cycle 시작값을 구함. */
+    public static final int        CYCLE_NO_MAXIMUM     = 2000000000;
+    public static final BigInteger CYCLE_NO_MAXIMUM_BIG = new BigInteger(String.valueOf(CYCLE_NO_MAXIMUM));
     
+    /** 다국어 지원용 스트링 테이블 */
     protected static final ColonyStringTable STRINGTABLE = new ColonyStringTable();
     
+    /** 전역 로그 수집 객체 */
     protected static transient GlobalLogUI dialogGlobalLog;
-    protected static transient boolean flagDebugMode = false; // 실행 시간 표시 플래그
+    
+    /** 디버그 모드 사용여부 플래그 */
+    protected static transient boolean flagDebugMode = false;
 }

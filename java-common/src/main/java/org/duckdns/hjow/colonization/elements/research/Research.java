@@ -150,6 +150,9 @@ public abstract class Research implements ColonyElements {
     public double getMaxProgressIncreaseRate() { return 1.1;  }
     
     @Override
+    public int cycleGap(Colony colony) { return 1; }
+    
+    @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { }
     
     /** 연구에 필요한 사전조건 중 필요 연구와 레벨 목록을 반환 */

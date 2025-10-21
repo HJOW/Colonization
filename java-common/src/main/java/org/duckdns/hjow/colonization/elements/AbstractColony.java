@@ -558,6 +558,9 @@ public abstract class AbstractColony implements Colony {
         loanAvail.clear();
         loanAvail.addAll(Loan.makeAvailableLoanListRandom(this));
     }
+    
+    @Override
+    public int cycleGap(Colony colony) { return 1; }
 
     @Override
     public void oneCycle(final int cycle, City city, Colony colony, int efficiency100, final ColonyPanel colPanel) { // city may be null
@@ -602,7 +605,7 @@ public abstract class AbstractColony implements Colony {
         
         // 대출 사이클 처리
         for(Loan l : getLoanHave()) {
-            l.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % l.cycleGap(colony) == 0) l.oneCycle(cycle, city, colony, efficiency100, colPanel);
         }
         
         // 1년 지날 때마다, 사용 가능한 대출 목록 갱신
@@ -616,7 +619,7 @@ public abstract class AbstractColony implements Colony {
         	actionsOnCycle.add(new SingleAction() {	
 		        @Override
 		        public void run(int index) throws Throwable {
-		        	c.oneCycle(cycle, c, getSelf(), 100, colPanel);
+		        	if(cycle % c.cycleGap(getSelf()) == 0) c.oneCycle(cycle, c, getSelf(), 100, colPanel);
 		        }
 		    });
         }
@@ -625,7 +628,7 @@ public abstract class AbstractColony implements Colony {
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
-            e.oneCycle(cycle, city, colony, efficiency100, colPanel);
+        	if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, city, colony, efficiency100, colPanel);
         }
         
         // 예약 작업 처리

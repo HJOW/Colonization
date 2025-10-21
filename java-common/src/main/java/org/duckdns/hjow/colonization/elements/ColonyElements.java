@@ -36,8 +36,11 @@ public interface ColonyElements extends Serializable, Disposeable {
     /** 방어력, 이 값 만큼 대미지에서 깎인다. 단, 대미지가 1 이하로는 떨어지지 않는다. */
     public int getDefencePoint();
     
-    /** 쓰레드 1 사이클 당 1회 호출됨 */
+    /** 쓰레드 N 사이클 당 1회 호출됨. 여기서 N값은 cycleGap 메소드에서 반환. (매개변수 cycle 은 N 관계없이 그대로 들어옴.) */
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel);
+    
+    /** 쓰레드 N 사이클 당 위 oneCycle 메소드를 1회 호출, 이 N값을 반환하는 메소드 */
+    public int cycleGap(Colony colony);
     
     /** JSON 데이터로부터 객체 데이터를 불러옮 */
     public void fromJson(JsonObject json);

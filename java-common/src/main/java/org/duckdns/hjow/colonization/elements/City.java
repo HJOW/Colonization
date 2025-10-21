@@ -230,6 +230,9 @@ public class City implements ColonyElements {
     protected long getDefaultTransportPoint() {
         return 300L;
     }
+    
+    @Override
+    public int cycleGap(Colony colony) { return 1; }
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { // city should be a self
@@ -294,7 +297,7 @@ public class City implements ColonyElements {
             }
             
             // 시설 효과 처리
-            f.oneCycle(cycle, this, colony, efficiency, colPanel);
+            if(cycle % f.cycleGap(colony) == 0) f.oneCycle(cycle, this, colony, efficiency, colPanel);
             
             // 교통시설인 경우 교통점수 계산
             if(f instanceof TransportStation) {    
@@ -319,7 +322,7 @@ public class City implements ColonyElements {
         
         // 시민 처리
         for(Citizen ct : getCitizens()) {
-            ct.oneCycle(cycle, city, colony, efficiency100, colPanel);
+        	if(cycle % ct.cycleGap(colony) == 0) ct.oneCycle(cycle, city, colony, efficiency100, colPanel);
             
             if(networks <= 0L) {
                 if(ct.getHappy() > 70) ct.setHappy(70); // 네트워크 사용 불가 시 행복도 상한 적용
@@ -330,7 +333,7 @@ public class City implements ColonyElements {
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
-            e.oneCycle(cycle, city, colony, efficiency100, colPanel);
+        	if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, city, colony, efficiency100, colPanel);
         }
         
         // 사망 개체 제거
