@@ -574,6 +574,22 @@ public abstract class ColonyManager implements ColonyManagerUI, Disposeable, Ser
     public static int generateNaturalNumber() {
         return Math.abs(new Random().nextInt());
     }
+    
+    /** 키를 받아 자연수 추출 (이름에 사용) */
+    public static int getNaturalNumberFrom(long key) {
+    	int res;
+    	
+    	key = Math.abs(key);
+    	String str = String.valueOf(key);
+    	if(str.length() > 9) {
+    		str = str.substring(0, 9);
+    	}
+    	res = Integer.parseInt(str);
+    	str = String.valueOf(res);
+    	
+    	if(str.length() < 9) res += 100000000;
+    	return res;
+    }
 
     public static boolean isDebugModeEnabled() {
         return flagDebugMode;

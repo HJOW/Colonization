@@ -17,7 +17,7 @@ import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
-import org.duckdns.hjow.colonization.elements.custom.CustomColony;
+import org.duckdns.hjow.colonization.elements.custom.FreeColony;
 import org.duckdns.hjow.colonization.pack.BundledPack;
 import org.duckdns.hjow.colonization.pack.Pack;
 
@@ -67,7 +67,7 @@ public class ColonyClassLoader {
         if(colonyClassListFlag) return colonyClassList;
         
         colonyClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) colonyClassList.addAll(p.getColonyClasses()); colonyClassList.add(CustomColony.class); }
+        for(Pack p : packs) { if(p.isEnabled()) colonyClassList.addAll(p.getColonyClasses()); colonyClassList.add(FreeColony.class); }
         
         colonyClassListFlag = true;
         return colonyClassList;

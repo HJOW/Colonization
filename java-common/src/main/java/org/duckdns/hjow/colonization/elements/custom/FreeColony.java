@@ -6,15 +6,15 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 
-/** 사용자 정의 정착지 시나라오로, 모든 종류의 시설과 연구 지원 */
-public abstract class CustomColony extends AbstractColony {
-	private static final long serialVersionUID = -4732649232228406754L;
-
-	public CustomColony() {
+/** 모든 종류의 시설과 연구를 지원하는 정착지 시나리오 */
+public final class FreeColony extends AbstractColony {
+	private static final long serialVersionUID = 7091084518100557257L;
+	
+	public FreeColony() {
         super();
     }
-    
-    public String getType() {
+
+	public String getType() {
         return getColonyClassName();
     }
     
@@ -36,7 +36,7 @@ public abstract class CustomColony extends AbstractColony {
     }
     
     public static String getColonyClassName() {
-        return "CustomColony";
+        return "FreeColony";
     }
     
     /** 사용 가능한 난이도 목록 반환 */
@@ -45,7 +45,7 @@ public abstract class CustomColony extends AbstractColony {
     }
     
     public static String getColonyClassTitle() {
-        return ColonyManager.t("커스텀 정착지 시나리오");
+        return ColonyManager.t("프리 정착지 시나리오");
     }
     
     public static String getColonyClassDescription() {

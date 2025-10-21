@@ -52,7 +52,7 @@ public abstract class AbstractColony implements Colony {
     protected List<Loan>       loanAvail  = new Vector<Loan>();
     protected List<Loan>       loanHave   = new Vector<Loan>();
     
-    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
+    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected int  difficulty = 0;
     protected int  hp         = getMaxHp();
     protected int  credit     = getStartCredit();

@@ -37,7 +37,7 @@ public class City implements ColonyElements {
     protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;
     
-    protected String name = ColonyManager.t("도시") + "_" + ColonyManager.generateNaturalNumber();
+    protected String name = ColonyManager.t("도시") + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected List<Facility>   facility = new Vector<Facility>();
     protected List<Citizen>    citizens = new Vector<Citizen>();
     protected List<Enemy>      enemies  = new Vector<Enemy>();

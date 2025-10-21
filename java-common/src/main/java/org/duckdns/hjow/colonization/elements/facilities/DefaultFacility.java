@@ -23,7 +23,7 @@ public abstract class DefaultFacility implements Facility {
     protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;
     
-    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
+    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected int hp = getMaxHp();
     protected int level = 1;
     

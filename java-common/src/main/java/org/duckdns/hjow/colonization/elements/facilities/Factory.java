@@ -19,7 +19,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public abstract class Factory extends DefaultFacility implements Storage {
     private static final long serialVersionUID = 8465140770981665970L;
-    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.generateNaturalNumber();
+    protected String name = getDefaultNamePrefix() + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected List<Product> stored = new Vector<Product>();
     protected transient String productType = null;
     

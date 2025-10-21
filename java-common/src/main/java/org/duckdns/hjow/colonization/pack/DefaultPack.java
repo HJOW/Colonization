@@ -26,7 +26,7 @@ public class DefaultPack implements Pack {
     public DefaultPack() { init(); }
     protected void init() {}
     
-    protected String getDefaultName()   { return "Pack_" + ColonyManager.generateNaturalNumber(); }
+    protected String getDefaultName()   { return "Pack_" + ColonyManager.getNaturalNumberFrom(key); }
     protected String getDefaultDesc()   { return ""; }
     protected String getDefaultAuthor() { return ""; }
     protected String getDefaultEmail()  { return ""; }
