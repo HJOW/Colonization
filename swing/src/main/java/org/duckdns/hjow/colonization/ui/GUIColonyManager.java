@@ -88,13 +88,14 @@ public class GUIColonyManager extends ColonyManager {
     protected transient BenchmarkManager benchManager;
     protected transient GUITCPSimpleDaemonManager daemonManager;
     protected transient ConfigManager configManager;
+    protected transient ModManager modManager;
     protected transient HelpDialog helpDialog;
     protected transient ServletClientPanel servletClient;
     protected transient CDOCViewer cdocViewer;
     
     protected transient JMenuBar menuBar;
     protected transient JMenu menuFile, menuAction, menuView, menuHelp, menuMods;
-    protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig;
+    protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig, menuFileMods;
     
     protected transient Queue<RefreshRequest> queueRefreshes = new LinkedList<RefreshRequest>();
     protected transient List<ModDialog> modDialogs = new ArrayList<ModDialog>();
@@ -562,6 +563,15 @@ public class GUIColonyManager extends ColonyManager {
 			}
 		});
         
+        menuFileMods = new JMenuItem(t("MOD 관리"));
+        menuFile.add(menuFileMods);
+        menuFileMods.addActionListener(new ActionListener() {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
+        		modManager.open();
+			}
+        });
+        
         menuFile.addSeparator();
         
         menuItem = new JMenuItem(t("재시작"));
@@ -692,6 +702,7 @@ public class GUIColonyManager extends ColonyManager {
         daemonManager = new GUITCPSimpleDaemonManager(frame);
         helpDialog    = new HelpDialog(this);
         configManager = new ConfigManager(this);
+        modManager    = new ModManager(this);
         
         refreshColonyContent();
     }
@@ -1091,6 +1102,9 @@ public class GUIColonyManager extends ColonyManager {
         if(configManager != null) configManager.dispose();
         configManager = null;
         
+        if(modManager != null) modManager.dispose();
+        modManager = null;
+        
         if(helpDialog != null) helpDialog.dispose();
         helpDialog = null;
         
@@ -1321,6 +1335,7 @@ public class GUIColonyManager extends ColonyManager {
         menuFileNew.setEnabled(false);
         menuFileConfig.setEnabled(false);
         if(configManager != null) configManager.close();
+        if(modManager    != null) modManager.close();
         
         for(DefaultColonyPanel c : pnColonies) { c.setEditable(false); }
         

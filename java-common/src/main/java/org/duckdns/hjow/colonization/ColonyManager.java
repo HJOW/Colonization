@@ -24,6 +24,7 @@ import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
@@ -198,7 +199,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             ColonyClassLoader.applyLocalConfigs(configs, this);
             
             // MODS 불러오기
-            loadMods();
+            loadMods(false);
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
         }
@@ -361,8 +362,13 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         refreshColonyList();
     }
     
-    /** Mods 불러오기 (활성화는 아직) */
+    /** Mods 불러오기 */
     protected void loadMods() {
+    	loadMods(true);
+    }
+    
+    /** Mods 불러오기 */
+    protected void loadMods(boolean refresh) {
     	modsList.clear();
     	modsEnabled.clear();
     	
@@ -370,8 +376,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
     	while(commaTokenizer.hasMoreTokens()) {
     		String classNames = commaTokenizer.nextToken().trim();
-    		
     		try {
+    			checkModClassName(classNames);
     			Class<?> modClass = Class.forName(classNames);
     			Mod mod = (Mod) modClass.newInstance();
     		    if(! modsList.contains(mod)) modsList.add(mod);
@@ -381,10 +387,98 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	}
     	
     	// TODO
+    	
+    	
+    	if(refresh) applyModOnUI();
     }
     
     /** 활성화된 모드들을 UI에 반영 */
     protected void applyModOnUI() {};
+    
+    /** Mods 들 목록 반환 */
+    public List<Mod> getMods() {
+    	List<Mod> list = new ArrayList<Mod>();
+    	list.addAll(modsList);
+    	return list;
+    }
+    
+    /** 클래스명 체크 */
+    public void checkModClassName(String modClassName) {
+    	if(modClassName.contains(",")) throw new KnownRuntimeException(t("클래스명에는 , 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains(";")) throw new KnownRuntimeException(t("클래스명에는 ; 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains("!")) throw new KnownRuntimeException(t("클래스명에는 ! 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains("\"")) throw new KnownRuntimeException(t("클래스명에는 \" 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains("'")) throw new KnownRuntimeException(t("클래스명에는 ' 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains(" ") || modClassName.contains("\t") || modClassName.contains("\n")) throw new KnownRuntimeException(t("클래스명에는 공백 기호가 들어갈 수 없습니다."));
+    }
+    
+    /** Mod 추가 */
+    public void addMod(String modClassName) {
+    	addMod(modClassName, true);
+    }
+    
+    /** Mod 추가 */
+    public void addMod(String modClassName, boolean refresh) {
+    	try {
+    		checkModClassName(modClassName);
+    		modClassName = modClassName.trim();
+    		
+    		String strMods = configs.getString("Mods");
+    		if(! strMods.contains(modClassName)) {
+    			if(DataUtil.isNotEmpty(strMods)) strMods += ",";
+    			strMods += modClassName;
+    		}
+    		configs.set("Mods", strMods);
+    		
+			Class<?> modClass = Class.forName(modClassName);
+			Mod mod = (Mod) modClass.newInstance();
+		    if(! modsList.contains(mod)) modsList.add(mod);
+		    
+		    saveLocalConfigs();
+		} catch(Throwable tx) {
+			logGlobals(t("Error") + " : " + tx.getMessage(), 2);
+		}
+    	
+    	if(refresh) applyModOnUI();
+    }
+    
+    /** Mod 제거 */
+    public void removeMod(String modClassName) {
+    	removeMod(modClassName, true);
+    }
+    
+    /** Mod 제거 */
+    public void removeMod(String modClassName, boolean refresh) {
+    	try {
+    		checkModClassName(modClassName);
+    		modClassName = modClassName.trim();
+    		
+    		// 설정 리스트로 변환
+    		String strMods = configs.getString("Mods");
+    		List<String> list = new ArrayList<String>(); // 리스트로 먼저 변환
+    		StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
+        	while(commaTokenizer.hasMoreTokens()) {
+        		list.add(commaTokenizer.nextToken().trim());
+        	}
+    		strMods = null;
+    		// 설정 제거
+    		list.remove(modClassName);
+    		
+    		// 다시 설정 작성
+    		strMods = "";
+    		for(String s : list) {
+    			if(DataUtil.isNotEmpty(strMods)) strMods += ",";
+    			strMods += s;
+    		}
+    		configs.set("Mods", strMods);
+    		
+    		saveLocalConfigs();
+    	} catch(Throwable tx) {
+			logGlobals(t("Error") + " : " + tx.getMessage(), 2);
+		}
+    	
+    	if(refresh) applyModOnUI();
+    }
 
     /** 로그 출력 */
     public void log(String msg) {
