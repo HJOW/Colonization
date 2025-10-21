@@ -52,6 +52,9 @@ import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
+import org.duckdns.hjow.colonization.ui.tools.CDOCViewer;
+import org.duckdns.hjow.colonization.ui.tools.GUITCPSimpleDaemonManager;
+import org.duckdns.hjow.commons.data.CompressedDocument;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -86,9 +89,10 @@ public class GUIColonyManager extends ColonyManager {
     protected transient ConfigManager configManager;
     protected transient HelpDialog helpDialog;
     protected transient ServletClientPanel servletClient;
+    protected transient CDOCViewer cdocViewer;
     
     protected transient JMenuBar menuBar;
-    protected transient JMenu menuFile, menuAction, menuHelp;
+    protected transient JMenu menuFile, menuAction, menuView, menuHelp;
     protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig;
     
     protected transient Queue<RefreshRequest> queueRefreshes = new LinkedList<RefreshRequest>();
@@ -594,7 +598,7 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
 
-        menuAction.addSeparator();
+        if(ColonyClassLoader.getInstalledPackNewFeatures().contains("DebugEnable")) menuAction.addSeparator();
 
         menuItem = new JCheckBoxMenuItem(t("디버그 모드"));
         menuAction.add(menuItem);
@@ -610,13 +614,17 @@ public class GUIColonyManager extends ColonyManager {
                 }
             }
         });
-        ((JCheckBoxMenuItem)menuItem).setSelected(isDebugModeEnabled());
+        ((JCheckBoxMenuItem) menuItem).setSelected(isDebugModeEnabled());
         if(! ColonyClassLoader.getInstalledPackNewFeatures().contains("DebugEnable")) {
         	menuItem.setVisible(false);
         }
 
+        
+        menuView = new JMenu(t("보기"));
+        menuBar.add(menuView);
+        
         menuItem = new JMenuItem(t("전역 로그 보기"));
-        menuAction.add(menuItem);
+        menuView.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -627,10 +635,10 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
-        menuAction.addSeparator();
+        menuView.addSeparator();
         
         menuItem = new JMenuItem(t("성능 벤치마크"));
-        menuAction.add(menuItem);
+        menuView.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -639,11 +647,23 @@ public class GUIColonyManager extends ColonyManager {
         });
         
         menuItem = new JMenuItem(t("TCP 데몬"));
-        menuAction.add(menuItem);
+        menuView.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 daemonManager.open();
+            }
+        });
+        
+        menuView.addSeparator();
+        
+        cdocViewer = new CDOCViewer(frame);
+        menuItem = new JMenuItem(t(CompressedDocument.FILE_DESC) + " Tool");
+        menuView.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	cdocViewer.open();
             }
         });
         

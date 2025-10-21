@@ -1,4 +1,4 @@
-package org.duckdns.hjow.colonization.ui;
+package org.duckdns.hjow.colonization.ui.tools;
 
 import java.awt.BorderLayout;
 import java.awt.Window;
