@@ -41,6 +41,7 @@ import org.duckdns.hjow.commons.stream.SimultaneousWork;
 import org.duckdns.hjow.commons.stream.SingleAction;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
+import org.duckdns.hjow.commons.util.SecurityUtil;
 
 /** 정착지 구현 공통 클래스 */
 public abstract class AbstractColony implements Colony {
@@ -880,6 +881,9 @@ public abstract class AbstractColony implements Colony {
         if(checked) json.put("checker", getCheckerValue().toString());
         else        json.put("checker", "0");
         
+        if(checked) json.put("checkkey", getCheckerSerial());
+        else        json.put("checkkey", "");
+        
         // 추가 정보 (불러올 때는 필요가 없는) 첨가
         json.put("maxHp", String.valueOf(getMaxHp()));
         
@@ -1055,6 +1059,17 @@ public abstract class AbstractColony implements Colony {
         for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); }
         
         return res;
+    }
+    
+    /** 인증용 시리얼 문자열 */
+    public String getCheckerSerial() {
+    	StringBuilder res = new StringBuilder(String.valueOf(getCheckerValue()));
+    	// TODO
+    	
+    	String serial = res.toString().trim();
+    	res = null;
+    	
+    	return SecurityUtil.hash(serial, "SHA-256");
     }
 
     /** 파일로 저장 */
