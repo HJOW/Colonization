@@ -36,13 +36,13 @@ public class ConfigManager implements Disposeable {
     protected JDialog dialog;
     protected JButton btnSave, btnCancel, btnSelStringTable;
     protected JComboBox<String> cbxLookAndFeel;
-    protected JTextField tfStringTable;
+    protected JTextField tfStringTable, tfModClasses;
     protected JTextArea taPacks;
     
     public ConfigManager(GUIColonyManager superInstance) {
     	this.superInstance = superInstance;
     	dialog = new JDialog(superInstance.getDialog(), true);
-    	dialog.setSize(400, 300);
+    	dialog.setSize(400, 350);
     	dialog.setTitle(ColonyManager.t("설정"));
     	GUIUtil.centerWindow(dialog);
     	dialog.setLayout(new BorderLayout());
@@ -181,7 +181,45 @@ public class ConfigManager implements Disposeable {
         
         rowNo++;
         
-        // 3. Packs
+        // 3. Mods
+        
+        gridBagConst = new GridBagConstraints();
+        gridBagConst.gridx = 0;
+        gridBagConst.gridy = rowNo;
+        gridBagConst.gridwidth = 1;
+        gridBagConst.gridheight = 1;
+        gridBagConst.weightx = 0.1;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+        gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConst.anchor = GridBagConstraints.NORTH;
+        
+        pn = new JPanel();
+        pn.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        lb = new JLabel(ColonyManager.t("MOD 클래스"));
+        pn.add(lb);
+        
+        pnConfigs.add(pn, gridBagConst);
+        
+        gridBagConst = new GridBagConstraints();
+        gridBagConst.gridx = 1;
+        gridBagConst.gridy = rowNo;
+        gridBagConst.gridwidth = 9;
+        gridBagConst.gridheight = 1;
+        gridBagConst.weightx = 0.9;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+        gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConst.anchor = GridBagConstraints.NORTH;
+        
+        pn = new JPanel();
+        pn.setLayout(new BorderLayout());
+        
+        tfModClasses = new JTextField();
+        pn.add(tfModClasses, BorderLayout.CENTER);
+        
+        pnConfigs.add(pn, gridBagConst);
+        
+        rowNo++;
+        
+        // 4. Packs
         
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 0;
@@ -268,6 +306,10 @@ public class ConfigManager implements Disposeable {
     	val = val.replace(superInstance.getColonyConfigRootDirectory().getAbsolutePath(), "[CONFIGPATH]");
     	superInstance.getConfig().set("StringTableFile", val);
     	
+    	// Mods
+    	val = tfModClasses.getText();
+    	superInstance.getConfig().set("Mods", val);
+    	
     	// Packs
     	val = taPacks.getText();
     	try {
@@ -287,6 +329,7 @@ public class ConfigManager implements Disposeable {
     	
     	cbxLookAndFeel.setSelectedItem(superInstance.getConfig().getString("LookAndFeel"));
     	tfStringTable.setText(superInstance.getConfig().getString("StringTableFile"));
+    	tfModClasses.setText(superInstance.getConfig().getString("Mods"));
     	
     	List<Object> packList = superInstance.getConfig().getList("Packs");
     	JsonArray arr = new JsonArray();
