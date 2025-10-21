@@ -69,4 +69,8 @@ public interface Colony extends ColonyElements {
     public long getStartMoney();
     /** 시작 신용도 반환 */
     public int getStartCredit();
+    /** 인증 여부 체크용 시리얼 반환 */
+    public String getCheckerSerial();
+    /** 인증 비활성화 */
+    public void disableChecked();
 }

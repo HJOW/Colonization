@@ -1048,7 +1048,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public BigInteger getCheckerValue() {
-        BigInteger res = new BigInteger(String.valueOf(getKey()));
+    	BigInteger res = new BigInteger(String.valueOf(getKey()));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
         res = res.add(getMoneyTotals()).multiply(Constants.BIGINTEGER_23);
         res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
@@ -1063,6 +1063,8 @@ public abstract class AbstractColony implements Colony {
     
     /** 인증용 시리얼 문자열 */
     public String getCheckerSerial() {
+    	if(! checked) return "";
+    	
     	StringBuilder res = new StringBuilder(String.valueOf(getCheckerValue()));
     	// TODO
     	
@@ -1070,6 +1072,11 @@ public abstract class AbstractColony implements Colony {
     	res = null;
     	
     	return SecurityUtil.hash(serial, "SHA-256");
+    }
+    
+    /** 인증 제거 (인증 제거 사유 발생 시 호출) */
+    public void disableChecked() {
+    	checked = false;
     }
 
     /** 파일로 저장 */
