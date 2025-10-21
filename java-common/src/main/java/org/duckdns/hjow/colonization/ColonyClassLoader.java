@@ -273,7 +273,6 @@ public class ColonyClassLoader {
     }
     
     /** 공통 로컬 설정 정보 적용 */
-    @SuppressWarnings("unchecked")
 	public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
         // 설정 파일에서 Pack 목록 불러오기
         List<Object> packList = null;
@@ -315,9 +314,19 @@ public class ColonyClassLoader {
             }
         }
         
-        // addpacks 불러오기 (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어가야 함)
-        try {
-        	Class<?> addPackClass = Class.forName("org.duckdns.hjow.colonization.addpack.AddPackInfo");
+        // addpacks 불러오기
+        processAddPack("org.duckdns.hjow.colonization.addpack.AddPackInfo");
+        processAddPack("org.duckdns.hjow.colonization.addpack.DebugPackInfo");
+        
+        // Pack 모두 열어 내용물 적용
+        loadAllListedPacks();
+    }
+    
+    /** addpacks 불러오기 (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) */
+    @SuppressWarnings("unchecked")
+	protected static void processAddPack(String className) {
+    	try {
+        	Class<?> addPackClass = Class.forName(className);
         	Object instances = addPackClass.newInstance();
         	Method mthd = addPackClass.getMethod("getPacks");
         	List<Pack> addPacks = (List<Pack>) mthd.invoke(instances);
@@ -329,8 +338,11 @@ public class ColonyClassLoader {
         } catch(Exception ex) {
         	GlobalLogs.processExceptionOccured(ex, false);
         }
-        
-        for(Pack p : getInstalledPacks()) {
+    }
+    
+    /** Pack 모두 열어 내용물 적용 */
+    protected static void loadAllListedPacks() {
+    	for(Pack p : getInstalledPacks()) {
             try {
                 loadPack(p);
             } catch(Exception ex) {
@@ -390,6 +402,15 @@ public class ColonyClassLoader {
     		if(p.getClass() == packClass) return p;
     	}
     	return null;
+    }
+    
+    /** Pack 으로 인해 사용 허가되어야 하는 기능 키워드 반환 */
+    public static List<String> getInstalledPackNewFeatures() {
+    	List<String> list = new ArrayList<String>();
+    	for(Pack p : getInstalledPacks()) {
+    		if(p.newFeatures() != null) list.addAll(p.newFeatures());
+    	}
+    	return list;
     }
     
     /** 클래스 정보들과, 불러온 Pack 모두 다시 확인 */

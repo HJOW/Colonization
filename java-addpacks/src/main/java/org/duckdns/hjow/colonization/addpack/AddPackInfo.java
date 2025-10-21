@@ -12,7 +12,9 @@ import org.duckdns.hjow.colonization.pack.Pack;
 public class AddPackInfo {
     public List<Pack> getPacks() {
     	List<Pack> list = new ArrayList<Pack>();
+        
     	// TODO : 이 곳에 Pack 추가
+    	// 예: try { list.add((Pack) Class.forName("org.duckdns.hjow.colonization.addpack.NewPack").newInstance()); } catch(Exception ex) {}
     	return list;
     }
 }

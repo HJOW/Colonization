@@ -18,4 +18,5 @@ public interface Pack extends Serializable {
     public String getEmail();
     public boolean isEnabled();
     public void setEnabled(boolean enabled);
+    public List<String> newFeatures();
 }

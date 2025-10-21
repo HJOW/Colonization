@@ -27,9 +27,21 @@
             <artifactId>colonization-daemon</artifactId>
             <version>0.0.1</version>        
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.duckdns.hjow</groupId>
+            <artifactId>colonization-java-packs</artifactId>
+            <version>0.0.1-SNAPSHOT</version>        
+        </dependency>
+        -->
 	</dependencies>
 	<build>
         <defaultGoal>install</defaultGoal>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

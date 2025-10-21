@@ -586,6 +586,9 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         ((JCheckBoxMenuItem)menuItem).setSelected(isDebugModeEnabled());
+        if(! ColonyClassLoader.getInstalledPackNewFeatures().contains("DebugEnable")) {
+        	menuItem.setVisible(false);
+        }
 
         menuItem = new JMenuItem(t("전역 로그 보기"));
         menuAction.add(menuItem);

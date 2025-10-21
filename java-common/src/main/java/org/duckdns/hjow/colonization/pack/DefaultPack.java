@@ -21,6 +21,7 @@ public class DefaultPack implements Pack {
     protected List<Class<?>> enemyClasses    = new ArrayList<Class<?>>();
     protected List<Class<?>> stateClasses    = new ArrayList<Class<?>>();
     protected List<Class<?>> productClasses  = new ArrayList<Class<?>>();
+    protected List<String>   featureKeywords = new ArrayList<String>();
     
     public DefaultPack() { init(); }
     protected void init() {}
@@ -105,6 +106,17 @@ public class DefaultPack implements Pack {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public List<String> getFeatureKeywords() {
+		return featureKeywords;
+	}
+	public void setFeatureKeywords(List<String> featureKeywords) {
+		this.featureKeywords = featureKeywords;
+	}
+	protected void addFeatureKeywords(String ... keywords) {
+		for(String str : keywords) {
+            if(! this.featureKeywords.contains(str)) this.featureKeywords.add(str);
+		}
+	}
 	@Override
     public List<Class<?>> getProductClasses() {
         return productClasses;
@@ -134,5 +146,10 @@ public class DefaultPack implements Pack {
         if(! (oth instanceof Pack)) return false;
         Pack otherPack = (Pack) oth;
         return otherPack.getName().equals(getName());
+    }
+    
+    @Override
+    public List<String> newFeatures() {
+    	return getFeatureKeywords();
     }
 }
