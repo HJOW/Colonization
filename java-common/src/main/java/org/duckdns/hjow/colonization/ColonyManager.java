@@ -14,6 +14,9 @@ import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -21,13 +24,19 @@ import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.pack.Library;
+import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
+import org.duckdns.hjow.colonization.script.PrimitiveObject;
+import org.duckdns.hjow.commons.script.MathObject;
+import org.duckdns.hjow.commons.script.ScriptPatternDetector;
+import org.duckdns.hjow.commons.script.SecurityObject;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 
@@ -59,6 +68,9 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     protected transient List<Mod> modsList    = new ArrayList<Mod>();
     protected transient List<Mod> modsEnabled = new ArrayList<Mod>();
     protected transient ColonyManagerBroker broker;
+    
+    protected transient ScriptEngineManager scriptEngineManager = null;
+    protected transient String scriptVarPrefix = "a" + (100000 + (Math.random() * 899999));
     
     /** 기본 생성자 */
     public ColonyManager() {
@@ -198,12 +210,30 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             ColonyClassLoader.clearAll();
             ColonyClassLoader.applyLocalConfigs(configs, this);
             
+            // 스크립트 엔진 매니저 준비
+            initScriptEngineManager();
+            
             // MODS 불러오기
             loadMods(false);
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
         }
     }
+    
+    /** 스크립트 엔진 매니저 준비 */
+    protected void initScriptEngineManager() {
+    	scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
+        scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
+        scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
+        scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
+    }
+    
+    /** 기본함수 선언 스크립트 실행 */
+	protected void evalInitScripts(ScriptEngine engine) throws Exception {
+		engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
+		engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
+		engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
+	}
     
     /** 정착지들을 기본 경로에서 불러오기 */
     public void loadColonies() {
@@ -397,8 +427,67 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             }
     	}
     	
+    	// 스크립트 MOD 불러오기
+    	loadScriptMods();
+    	
     	if(refresh) applyModOnUI();
     }
+	
+	/** 스크립트 MOD 불러오기 */
+	protected void loadScriptMods() {
+		// 폴더 체크 (없으면 만들기)
+		File root = getColonyConfigRootDirectory();
+    	if(! root.exists()) root.mkdirs();
+    	File dirScripts = new File(root.getAbsolutePath() + File.separator + "scripts");
+        if(! dirScripts.exists()) dirScripts.mkdirs();
+        File dirScriptMods = new File(dirScripts.getAbsolutePath() + File.separator + "mods"); // [ROOT] / scripts / mods
+        if(! dirScriptMods.exists()) dirScriptMods.mkdirs();
+        
+        // 폴더 내 js 파일 서치
+        File[] files = dirScriptMods.listFiles(new FileFilter() {	
+			@Override
+			public boolean accept(File pathname) {
+				return pathname.getName().toLowerCase().trim().endsWith(".js");
+			}
+		});
+        
+        // 파일 루프
+        for(File f : files) {
+        	if(! f.exists()) continue;
+        	if(f.isDirectory()) continue;
+        	
+        	GlobalLogs.log(t("Trying to load script MOD from [FILE]").replace("[FILE]", f.getName()));
+        	
+        	try {
+        		// 엔진 생성
+        		ScriptEngine engine = scriptEngineManager.getEngineByName("JavaScript");
+        		ScriptPatternDetector detector = new ScriptPatternDetector();
+        		
+        		// 스크립트 불러오기
+        		String scripts = FileUtil.readString(f, "UTF-8");
+        		// 리플렉션 존재여부 체크
+        		detector.checkReflection(scripts);
+        		
+        		// 스크립트 실행 (기본함수들 제공)
+        		evalInitScripts(engine);
+        		
+        		// 스크립트 실행 (함수들이 선언될 것)
+        		engine.eval(scripts);
+        		
+        		// 스크립트 MOD 객체 생성 및 준비
+        		ScriptMod mod = new ScriptMod();
+        		mod.injectScriptEngine(engine);
+        		mod.check();
+        		
+        		// MOD 등록
+        		if(! modsList.contains(mod)) modsList.add(mod);
+        		
+        		GlobalLogs.log(t("Load complete : [FILE]").replace("[FILE]", f.getName()));
+        	} catch(Exception ex) {
+        		GlobalLogs.processExceptionOccured(ex, false);
+        	}
+        }
+	}
     
     /** 활성화된 모드들을 UI에 반영 */
     protected void applyModOnUI() {};

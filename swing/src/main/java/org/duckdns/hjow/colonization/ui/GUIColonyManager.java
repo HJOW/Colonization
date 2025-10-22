@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -52,10 +54,15 @@ import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.script.PrimitiveObject;
+import org.duckdns.hjow.colonization.script.ScriptClassLoader;
+import org.duckdns.hjow.colonization.script.UIObject;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
 import org.duckdns.hjow.colonization.ui.tools.CDOCViewer;
 import org.duckdns.hjow.colonization.ui.tools.GUITCPSimpleDaemonManager;
 import org.duckdns.hjow.commons.data.CompressedDocument;
+import org.duckdns.hjow.commons.script.MathObject;
+import org.duckdns.hjow.commons.script.SecurityObject;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -99,6 +106,8 @@ public class GUIColonyManager extends ColonyManager {
     
     protected transient Queue<RefreshRequest> queueRefreshes = new LinkedList<RefreshRequest>();
     protected transient List<ModDialog> modDialogs = new ArrayList<ModDialog>();
+    
+    protected transient UIObject uiScriptBroker;
     
     /** 생성자, 상위 프로그램에서 호출됨 */
     public GUIColonyManager(GUIColonizationMainClass superInstance) {
@@ -1484,6 +1493,27 @@ public class GUIColonyManager extends ColonyManager {
         }
         return null;
     }
+    
+    /** 스크립트 엔진 매니저 준비 */
+    @Override
+    protected void initScriptEngineManager() {
+    	scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
+        scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
+        scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
+        scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
+        
+        uiScriptBroker = new UIObject(getDialog());
+        scriptEngineManager.put(uiScriptBroker.getPrefixName() + "_" + scriptVarPrefix, uiScriptBroker);
+    }
+    
+    /** 기본함수 선언 스크립트 실행 */
+    @Override
+	protected void evalInitScripts(ScriptEngine engine) throws Exception {
+		engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
+		engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
+		engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
+		engine.eval(uiScriptBroker.getInitScript(scriptVarPrefix));
+	}
     
     @Override
     protected void applyModOnUI() {
