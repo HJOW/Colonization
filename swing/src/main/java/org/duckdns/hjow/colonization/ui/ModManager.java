@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -126,7 +127,7 @@ public class ModManager implements Disposeable {
 		req = req.trim();
 		
 		try {
-			manager.checkModClassName(req);
+			ColonyClassLoader.checkModClassName(req);
 			if(! ((Class.forName(req).newInstance()) instanceof Mod)) throw new KnownRuntimeException(ColonyManager.t("입력하신 클래스는 MOD 클래스가 아닙니다."));
 			
 			List<Mod> mods = manager.getMods();

@@ -391,6 +391,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
                 for(Mod m : mods) {
                     if(! modsList.contains(m)) modsList.add(m);
                 }
+    		} catch(ClassNotFoundException ignores) {
     		} catch(Exception ex) {
             	GlobalLogs.processExceptionOccured(ex, false);
             }
