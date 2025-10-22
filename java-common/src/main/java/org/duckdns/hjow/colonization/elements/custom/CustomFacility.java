@@ -10,6 +10,6 @@ import org.duckdns.hjow.colonization.elements.Facility;
  *      연구 시설인 경우 ResearchCenter
  *  를 같이 상속받아 개발해야 함.
   */
-public interface CustomFacility extends Facility {
+public interface CustomFacility extends Facility, CustomElement {
 
 }

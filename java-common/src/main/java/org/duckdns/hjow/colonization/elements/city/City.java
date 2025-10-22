@@ -17,6 +17,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
+import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.BusinessCenter;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
@@ -1131,10 +1132,10 @@ public abstract class City implements ColonyElements {
         BigInteger res = new BigInteger(String.valueOf(getKey()));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
         res = res.add(new BigInteger(String.valueOf(getHp())));
-        for(Facility   f : getFacility()) { res = res.add(f.getCheckerValue()); }
-        for(Citizen    c : getCitizens()) { res = res.add(c.getCheckerValue()); }
-        for(Enemy      e : getEnemies())  { res = res.add(e.getCheckerValue()); }
-        for(HoldingJob h : getHoldings()) { res = res.add(h.getCheckerValue()); }
+        for(Facility   f : getFacility()) { res = res.add(f.getCheckerValue()); if(f instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Citizen    c : getCitizens()) { res = res.add(c.getCheckerValue()); if(c instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Enemy      e : getEnemies())  { res = res.add(e.getCheckerValue()); if(e instanceof CustomElement) res = BigInteger.ZERO; }
+        for(HoldingJob h : getHoldings()) { res = res.add(h.getCheckerValue()); if(h instanceof CustomElement) res = BigInteger.ZERO; }
         
         return res;
     }

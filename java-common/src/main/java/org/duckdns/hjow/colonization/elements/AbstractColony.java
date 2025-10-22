@@ -14,6 +14,7 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.city.NormalCity;
+import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
 import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
@@ -1054,9 +1055,9 @@ public abstract class AbstractColony implements Colony {
         res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
         res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17));
         
-        for(City c : getCities())    { res = res.add(c.getCheckerValue()); }
-        for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue()); }
-        for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); }
+        for(City c : getCities())    { res = res.add(c.getCheckerValue()); if(c instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue()); if(l instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); if(l instanceof CustomElement) res = BigInteger.ZERO; }
         
         return res;
     }

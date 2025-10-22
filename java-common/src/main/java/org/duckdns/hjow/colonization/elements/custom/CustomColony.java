@@ -7,7 +7,7 @@ import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 
 /** 사용자 정의 정착지 시나라오로, 모든 종류의 시설과 연구 지원 */
-public abstract class CustomColony extends AbstractColony {
+public abstract class CustomColony extends AbstractColony implements CustomElement {
 	private static final long serialVersionUID = -4732649232228406754L;
 
 	public CustomColony() {
