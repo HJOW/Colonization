@@ -18,5 +18,10 @@
         "name" : "시설",
         "contentType" : "text/html",
         "file" : "facilities.html"
+    },
+    {
+        "name" : "스크립트 API",
+        "contentType" : "text/html",
+        "file" : "scriptapi.html"
     }
 ]
