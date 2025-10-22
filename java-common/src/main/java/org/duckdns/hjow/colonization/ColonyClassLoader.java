@@ -12,14 +12,16 @@ import java.util.List;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
-import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.util.ClassUtil;
-import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
 import org.duckdns.hjow.colonization.elements.custom.FreeColony;
 import org.duckdns.hjow.colonization.pack.BundledPack;
+import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.pack.Pack;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
+import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.ClassUtil;
+import org.duckdns.hjow.commons.util.FileUtil;
 
 /** 정착지 시나리오, 시설, 연구, 시설과 시민의 상태 타입 등 클래스들과 타입 리스트를 관리하는 클래스 */
 public class ColonyClassLoader {
@@ -272,6 +274,19 @@ public class ColonyClassLoader {
         // TODO
     }
     
+    /** 예약된 Library 클래스명 */
+    protected static final String[] RESERVED_LIB_NAMES = {
+        "org.duckdns.hjow.colonization.addpack.AddPackInfo"
+      , "org.duckdns.hjow.colonization.addpack.DebugPackInfo"
+    };
+    
+    /** 예약된 Library 클래스명 배열 반환 */
+    public static String[] getReservedLibraryClassNames() {
+    	String[] newArr = new String[RESERVED_LIB_NAMES.length];
+    	for(int idx=0; idx<newArr.length; idx++) { newArr[idx] = RESERVED_LIB_NAMES[idx]; }
+    	return newArr;
+    }
+    
     /** 공통 로컬 설정 정보 적용 */
 	public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
         // 설정 파일에서 Pack 목록 불러오기
@@ -315,21 +330,32 @@ public class ColonyClassLoader {
         }
         
         // addpacks 불러오기
-        processAddPack("org.duckdns.hjow.colonization.addpack.AddPackInfo");
-        processAddPack("org.duckdns.hjow.colonization.addpack.DebugPackInfo");
+        for(String resv : RESERVED_LIB_NAMES) {
+        	processAddPack(resv, man);
+        }
+        processAddPack("org.duckdns.hjow.colonization.addpack.AddPackInfo"  , man);
+        processAddPack("org.duckdns.hjow.colonization.addpack.DebugPackInfo", man);
         
         // Pack 모두 열어 내용물 적용
         loadAllListedPacks();
     }
+	
+	/** 클래스명 체크 */
+    public static void checkModClassName(String modClassName) {
+    	if(modClassName.contains(",")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 , 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains(";")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ; 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains("!")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ! 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains("\"")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 \" 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains("'")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ' 기호가 들어갈 수 없습니다."));
+		if(modClassName.contains(" ") || modClassName.contains("\t") || modClassName.contains("\n")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 공백 기호가 들어갈 수 없습니다."));
+    }
     
     /** addpacks 불러오기 (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) */
-    @SuppressWarnings("unchecked")
-	protected static void processAddPack(String className) {
+	protected static void processAddPack(String className, ColonyManager man) {
     	try {
         	Class<?> addPackClass = Class.forName(className);
-        	Object instances = addPackClass.newInstance();
-        	Method mthd = addPackClass.getMethod("getPacks");
-        	List<Pack> addPacks = (List<Pack>) mthd.invoke(instances);
+        	Library instances = (Library) addPackClass.newInstance();
+        	List<Pack> addPacks = instances.getPacks();
         	for(Pack packOne : addPacks) {
         		if(! packs.contains(packOne)) packs.add(packOne);
         	}

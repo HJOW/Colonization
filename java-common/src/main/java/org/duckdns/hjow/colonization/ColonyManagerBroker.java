@@ -7,7 +7,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 
 /** ColonyManager 대리자, 일부 필드와 메소드에만 액세스할 수 있도록 제한된 객체를 전달하기 위해 사용, Call by reference */
 public class ColonyManagerBroker implements ColonyManagerInterface {
-    protected transient ColonyManager originals;
+    private transient ColonyManager originals;
     public ColonyManagerBroker(ColonyManager originals) {
     	this.originals = originals;
     }
@@ -17,35 +17,49 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
     	return ColonyManager.t(text);
     }
     
+    /** 프로그램 종료 시 호출됨. 직접 호출하지 말 것. */
 	@Override
 	public void dispose() {
 		this.originals = null;
 	}
     
+	/** 프로그램 종료 */
+	@Override
 	public void exit() {
 		originals.exit();
 	}
 	
+	/** 현재 프로그램 설정 내용을 복제해 반환 */
+	@Override
 	public ColonyManagerConfig getConfig() {
         return originals.getConfig().cloneSelf();
     }
 	
+	@Override
 	public void reserveRefresh() {
 		originals.reserveRefresh();
 	}
 	
+	/** 로그 출력 */
+	@Override
 	public void log(String msg) {
 		originals.log(msg);
 	}
 	
+	/** 알림 메시지 출력 */
+	@Override
 	public void alert(String msg) {
 		originals.alert(msg);
 	}
 	
+	/** 시뮬레이션 정지 */
+	@Override
 	public void pauseSimulation() {
 		originals.pauseSimulation();
 	}
 	
+	/** 시뮬레이션 재개 */
+	@Override
 	public void resumeSimulation(int cycleCount) {
 		originals.resumeSimulation(cycleCount);
 	}

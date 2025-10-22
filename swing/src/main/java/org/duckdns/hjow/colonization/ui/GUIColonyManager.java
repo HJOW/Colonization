@@ -1443,7 +1443,7 @@ public class GUIColonyManager extends ColonyManager {
         		if(cycle % 4 == 0) mod.refresh(cycle, col.toJson(), broker); // 읽기 전용인 경우 JSON으로 변환해 반환
         	} else {
         		col.disableChecked(); // 쓰기 허용 MOD 사용 시 인증 비활성화
-        	    mod.refresh(cycle, col, this);
+        	    mod.refresh(cycle, col, broker);
         	}
         }
         
@@ -1500,8 +1500,7 @@ public class GUIColonyManager extends ColonyManager {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(! dialog.isOpenedOnce()) {
-						if(mod.isReadOnly()) mod.init(broker);
-			    		else                 mod.init(getSelf());
+						mod.init(broker);
 						if(! modsEnabled.contains(mod)) modsEnabled.add(mod);
 					}
 					dialog.open();

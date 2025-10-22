@@ -24,8 +24,8 @@ public interface Mod extends Disposeable, Serializable {
     
     /** 
      * 시뮬레이션 중 새로 고침 시 호출, 혹은 전체 새로고침 시에도 호출. 
-     *     읽기 전용 모드인 경우 colony 에는 정착지 정보가 JsonObject 타입으로 들어가며 manager 에는 본 화면 UI 의 대리 객체가 들어감.
-     *     읽기 전용 모드가 아닌 경우, colony 에는 정착지 객체 자체가 들어와 액세스가 가능하며, manager 에도 본 화면 객체 자체가 들어감.
+     *     읽기 전용 모드인 경우 colony 에는 정착지 정보가 JsonObject 타입으로 들어감.
+     *     읽기 전용 모드가 아닌 경우, colony 에는 정착지 객체 자체가 들어와 데이터 변경이 가능
      */
     public void refresh(int cycle, Object colony, ColonyManagerInterface manager);
     

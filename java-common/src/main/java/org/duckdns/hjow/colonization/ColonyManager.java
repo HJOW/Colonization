@@ -21,10 +21,10 @@ import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
-import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
@@ -368,26 +368,33 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     }
     
     /** Mods 불러오기 */
-    protected void loadMods(boolean refresh) {
+	protected void loadMods(boolean refresh) {
+    	// 기존 Mod 들 제거
+    	for(Mod m : modsList) { m.dispose(); }
     	modsList.clear();
     	modsEnabled.clear();
     	
+    	// 다시 불러오기
     	String strMods = configs.getString("Mods");
     	StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
     	while(commaTokenizer.hasMoreTokens()) {
     		String classNames = commaTokenizer.nextToken().trim();
-    		try {
-    			checkModClassName(classNames);
-    			Class<?> modClass = Class.forName(classNames);
-    			Mod mod = (Mod) modClass.newInstance();
-    		    if(! modsList.contains(mod)) modsList.add(mod);
-    		} catch(Throwable tx) {
-    			logGlobals(t("Error") + " : " + tx.getMessage(), 2);
-    		}
+    		addMod(classNames, false, false);
     	}
     	
-    	// TODO
-    	
+    	// 예약어 등록된 Library 도 불러오기
+    	for(String reservedLibClassNames : ColonyClassLoader.getReservedLibraryClassNames()) {
+    		try {
+                Class<?> libClass = Class.forName(reservedLibClassNames);
+                Library instances = (Library) libClass.newInstance();
+                List<Mod> mods = instances.getMods();
+                for(Mod m : mods) {
+                    if(! modsList.contains(m)) modsList.add(m);
+                }
+    		} catch(Exception ex) {
+            	GlobalLogs.processExceptionOccured(ex, false);
+            }
+    	}
     	
     	if(refresh) applyModOnUI();
     }
@@ -402,39 +409,30 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	return list;
     }
     
-    /** 클래스명 체크 */
-    public void checkModClassName(String modClassName) {
-    	if(modClassName.contains(",")) throw new KnownRuntimeException(t("클래스명에는 , 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains(";")) throw new KnownRuntimeException(t("클래스명에는 ; 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains("!")) throw new KnownRuntimeException(t("클래스명에는 ! 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains("\"")) throw new KnownRuntimeException(t("클래스명에는 \" 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains("'")) throw new KnownRuntimeException(t("클래스명에는 ' 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains(" ") || modClassName.contains("\t") || modClassName.contains("\n")) throw new KnownRuntimeException(t("클래스명에는 공백 기호가 들어갈 수 없습니다."));
-    }
-    
     /** Mod 추가 */
     public void addMod(String modClassName) {
-    	addMod(modClassName, true);
+    	addMod(modClassName, true, true);
     }
     
-    /** Mod 추가 */
-    public void addMod(String modClassName, boolean refresh) {
+    /** Mod 추가 (이 메소드는 ColonyClassLoader 간의 통신을 위해서만 존재하므로 되도록 직접 호출 자제 !) */
+    public void addMod(String modClassName, boolean refresh, boolean saveConfig) {
     	try {
-    		checkModClassName(modClassName);
+    		ColonyClassLoader.checkModClassName(modClassName);
     		modClassName = modClassName.trim();
     		
-    		String strMods = configs.getString("Mods");
-    		if(! strMods.contains(modClassName)) {
-    			if(DataUtil.isNotEmpty(strMods)) strMods += ",";
-    			strMods += modClassName;
-    		}
-    		configs.set("Mods", strMods);
-    		
-			Class<?> modClass = Class.forName(modClassName);
+    		Class<?> modClass = Class.forName(modClassName);
 			Mod mod = (Mod) modClass.newInstance();
 		    if(! modsList.contains(mod)) modsList.add(mod);
-		    
-		    saveLocalConfigs();
+    		
+    		if(saveConfig) {
+    			String strMods = configs.getString("Mods");
+        		if(! strMods.contains(modClassName)) {
+        			if(DataUtil.isNotEmpty(strMods)) strMods += ",";
+        			strMods += modClassName;
+        		}
+        		configs.set("Mods", strMods);
+        		saveLocalConfigs();
+    		}
 		} catch(Throwable tx) {
 			logGlobals(t("Error") + " : " + tx.getMessage(), 2);
 		}
@@ -450,7 +448,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     /** Mod 제거 */
     public void removeMod(String modClassName, boolean refresh) {
     	try {
-    		checkModClassName(modClassName);
+    		ColonyClassLoader.checkModClassName(modClassName);
     		modClassName = modClassName.trim();
     		
     		// 설정 리스트로 변환
