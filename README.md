@@ -43,6 +43,9 @@ Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 �
 
 작업 시 Visual Studio 2017 (Express 가능) 이상 버전이 필요합니다.
 
+## 기타 파일
+packages.zip - JavaLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.
+
 # License
 
    Copyright 2025 HJOW (hujinone22@naver.com)
