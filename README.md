@@ -36,6 +36,13 @@ Java 기반 Daemon 입니다.
 추가 Pack (새로운 문명 타입, 새 시설과 연구 등 포함) 개발을 위한 샘플 프로젝트입니다.
 Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.
 
+## JavaLauncher
+Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 프로젝트입니다.
+.Net Framework 4.6 기반으로 개발되었습니다.
+(개발 중으로 아직 사용 불가)
+
+작업 시 Visual Studio 2017 (Express 가능) 이상 버전이 필요합니다.
+
 # License
 
    Copyright 2025 HJOW (hujinone22@naver.com)
