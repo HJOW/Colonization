@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace JavaLauncher
 {
@@ -40,8 +41,10 @@ namespace JavaLauncher
                 System.IO.Directory.CreateDirectory(ROOTPATH);
             }
 
+            progMain.IsIndeterminate = true;
 
-            // TODO
+            Thread mainThread = new Thread(Prepare);
+            mainThread.Start();
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
@@ -53,6 +56,36 @@ namespace JavaLauncher
         private void BtnRun_Click(object sender, RoutedEventArgs e)
         {
             // TODO
+        }
+
+        private async void Prepare()
+        {
+            string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+            string javaBinPath = null;
+            if (string.IsNullOrEmpty(javaPath))
+            {
+                Dictionary<string, object> dict = null;
+                // Access Server
+                using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+                {
+                    System.Net.Http.HttpResponseMessage response = await client.GetAsync("http://hjow.duckdns.org/colonization/content.json");
+                    response.EnsureSuccessStatusCode();
+
+                    string body = await response.Content.ReadAsStringAsync();
+                    dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(body);
+                }
+                
+
+                // Parsing JSON - System.Text.Json;
+
+            }
+            else
+            {
+                javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
+            }
+
+
+
         }
     }
 }
