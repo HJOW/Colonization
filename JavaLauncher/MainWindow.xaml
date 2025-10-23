@@ -33,7 +33,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Name="btnRun" Grid.Row="0" Grid.Column="1" IsEnabled="False">실행</Button>
+            <Button Name="btnRun" Grid.Row="0" Grid.Column="1" IsEnabled="False" Click="BtnRun_Click">실행</Button>
             <Button Name="btnExit" Grid.Row="0" Grid.Column="3" Click="BtnExit_Click">종료</Button>
         </Grid>
     </Grid>
