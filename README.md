@@ -3,12 +3,12 @@ GUI 요소들로 간단히 만드는 우주시대 정착지 개척 시뮬레이�
 여러 플랫폼 연습 겸해 손대고 있는 토이 프로젝트입니다.
 
 # 실행
-Swing 빌드를 데스크톱 PC에서 실행해 플레이할 수 있습니다.
+Swing 빌드를 데스크톱 PC에서 실행해 플레이할 수 있습니다.   
 Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 설치가 필요합니다.
 
 # 빌드
 ## colonization-java-common (java-common)
-Java 기반 빌드의 공통 파트입니다.
+Java 기반 빌드의 공통 파트입니다.   
 Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
 
 ## Swing 빌드 (swing)
@@ -18,33 +18,34 @@ Maven 구동 시 실행 가능한 jar 환경으로 빌드됩니다.
 (colonization-java-common, daemon 를 먼저 Maven 구동 후 Swing 빌드 구동이 가능합니다.)   
 
 ## Servlet 빌드 (java-web)
-Java Servlet 2.5, JSTL 1.2 기반의 JSP/Servlet 프로젝트로
-OpenJDK 8, Tomcat 9 기반 하에 동작하는 웹 서비스입니다.
-
+Java Servlet 2.5, JSTL 1.2 기반의 JSP/Servlet 프로젝트로    
+OpenJDK 8, Tomcat 9 기반 하에 동작하는 웹 서비스입니다.    
+    
 계정 및 회원가입 개념이 존재하며, Swing 빌드에서도 로그인 및 접속이 가능하도록 개발될 예정입니다.
-
+     
 ## Daemon (daemon)
-Java 기반 Daemon 입니다.
-구동 시 시뮬레이션 서버가 Daemon 형태로 구동됩니다.
-시뮬레이션 성능이 나오지 않는 클라이언트가, 서버에 접속해 정착지 시뮬레이션을 요청해 사용하는 방식입니다.
-콘솔 프로그램으로, 65246 포트를 기본으로 사용합니다.
-콘솔 구동 시 매개변수로 포트 지정이 가능합니다.
-
-(Swing 빌드에 클라이언트 기능 아직 미완성, 작업 우선순위 낮음)
-
+Java 기반 Daemon 입니다.    
+구동 시 시뮬레이션 서버가 Daemon 형태로 구동됩니다.    
+시뮬레이션 성능이 나오지 않는 클라이언트가, 서버에 접속해 정착지 시뮬레이션을 요청해 사용하는 방식입니다.    
+콘솔 프로그램으로, 65246 포트를 기본으로 사용합니다.    
+콘솔 구동 시 매개변수로 포트 지정이 가능합니다.    
+    
+(Swing 빌드에 클라이언트 기능 아직 미완성, 작업 우선순위 낮음)    
+    
 ## 추가 Pack 개발용 샘플 프로젝트 (java-addpacks)
-추가 Pack (새로운 문명 타입, 새 시설과 연구 등 포함) 개발을 위한 샘플 프로젝트입니다.
-Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.
-
+추가 Pack (새로운 문명 타입, 새 시설과 연구 등 포함) 개발을 위한 샘플 프로젝트입니다.    
+Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.    
+    
 ## JavaLauncher
-Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 프로젝트입니다.
-.Net Framework 4.6 기반으로 개발되었습니다.
-(개발 중으로 아직 사용 불가)
-
-작업 시 Visual Studio 2017 (Express 가능) 이상 버전이 필요합니다.
-
+Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 프로젝트입니다.    
+.Net Framework 4.6 기반으로 개발되었습니다.    
+(개발 중으로 아직 사용 불가)    
+    
+작업 시 Visual Studio 2017 (Express 가능) 이상 버전이 필요합니다.    
+    
 ## 기타 파일
-packages.zip - JavaLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.
+packages.zip - JavaLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.    
+               용량 문제로 CefSharp 는 제외되어 있습니다. [풀버전](http://hjow.duckdns.org/colonization/packages.zip)
 
 # License
 
