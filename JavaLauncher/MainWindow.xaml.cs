@@ -94,7 +94,7 @@ namespace JavaLauncher
             }));
         }
 
-        private async void Run()
+        private void Run()
         {
             string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
             string javaBinPath = null;
