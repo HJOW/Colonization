@@ -71,7 +71,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     protected transient ScriptEngineManager scriptEngineManager = null;
     protected transient String scriptLanguage = "JavaScript";
-    protected transient String scriptVarPrefix = "a" + (100000 + (Math.random() * 899999));
+    protected transient String scriptVarPrefix = "a" + (100000 + (int) (Math.random() * 899999));
     
     /** 기본 생성자 */
     public ColonyManager() {
