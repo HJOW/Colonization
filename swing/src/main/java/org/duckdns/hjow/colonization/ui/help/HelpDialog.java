@@ -30,7 +30,18 @@ public class HelpDialog implements Disposeable {
     public HelpDialog(GUIColonyManager superInstance) {
     	this.superInstance = superInstance;
     	dialog = new JDialog(superInstance.getDialog());
-    	dialog.setSize(600, 500);
+    	
+    	int width  = 600;
+    	int height = 500;
+    	if(superInstance != null) {
+    		width  = (int) (superInstance.getDialogWidth() * 0.75);
+    		height = (int) (superInstance.getDialogHeight() * 0.75);
+    		
+    		if(width  < 600) width  = 600;
+    		if(height < 500) height = 500;
+    	}
+    	
+    	dialog.setSize(width, height);
     	GUIUtil.centerWindow(dialog);
     	dialog.setLayout(new BorderLayout());
     	

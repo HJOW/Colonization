@@ -165,6 +165,11 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         return getHomeDir("colonization", "configs");
     }
     
+    /** 정착지 Script 기본 경로 반환 */
+    public File getColonyScriptRootDirectory() {
+        return getHomeDir("colonization", "scripts");
+    }
+    
     /** Colonization 기본 설정 불러오기 */
     public void loadLocalConfigs() {
         File root = getColonyConfigRootDirectory();
@@ -436,11 +441,9 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
 	/** 스크립트 MOD 불러오기 */
 	protected void loadScriptMods() {
 		// 폴더 체크 (없으면 만들기)
-		File root = getColonyConfigRootDirectory();
+		File root = getColonyScriptRootDirectory();
     	if(! root.exists()) root.mkdirs();
-    	File dirScripts = new File(root.getAbsolutePath() + File.separator + "scripts");
-        if(! dirScripts.exists()) dirScripts.mkdirs();
-        File dirScriptMods = new File(dirScripts.getAbsolutePath() + File.separator + "mods"); // [ROOT] / scripts / mods
+        File dirScriptMods = new File(root.getAbsolutePath() + File.separator + "mods"); // [ROOT] / scripts / mods
         if(! dirScriptMods.exists()) dirScriptMods.mkdirs();
         
         // 폴더 내 js 파일 서치

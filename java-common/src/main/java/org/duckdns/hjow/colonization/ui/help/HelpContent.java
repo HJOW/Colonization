@@ -92,6 +92,8 @@ public class HelpContent implements Serializable {
     			strContent = new StringBuilder("");
     			if(fileName != null) {
     				inp1 = HelpContent.class.getResourceAsStream(fileName);
+    				if(inp1 == null) continue;
+    				
     				inp2 = new InputStreamReader(inp1, "UTF-8");
     	    		inp3 = new BufferedReader(inp2);
     	    		

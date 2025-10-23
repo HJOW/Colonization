@@ -20,6 +20,11 @@
         "file" : "facilities.html"
     },
     {
+        "name" : "MOD",
+        "contentType" : "text/html",
+        "file" : "mod.html"
+    },
+    {
         "name" : "스크립트 API",
         "contentType" : "text/html",
         "file" : "scriptapi.html"
