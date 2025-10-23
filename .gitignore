@@ -1,2 +1,4 @@
 java-common/target/**
 swing/target/**
+JavaLauncher/bin/**
+JavaLauncher/obj/**
