@@ -694,7 +694,7 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	new ScriptTester(getDialog()).open(scriptEngineManager.getEngineByName(scriptLanguage));
+            	try { new ScriptTester(getDialog()).open(newScriptEngine()); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); }
             }
         });
         

@@ -464,16 +464,14 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         	
         	try {
         		// 엔진 생성
-        		ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
-        		ScriptPatternDetector detector = new ScriptPatternDetector();
+        		ScriptEngine engine = newScriptEngine();
         		
         		// 스크립트 불러오기
         		String scripts = FileUtil.readString(f, "UTF-8");
-        		// 리플렉션 존재여부 체크
-        		detector.checkReflection(scripts);
         		
-        		// 스크립트 실행 (기본함수들 제공)
-        		evalInitScripts(engine);
+        		// 리플렉션 존재여부 체크
+        		ScriptPatternDetector detector = new ScriptPatternDetector();
+        		detector.checkReflection(scripts);
         		
         		// 스크립트 실행 (함수들이 선언될 것)
         		engine.eval(scripts);
@@ -491,6 +489,17 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         		GlobalLogs.processExceptionOccured(ex, false);
         	}
         }
+	}
+	
+	/** 스크립트 엔진 생성해 반환 */
+	protected ScriptEngine newScriptEngine() throws Exception {
+		// 엔진 생성
+		ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
+		
+		// 스크립트 실행 (기본함수들 제공)
+		evalInitScripts(engine);
+		
+		return engine;
 	}
     
     /** 활성화된 모드들을 UI에 반영 */
