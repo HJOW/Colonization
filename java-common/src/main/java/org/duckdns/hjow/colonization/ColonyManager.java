@@ -70,6 +70,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     protected transient ColonyManagerBroker broker;
     
     protected transient ScriptEngineManager scriptEngineManager = null;
+    protected transient String scriptLanguage = "JavaScript";
     protected transient String scriptVarPrefix = "a" + (100000 + (Math.random() * 899999));
     
     /** 기본 생성자 */
@@ -463,7 +464,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         	
         	try {
         		// 엔진 생성
-        		ScriptEngine engine = scriptEngineManager.getEngineByName("JavaScript");
+        		ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
         		ScriptPatternDetector detector = new ScriptPatternDetector();
         		
         		// 스크립트 불러오기

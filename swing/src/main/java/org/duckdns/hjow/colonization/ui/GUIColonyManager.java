@@ -54,6 +54,7 @@ import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.script.UIObject;
@@ -685,6 +686,15 @@ public class GUIColonyManager extends ColonyManager {
             @Override
             public void actionPerformed(ActionEvent e) {
             	cdocViewer.open();
+            }
+        });
+        
+        menuItem = new JMenuItem(t("스크립트 테스터"));
+        menuView.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	new ScriptTester(getDialog()).open(scriptEngineManager.getEngineByName(scriptLanguage));
             }
         });
         
@@ -1523,19 +1533,22 @@ public class GUIColonyManager extends ColonyManager {
     		JMenuItem menuItem = new JMenuItem(t(mod.getName()));
     		menuMods.add(menuItem);
     		
-    		final ModDialog dialog = new ModDialog(getDialog(), mod);
-    		modDialogs.add(dialog);
-    		
-    		menuItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if(! dialog.isOpenedOnce()) {
-						mod.init(broker);
-						if(! modsEnabled.contains(mod)) modsEnabled.add(mod);
-					}
-					dialog.open();
-				}
-			});
+    		if(mod.getLocation() == 0) {
+    		    final ModDialog dialog = new ModDialog(getDialog(), mod);
+        		modDialogs.add(dialog);
+        	    if(mod instanceof ScriptMod) { ((ScriptMod) mod).injectParentComponent(dialog); }
+        		
+        		menuItem.addActionListener(new ActionListener() {
+    				@Override
+    				public void actionPerformed(ActionEvent e) {
+    					if(! dialog.isOpenedOnce()) {
+    						mod.init(broker);
+    						if(! modsEnabled.contains(mod)) modsEnabled.add(mod);
+    					}
+    					dialog.open();
+    				}
+    			});
+    		}
     	}
     }
 }

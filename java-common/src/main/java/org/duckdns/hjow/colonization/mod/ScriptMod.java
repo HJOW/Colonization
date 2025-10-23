@@ -11,6 +11,8 @@ import org.duckdns.hjow.commons.util.DataUtil;
 public class ScriptMod implements Mod, ScriptUsingObject {
 	private static final long serialVersionUID = -8887470668482563210L;
 	protected transient ScriptEngine engine;
+	protected transient Object parent;
+	
     protected transient JPanel panel;
     
     protected transient boolean flagChecking = false;
@@ -20,6 +22,12 @@ public class ScriptMod implements Mod, ScriptUsingObject {
         this.engine = engine;
         panel = new JPanel();
         this.engine.put("__panel", panel);
+	}
+	
+	/** 부모 컴포넌트 객체 주입 */
+	public void injectParentComponent(Object parent) {
+		this.parent = parent;
+		this.engine.put("__parent", parent);
 	}
 	
 	@Override
@@ -68,6 +76,7 @@ public class ScriptMod implements Mod, ScriptUsingObject {
 	public void dispose() {
 		try { engine.eval("dispose(__panel)"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
 		engine = null;
+		parent = null;
 		
 		if(panel != null) panel.removeAll();
 		panel = null;
