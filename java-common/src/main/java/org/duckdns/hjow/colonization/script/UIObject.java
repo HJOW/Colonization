@@ -79,6 +79,9 @@ public class UIObject extends ScriptObject {
         initScript = initScript.append("function ui_create(a) {                                                              ").append("\n");
         initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".create(a);                      ").append("\n");
         initScript = initScript.append("};                                                                                   ").append("\n");
+        initScript = initScript.append("function ui_createsByJson(a) {                                                       ").append("\n");
+        initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".createsByJson(a);               ").append("\n");
+        initScript = initScript.append("};                                                                                   ").append("\n");
         initScript = initScript.append("function ui_scroll(a) {                                                              ").append("\n");
         initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".wrapScrollPane(a);              ").append("\n");
         initScript = initScript.append("};                                                                                   ").append("\n");
@@ -99,6 +102,10 @@ public class UIObject extends ScriptObject {
         initScript = initScript.append("};                                                                                   ").append("\n");
         
         return initScript.toString();
+    }
+    
+    public Object createsByJson(Object jsonText) {
+        return new ScriptJsonPane(jsonText);
     }
     
     @SuppressWarnings("rawtypes")
