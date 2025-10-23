@@ -90,7 +90,7 @@ namespace JavaLauncher
                 btnRun.IsEnabled = true;
                 progMain.Value = 0;
                 progMain.IsIndeterminate = false;
-                webMain.Navigate(new Uri(swingBuild["noticeKo"].ToString()));
+                webMain.Address = swingBuild["noticeKo"].ToString();
             }));
         }
 
