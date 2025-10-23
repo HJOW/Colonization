@@ -1,0 +1,40 @@
+﻿<Window x:Class="JavaLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:JavaLauncher"
+        mc:Ignorable="d"
+        Title="Colonization 실행 도우미" Name="mainWindow" Height="450" Width="800" Closed="Window_Closed" Initialized="Window_Initialized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition />
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+        <WebBrowser Name="webMain" Grid.Row="1" Grid.Column="1"/>
+        <ProgressBar Name="progMain" Grid.Row="3" Grid.Column="1"/>
+        <Grid Grid.Row="5" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="120"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="120"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Button Name="btnRun" Grid.Row="0" Grid.Column="1" IsEnabled="False">실행</Button>
+            <Button Name="btnExit" Grid.Row="0" Grid.Column="3" Click="BtnExit_Click">종료</Button>
+        </Grid>
+    </Grid>
+</Window>
