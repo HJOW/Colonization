@@ -22,7 +22,7 @@
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <WebBrowser Name="webMain" Grid.Row="1" Grid.Column="1"/>
-        <ProgressBar Name="progMain" Grid.Row="3" Grid.Column="1"/>
+        <ProgressBar Name="progMain" Grid.Row="3" Grid.Column="1" Maximum="220"/>
         <Grid Grid.Row="5" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

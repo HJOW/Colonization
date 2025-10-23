@@ -14,6 +14,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Threading;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System.Net;
+using System.Windows.Threading;
 
 namespace JavaLauncher
 {
@@ -23,6 +27,10 @@ namespace JavaLauncher
     public partial class MainWindow : Window
     {
         private static string ROOTPATH = Util.GetUserHomePath() + System.IO.Path.DirectorySeparatorChar + ".colonization";
+        private int progressPads = 0;
+        private JObject json = null;
+        private JObject swingBuild = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -55,37 +63,151 @@ namespace JavaLauncher
 
         private void BtnRun_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
+            btnRun.IsEnabled = false;
+            progMain.Value = 0;
+            progMain.IsIndeterminate = true;
+            progressPads = 0;
+
+            Thread mainThread = new Thread(Run);
+            mainThread.Start();
         }
 
         private async void Prepare()
         {
+            // Access Server
+            using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+            {
+                System.Net.Http.HttpResponseMessage response = await client.GetAsync("http://hjow.duckdns.org/colonization/content.json");
+                response.EnsureSuccessStatusCode();
+
+                string body = await response.Content.ReadAsStringAsync();
+                json = JObject.Parse(body);
+                swingBuild = json["swing"] as JObject;
+            }
+
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                btnRun.IsEnabled = true;
+                progMain.Value = 0;
+                progMain.IsIndeterminate = false;
+                webMain.Navigate(new Uri(swingBuild["noticeKo"].ToString()));
+            }));
+        }
+
+        private async void Run()
+        {
             string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
             string javaBinPath = null;
+            javaPath = null;
+            
+            progressPads = 0;
+            
+            // Download JRE if not exist
             if (string.IsNullOrEmpty(javaPath))
             {
-                Dictionary<string, object> dict = null;
-                // Access Server
-                using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
+                javaPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "jre";
+                if (!System.IO.Directory.Exists(javaPath))
                 {
-                    System.Net.Http.HttpResponseMessage response = await client.GetAsync("http://hjow.duckdns.org/colonization/content.json");
-                    response.EnsureSuccessStatusCode();
-
-                    string body = await response.Content.ReadAsStringAsync();
-                    dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(body);
+                    System.IO.Directory.CreateDirectory(javaPath);
                 }
-                
 
-                // Parsing JSON - System.Text.Json;
+                // Check already exists on directory
+                if (!File.Exists(javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe"))
+                {
+                    // Prepare to download
+                    string jreUrl = (json["jre"] as JObject)["win_x64"].ToString();
 
+                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    {
+                        progMain.IsIndeterminate = false;
+                        progMain.Value = 10;
+                    }));
+
+                    // Download JRE
+                    using (System.Net.WebClient client = new System.Net.WebClient())
+                    {
+                        client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
+                        client.DownloadFile(jreUrl, javaPath + System.IO.Path.DirectorySeparatorChar + "jre.zip");
+
+                        progressPads = 0;
+                        SetProgrssValue(110);
+                        System.IO.Compression.ZipFile.ExtractToDirectory(javaPath + System.IO.Path.DirectorySeparatorChar + "jre.zip", javaPath);
+                        File.Delete(javaPath + System.IO.Path.DirectorySeparatorChar + "jre.zip");
+                    }
+                }
             }
-            else
+            javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
+            
+            // Check version
+            string versionNew = swingBuild["version"].ToString();
+            JObject versionInfo = (swingBuild["builds"] as JObject)[versionNew] as JObject;
+            string versionUrl = versionInfo["url"].ToString();
+
+            // Download Game
+            progressPads = 110;
+
+            string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
+            if (!System.IO.Directory.Exists(jarPath))
             {
-                javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
+                System.IO.Directory.CreateDirectory(jarPath);
             }
 
+            if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar"))
+            {
+                using (System.Net.WebClient client = new System.Net.WebClient())
+                {
+                    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
+                    client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar");
+                }
+            }
 
+            progressPads = 0;
+            SetProgrssValue(0);
+            SetProgressIndeterminate(true);
 
+            // JAR 실행
+
+            System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+
+            info.FileName = javaBinPath;
+            info.CreateNoWindow  = true;
+            info.UseShellExecute = false;
+            info.WorkingDirectory = jarPath;
+            info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar\"";
+
+            info.RedirectStandardInput  = true;
+            info.RedirectStandardOutput = true;
+            info.RedirectStandardError  = true;
+
+            process.StartInfo = info;
+            process.Start();
+
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                mainWindow.Close();
+            }));
+        }
+
+        private void SetProgressIndeterminate(bool indeterminate)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                progMain.IsIndeterminate = indeterminate;
+            }));
+        }
+
+        private void SetProgrssValue(int val)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                progMain.Value = val;
+            }));
+        }
+
+        private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            SetProgrssValue(e.ProgressPercentage + progressPads + 10);
         }
     }
 }

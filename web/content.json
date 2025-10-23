@@ -1,13 +1,12 @@
 {
     "swing" : { 
         "version" : "0.0.0.1"
-        , "noticeKo" : "notice_ko.html"
-        , "noticeEn" : "notice_ko.html"
-        , "jre" : {
-            "win_x64" : "http://hjow.duckdns.org/colonization/jre8_win_x64.zip"
+        , "noticeKo" : "http://hjow.duckdns.org/colonization/notice_ko.html"
+        , "noticeEn" : "http://hjow.duckdns.org/colonization/notice_ko.html"
+        , "builds" : {
+            "0.0.0.1" : { "version" : "0.0.0.1", "url" : "http://hjow.duckdns.org/colonization/colonization-swing-0.0.0.1.jar", "check" : "0" }
         }
-        , "builds" : [
-            { "version" : "0.0.0.1", "url" : "colonization-swing-0.0.0.1.jar", "check" : "0" }
-        ]
+    }, "jre" : {
+        "win_x64" : "http://hjow.duckdns.org/colonization/jre8_win_x64.zip"
     }
 }
