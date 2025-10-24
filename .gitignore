@@ -2,5 +2,7 @@ java-common/target/**
 swing/target/**
 JavaLauncher/bin/**
 JavaLauncher/obj/**
+JavaLauncher/publish/**
 .vs/**
 packages
+JavaLauncher_TemporaryKey.pfx
