@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
+using System.Diagnostics;
 
 namespace JavaLauncher
 {
@@ -92,6 +93,15 @@ namespace JavaLauncher
 
                 double values = double.Parse(versionPart);
                 return (int) values;
+            }
+        }
+
+        /** 특정 폴더를 탐색기로 열기 (해당 폴더가 존재해야 동작함) */
+        public static void OpenExplorer(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                Process.Start("explorer.exe", path);
             }
         }
     }

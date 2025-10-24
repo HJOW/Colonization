@@ -34,6 +34,7 @@ namespace JavaLauncher
         private JObject json = null;
         private JObject swingBuild = null;
         private string versionString = "";
+        private string pathInstalled = null;
 
         public MainWindow()
         {
@@ -94,6 +95,11 @@ namespace JavaLauncher
             mainThread.Start();
         }
 
+        private void BtnExplore_Click(object sender, RoutedEventArgs e)
+        {
+            Util.OpenExplorer(pathInstalled);
+        }
+
         private void BtnAgreeOk_Click(object sender, RoutedEventArgs e)
         {
             tabItemMainAction.IsEnabled = true;
@@ -108,6 +114,8 @@ namespace JavaLauncher
 
         private async void Prepare()
         {
+            string statusMsg = "";
+
             // Access Server
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
             {
@@ -137,12 +145,14 @@ namespace JavaLauncher
                 if (!File.Exists(javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe"))
                 {
                     installNeeded = true;
+                    statusMsg = "Java Runtime 다운로드가 필요합니다.";
                 }
             }
             javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin";
             if (!File.Exists(javaBinPath + System.IO.Path.DirectorySeparatorChar + "javaw.exe"))
             {
                 installNeeded = true;
+                statusMsg = "Java Runtime 다운로드가 필요합니다.";
             }
             else
             {
@@ -150,6 +160,8 @@ namespace JavaLauncher
                 if (javaVer < 8)
                 {
                     installNeeded = true;
+                    statusMsg = "기존 Java Runtime 사용 불가로, 다운로드가 필요합니다.";
+
                     javaPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "jre";
                     if (!System.IO.Directory.Exists(javaPath))
                     {
@@ -174,6 +186,7 @@ namespace JavaLauncher
                 if (!System.IO.Directory.Exists(libDir))
                 {
                     installNeeded = true;
+                    statusMsg = "Colonization JAR 다운로드가 필요합니다.";
                 }
 
                 string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
@@ -182,6 +195,7 @@ namespace JavaLauncher
                     if (!System.IO.Directory.Exists(jarPath))
                     {
                         installNeeded = true;
+                        statusMsg = "Colonization JAR 다운로드가 필요합니다.";
                     }
                 }
 
@@ -190,6 +204,7 @@ namespace JavaLauncher
                     if (! File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
                     {
                         installNeeded = true;
+                        statusMsg = "Colonization JAR 다운로드가 필요합니다.";
                     }
                 }
             }
@@ -208,11 +223,13 @@ namespace JavaLauncher
                 else
                 {
                     btnInst.IsEnabled = false;
+                    btnInst.Visibility = Visibility.Hidden;
                     btnRun.IsEnabled = true;
+                    statusMsg = "Colonization 실행 준비 완료";
                 }
 
                 webMain.Address = swingBuild["noticeKo"].ToString();
-                SetStatusMessage("");
+                SetStatusMessage(statusMsg);
             }));
         }
 
@@ -227,6 +244,15 @@ namespace JavaLauncher
                     progMain.Value = 0;
                     btnInst.IsEnabled = false;
                     btnRun.IsEnabled = true;
+
+                    if (!string.IsNullOrEmpty(pathInstalled))
+                    {
+                        btnExplore.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        btnExplore.Visibility = Visibility.Hidden;
+                    }
                 }));
             }
             catch (Exception ex)
@@ -245,6 +271,8 @@ namespace JavaLauncher
 
         private void Install()
         {
+            pathInstalled = "";
+
             string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
 
             progressPads = 0;
@@ -296,6 +324,7 @@ namespace JavaLauncher
                     }
 
                     SetStatusMessage("Java Runtime (JRE) 다운로드 완료");
+                    pathInstalled = javaPath;
                 }
             }
 
@@ -331,7 +360,8 @@ namespace JavaLauncher
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
                     client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
                 }
-                SetStatusMessage("Colonization 버전 " + versionString + "다운로드 완료");
+                SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 완료");
+                pathInstalled = jarPath;
             }
         }
 
@@ -422,7 +452,5 @@ namespace JavaLauncher
         {
             SetProgrssValue(e.ProgressPercentage + progressPads + 10);
         }
-
-        
     }
 }
