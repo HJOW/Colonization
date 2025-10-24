@@ -87,3 +87,8 @@ JavaLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로,
 - moment.js          (See https://github.com/moment/moment/blob/develop/LICENSE            )
 - Babel standalone   (See https://github.com/babel/babel/blob/main/LICENSE                 )
 - React              (See https://github.com/facebook/react/blob/main/LICENSE              )
+
+## JavaLauncher 빌드만 해당
+- Eclipse Temurin    (See https://adoptium.net/about                                       )
+- Cefsharp           (See https://www.nuget.org/packages/CefSharp.Wpf/140.1.140/license    )
+- Newtonsoft.Json    (See https://licenses.nuget.org/MIT                                   )
