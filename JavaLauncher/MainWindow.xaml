@@ -66,13 +66,16 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="5"/>
                             <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="60"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <Label Name="lbStatus" Grid.Row="0" Grid.Column="0"></Label>
-                        <Button Name="btnRun" Grid.Row="0" Grid.Column="1" IsEnabled="False" Click="BtnRun_Click">실행</Button>
-                        <Button Name="btnExit" Grid.Row="0" Grid.Column="3" Click="BtnExit_Click">종료</Button>
+                        <Button Name="btnInst" Grid.Row="0" Grid.Column="1" IsEnabled="False" Click="BtnInst_Click">설치</Button>
+                        <Button Name="btnRun" Grid.Row="0" Grid.Column="3" IsEnabled="False" Click="BtnRun_Click">실행</Button>
+                        <Button Name="btnExit" Grid.Row="0" Grid.Column="5" Click="BtnExit_Click">종료</Button>
                     </Grid>
                 </Grid>
             </TabItem>

@@ -33,6 +33,7 @@ namespace JavaLauncher
         private string arch = "win_x64";
         private JObject json = null;
         private JObject swingBuild = null;
+        private string versionString = "";
 
         public MainWindow()
         {
@@ -69,14 +70,27 @@ namespace JavaLauncher
             Application.Current.Shutdown();
         }
 
-        private void BtnRun_Click(object sender, RoutedEventArgs e)
+        private void BtnInst_Click(object sender, RoutedEventArgs e)
         {
+            btnInst.IsEnabled = false;
             btnRun.IsEnabled = false;
             progMain.Value = 0;
             progMain.IsIndeterminate = true;
             progressPads = 0;
 
-            Thread mainThread = new Thread(Run);
+            Thread mainThread = new Thread(InstallWith);
+            mainThread.Start();
+        }
+
+        private void BtnRun_Click(object sender, RoutedEventArgs e)
+        {
+            btnInst.IsEnabled = false;
+            btnRun.IsEnabled = false;
+            progMain.Value = 0;
+            progMain.IsIndeterminate = true;
+            progressPads = 0;
+
+            Thread mainThread = new Thread(RunWith);
             mainThread.Start();
         }
 
@@ -105,21 +119,122 @@ namespace JavaLauncher
                 swingBuild = json["swing"] as JObject;
             }
 
+            // Check Install needed
+            SetStatusMessage("Java Runtime (JRE) 확인 중...");
+            bool installNeeded = false;
+            string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+            string javaBinPath = null;
+
+            if (string.IsNullOrEmpty(javaPath))
+            {
+                javaPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "jre";
+                if (!System.IO.Directory.Exists(javaPath))
+                {
+                    System.IO.Directory.CreateDirectory(javaPath);
+                }
+
+                // Check already exists on directory
+                if (!File.Exists(javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe"))
+                {
+                    installNeeded = true;
+                }
+            }
+            javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
+            if (!File.Exists(javaBinPath))
+            {
+                installNeeded = true;
+            }
+
+            // Check version
+            versionString = swingBuild["version"].ToString();
+            JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
+            string versionUrl = versionInfo["url"].ToString();
+            if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
+
+            if (! installNeeded)
+            {
+                // Check colonization is installed
+                SetStatusMessage("Colonization 설치 확인 중...");
+
+                // Prepare JAR (Libraries) Dir
+                string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+                if (!System.IO.Directory.Exists(libDir))
+                {
+                    installNeeded = true;
+                }
+
+                string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
+                if (! installNeeded)
+                {
+                    if (!System.IO.Directory.Exists(jarPath))
+                    {
+                        installNeeded = true;
+                    }
+                }
+
+                if (! installNeeded)
+                {
+                    if (! File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                    {
+                        installNeeded = true;
+                    }
+                }
+            }
+
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 btnRun.IsEnabled = true;
                 progMain.Value = 0;
                 progMain.IsIndeterminate = false;
+
+                if (installNeeded)
+                {
+                    btnInst.IsEnabled = true;
+                    btnRun.IsEnabled = false;
+                }
+                else
+                {
+                    btnInst.IsEnabled = false;
+                    btnRun.IsEnabled = true;
+                }
+
                 webMain.Address = swingBuild["noticeKo"].ToString();
+                SetStatusMessage("");
             }));
         }
 
-        private void Run()
+        private void InstallWith()
+        {
+            try
+            {
+                Install();
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    progMain.IsIndeterminate = false;
+                    progMain.Value = 0;
+                    btnInst.IsEnabled = false;
+                    btnRun.IsEnabled = true;
+                }));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("오류 : " + ex.Message);
+                Console.WriteLine("오류 : " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
+
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    mainWindow.Close();
+                    Application.Current.Shutdown();
+                }));
+            }
+        }
+
+        private void Install()
         {
             string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
             string javaBinPath = null;
-            javaPath = null;
-            
+
             progressPads = 0;
 
             SetStatusMessage("Java Runtime (JRE) 확인 중...");
@@ -140,7 +255,7 @@ namespace JavaLauncher
 
                     // Prepare to download
                     string jreUrl = (json["jre"] as JObject)[arch].ToString();
-                    if (! jreUrl.StartsWith("http")) jreUrl = ROOTURL + jreUrl;
+                    if (!jreUrl.StartsWith("http")) jreUrl = ROOTURL + jreUrl;
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
                     {
@@ -170,10 +285,10 @@ namespace JavaLauncher
             SetStatusMessage("Colonization 버전 확인...");
 
             // Check version
-            string versionNew = swingBuild["version"].ToString();
-            JObject versionInfo = (swingBuild["builds"] as JObject)[versionNew] as JObject;
+            versionString = swingBuild["version"].ToString();
+            JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
             string versionUrl = versionInfo["url"].ToString();
-            if (! versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
+            if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
 
             // Prepare JAR (Libraries) Dir
             string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
@@ -191,23 +306,58 @@ namespace JavaLauncher
                 System.IO.Directory.CreateDirectory(jarPath);
             }
 
-            if (! File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar"))
+            if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
             {
-                SetStatusMessage("Colonization 버전 " + versionNew + "다운로드 중...");
+                SetStatusMessage("Colonization 버전 " + versionString + "다운로드 중...");
                 using (System.Net.WebClient client = new System.Net.WebClient())
                 {
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
-                    client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar");
+                    client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
                 }
-                SetStatusMessage("Colonization 버전 " + versionNew + "다운로드 완료");
+                SetStatusMessage("Colonization 버전 " + versionString + "다운로드 완료");
             }
+        }
 
-            progressPads = 0;
+        private void RunWith()
+        {
+            try
+            {
+                Run();
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    SetStatusMessage("");
+                    mainWindow.Close();
+                }));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("오류 : " + ex.Message);
+                Console.WriteLine("오류 : " + ex.Message);
+                Console.WriteLine(ex.StackTrace);
+
+                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                {
+                    mainWindow.Close();
+                    Application.Current.Shutdown();
+                }));
+            }
+        }
+
+        private void Run()
+        {
             SetProgrssValue(0);
             SetProgressIndeterminate(true);
 
-            // JAR 실행
+            string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+            string javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
+            string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
+            string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+            progressPads = 0;
 
+            // Re-Checking installation
+            Install();
+            
+            // JAR 실행
             SetStatusMessage("Colonization 실행 중...");
 
             System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
@@ -217,7 +367,7 @@ namespace JavaLauncher
             info.CreateNoWindow  = true;
             info.UseShellExecute = false;
             info.WorkingDirectory = jarPath;
-            info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
+            info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
 
             info.RedirectStandardInput  = true;
             info.RedirectStandardOutput = true;
@@ -225,12 +375,6 @@ namespace JavaLauncher
 
             process.StartInfo = info;
             process.Start();
-
-            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-            {
-                SetStatusMessage("");
-                mainWindow.Close();
-            }));
         }
 
         private void SetProgressIndeterminate(bool indeterminate)
@@ -261,5 +405,7 @@ namespace JavaLauncher
         {
             SetProgrssValue(e.ProgressPercentage + progressPads + 10);
         }
+
+        
     }
 }
