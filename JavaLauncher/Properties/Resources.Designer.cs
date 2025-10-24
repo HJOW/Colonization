@@ -59,5 +59,14 @@ namespace JavaLauncher.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   123과(와) 유사한 지역화된 문자열을 찾습니다.
+        /// </summary>
+        internal static string agreement {
+            get {
+                return ResourceManager.GetString("agreement", resourceCulture);
+            }
+        }
     }
 }

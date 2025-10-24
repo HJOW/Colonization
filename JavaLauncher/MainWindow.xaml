@@ -16,26 +16,65 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
             <RowDefinition />
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="15"/>
-            <RowDefinition Height="5"/>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
-        <cef:ChromiumWebBrowser Name="webMain" Grid.Row="1" Grid.Column="1"/>
-        <ProgressBar Name="progMain" Grid.Row="3" Grid.Column="1" Maximum="220"/>
-        <Grid Grid.Row="5" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="5"/>
-                <ColumnDefinition Width="120"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Button Name="btnRun" Grid.Row="0" Grid.Column="1" IsEnabled="False" Click="BtnRun_Click">실행</Button>
-            <Button Name="btnExit" Grid.Row="0" Grid.Column="3" Click="BtnExit_Click">종료</Button>
-        </Grid>
+        <TabControl Name="tabMain" Grid.Column="1" Grid.Row="1">
+            <TabItem Header="약관">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <TextBox Name="taAgreements" IsReadOnly="True" Grid.Column="0" Grid.Row="0"/>
+                    <Grid Grid.Column="0" Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Button Name="btnAgreeOk" Grid.Column="1" Grid.Row="0" Click="BtnAgreeOk_Click">동의</Button>
+                        <Button Name="btnAgreeCancel" Grid.Column="3" Grid.Row="0" Click="BtnAgreeCancel_Click">거절</Button>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="동작" Name="tabItemMainAction" IsEnabled="False">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="11*"/>
+                        <ColumnDefinition Width="372*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <cef:ChromiumWebBrowser Name="webMain" Grid.Row="0" Grid.ColumnSpan="2"/>
+                    <ProgressBar Name="progMain" Grid.Row="2" Maximum="220" Grid.ColumnSpan="2"/>
+                    <Grid Grid.Row="4" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Button Name="btnRun" Grid.Row="0" Grid.Column="1" IsEnabled="False" Click="BtnRun_Click">실행</Button>
+                        <Button Name="btnExit" Grid.Row="0" Grid.Column="3" Click="BtnExit_Click">종료</Button>
+                    </Grid>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>

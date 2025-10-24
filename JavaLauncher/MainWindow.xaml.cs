@@ -49,6 +49,11 @@ namespace JavaLauncher
                 System.IO.Directory.CreateDirectory(ROOTPATH);
             }
 
+            // 약관 동의 내용 불러오기
+            taAgreements.Text = JavaLauncher.Properties.Resources.agreement;
+
+            // 사전 준비 작업 시작
+
             progMain.IsIndeterminate = true;
 
             Thread mainThread = new Thread(Prepare);
@@ -70,6 +75,18 @@ namespace JavaLauncher
 
             Thread mainThread = new Thread(Run);
             mainThread.Start();
+        }
+
+        private void BtnAgreeOk_Click(object sender, RoutedEventArgs e)
+        {
+            tabItemMainAction.IsEnabled = true;
+            tabMain.SelectedIndex = 1;
+        }
+
+        private void BtnAgreeCancel_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.Close();
+            Application.Current.Shutdown();
         }
 
         private async void Prepare()
