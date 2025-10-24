@@ -139,12 +139,25 @@ namespace JavaLauncher
                     installNeeded = true;
                 }
             }
-            javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
-            if (!File.Exists(javaBinPath))
+            javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin";
+            if (!File.Exists(javaBinPath + System.IO.Path.DirectorySeparatorChar + "javaw.exe"))
             {
                 installNeeded = true;
             }
-
+            else
+            {
+                int javaVer = Util.GetJavaVersion(javaBinPath);
+                if (javaVer < 8)
+                {
+                    installNeeded = true;
+                    javaPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "jre";
+                    if (!System.IO.Directory.Exists(javaPath))
+                    {
+                        System.IO.Directory.CreateDirectory(javaPath);
+                    }
+                }
+            }
+            
             // Check version
             versionString = swingBuild["version"].ToString();
             JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
@@ -233,12 +246,17 @@ namespace JavaLauncher
         private void Install()
         {
             string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
-            string javaBinPath = null;
 
             progressPads = 0;
 
             SetStatusMessage("Java Runtime (JRE) 확인 중...");
 
+            if (! string.IsNullOrEmpty(javaPath))
+            {
+                int javaVer = Util.GetJavaVersion(javaPath + System.IO.Path.DirectorySeparatorChar + "bin");
+                if (javaVer < 8) javaPath = null; // JAVA_HOME version is lower than 8, do not use.
+            }
+            
             // Download JRE if not exist
             if (string.IsNullOrEmpty(javaPath))
             {
@@ -280,7 +298,6 @@ namespace JavaLauncher
                     SetStatusMessage("Java Runtime (JRE) 다운로드 완료");
                 }
             }
-            javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
 
             SetStatusMessage("Colonization 버전 확인...");
 
@@ -349,7 +366,7 @@ namespace JavaLauncher
             SetProgressIndeterminate(true);
 
             string javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
-            string javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
+            string javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin";
             string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
             string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
             progressPads = 0;
@@ -363,7 +380,7 @@ namespace JavaLauncher
             System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
             System.Diagnostics.Process process = new System.Diagnostics.Process();
 
-            info.FileName = javaBinPath;
+            info.FileName = javaBinPath + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
             info.CreateNoWindow  = true;
             info.UseShellExecute = false;
             info.WorkingDirectory = jarPath;

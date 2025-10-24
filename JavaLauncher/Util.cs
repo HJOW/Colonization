@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows;
 
 namespace JavaLauncher
 {
@@ -39,6 +41,58 @@ namespace JavaLauncher
         public static string GetUserHomePath()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
+        /** JRE 혹은 JDK의 bin 디렉토리 (java.exe와 javaw.exe가 있는 디렉토리를 말함) 경로를 받아, 해당 Java 버전을 정수로 반환, 버전이 1.X 형태인 경우 X 값을 반환, java.exe 가 없으면 -1을 반환  */
+        public static int GetJavaVersion(string javaBinPath)
+        {
+            if (!Directory.Exists(javaBinPath)) return -1;
+
+            string javaExePath = javaBinPath + System.IO.Path.DirectorySeparatorChar + "java.exe";
+            if (!File.Exists(javaExePath)) return -1;
+
+            System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
+
+            info.FileName = javaExePath;
+            info.CreateNoWindow = true;
+            info.UseShellExecute = false;
+            info.WorkingDirectory = javaBinPath;
+            info.Arguments = "-version";
+
+            info.RedirectStandardInput = true;
+            info.RedirectStandardOutput = true;
+            info.RedirectStandardError = true;
+
+            string outputs = "";
+            using (System.Diagnostics.Process process = new System.Diagnostics.Process())
+            {
+                process.StartInfo = info;
+                process.Start();
+                
+                outputs = process.StandardOutput.ReadToEnd() + process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+                outputs = outputs.Trim();
+                Console.WriteLine(outputs);
+
+                int quoteIndex = outputs.IndexOf("\"");
+                string versionPart = outputs.Substring(quoteIndex + 1);
+
+                quoteIndex = versionPart.IndexOf("\"");
+                versionPart = versionPart.Substring(0, quoteIndex);
+
+                int underbarIndex = versionPart.IndexOf("_");
+                if (underbarIndex >= 0)
+                {
+                    versionPart = versionPart.Substring(0, underbarIndex);
+                }
+
+                versionPart = versionPart.Trim();
+                if (versionPart.StartsWith("1.")) versionPart = versionPart.Substring(2);
+
+                double values = double.Parse(versionPart);
+                return (int) values;
+            }
         }
     }
 }
