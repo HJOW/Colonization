@@ -27,7 +27,10 @@ namespace JavaLauncher
     public partial class MainWindow : Window
     {
         private static string ROOTPATH = Util.GetUserHomePath() + System.IO.Path.DirectorySeparatorChar + ".colonization";
+        private const string ROOTURL = "http://hjow.duckdns.org/colonization/";
+
         private int progressPads = 0;
+        private string arch = "win_x64";
         private JObject json = null;
         private JObject swingBuild = null;
 
@@ -94,7 +97,7 @@ namespace JavaLauncher
             // Access Server
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
             {
-                System.Net.Http.HttpResponseMessage response = await client.GetAsync("http://hjow.duckdns.org/colonization/content.json");
+                System.Net.Http.HttpResponseMessage response = await client.GetAsync(ROOTURL + "content.json");
                 response.EnsureSuccessStatusCode();
 
                 string body = await response.Content.ReadAsStringAsync();
@@ -118,7 +121,9 @@ namespace JavaLauncher
             javaPath = null;
             
             progressPads = 0;
-            
+
+            SetStatusMessage("Java Runtime (JRE) 확인 중...");
+
             // Download JRE if not exist
             if (string.IsNullOrEmpty(javaPath))
             {
@@ -131,14 +136,19 @@ namespace JavaLauncher
                 // Check already exists on directory
                 if (!File.Exists(javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe"))
                 {
+                    SetStatusMessage("Java Runtime (JRE) 다운로드 준비 중...");
+
                     // Prepare to download
-                    string jreUrl = (json["jre"] as JObject)["win_x64"].ToString();
+                    string jreUrl = (json["jre"] as JObject)[arch].ToString();
+                    if (! jreUrl.StartsWith("http")) jreUrl = ROOTURL + jreUrl;
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
                     {
                         progMain.IsIndeterminate = false;
                         progMain.Value = 10;
                     }));
+
+                    SetStatusMessage("Java Runtime (JRE) 다운로드 중...");
 
                     // Download JRE
                     using (System.Net.WebClient client = new System.Net.WebClient())
@@ -151,14 +161,26 @@ namespace JavaLauncher
                         System.IO.Compression.ZipFile.ExtractToDirectory(javaPath + System.IO.Path.DirectorySeparatorChar + "jre.zip", javaPath);
                         File.Delete(javaPath + System.IO.Path.DirectorySeparatorChar + "jre.zip");
                     }
+
+                    SetStatusMessage("Java Runtime (JRE) 다운로드 완료");
                 }
             }
             javaBinPath = javaPath + System.IO.Path.DirectorySeparatorChar + "bin" + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
-            
+
+            SetStatusMessage("Colonization 버전 확인...");
+
             // Check version
             string versionNew = swingBuild["version"].ToString();
             JObject versionInfo = (swingBuild["builds"] as JObject)[versionNew] as JObject;
             string versionUrl = versionInfo["url"].ToString();
+            if (! versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
+
+            // Prepare JAR (Libraries) Dir
+            string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+            if (!System.IO.Directory.Exists(libDir))
+            {
+                System.IO.Directory.CreateDirectory(libDir);
+            }
 
             // Download Game
             progressPads = 110;
@@ -169,13 +191,15 @@ namespace JavaLauncher
                 System.IO.Directory.CreateDirectory(jarPath);
             }
 
-            if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar"))
+            if (! File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar"))
             {
+                SetStatusMessage("Colonization 버전 " + versionNew + "다운로드 중...");
                 using (System.Net.WebClient client = new System.Net.WebClient())
                 {
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
                     client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar");
                 }
+                SetStatusMessage("Colonization 버전 " + versionNew + "다운로드 완료");
             }
 
             progressPads = 0;
@@ -184,6 +208,8 @@ namespace JavaLauncher
 
             // JAR 실행
 
+            SetStatusMessage("Colonization 실행 중...");
+
             System.Diagnostics.ProcessStartInfo info = new System.Diagnostics.ProcessStartInfo();
             System.Diagnostics.Process process = new System.Diagnostics.Process();
 
@@ -191,7 +217,7 @@ namespace JavaLauncher
             info.CreateNoWindow  = true;
             info.UseShellExecute = false;
             info.WorkingDirectory = jarPath;
-            info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar\"";
+            info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionNew + ".jar\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
 
             info.RedirectStandardInput  = true;
             info.RedirectStandardOutput = true;
@@ -202,6 +228,7 @@ namespace JavaLauncher
 
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
+                SetStatusMessage("");
                 mainWindow.Close();
             }));
         }
@@ -219,6 +246,14 @@ namespace JavaLauncher
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 progMain.Value = val;
+            }));
+        }
+
+        private void SetStatusMessage(string msg)
+        {
+            Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+            {
+                lbStatus.Content = msg;
             }));
         }
 
