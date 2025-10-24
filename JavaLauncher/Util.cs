@@ -104,5 +104,37 @@ namespace JavaLauncher
                 Process.Start("explorer.exe", path);
             }
         }
+
+        /** JRE 설치 디렉토리 안에서 bin 디렉토리 찾아 반환. 존재하지 않으면 null 반환. */
+        public static string GetJavaBinPath(string javaInstallPath)
+        {
+            if (!Directory.Exists(javaInstallPath)) return null;
+            string[] children = Directory.GetDirectories(javaInstallPath);
+            if (children == null) return null;
+
+            foreach (string child in children)
+            {
+                if (!Directory.Exists(child)) continue;
+                if (child.EndsWith(Path.DirectorySeparatorChar + "bin"))
+                {
+                    if (GetJavaVersion(child) >= 8) return child;
+                }
+                
+                string[] grands = Directory.GetDirectories(child);
+                bool binExists = false;
+                foreach (string g in grands)
+                {
+                    if (g.EndsWith(Path.DirectorySeparatorChar + "bin")) { binExists = true; break; }
+                }
+                if (!binExists) continue;
+
+                string binPath = child + Path.DirectorySeparatorChar + "bin";
+                if (!Directory.Exists(binPath)) continue;
+
+                if (GetJavaVersion(binPath) < 8) continue;
+                return binPath;
+            }
+            return null;
+        }
     }
 }
