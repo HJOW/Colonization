@@ -7,7 +7,7 @@ using System.IO;
 using System.Windows;
 using System.Diagnostics;
 
-namespace JavaLauncher
+namespace WinLauncher
 {
     public class Util
     {

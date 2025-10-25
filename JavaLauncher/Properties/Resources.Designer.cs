@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace JavaLauncher.Properties {
+namespace WinLauncher.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace JavaLauncher.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JavaLauncher.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WinLauncher.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,26 @@ namespace JavaLauncher.Properties {
         }
         
         /// <summary>
-        ///   123과(와) 유사한 지역화된 문자열을 찾습니다.
+        ///   -----------------------------------------------------------------
+        ///Colonization 개인정보 처리방침 및 약관
+        ///-----------------------------------------------------------------
+        ///
+        ///※ 약관
+        ///
+        /// 본 게임은 아직 개발 중인 게임으로, 
+        /// 세이브의 보존 및 업데이트로 인한 비호환 방지를 보장하지 
+        /// 않습니다.
+        ///
+        /// Colonization 실행에는 Java Runtime 이 필요합니다.
+        /// 필요한 경우 자동으로 Eclipse Temurin JRE 가 다운로드 됩니다.
+        ///
+        /// Colonization 및 소스 코드는 Apache License 2.0 로 공개되어 있으며,
+        /// https://github.com/HJOW/Colonization
+        /// 에서 확인하실 수 있습니다.
+        ///
+        /// Copyright 2025 HJOW (hujinone22@naver.com)
+        ///
+        /// Licensed under the[나머지 문자열은 잘림]&quot;;과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string agreement {
             get {

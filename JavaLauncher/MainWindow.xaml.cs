@@ -19,7 +19,7 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Windows.Threading;
 
-namespace JavaLauncher
+namespace WinLauncher
 {
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리
@@ -60,7 +60,7 @@ namespace JavaLauncher
             else arch = "win_x86";
 
             // 약관 동의 내용 불러오기
-            taAgreements.Text = JavaLauncher.Properties.Resources.agreement;
+            taAgreements.Text = WinLauncher.Properties.Resources.agreement;
 
             // 사전 준비 작업 시작
 
