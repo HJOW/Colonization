@@ -11,11 +11,21 @@ Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 설치가 필요�
 Java 기반 빌드의 공통 파트입니다.   
 Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
 
+## colonization-java-default (java-defaultpack)
+Java 기반 빌드 중 기본 제공되는 컨텐츠 파트입니다.
+기본 제공되는 정착지, 도시, 연구, 시설들을 구현합니다.
+Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
+
 ## Swing 빌드 (swing)
 Java 의 Swing API 를 활용한 GUI 환경 빌드입니다.   
 Java 8 (OpenJDK 1.8 사용 가능) 이상 버전에서 구동되며, GUI 환경이 필요합니다.   
 Maven 구동 시 실행 가능한 jar 환경으로 빌드됩니다.   
-(colonization-java-common, daemon 를 먼저 Maven 구동 후 Swing 빌드 구동이 가능합니다.)   
+(colonization-java-common, colonization-java-default, daemon 를 먼저 Maven 구동 후 Swing 빌드 구동이 가능합니다.)   
+
+## JavaLauncher (WinLauncher)
+Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 프로젝트입니다.    
+.Net Framework 4.5.2 기반으로 개발되었습니다.    
+(개발 중으로 아직 사용 불가)    
 
 ## Servlet 빌드 (java-web)
 Java Servlet 2.5, JSTL 1.2 기반의 JSP/Servlet 프로젝트로    
@@ -36,17 +46,10 @@ Java 기반 Daemon 입니다.
 추가 Pack (새로운 문명 타입, 새 시설과 연구 등 포함) 개발을 위한 샘플 프로젝트입니다.    
 Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.    
     
-## JavaLauncher
-Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 프로젝트입니다.    
-.Net Framework 4.5.2 기반으로 개발되었습니다.    
-(개발 중으로 아직 사용 불가)    
-    
-작업 시 Visual Studio 2017 (Express 가능) 이상 버전이 필요합니다.    
-    
 ## 기타 파일
 ### packages.zip
-JavaLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.    
-용량 문제로 CefSharp 는 제외되어 있습니다. [풀버전](http://hjow.duckdns.org/colonization/packages.zip)
+JavaLauncher (WinLauncher) 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.    
+용량 문제로 CefSharp 는 제외되어 있습니다. [패키지](http://hjow.duckdns.org/colonization/packages.zip)
 
 # License
 
@@ -88,7 +91,7 @@ JavaLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로,
 - Babel standalone   (See https://github.com/babel/babel/blob/main/LICENSE                 )
 - React              (See https://github.com/facebook/react/blob/main/LICENSE              )
 
-## JavaLauncher 빌드만 해당
+## JavaLauncher (WinLauncher) 빌드만 해당
 - Eclipse Temurin    (See https://adoptium.net/about                                       )
 - Cefsharp           (See https://www.nuget.org/packages/CefSharp.Wpf/140.1.140/license    )
 - Newtonsoft.Json    (See https://licenses.nuget.org/MIT                                   )
