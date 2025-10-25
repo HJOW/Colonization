@@ -209,22 +209,33 @@ namespace WinLauncher
                         statusMsg = "Colonization JAR 다운로드가 필요합니다.";
                     }
 
-                    jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
-                    if (!installNeeded)
+                    // Check colonization downloads
+                    jarPath = null;
+                    string localPath = Util.GetThisExePath();
+                    if (File.Exists(localPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
                     {
-                        if (!System.IO.Directory.Exists(jarPath))
-                        {
-                            installNeeded = true;
-                            statusMsg = "Colonization JAR 다운로드가 필요합니다.";
-                        }
+                        jarPath = localPath;
                     }
 
-                    if (!installNeeded)
+                    if (jarPath == null)
                     {
-                        if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                        jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
+                        if (!installNeeded)
                         {
-                            installNeeded = true;
-                            statusMsg = "Colonization JAR 다운로드가 필요합니다.";
+                            if (!System.IO.Directory.Exists(jarPath))
+                            {
+                                installNeeded = true;
+                                statusMsg = "Colonization JAR 다운로드가 필요합니다.";
+                            }
+                        }
+
+                        if (!installNeeded)
+                        {
+                            if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                            {
+                                installNeeded = true;
+                                statusMsg = "Colonization JAR 다운로드가 필요합니다.";
+                            }
                         }
                     }
                 }
