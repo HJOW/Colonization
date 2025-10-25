@@ -120,108 +120,120 @@ namespace WinLauncher
         private async void Prepare()
         {
             string statusMsg = "";
-
-            // Access Server
-            using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
-            {
-                System.Net.Http.HttpResponseMessage response = await client.GetAsync(ROOTURL + "content.json");
-                response.EnsureSuccessStatusCode();
-
-                string body = await response.Content.ReadAsStringAsync();
-                json = JObject.Parse(body);
-                swingBuild = json["swing"] as JObject;
-            }
-
-            // Check Install needed
-            SetStatusMessage("Java Runtime (JRE) 확인 중...");
+            bool err = false;
             bool installNeeded = false;
 
-            // javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
-            javaPath = null;
-
-            string javaInsPath = null;
-            string javaBinPath = null;
-
-            if (string.IsNullOrEmpty(javaPath))
+            try
             {
-                javaInsPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "jre";
-                if (!System.IO.Directory.Exists(javaInsPath))
+                // Access Server
+                using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
                 {
-                    System.IO.Directory.CreateDirectory(javaInsPath);
+                    System.Net.Http.HttpResponseMessage response = await client.GetAsync(ROOTURL + "content.json");
+                    response.EnsureSuccessStatusCode();
+
+                    string body = await response.Content.ReadAsStringAsync();
+                    json = JObject.Parse(body);
+                    swingBuild = json["swing"] as JObject;
                 }
 
-                string[] lists = Directory.GetDirectories(javaInsPath);
-                bool jreExists = false;
-                foreach (string dirOne in lists) // May be JRE
+                // Check Install needed
+                SetStatusMessage("Java Runtime (JRE) 확인 중...");
+                installNeeded = false;
+
+                // javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+                javaPath = null;
+
+                string javaInsPath = null;
+                string javaBinPath = null;
+
+                if (string.IsNullOrEmpty(javaPath))
                 {
-                    if (!Directory.Exists(dirOne)) continue;
-                    string mayBeJavaBinPath = Util.GetJavaBinPath(dirOne);
-                    if (mayBeJavaBinPath != null)
+                    javaInsPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "jre";
+                    if (!System.IO.Directory.Exists(javaInsPath))
                     {
-                        jreExists = true;
-                        javaPath = dirOne;
-                        javaBinPath = mayBeJavaBinPath;
-                        break;
+                        System.IO.Directory.CreateDirectory(javaInsPath);
+                    }
+
+                    string[] lists = Directory.GetDirectories(javaInsPath);
+                    bool jreExists = false;
+                    foreach (string dirOne in lists) // May be JRE
+                    {
+                        if (!Directory.Exists(dirOne)) continue;
+                        string mayBeJavaBinPath = Util.GetJavaBinPath(dirOne);
+                        if (mayBeJavaBinPath != null)
+                        {
+                            jreExists = true;
+                            javaPath = dirOne;
+                            javaBinPath = mayBeJavaBinPath;
+                            break;
+                        }
+                    }
+
+                    // Check already exists on directory
+                    if (!jreExists)
+                    {
+                        installNeeded = true;
+                        statusMsg = "Java Runtime 다운로드가 필요합니다.";
+                    }
+                }
+                else
+                {
+                    javaBinPath = Util.GetJavaBinPath(javaPath);
+                    if (javaBinPath == null)
+                    {
+                        installNeeded = true;
+                        statusMsg = "Java Runtime 다운로드가 필요합니다.";
+                        Console.WriteLine(statusMsg);
+                        Console.WriteLine(javaPath);
+                        Console.WriteLine(javaBinPath);
                     }
                 }
 
-                // Check already exists on directory
-                if (!jreExists)
-                {
-                    installNeeded = true;
-                    statusMsg = "Java Runtime 다운로드가 필요합니다.";
-                }
-            }
-            else
-            {
-                javaBinPath = Util.GetJavaBinPath(javaPath);
-                if (javaBinPath == null)
-                {
-                    installNeeded = true;
-                    statusMsg = "Java Runtime 다운로드가 필요합니다.";
-                    Console.WriteLine(statusMsg);
-                    Console.WriteLine(javaPath);
-                    Console.WriteLine(javaBinPath);
-                }
-            }
-            
-            // Check version
-            versionString = swingBuild["version"].ToString();
-            JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
-            string versionUrl = versionInfo["url"].ToString();
-            if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
+                // Check version
+                versionString = swingBuild["version"].ToString();
+                JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
+                string versionUrl = versionInfo["url"].ToString();
+                if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
 
-            if (! installNeeded)
-            {
-                // Check colonization is installed
-                SetStatusMessage("Colonization 설치 확인 중...");
-
-                // Prepare JAR (Libraries) Dir
-                string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
-                if (!System.IO.Directory.Exists(libDir))
+                if (!installNeeded)
                 {
-                    installNeeded = true;
-                    statusMsg = "Colonization JAR 다운로드가 필요합니다.";
-                }
+                    // Check colonization is installed
+                    SetStatusMessage("Colonization 설치 확인 중...");
 
-                string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
-                if (! installNeeded)
-                {
-                    if (!System.IO.Directory.Exists(jarPath))
+                    // Prepare JAR (Libraries) Dir
+                    string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+                    if (!System.IO.Directory.Exists(libDir))
                     {
                         installNeeded = true;
                         statusMsg = "Colonization JAR 다운로드가 필요합니다.";
                     }
-                }
 
-                if (! installNeeded)
-                {
-                    if (! File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                    string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
+                    if (!installNeeded)
                     {
-                        installNeeded = true;
-                        statusMsg = "Colonization JAR 다운로드가 필요합니다.";
+                        if (!System.IO.Directory.Exists(jarPath))
+                        {
+                            installNeeded = true;
+                            statusMsg = "Colonization JAR 다운로드가 필요합니다.";
+                        }
+                    }
+
+                    if (!installNeeded)
+                    {
+                        if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                        {
+                            installNeeded = true;
+                            statusMsg = "Colonization JAR 다운로드가 필요합니다.";
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                err = true;
+                statusMsg = "오류 : " + ex.Message;
+                Console.WriteLine(statusMsg);
+                Console.WriteLine(ex.StackTrace);
             }
 
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
@@ -230,7 +242,13 @@ namespace WinLauncher
                 progMain.Value = 0;
                 progMain.IsIndeterminate = false;
 
-                if (installNeeded)
+                if (err)
+                {
+                    btnInst.IsEnabled = false;
+                    btnInst.Visibility = Visibility.Hidden;
+                    btnRun.IsEnabled = false;
+                }
+                else if (installNeeded)
                 {
                     btnInst.IsEnabled = true;
                     btnRun.IsEnabled = false;
@@ -242,11 +260,14 @@ namespace WinLauncher
                     btnRun.IsEnabled = true;
                     statusMsg = "Colonization 실행 준비 완료";
                 }
-                
-                string noticeUrl = swingBuild["noticeKo"].ToString();
-                if (!noticeUrl.StartsWith("http")) noticeUrl = ROOTURL + noticeUrl;
 
-                webMain.Address = noticeUrl;
+                if (!err)
+                {
+                    string noticeUrl = swingBuild["noticeKo"].ToString();
+                    if (!noticeUrl.StartsWith("http")) noticeUrl = ROOTURL + noticeUrl;
+                    webMain.Address = noticeUrl;
+                }
+                
                 SetStatusMessage(statusMsg);
             }));
         }
