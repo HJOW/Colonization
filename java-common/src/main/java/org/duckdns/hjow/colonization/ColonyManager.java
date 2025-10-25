@@ -21,11 +21,11 @@ import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
-import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.pack.Library;
+import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -33,7 +33,6 @@ import org.duckdns.hjow.colonization.ui.GlobalLogUI;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
-import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.commons.script.MathObject;
 import org.duckdns.hjow.commons.script.ScriptPatternDetector;
 import org.duckdns.hjow.commons.script.SecurityObject;
@@ -361,10 +360,14 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 새 정착지 생성 (기본형으로 생성) */
     public Colony newColony() {
-        Colony newCol = new NormalColony();
-        newColonyAfterJobs(newCol);
-        
-        return newCol;
+    	try {
+            Colony newCol = (Colony) Class.forName("org.duckdns.hjow.colonization.elements.NormalColony").newInstance();
+            newColonyAfterJobs(newCol);
+            
+            return newCol;
+    	} catch(Exception ex) {
+    		throw new RuntimeException("java-default-pack not detected.");
+    	}
     }
     
     /** 새 정착지 생성 (타입 지정) */

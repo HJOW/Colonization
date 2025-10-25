@@ -24,6 +24,11 @@
         </dependency>
         <dependency>
             <groupId>org.duckdns.hjow</groupId>
+            <artifactId>colonization-java-default</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.duckdns.hjow</groupId>
             <artifactId>colonization-daemon</artifactId>
             <version>0.0.1</version>        
         </dependency>

@@ -14,8 +14,6 @@ import java.util.zip.GZIPInputStream;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
-import org.duckdns.hjow.colonization.elements.custom.FreeColony;
-import org.duckdns.hjow.colonization.pack.BundledPack;
 import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
@@ -69,7 +67,10 @@ public class ColonyClassLoader {
         if(colonyClassListFlag) return colonyClassList;
         
         colonyClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) colonyClassList.addAll(p.getColonyClasses()); colonyClassList.add(FreeColony.class); }
+        for(Pack p : packs) { 
+        	if(p.isEnabled()) colonyClassList.addAll(p.getColonyClasses());
+        }
+        try { colonyClassList.add((Class<?>) Class.forName("org.duckdns.hjow.colonization.elements.custom.FreeColony")); } catch(Exception ex) { GlobalLogs.log(ColonyManager.t("java-default-pack not detected.")); }
         
         colonyClassListFlag = true;
         return colonyClassList;
@@ -419,7 +420,7 @@ public class ColonyClassLoader {
     
     /** 기본 제공 Pack 불러오기 */
     private static void loadDefaultPacks() {
-    	packs.add(new BundledPack());
+    	try { packs.add((Pack) Class.forName("org.duckdns.hjow.colonization.pack.BundledPack").newInstance()); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
     }
     
     /** Pack class 를 받아, 그에 해당하는 이미 불러온 Pack 객체를 리턴 */

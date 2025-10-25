@@ -13,25 +13,12 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.city.NormalCity;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
-import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
-import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
-import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
-import org.duckdns.hjow.colonization.elements.facilities.Residence;
-import org.duckdns.hjow.colonization.elements.facilities.ResidenceModule;
-import org.duckdns.hjow.colonization.elements.facilities.Restaurant;
-import org.duckdns.hjow.colonization.elements.facilities.SmallFactory;
-import org.duckdns.hjow.colonization.elements.facilities.SmallResearchCenter;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
-import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
-import org.duckdns.hjow.colonization.events.EasyGorrdInvasion;
-import org.duckdns.hjow.colonization.events.InfluenzaEvent;
-import org.duckdns.hjow.colonization.events.Riot;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -714,59 +701,6 @@ public abstract class AbstractColony implements Colony {
         return getCities().size();
     }
     
-    /** 새 도시를 생성 */
-    @Override
-    public City newCity() {
-        if(getCityCount() >= getMaxCityCount()) throw new KnownRuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
-        
-        City city = new NormalCity();
-        int idx;
-        
-        for(idx=0; idx<50; idx++) {
-            city.createNewCitizen();
-        }
-        
-        Facility fac;
-        
-        for(idx=0; idx<12; idx++) {
-            fac = new ResidenceModule();
-            ((Residence) fac).setComportGrade(0);
-            city.getFacility().add(fac);
-        }
-        
-        for(idx=0; idx<3; idx++) {
-            fac = new PowerStation();
-            city.getFacility().add(fac);
-        }
-        
-        for(idx=0; idx<2; idx++) {
-            fac = new Restaurant();
-            for(idx=0; idx<10; idx++) {
-                ((Restaurant) fac).store(new NutritionBlock());
-            }
-            city.getFacility().add(fac);
-        }
-        
-        fac = new SmallResearchCenter();
-        city.getFacility().add(fac);
-        
-        for(idx=0; idx<2; idx++) {
-            fac = new SmallFactory();
-            city.getFacility().add(fac);
-        }
-        
-        for(idx=0; idx<2; idx++) {
-            fac = new CapsuleBusStation();
-            city.getFacility().add(fac);
-        }
-        
-        fac = new CargoRailSystem();
-        city.getFacility().add(fac);
-        
-        getCities().add(city);
-        return city;
-    }
-    
     @Override
     public int getMaxHp() {
         return 1000000;
@@ -828,9 +762,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** Json 데이터를 읽어 City 불러오기 */
-    protected City createCityInstance(JsonObject json) throws IOException {
-    	return new NormalCity(json);
-    }
+    protected abstract City createCityInstance(JsonObject json) throws IOException;
 
     @Override
     public JsonObject toJson() {
@@ -1088,18 +1020,6 @@ public abstract class AbstractColony implements Colony {
         } else {
             FileUtil.writeString(f, "UTF-8", toJson().toJSON()); 
         }
-    }
-    
-    /** 발생할 수 있는 이벤트 유형들 반환 */
-    @Override
-    public List<TimeEvent> getEvents() {
-        List<TimeEvent> events = new Vector<TimeEvent>();
-        
-        events.add(new InfluenzaEvent());
-        events.add(new Riot());
-        events.add(new EasyGorrdInvasion());
-        
-        return events;
     }
     
     @Override

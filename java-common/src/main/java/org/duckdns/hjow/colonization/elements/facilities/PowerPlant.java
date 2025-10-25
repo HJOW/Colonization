@@ -42,6 +42,10 @@ public abstract class PowerPlant extends DefaultFacility {
     public int getWorkerCapacity() {
         return 2;
     }
+    
+    public int getPowerGenerate(Colony col, City city) {
+        return getCapacity();
+    }
 
     @Override
     public int getWorkerSuitability(Citizen citizen) {

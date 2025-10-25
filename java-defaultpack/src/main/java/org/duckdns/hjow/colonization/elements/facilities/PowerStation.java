@@ -25,10 +25,7 @@ public class PowerStation extends PowerPlant {
     public int getPowerConsume() {
         return 0;
     }
-    public int getPowerGenerate(Colony col, City city) {
-        return getCapacity();
-    }
-
+    
     @Override
     public int getMaxHp() {
         return 1000;

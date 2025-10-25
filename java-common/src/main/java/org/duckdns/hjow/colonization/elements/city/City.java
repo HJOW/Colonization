@@ -24,7 +24,7 @@ import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
 import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.facilities.NetworkFacility;
-import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
+import org.duckdns.hjow.colonization.elements.facilities.PowerPlant;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.TransportStation;
@@ -489,9 +489,9 @@ public abstract class City implements ColonyElements {
         for(Facility f : facility) {
             int working = f.getWorkingCitizensCount(this, col);
             if(working >= 1) {
-                if(f instanceof PowerStation) {
-                    if(working >= f.getWorkerNeeded()) power += ((PowerStation) f).getPowerGenerate(col, this);
-                    else                               power += (((PowerStation) f).getPowerGenerate(col, this)) / 2;
+                if(f instanceof PowerPlant) {
+                    if(working >= f.getWorkerNeeded()) power += ((PowerPlant) f).getPowerGenerate(col, this);
+                    else                               power += (((PowerPlant) f).getPowerGenerate(col, this)) / 2;
                 }
             }
         }
