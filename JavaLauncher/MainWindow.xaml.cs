@@ -35,6 +35,7 @@ namespace WinLauncher
         private JObject swingBuild = null;
         private string versionString = "";
         private string javaPath = null;
+        private string jarPath = null;
         private string pathInstalled = null;
 
         public MainWindow()
@@ -208,7 +209,7 @@ namespace WinLauncher
                         statusMsg = "Colonization JAR 다운로드가 필요합니다.";
                     }
 
-                    string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
+                    jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
                     if (!installNeeded)
                     {
                         if (!System.IO.Directory.Exists(jarPath))
@@ -434,27 +435,40 @@ namespace WinLauncher
             JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
             string versionUrl = versionInfo["url"].ToString();
             if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
-            
+
+            jarPath = null;
+
+            // Check local
+            string localPath = Util.GetThisExePath();
+            if (File.Exists(localPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+            {
+                jarPath = localPath;
+            }
+
             // Download Game
             progressPads = 110;
 
-            string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
-            if (!System.IO.Directory.Exists(jarPath))
+            if (jarPath == null)
             {
-                System.IO.Directory.CreateDirectory(jarPath);
-            }
-
-            if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
-            {
-                SetStatusMessage("Colonization 버전 " + versionString + "다운로드 중...");
-                using (System.Net.WebClient client = new System.Net.WebClient())
+                jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
+                if (!System.IO.Directory.Exists(jarPath))
                 {
-                    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
-                    client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
+                    System.IO.Directory.CreateDirectory(jarPath);
                 }
-                SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 완료");
-                pathInstalled = jarPath;
+
+                if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                {
+                    SetStatusMessage("Colonization 버전 " + versionString + "다운로드 중...");
+                    using (System.Net.WebClient client = new System.Net.WebClient())
+                    {
+                        client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
+                        client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
+                    }
+                    SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 완료");
+                    pathInstalled = jarPath;
+                }
             }
+            
 
             // Download Additional Libraries
             string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
@@ -521,8 +535,8 @@ namespace WinLauncher
             SetProgressIndeterminate(true);
 
             string javaBinPath = Util.GetJavaBinPath(javaPath);
-            string jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
             string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+            jarPath = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "build";
             progressPads = 0;
 
             // Re-Checking installation
