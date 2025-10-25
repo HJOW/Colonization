@@ -1261,6 +1261,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 시뮬레이션 시작/정지 토글 */
     public void toggleSimulationRunning() {
         boolean resv = (! threadPaused);
+        btnThrPlay.setEnabled(false);
         
         if(resv) {
             pauseSimulation();
@@ -1282,6 +1283,7 @@ public class GUIColonyManager extends ColonyManager {
         
         btnThrPlay.setEnabled(false);
         menuActionThrPlay.setEnabled(false);
+        cardLocalLoading2.show(pnLocalSecond, "C1S");
         
         btnThrPlay.setText(t("시뮬레이션 시작"));
         menuActionThrPlay.setText(t("시뮬레이션 시작") + " (" + t("로컬") + ")");
@@ -1297,22 +1299,37 @@ public class GUIColonyManager extends ColonyManager {
         menuFileNew.setEnabled(true);
         menuFileConfig.setEnabled(true);
         
-        refreshArenaPanelIn(0);
-        
-        for(DefaultColonyPanel c : pnColonies) {
-            Colony col = c.getColony();
-            if(col == null) return;
-            if(col.getHp() <= 0) return;
-            c.setEditable(true); 
-        }
-        
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try { Thread.sleep(500L); } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
-                btnThrPlay.setEnabled(true);
-                menuActionThrPlay.setEnabled(true);
-                cbxSimuCount.setEnabled(true);
+            	// 쓰레드가 완전히 종료될 때까지 대기
+                try {
+                    int prefInfLoop = 10;
+                    while(! bCheckerPauseCompleted) {
+                        Thread.sleep(250L);
+                        prefInfLoop--;
+                        if(prefInfLoop <= 0) break;
+                    }
+                } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
+                
+                refreshArenaPanelIn(0);
+                
+                for(DefaultColonyPanel c : pnColonies) {
+                    Colony col = c.getColony();
+                    if(col == null) return;
+                    if(col.getHp() <= 0) return;
+                    c.setEditable(true); 
+                }
+            	
+                SwingUtilities.invokeLater(new Runnable() {	
+					@Override
+					public void run() {
+						cardLocalLoading2.show(pnLocalSecond, "C1F");
+						btnThrPlay.setEnabled(true);
+		                menuActionThrPlay.setEnabled(true);
+		                cbxSimuCount.setEnabled(true);
+					}
+				});
             }
         }).start();
     }
@@ -1329,16 +1346,6 @@ public class GUIColonyManager extends ColonyManager {
         menuActionThrPlay.setEnabled(false);
         cbxSimuCount.setEnabled(false);
         if(backupManager != null) backupManager.close();
-        
-        // 쓰레드가 완전히 종료될 때까지 대기
-        try {
-            int prefInfLoop = 10;
-            while(! bCheckerPauseCompleted) {
-                Thread.sleep(1000L);
-                prefInfLoop--;
-                if(prefInfLoop <= 0) break;
-            }
-        } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
         
         btnThrPlay.setText(t("시뮬레이션 정지"));
         menuActionThrPlay.setText(t("시뮬레이션 정지") + " (" + t("로컬") + ")");
@@ -1447,7 +1454,7 @@ public class GUIColonyManager extends ColonyManager {
             pnColonies.add(colPn);
         }
         
-        if(cpNow == null || cpNow != colPn) {
+        if(cycle == 0 || cpNow == null || cpNow != colPn) {
             cardLocalLoading2.show(pnLocalSecond, "C1S");
             pnCols.removeAll();
             cpNow = colPn;
