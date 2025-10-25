@@ -74,7 +74,6 @@ namespace JavaLauncher
                 process.WaitForExit();
 
                 outputs = outputs.Trim();
-                Console.WriteLine(outputs);
 
                 int quoteIndex = outputs.IndexOf("\"");
                 string versionPart = outputs.Substring(quoteIndex + 1);

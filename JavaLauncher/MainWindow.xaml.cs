@@ -55,6 +55,10 @@ namespace JavaLauncher
                 System.IO.Directory.CreateDirectory(ROOTPATH);
             }
 
+            // 아키텍처 체크
+            if (Environment.Is64BitOperatingSystem) arch = "win_x64";
+            else arch = "win_x86";
+
             // 약관 동의 내용 불러오기
             taAgreements.Text = JavaLauncher.Properties.Resources.agreement;
 
@@ -131,8 +135,10 @@ namespace JavaLauncher
             // Check Install needed
             SetStatusMessage("Java Runtime (JRE) 확인 중...");
             bool installNeeded = false;
-            
-            javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+
+            // javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+            javaPath = null;
+
             string javaInsPath = null;
             string javaBinPath = null;
 
@@ -168,13 +174,14 @@ namespace JavaLauncher
             }
             else
             {
-                Console.WriteLine(javaPath);
                 javaBinPath = Util.GetJavaBinPath(javaPath);
-                Console.WriteLine(javaBinPath);
                 if (javaBinPath == null)
                 {
                     installNeeded = true;
                     statusMsg = "Java Runtime 다운로드가 필요합니다.";
+                    Console.WriteLine(statusMsg);
+                    Console.WriteLine(javaPath);
+                    Console.WriteLine(javaBinPath);
                 }
             }
             
@@ -406,14 +413,7 @@ namespace JavaLauncher
             JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
             string versionUrl = versionInfo["url"].ToString();
             if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
-
-            // Prepare JAR (Libraries) Dir
-            string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
-            if (!System.IO.Directory.Exists(libDir))
-            {
-                System.IO.Directory.CreateDirectory(libDir);
-            }
-
+            
             // Download Game
             progressPads = 110;
 
@@ -434,6 +434,39 @@ namespace JavaLauncher
                 SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 완료");
                 pathInstalled = jarPath;
             }
+
+            // Download Additional Libraries
+            string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+            if (!System.IO.Directory.Exists(libDir))
+            {
+                System.IO.Directory.CreateDirectory(libDir);
+            }
+
+            SetStatusMessage("추가 라이브러리 다운로드 중...");
+            SetProgrssValue(1);
+
+            JArray libArr = (swingBuild["libs"] as JArray);
+            int libCount = libArr.Count;
+            int indexes = 0;
+            foreach (JObject libOne in libArr)
+            {
+                string libUrl  = libOne["url"].ToString();
+                string libName = libOne["name"].ToString();
+
+                if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { indexes++; continue;  }
+                SetStatusMessage("라이브러리 " + libName + " 다운로드 중...");
+
+                using (System.Net.WebClient client = new System.Net.WebClient())
+                {
+                    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
+                    client.DownloadFile(libUrl, libDir + System.IO.Path.DirectorySeparatorChar + libName);
+                }
+
+                SetProgrssValue(1 + indexes);
+                indexes++;
+            }
+
+            SetStatusMessage("Colonization 실행 준비 완료");
         }
 
         private void RunWith()

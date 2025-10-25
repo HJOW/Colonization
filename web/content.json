@@ -6,7 +6,10 @@
         , "builds" : {
             "0.0.0.1" : { "version" : "0.0.0.1", "url" : "colonization-swing-0.0.0.1.jar", "check" : "0" }
         }
+        , "libs" : []
     }, "jre" : {
-        "win_x64" : "OpenJDK8U-jre_x64_windows_hotspot_8u462b08.zip"
+          "win_x86" : "OpenJDK8U-jre_x86-32_windows_hotspot_8u462b08.zip"
+        , "win_x64" : "OpenJDK8U-jre_x64_windows_hotspot_8u462b08.zip"
+        , "win_arm64" : "zulu21.46.19-ca-jdk21.0.9-win_aarch64.zip"
     }
 }

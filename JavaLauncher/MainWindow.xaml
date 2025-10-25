@@ -59,7 +59,7 @@
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
                     <cef:ChromiumWebBrowser Name="webMain" Grid.Row="0" Grid.ColumnSpan="2"/>
-                    <ProgressBar Name="progMain" Grid.Row="2" Maximum="220" Grid.ColumnSpan="2"/>
+                    <ProgressBar Name="progMain" Grid.Row="2" Maximum="230" Grid.ColumnSpan="2"/>
                     <Grid Grid.Row="4" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
