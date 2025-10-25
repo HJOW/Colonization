@@ -110,6 +110,8 @@ namespace WinLauncher
         {
             tabItemMainAction.IsEnabled = true;
             tabMain.SelectedIndex = 1;
+
+            tabItemLogs.Visibility = Visibility.Visible;
         }
 
         private void BtnAgreeCancel_Click(object sender, RoutedEventArgs e)
@@ -126,6 +128,8 @@ namespace WinLauncher
 
             try
             {
+                SetStatusMessage("서버에 접속하여 최신 버전 정보 확인 중...");
+                
                 // Access Server
                 using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
                 {
@@ -179,7 +183,15 @@ namespace WinLauncher
                 }
                 else
                 {
-                    javaBinPath = Util.GetJavaBinPath(javaPath);
+                    SetStatusMessage("이미 설치된 Java Runtime 의 버전 확인 중");
+
+                    try
+                    {
+                        javaBinPath = Util.GetJavaBinPath(javaPath);
+                    }
+                    catch (Exception exIn)
+                    { javaBinPath = null; Console.WriteLine(exIn); }
+
                     if (javaBinPath == null)
                     {
                         installNeeded = true;
@@ -187,8 +199,12 @@ namespace WinLauncher
                         Console.WriteLine(statusMsg);
                         Console.WriteLine(javaPath);
                         Console.WriteLine(javaBinPath);
+
+                        SetStatusMessage("설치되어 있는 Java Runtime 은 Colonization 과 호환되지 않습니다.");
                     }
                 }
+
+                SetStatusMessage("버전 정보 해석 중...");
 
                 // Check version
                 versionString = swingBuild["version"].ToString();
@@ -196,20 +212,12 @@ namespace WinLauncher
                 string versionUrl = versionInfo["url"].ToString();
                 if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
 
+                string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+
                 if (!installNeeded)
                 {
                     // Check colonization is installed
                     SetStatusMessage("Colonization 설치 확인 중...");
-
-                    // Prepare JAR (Libraries) Dir
-                    string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
-                    if (!System.IO.Directory.Exists(libDir))
-                    {
-                        installNeeded = true;
-                        statusMsg = "Colonization JAR 다운로드가 필요합니다.";
-                    }
-
-                    // Check colonization downloads
                     jarPath = null;
                     string localPath = Util.GetThisExePath();
                     if (File.Exists(localPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
@@ -236,6 +244,36 @@ namespace WinLauncher
                                 installNeeded = true;
                                 statusMsg = "Colonization JAR 다운로드가 필요합니다.";
                             }
+                        }
+                    }
+                }
+
+                if (!installNeeded)
+                {
+                    // Check libraries are exists
+                    if (!System.IO.Directory.Exists(libDir))
+                    {
+                        installNeeded = true;
+                        statusMsg = "Colonization JAR 다운로드가 필요합니다.";
+                    }
+                }
+
+                if (!installNeeded)
+                {
+                    JArray libArr = (swingBuild["libs"] as JArray);
+                    foreach (JObject libOne in libArr)
+                    {
+                        string libUrl = libOne["url"].ToString();
+                        string libName = libOne["name"].ToString();
+
+                        if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { continue; }
+                        SetStatusMessage("라이브러리 " + libName + " 확인 중...");
+
+                        string localFile = libDir + System.IO.Path.DirectorySeparatorChar + libName;
+                        if(! File.Exists(localFile))
+                        {
+                            installNeeded = true;
+                            statusMsg = "추가 Library 파일 다운로드가 필요합니다.";
                         }
                     }
                 }
@@ -322,7 +360,7 @@ namespace WinLauncher
 
         private void Install()
         {
-            pathInstalled = "";
+            pathInstalled = null;
             
             // javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
             string javaInsPath = null;
@@ -364,10 +402,13 @@ namespace WinLauncher
             }
             else
             {
+                SetStatusMessage("이미 설치된 Java Runtime 의 버전 확인 중");
+
                 javaBinPath = Util.GetJavaBinPath(javaPath);
                 if (javaBinPath == null)
                 {
                     installNeeded = true;
+                    SetStatusMessage("설치되어 있는 Java Runtime 은 Colonization 과 호환되지 않습니다.");
                 }
             }
             
@@ -404,6 +445,7 @@ namespace WinLauncher
 
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
                     client.DownloadFile(jreUrl, downloadFile); // Download
+                    SetStatusMessage("다운로드 완료 : " + downloadFile);
 
                     progressPads = 0;
                     SetProgrssValue(110);
@@ -411,6 +453,7 @@ namespace WinLauncher
                     // Extract ZIP
                     System.IO.Compression.ZipFile.ExtractToDirectory(downloadFile, javaInsPath);
                     File.Delete(downloadFile);
+                    SetStatusMessage("압축 해제 완료 : " + downloadFile);
 
                     javaPath = null;
                     javaBinPath = null;
@@ -436,7 +479,7 @@ namespace WinLauncher
                 }
 
                 SetStatusMessage("Java Runtime (JRE) 다운로드 완료");
-                pathInstalled = javaPath;
+                pathInstalled = ROOTPATH;
             }
 
             SetStatusMessage("Colonization 버전 확인...");
@@ -469,14 +512,15 @@ namespace WinLauncher
 
                 if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
                 {
-                    SetStatusMessage("Colonization 버전 " + versionString + "다운로드 중...");
+                    SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 중...");
                     using (System.Net.WebClient client = new System.Net.WebClient())
                     {
                         client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
                         client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
+                        SetStatusMessage("다운로드 완료 : " + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
                     }
                     SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 완료");
-                    pathInstalled = jarPath;
+                    pathInstalled = ROOTPATH;
                 }
             }
             
@@ -506,6 +550,7 @@ namespace WinLauncher
                 {
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
                     client.DownloadFile(libUrl, libDir + System.IO.Path.DirectorySeparatorChar + libName);
+                    SetStatusMessage("다운로드 완료 : " + libDir + System.IO.Path.DirectorySeparatorChar + libName);
                 }
 
                 SetProgrssValue(1 + indexes);
@@ -594,6 +639,7 @@ namespace WinLauncher
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 lbStatus.Content = msg;
+                taLogs.Text += "\n" + msg;
             }));
         }
 

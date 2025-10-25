@@ -19,7 +19,7 @@
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
         <TabControl Name="tabMain" Grid.Column="1" Grid.Row="1">
-            <TabItem Header="약관">
+            <TabItem Header="약관" Name="tabItemAgreement">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -48,8 +48,7 @@
             <TabItem Header="동작" Name="tabItemMainAction" IsEnabled="False">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="11*"/>
-                        <ColumnDefinition Width="372*"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -58,9 +57,9 @@
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <cef:ChromiumWebBrowser Name="webMain" Grid.Row="0" Grid.ColumnSpan="2"/>
-                    <ProgressBar Name="progMain" Grid.Row="2" Maximum="230" Grid.ColumnSpan="2"/>
-                    <Grid Grid.Row="4" Grid.ColumnSpan="2">
+                    <cef:ChromiumWebBrowser Name="webMain" Grid.Row="0" Grid.Column="0"/>
+                    <ProgressBar Name="progMain" Grid.Row="2" Grid.Column="0" Maximum="230"/>
+                    <Grid Grid.Row="4" Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="60"/>
@@ -81,6 +80,9 @@
                         <Button Name="btnExit" Grid.Row="0" Grid.Column="7" Click="BtnExit_Click">종료</Button>
                     </Grid>
                 </Grid>
+            </TabItem>
+            <TabItem Header="Logs" Name="tabItemLogs" Visibility="Hidden">
+                <TextBox Name="taLogs" IsReadOnly="True"/>
             </TabItem>
         </TabControl>
     </Grid>
