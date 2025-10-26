@@ -6,6 +6,7 @@ import org.duckdns.hjow.colonization.elements.facilities.Arcade;
 import org.duckdns.hjow.colonization.elements.facilities.ArchitectOffice;
 import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
 import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
+import org.duckdns.hjow.colonization.elements.facilities.FissionReactorStation;
 import org.duckdns.hjow.colonization.elements.facilities.MagneticLevitationMetroStation;
 import org.duckdns.hjow.colonization.elements.facilities.MiniCenter;
 import org.duckdns.hjow.colonization.elements.facilities.PowerStation;
@@ -31,6 +32,7 @@ import org.duckdns.hjow.colonization.elements.research.energy.FissionReactor;
 import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
+import org.duckdns.hjow.colonization.elements.research.engineering.ComputerTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionDrones;
 import org.duckdns.hjow.colonization.elements.research.engineering.Printing3DStructure;
 import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
@@ -74,6 +76,7 @@ public final class BundledPack extends DefaultPack {
         facilityClasses.add(TownHouse.class);
         facilityClasses.add(SmallApartment.class);
         facilityClasses.add(SolarStation.class);
+        facilityClasses.add(FissionReactorStation.class);
         facilityClasses.add(CargoRailSystem.class);
         
         researchClasses.add(BasicScience.class);
@@ -83,6 +86,7 @@ public final class BundledPack extends DefaultPack {
         researchClasses.add(BasicBiology.class);
         researchClasses.add(BasicMedicalScience.class);
         researchClasses.add(BasicEngineering.class);
+        researchClasses.add(ComputerTech.class);
         researchClasses.add(EnergyTech.class);
         researchClasses.add(NewMetals.class);
         researchClasses.add(LightTech.class);
