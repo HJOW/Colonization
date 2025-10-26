@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -141,6 +142,27 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         threadShutdown = false;
         
         return true;
+    }
+    
+    /** 지원되는 시뮬 속도 목록 반환 */
+    protected Vector<SimulationSpeed> getSpeedList() {
+        Vector<SimulationSpeed> strSpeeds = new Vector<SimulationSpeed>();
+        strSpeeds.add(new SimulationSpeed(1));
+        strSpeeds.add(new SimulationSpeed(2));
+        strSpeeds.add(new SimulationSpeed(3));
+        
+        for(Mod m : getMods()) {
+        	try {
+        		Class<? extends Mod> modClass = m.getClass();
+        		Method mthdSpeed = modClass.getMethod("getAdditionalSimulationSpeeds");
+        		SimulationSpeed speedOne = (SimulationSpeed) mthdSpeed.invoke(m);
+        		if(! strSpeeds.contains(speedOne)) strSpeeds.add(speedOne);
+        	} catch(Throwable tx) {
+        		GlobalLogs.processExceptionOccured(tx, false);
+        	}
+        }
+        
+        return strSpeeds;
     }
     
     /** 정착지 세이브 파일 필터 생성 */
@@ -409,7 +431,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     /** Mods 불러오기 */
 	protected void loadMods(boolean refresh) {
     	// 기존 Mod 들 제거
-    	for(Mod m : modsList) { m.dispose(); }
+    	for(Mod m : modsList) { try {  m.dispose(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); } }
     	modsList.clear();
     	modsEnabled.clear();
     	

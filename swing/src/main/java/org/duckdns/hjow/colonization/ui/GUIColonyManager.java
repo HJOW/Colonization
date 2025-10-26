@@ -726,15 +726,6 @@ public class GUIColonyManager extends ColonyManager {
         refreshColonyContent();
     }
 
-    /** 지원되는 시뮬 속도 목록 반환 */
-    protected Vector<SimulationSpeed> getSpeedList() {
-        Vector<SimulationSpeed> strSpeeds = new Vector<SimulationSpeed>();
-        strSpeeds.add(new SimulationSpeed(1));
-        strSpeeds.add(new SimulationSpeed(2));
-        strSpeeds.add(new SimulationSpeed(3));
-        return strSpeeds;
-    }
-
     /** 창이 열리기 전 수행해야 할 작업 */
     public void onBeforeOpened(GUIColonizationMainClass superInstance) {
         if(thread != null) { try { threadSwitch = false; thread.interrupt(); Thread.sleep(1000L); } catch(Exception exc) {} }

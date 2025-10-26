@@ -14,6 +14,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
+import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
@@ -334,8 +335,18 @@ public class ColonyClassLoader {
         for(String resv : RESERVED_LIB_NAMES) {
         	processAddPack(resv, man);
         }
-        processAddPack("org.duckdns.hjow.colonization.addpack.AddPackInfo"  , man);
-        processAddPack("org.duckdns.hjow.colonization.addpack.DebugPackInfo", man);
+        
+        // Mod 도 탐색
+        for(Mod m : man.getMods()) {
+        	try {
+        		Class<? extends Mod> modClass = m.getClass();
+        		Method mthd = modClass.getMethod("getAdditionalPacks");
+        		Pack packOne = (Pack) mthd.invoke(m);
+        		if(! packs.contains(packOne)) packs.add(packOne);
+        	} catch(Throwable tx) {
+        		GlobalLogs.processExceptionOccured(tx, false);
+        	}
+        }
         
         // Pack 모두 열어 내용물 적용
         loadAllListedPacks();
