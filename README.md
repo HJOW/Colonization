@@ -22,7 +22,7 @@ Java 8 (OpenJDK 1.8 사용 가능) 이상 버전에서 구동되며, GUI 환경�
 Maven 구동 시 실행 가능한 jar 환경으로 빌드됩니다.   
 (colonization-java-common, colonization-java-default, daemon 를 먼저 Maven 구동 후 Swing 빌드 구동이 가능합니다.)   
 
-## JavaLauncher (WinLauncher)
+## WinLauncher
 Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 프로젝트입니다.    
 .Net Framework 4.5.2 기반으로 개발되었습니다.    
 (개발 중으로 아직 사용 불가)    
@@ -48,7 +48,7 @@ Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.
     
 ## 기타 파일
 ### packages.zip
-JavaLauncher (WinLauncher) 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.    
+WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.    
 용량 문제로 CefSharp 는 제외되어 있습니다. [패키지](http://hjow.duckdns.org/colonization/packages.zip)
 
 # License
@@ -91,7 +91,8 @@ JavaLauncher (WinLauncher) 를 Visual Studio 로 불러올 때 필요할 수 있
 - Babel standalone   (See https://github.com/babel/babel/blob/main/LICENSE                 )
 - React              (See https://github.com/facebook/react/blob/main/LICENSE              )
 
-## JavaLauncher (WinLauncher) 빌드만 해당
+## WinLauncher 빌드만 해당
 - Eclipse Temurin    (See https://adoptium.net/about                                       )
 - Cefsharp           (See https://www.nuget.org/packages/CefSharp.Wpf/140.1.140/license    )
 - Newtonsoft.Json    (See https://licenses.nuget.org/MIT                                   )
+- NanumGothicCoding  (See https://github.com/naver/nanumfont                               )
