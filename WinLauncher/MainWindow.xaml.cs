@@ -145,8 +145,8 @@ namespace WinLauncher
                 SetStatusMessage("Java Runtime (JRE) 확인 중...");
                 installNeeded = false;
 
-                // javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
-                javaPath = null;
+                javaPath = Environment.GetEnvironmentVariable("JAVA_HOME");
+                // javaPath = null;
 
                 string javaInsPath = null;
                 string javaBinPath = null;
