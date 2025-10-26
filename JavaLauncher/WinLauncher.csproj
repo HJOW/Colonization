@@ -162,6 +162,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Resource Include="Resources\NanumGothicCoding.ttf" />
     <None Include="WinLauncher_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\app.manifest">

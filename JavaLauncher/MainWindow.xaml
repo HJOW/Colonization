@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WinLauncher"
         xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="Colonization 실행 도우미" Name="mainWindow" Height="450" Width="800" Closed="Window_Closed" Initialized="Window_Initialized">
+        Title="Colonization 실행 도우미" Name="mainWindow" Height="600" Width="800" Closed="Window_Closed" Initialized="Window_Initialized">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
@@ -29,7 +29,7 @@
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <TextBox Name="taAgreements" IsReadOnly="True" Grid.Column="0" Grid.Row="0"/>
+                    <TextBox Name="taAgreements" IsReadOnly="True" Grid.Column="0" Grid.Row="0" FontFamily="/WinLauncher;component/Resources/#NanumGothicCoding"/>
                     <Grid Grid.Column="0" Grid.Row="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -57,7 +57,7 @@
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <cef:ChromiumWebBrowser Name="webMain" Grid.Row="0" Grid.Column="0"/>
+                    <cef:ChromiumWebBrowser Name="webMain" Grid.Row="0" Grid.Column="0" FontFamily="/WinLauncher;component/Resources/#NanumGothicCoding"/>
                     <ProgressBar Name="progMain" Grid.Row="2" Grid.Column="0" Maximum="230"/>
                     <Grid Grid.Row="4" Grid.Column="0">
                         <Grid.ColumnDefinitions>
@@ -82,7 +82,7 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Logs" Name="tabItemLogs" Visibility="Hidden">
-                <TextBox Name="taLogs" IsReadOnly="True"/>
+                <TextBox Name="taLogs" IsReadOnly="True" FontFamily="/WinLauncher;component/Resources/#NanumGothicCoding"/>
             </TabItem>
         </TabControl>
     </Grid>

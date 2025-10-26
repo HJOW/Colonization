@@ -87,5 +87,15 @@ namespace WinLauncher.Properties {
                 return ResourceManager.GetString("agreement", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   System.Byte[] 형식의 지역화된 리소스를 찾습니다.
+        /// </summary>
+        internal static byte[] NanumGothicCoding {
+            get {
+                object obj = ResourceManager.GetObject("NanumGothicCoding", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
