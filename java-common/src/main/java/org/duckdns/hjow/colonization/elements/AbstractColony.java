@@ -16,7 +16,10 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
+import org.duckdns.hjow.colonization.elements.facilities.Residence;
+import org.duckdns.hjow.colonization.elements.facilities.Storage;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
+import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
 import org.duckdns.hjow.colonization.events.TimeEvent;
@@ -687,6 +690,66 @@ public abstract class AbstractColony implements Colony {
         } catch(Exception ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
+    }
+    
+    /** 새 도시를 생성 */
+    @Override
+    public City newCity() {
+        if(getCityCount() >= getMaxCityCount()) throw new KnownRuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
+        
+        City city = null;
+        try { city = (City) Class.forName("org.duckdns.hjow.colonization.elements.city.NormalCity").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+        
+        addDefaultStarts(city);
+        getCities().add(city);
+        return city;
+    }
+    
+    /** 새 도시에 기본 요소들 추가 */
+    protected void addDefaultStarts(City city) {
+    	int idx;
+    	for(idx=0; idx<50; idx++) {
+            city.createNewCitizen();
+        }
+        
+        Facility fac;
+        
+        for(idx=0; idx<12; idx++) {
+        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.ResidenceModule").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            ((Residence) fac).setComportGrade(0);
+            city.getFacility().add(fac);
+        }
+        
+        for(idx=0; idx<3; idx++) {
+        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.PowerStation").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            city.getFacility().add(fac);
+        }
+        
+        for(idx=0; idx<2; idx++) {
+        	try { 
+        		fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.Restaurant").newInstance();
+        		for(idx=0; idx<10; idx++) {
+                    ((Storage) fac).store((Product) Class.forName("org.duckdns.hjow.colonization.elements.products.food.NutritionBlock").newInstance());
+                }
+        	} catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            city.getFacility().add(fac);
+        }
+        
+        try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.SmallResearchCenter").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+        city.getFacility().add(fac);
+        
+        for(idx=0; idx<2; idx++) {
+        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.SmallFactory").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            city.getFacility().add(fac);
+        }
+        
+        for(idx=0; idx<2; idx++) {
+        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            city.getFacility().add(fac);
+        }
+        
+        try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+        city.getFacility().add(fac);
     }
     
     /** 이 정착지가 감당 가능한 도시 수를 반환 */

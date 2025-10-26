@@ -69,8 +69,14 @@ public final class NormalColony extends AbstractColony {
         if(getCityCount() >= getMaxCityCount()) throw new KnownRuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
         
         City city = new NormalCity();
+        addDefaultStarts(city);
+        getCities().add(city);
+        return city;
+    }
+    
+    @Override
+    protected void addDefaultStarts(City city) {
         int idx;
-        
         for(idx=0; idx<50; idx++) {
             city.createNewCitizen();
         }
@@ -111,9 +117,6 @@ public final class NormalColony extends AbstractColony {
         
         fac = new CargoRailSystem();
         city.getFacility().add(fac);
-        
-        getCities().add(city);
-        return city;
     }
     
     /** 발생할 수 있는 이벤트 유형들 반환 */
