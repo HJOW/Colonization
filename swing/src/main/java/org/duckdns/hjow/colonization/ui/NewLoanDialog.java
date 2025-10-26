@@ -143,10 +143,10 @@ public class NewLoanDialog implements Disposeable {
         if(loan != null) {
             desc = loan.getName();
             desc += "\n";
-            desc += "\n" + ColonyManager.t("원금") + " : " + ColonyManager.FORMATTER_INT.format(loan.getAmount());
-            desc += "\n" + ColonyManager.t("기간(월)") + " : " + ColonyManager.FORMATTER_INT.format(loan.getInterestCount());
-            desc += "\n" + ColonyManager.t("이자율(연)") + " : " + ColonyManager.FORMATTER_RATE.format(loan.getInterestRate100()) + " %";
-            desc += "\n" + ColonyManager.t("이자(월당)") + " : " + ColonyManager.FORMATTER_INT.format(loan.getInterestOnce(1));
+            desc += "\n" + ColonyManager.t("원금") + " : " + ColonyManager.formatInt(loan.getAmount());
+            desc += "\n" + ColonyManager.t("기간(월)") + " : " + ColonyManager.formatInt(loan.getInterestCount());
+            desc += "\n" + ColonyManager.t("이자율(연)") + " : " + ColonyManager.formatRate(loan.getInterestRate100()) + " %";
+            desc += "\n" + ColonyManager.t("이자(월당)") + " : " + ColonyManager.formatInt(loan.getInterestOnce(1));
             
             desc += "\n";
             desc += "\n" + ColonyManager.t("만기일에 원금을 전액 상환해야 합니다.");

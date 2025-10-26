@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.Serializable;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -956,6 +957,26 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     /** 버전 배열을 문자열로 변환 */
     public static String getVersionString(int[] num) {
         return num[0] + "." + num[1] + "." + num[2] + "." + num[3];
+    }
+    
+    /** 정수 포맷 설정 */
+    public static String formatInt(long num) {
+    	return FORMATTER_INT.format(num);
+    }
+    
+    /** 정수 포맷 설정 */
+    public static String formatInt(BigInteger num) {
+    	return FORMATTER_INT.format(num);
+    }
+    
+    /** 실수 포맷 설정 */
+    public static String formatRate(double num) {
+    	return FORMATTER_RATE.format(num);
+    }
+    
+    /** 실수 포맷 설정 */
+    public static String formatRate(BigDecimal num) {
+    	return FORMATTER_RATE.format(num);
     }
     
     /** 버전 코드 */

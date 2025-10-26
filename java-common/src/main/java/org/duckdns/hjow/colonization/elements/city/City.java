@@ -1141,7 +1141,7 @@ public abstract class City implements ColonyElements {
         		if(rNow != null) rsName = rNow.getTitle();
         		
         		String percents = "";
-        		if(rNow != null) percents = ColonyManager.FORMATTER_RATE.format(rNow.getProgressPercents()) + "%";
+        		if(rNow != null) percents = ColonyManager.formatRate(rNow.getProgressPercents()) + "%";
         		
         		desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 연구 진행 중 : [RESEARCH] ([PROGRESS])").replace("[FACILITYNAME]", f.getName()).replace("[RESEARCH]", rsName).replace("[PROGRESS]", percents));
         	}

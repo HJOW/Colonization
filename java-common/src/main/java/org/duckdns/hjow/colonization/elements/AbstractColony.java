@@ -813,12 +813,12 @@ public abstract class AbstractColony implements Colony {
     @Override
     public String getStatusString(ColonyManagerUI superInstance) {
         StringBuilder desc = new StringBuilder("");
-        desc = desc.append("\t").append("HP : ").append(ColonyManager.FORMATTER_INT.format(getHp())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxHp()));
-        desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(ColonyManager.FORMATTER_INT.format(getMoneyTotals()));
-        desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(ColonyManager.FORMATTER_INT.format(getTech()));
-        desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(ColonyManager.FORMATTER_INT.format(getCityCount())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxCityCount()));
-        desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(ColonyManager.FORMATTER_INT.format(getCitizenCount()));
-        desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(ColonyManager.FORMATTER_INT.format(getCredit())).append(" / ").append(ColonyManager.FORMATTER_INT.format(getMaxCredit()));
+        desc = desc.append("\t").append("HP : ").append(ColonyManager.formatInt(getHp())).append(" / ").append(ColonyManager.formatInt(getMaxHp()));
+        desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(ColonyManager.formatInt(getMoneyTotals()));
+        desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(ColonyManager.formatInt(getTech()));
+        desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(ColonyManager.formatInt(getCityCount())).append(" / ").append(ColonyManager.formatInt(getMaxCityCount()));
+        desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(ColonyManager.formatInt(getCitizenCount()));
+        desc = desc.append("\t").append(ColonyManager.t("신용도") + " : ").append(ColonyManager.formatInt(getCredit())).append(" / ").append(ColonyManager.formatInt(getMaxCredit()));
         if(checked) desc = desc.append("\t").append(ColonyManager.t("인증됨"));
         
         return desc.toString().trim();

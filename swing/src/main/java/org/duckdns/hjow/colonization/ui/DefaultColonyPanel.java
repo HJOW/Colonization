@@ -520,10 +520,10 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             res = res.append("\n");
             for(Loan l : list) {
                 res = res.append("\n").append(l.getName());
-                res = res.append("\n    ").append(ColonyManager.t("원금")).append(" : ").append(ColonyManager.FORMATTER_INT.format(l.getOriginals()));
-                res = res.append("\n    ").append(ColonyManager.t("기간(월)")).append(" : ").append(ColonyManager.FORMATTER_INT.format(l.getInterestLeft())).append(" / ").append(ColonyManager.FORMATTER_INT.format(l.getInterestCount()));
-                res = res.append("\n    ").append(ColonyManager.t("이자율(연)")).append(" : ").append(ColonyManager.FORMATTER_RATE.format(l.getInterestRate100())).append(" %");
-                res = res.append("\n    ").append(ColonyManager.t("이자(월당)")).append(" : ").append(ColonyManager.FORMATTER_INT.format(l.getInterestOnce(1)));
+                res = res.append("\n    ").append(ColonyManager.t("원금")).append(" : ").append(ColonyManager.formatInt(l.getOriginals()));
+                res = res.append("\n    ").append(ColonyManager.t("기간(월)")).append(" : ").append(ColonyManager.formatInt(l.getInterestLeft())).append(" / ").append(ColonyManager.formatInt(l.getInterestCount()));
+                res = res.append("\n    ").append(ColonyManager.t("이자율(연)")).append(" : ").append(ColonyManager.formatRate(l.getInterestRate100())).append(" %");
+                res = res.append("\n    ").append(ColonyManager.t("이자(월당)")).append(" : ").append(ColonyManager.formatInt(l.getInterestOnce(1)));
             }
         }
         

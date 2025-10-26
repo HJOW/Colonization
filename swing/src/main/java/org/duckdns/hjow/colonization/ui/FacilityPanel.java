@@ -221,12 +221,12 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
             	long m = f.getDestructionFee(city, colony);
             	long currentMoney = colony.getMoney();
             	
-            	if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.FORMATTER_INT.format( m - currentMoney ))); return; }
+            	if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.formatInt( m - currentMoney ))); return; }
             	
             	if(f.getHp() <= 0) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("이미 곧 철거될 예정입니다.")); return; }
             	
             	String msg = ColonyManager.t("이 시설을 철거하시겠습니까?");
-            	msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.FORMATTER_INT.format(m));
+            	msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.formatInt(m));
             	
                 int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
                 if(sel != JOptionPane.YES_OPTION) return;
@@ -246,12 +246,12 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
 				int  c = f.getUpgradeCycle(colony, city);
 				long currentMoney = colony.getMoney();
 				
-				if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.FORMATTER_INT.format( m - currentMoney ))); return; }
+				if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.formatInt( m - currentMoney ))); return; }
 				if(f.getLevel() >= f.getMaxLevel()) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("더 이상 증축이 불가능합니다.")); return; }
 				if(! isUpgradeAvail(f, colony, city)) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("증축이 불가능합니다.")); return; }
 				
 				String msg = ColonyManager.t("이 시설을 증축하시겠습니까?");
-				msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.FORMATTER_INT.format(m));
+				msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.formatInt(m));
 				
 				int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
 				if(sel != JOptionPane.YES_OPTION) return;
