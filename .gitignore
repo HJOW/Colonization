@@ -3,6 +3,9 @@ swing/target/**
 JavaLauncher/bin/**
 JavaLauncher/obj/**
 JavaLauncher/publish/**
+WinLauncher/bin/**
+WinLauncher/obj/**
+WinLauncher/publish/**
 .vs/**
 packages
 WinLauncher_TemporaryKey.pfx
