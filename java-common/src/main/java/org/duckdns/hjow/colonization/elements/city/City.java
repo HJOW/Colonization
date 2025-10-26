@@ -438,7 +438,10 @@ public abstract class City implements ColonyElements {
         
         try {
             if(command.equalsIgnoreCase("NewCitizen")) {
-                if(getCitizenCount() < Integer.MAX_VALUE) createNewCitizen();
+                if(getCitizenCount() < Integer.MAX_VALUE) {
+                	Citizen c = createNewCitizen();
+                	ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 입주 신고").replace("[CITIZEN]", c.getName()), 1);
+                }
                 j.setCompleted(true);
                 return;
             }
@@ -450,9 +453,10 @@ public abstract class City implements ColonyElements {
                 
                 Class<?> facilityClass = FacilityManager.getFacilityClass(params);
                 if(facilityClass == null) return;
-                Object newOne = facilityClass.newInstance();
-                getFacility().add((Facility) newOne);
+                Facility newOne = (Facility) facilityClass.newInstance();
+                getFacility().add(newOne);
                 j.setCompleted(true);
+                ColonyManager.logGlobals(ColonyManager.t("시설 [FACILITY] 건설 완료").replace("[FACILITY]", newOne.getName()), 1);
             }
             
             if(command.equalsIgnoreCase("UpgradeFacility")) {
@@ -464,6 +468,7 @@ public abstract class City implements ColonyElements {
                     if(f.getKey() == l) {
                         f.setLevel(f.getLevel() + 1);
                         j.setCompleted(true);
+                        ColonyManager.logGlobals(ColonyManager.t("시설 [FACILITY] 증축 완료").replace("[FACILITY]", f.getName()), 1);
                         break;
                     }
                 }
@@ -525,6 +530,7 @@ public abstract class City implements ColonyElements {
             if(c.getHp() <= 0) {
                 c.dispose();
                 getCitizens().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 사망").replace("[CITIZEN]", c.getName()), 1);
                 continue;
             }
             idx++;
@@ -538,19 +544,26 @@ public abstract class City implements ColonyElements {
                 // 일하는 중인 시민 구직자 만들기
                 long facKey = f.getKey();
                 for(Citizen c : getCitizens()) {
-                    if(c.getWorkingFacility() == facKey) c.setWorkingFacility(0L);
+                    if(c.getWorkingFacility() == facKey) {
+                    	c.setWorkingFacility(0L);
+                    	ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 일자리를 잃음 (시설이 파괴됨)").replace("[CITIZEN]", c.getName()), 1);
+                    }
                 }
                 
                 if(f instanceof Home) {
                     // 살던 시민 노숙자 만들기
                     for(Citizen c : getCitizens()) {
-                        if(c.getLivingHome() == facKey) c.setLivingHome(0L);
+                        if(c.getLivingHome() == facKey) {
+                        	c.setLivingHome(0L);
+                        	ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 집을 잃음 (시설이 파괴됨)").replace("[CITIZEN]", c.getName()), 1);
+                        }
                     }
                 }
                 
                 // 시설 제거
                 f.dispose();
                 getFacility().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("시설 [FACILITY] 파괴됨").replace("[FACILITY]", f.getName()), 1);
                 continue;
             }
             idx++;
@@ -596,7 +609,10 @@ public abstract class City implements ColonyElements {
             
             if(c.getLivingHome() != 0L) {
                 Home h = c.getLivingHome(this);
-                if(h == null) c.setLivingHome(0L);
+                if(h == null) {
+                	c.setLivingHome(0L);
+                	ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 집을 잃음").replace("[CITIZEN]", c.getName()), 1);
+                }
             }
         }
         
@@ -611,6 +627,7 @@ public abstract class City implements ColonyElements {
                     Home home = (Home) f;
                     if(! home.isFull(this, col)) {
                         c.setLivingHome(home.getKey());
+                        ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 주거 시설 [FACILITY] 에 거주 시작").replace("[CITIZEN]", c.getName()).replace("[FACILITY]", home.getName()), 1);
                         break;
                     }
                 }
@@ -631,13 +648,19 @@ public abstract class City implements ColonyElements {
             // 존재하지 않는 직장인 경우 (직장 시설이 없어졌거나 등등) 리셋
             if(c.getWorkingFacility() != 0L) {
                 Facility f = c.getWorkingFacility(this);
-                if(f == null) c.setWorkingFacility(0L);
+                if(f == null) {
+                	c.setWorkingFacility(0L);
+                	ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 무직자로 판명").replace("[CITIZEN]", c.getName()), 1);
+                }
             }
             
             // 존재하지 않는 건설 현장인 경우 (완공되었거나 등등) 리셋
             if(c.getBuildingFacility() != 0L) {
                 HoldingJob j = c.getBuildingFacility(this);
-                if(j == null) c.setBuildingFacility(0L);
+                if(j == null) {
+                	c.setBuildingFacility(0L);
+                	ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 무직자로 판명").replace("[CITIZEN]", c.getName()), 1);
+                }
             }
         }
         
@@ -645,6 +668,12 @@ public abstract class City implements ColonyElements {
         for(final Citizen c : getCitizens()) {
             // 백수 여부 판단
             if(! c.isJobSeeker()) continue;
+            
+            // 교통 점수가 부족하면 일자리 할당 중단
+            if(trans <= 0) {
+            	ColonyManager.logGlobals(ColonyManager.t("교통 인프라 부족으로 일자리 할당 중단 !"), 1);
+            	break;
+            }
             
             // 건설 일자리들 확인
             list.clear();
@@ -662,7 +691,7 @@ public abstract class City implements ColonyElements {
                 continue;
             }
             
-            // 일자리가 당장 필요한 직장들 찾기 - 정렬 고민해야...
+            // 일자리가 당장 필요한 직장들 찾기
             list.clear();
             for(Facility f : facility) {
                 if(f.getWorkerNeeded() > f.getWorkingCitizensCount(this, col)) {
@@ -683,8 +712,12 @@ public abstract class City implements ColonyElements {
                 });
                 
                 if(trans <= 0) break;
-                c.setWorkingFacility(list.get(0).getKey());
+                
+                Facility f = list.get(0);
+                c.setWorkingFacility(f.getKey());
                 trans = trans - 1;
+                
+                ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 적합도 [SUITABLITY] 으로 시설 [FACILITY] 에 취직").replace("[CITIZEN]", c.getName()).replace("[SUITABLITY]", f.getWorkerSuitability(c) + "").replace("[FACILITY]", f.getName()), 1);
                 continue;
             }
             
@@ -709,8 +742,12 @@ public abstract class City implements ColonyElements {
                 });
                 
                 if(trans <= 0) break;
-                c.setWorkingFacility(list.get(0).getKey());
+                
+                Facility f = list.get(0);
+                c.setWorkingFacility(f.getKey());
                 trans = trans - 1;
+                
+                ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 적합도 [SUITABLITY] 으로 시설 [FACILITY] 에 취직").replace("[CITIZEN]", c.getName()).replace("[SUITABLITY]", f.getWorkerSuitability(c) + "").replace("[FACILITY]", f.getName()), 1);
             }
         }
         
@@ -727,6 +764,7 @@ public abstract class City implements ColonyElements {
             if(now <= 0L) {
                 for(Citizen c : f.getWorkingCitizens(this, colony)) {
                     c.setWorkingFacility(0L);
+                    ColonyManager.logGlobals(ColonyManager.t("시민 [CITIZEN] 이 교통 인프라 부족으로 출퇴근이 불가능해져 일자리를 잃음").replace("[CITIZEN]", c.getName()), 1);
                     break; // 1명씩만 구직자 만들기
                 }
             }

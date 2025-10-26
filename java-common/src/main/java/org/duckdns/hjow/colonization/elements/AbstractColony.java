@@ -569,6 +569,7 @@ public abstract class AbstractColony implements Colony {
             if(cityOne.getHp() <= 0) {
                 cityOne.dispose();
                 getCities().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("도시 [CITY] 파괴됨").replace("[CITY]", cityOne.getName()), 1);
                 continue;
             }
             idx++;
@@ -581,6 +582,7 @@ public abstract class AbstractColony implements Colony {
             if(en.getHp() <= 0) {
                 en.dispose();
                 getEnemies().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("적 [ENEMY] 파괴됨").replace("[ENEMY]", en.getName()), 1);
                 continue;
             }
             idx++;
@@ -593,6 +595,7 @@ public abstract class AbstractColony implements Colony {
             if(en.getAmount() <= 0) {
                 en.dispose();
                 getLoanHave().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("대출 [LOAN] 상환됨").replace("[LOAN]", en.getName()), 1);
                 continue;
             }
             idx++;
@@ -606,6 +609,7 @@ public abstract class AbstractColony implements Colony {
         // 1년 지날 때마다, 사용 가능한 대출 목록 갱신
         if(cycle % 60 * 24 * 30 * 12 == 0) {
             resetAvailLoans();
+            ColonyManager.logGlobals(ColonyManager.t("사용 가능한 대출 목록이 변경됨"), 1);
         }
         
         // 도시별 사이클 처리 (멀티쓰레드 처리)
@@ -682,7 +686,8 @@ public abstract class AbstractColony implements Colony {
         
         try {
             if(command.equalsIgnoreCase("NewCity")) {
-                newCity();
+                City city = newCity();
+                ColonyManager.logGlobals(ColonyManager.t("새 도시 [CITY] 건설됨").replace("[CITY]", city.getName()), 1);
                 return;
             }
         } catch(RuntimeException ex) {
