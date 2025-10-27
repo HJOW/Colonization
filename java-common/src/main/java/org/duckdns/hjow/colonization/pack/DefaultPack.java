@@ -21,6 +21,7 @@ public class DefaultPack implements Pack {
     protected List<Class<?>> enemyClasses    = new ArrayList<Class<?>>();
     protected List<Class<?>> stateClasses    = new ArrayList<Class<?>>();
     protected List<Class<?>> productClasses  = new ArrayList<Class<?>>();
+    protected List<Class<?>> policyClasses   = new ArrayList<Class<?>>();
     protected List<String>   featureKeywords = new ArrayList<String>();
     
     public DefaultPack() { init(); }
@@ -126,7 +127,13 @@ public class DefaultPack implements Pack {
         this.productClasses = productClasses;
     }
     
-    @Override
+    public List<Class<?>> getPolicyClasses() {
+		return policyClasses;
+	}
+	public void setPolicyClasses(List<Class<?>> policyClasses) {
+		this.policyClasses = policyClasses;
+	}
+	@Override
     public boolean isEnabled() {
         return enabled;
     }

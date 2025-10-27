@@ -14,6 +14,7 @@ import java.util.zip.GZIPInputStream;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
+import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.pack.Pack;
@@ -204,6 +205,34 @@ public class ColonyClassLoader {
         
         productClassListFlag = true;
         return productClassList;
+    }
+    
+    private static final List<Class<?>> policyClassList     = new Vector<Class<?>>();
+    private static       boolean        policyClassListFlag = false;
+    
+    /** 정책 클래스 목록 반환 */
+    public static synchronized List<Class<?>> policyClasses() {
+        if(policyClassListFlag) return policyClassList;
+        
+        policyClassList.clear();
+        for(Pack p : packs) { if(p.isEnabled()) policyClassList.addAll(p.getPolicyClasses()); }
+        
+        policyClassListFlag = true;
+        return policyClassList;
+    }
+    
+    /** 정책 객체 생성 */
+    public static Policy createPolicyInstance(String className) {
+    	for(Class<?> classes : policyClassList) {
+    		if(! (classes.getSimpleName().equals(className) || classes.getName().equals(className))) continue;
+    		try {
+    		    Policy p = (Policy) classes.newInstance();
+    		    return p;
+    		} catch(Exception ex) {
+    			GlobalLogs.processExceptionOccured(ex, false);
+    		}
+    	}
+    	return null;
     }
     
     /** 기본 공지사항 컨텐츠 html 반환 (웹 접근 못했을 시 이 내용 출력) */
@@ -420,6 +449,8 @@ public class ColonyClassLoader {
         if(pack.getResearchClasses() != null) researchClassList.addAll(pack.getResearchClasses());
         if(pack.getEnemyClasses()    != null) enemyClassList.addAll(pack.getEnemyClasses());
         if(pack.getStateClasses()    != null) stateClassList.addAll(pack.getStateClasses());
+        if(pack.getProductClasses()  != null) productClassList.addAll(pack.getProductClasses());
+        if(pack.getPolicyClasses()   != null) policyClassList.addAll(pack.getPolicyClasses());
     }
     
     /** 등록된 Pack 객체들 리턴 (새 List 객체로 리턴) */
@@ -460,6 +491,7 @@ public class ColonyClassLoader {
         enemyClassListFlag    = false;
         stateClassListFlag    = false;
         productClassListFlag  = false;
+        policyClassListFlag   = false;
     }
     
     /** 저장된 클래스 정보들 비우기 */
@@ -471,6 +503,7 @@ public class ColonyClassLoader {
         enemyClassListFlag    = false; enemyClassList.clear();   
         stateClassListFlag    = false; stateClassList.clear();
         productClassListFlag  = false; productClassList.clear();
+        policyClassListFlag   = false; policyClassList.clear();
         packs.clear();
         loadDefaultPacks();
     }

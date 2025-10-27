@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
+import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
@@ -28,6 +29,7 @@ import org.duckdns.hjow.colonization.elements.facilities.PowerPlant;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.TransportStation;
+import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
@@ -46,6 +48,7 @@ public abstract class City implements ColonyElements {
     protected String name = ColonyManager.t("도시") + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected List<Facility>   facility = new Vector<Facility>();
     protected List<Citizen>    citizens = new Vector<Citizen>();
+    protected List<Policy>     policies = new Vector<Policy>();
     protected List<Enemy>      enemies  = new Vector<Enemy>();
     protected List<HoldingJob> holdings = new Vector<HoldingJob>();
     protected int hp = getMaxHp();
@@ -56,7 +59,7 @@ public abstract class City implements ColonyElements {
     protected transient long calculatedTransPointLeft = 0L;
     
     public City() {
-        
+        resetPolicies();
     }
     
     public City(JsonObject json) throws IOException {
@@ -98,7 +101,17 @@ public abstract class City implements ColonyElements {
     	}
     	return list;
     }
-    /** 도시 이름 변경 */
+    
+    /** 정책 목록 반환 */
+    public List<Policy> getPolicies() {
+		return policies;
+	}
+
+	public void setPolicies(List<Policy> policies) {
+		this.policies = policies;
+	}
+
+	/** 도시 이름 변경 */
     public void setName(String name) {
         this.name = name;
         markAsRefresh(true);
@@ -335,6 +348,25 @@ public abstract class City implements ColonyElements {
             } else {
                 networks = networks - 1L;
             }
+        }
+        
+        // 정책 처리
+        for(Policy p : getPolicies()) {
+        	if(! p.isEnabled()) continue;
+        	if(! p.isAvail(colony, city)) {
+        		p.setEnabled(false);
+        		continue;
+        	}
+        	
+        	// 비용 처리
+        	if(cycle % (60 * 24 * 30) == 0) {
+        		colony.modifyingMoney((-1) * p.getMonthlyFee(), city, p, "Policy", ColonyManager.t("월간 정책 집행 예산"));
+        	}
+        	
+        	// 효과 처리
+        	if(cycle % p.cycleGap(colony) == 0) {
+        		p.oneCycle(cycle, city, colony, efficiency100, colPanel);
+        	}
         }
         
         // 적 사이클 처리
@@ -1007,6 +1039,10 @@ public abstract class City implements ColonyElements {
         for(Enemy h : enemies) { list.add(h.toJson(details, col, city)); }
         json.put("enemies", list);
         
+        list = new JsonArray();
+        for(Policy p : policies) { list.add(p.toJson(details, col, city)); }
+        json.put("policies", list);
+        
         // 추가 정보 (불러올 때는 필요가 없는) 첨가
         json.put("maxHp", String.valueOf(getMaxHp()));
         json.put("spaceUsing", new Integer(getUsingSpaces()));
@@ -1097,6 +1133,26 @@ public abstract class City implements ColonyElements {
                 }
             }
         }
+        
+        list = null;
+        try { list = (JsonArray) json.get("policies"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        policies.clear();
+        if(list != null) {
+            for(Object o : list) {
+                if(o instanceof String) o = JsonObject.parseJson(o.toString());
+                if(o instanceof JsonObject) {
+                    try {
+                    	JsonObject jsonIn = (JsonObject) o;
+                    	String type = jsonIn.get("type").toString();
+                    	Policy p = ColonyClassLoader.createPolicyInstance(type);
+                    	p.fromJson(jsonIn);
+                        policies.add(p);
+                    } catch(Exception ex) {
+                        GlobalLogs.processExceptionOccured(ex, false);
+                    }
+                }
+            }
+        }
     }
     
     /** 상태 메시지 생성 (UI 내 JTextArea 에 출력됨) */
@@ -1163,6 +1219,12 @@ public abstract class City implements ColonyElements {
     /** 계산된 잔여 교통 점수 반환 */
     public long getCalculatedTransLeftPoint() {
         return calculatedTransPointLeft;
+    }
+    
+    /** 정책 목록 갱신 */
+    public void resetPolicies() {
+    	policies.clear();
+    	// TODO
     }
     
     @Override

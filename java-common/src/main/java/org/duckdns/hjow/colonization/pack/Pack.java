@@ -11,6 +11,7 @@ public interface Pack extends Serializable {
     public List<Class<?>> getEnemyClasses();
     public List<Class<?>> getStateClasses();
     public List<Class<?>> getProductClasses();
+    public List<Class<?>> getPolicyClasses();
     public long getKey();
     public String getName();
     public String getDesc();
