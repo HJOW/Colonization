@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
@@ -154,12 +156,26 @@ public class GUIColonyManager extends ColonyManager {
                 onWindowClosing();
             }
         });
-        /*frame.addComponentListener(new ComponentAdapter() {
+        frame.addComponentListener(new ComponentAdapter() {
+        	@Override
+        	public void componentMoved(ComponentEvent e) {
+        		int x = frame.getX();
+        		int y = frame.getY() + frame.getHeight();
+        		if(dialogGlobalLog instanceof GlobalLogDialog) {
+        			GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
+        			d.setLocation(x, y);
+        		}
+        	}
             @Override
             public void componentResized(ComponentEvent e) {
-                refreshArenaPanel(0);
+                int w = frame.getWidth();
+                if(dialogGlobalLog instanceof GlobalLogDialog) {
+        			GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
+        			d.setSize(w, (int) d.getSize().getHeight());
+        			componentMoved(e);
+        		}
             }
-        });*/
+        });
         
         initializeUI();
     }

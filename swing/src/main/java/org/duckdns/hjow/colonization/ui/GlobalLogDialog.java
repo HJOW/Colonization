@@ -245,6 +245,10 @@ public class GlobalLogDialog implements GlobalLogUI {
         dialog.setSize(w, h);
     }
     
+    public void setLocation(int x, int y) {
+    	dialog.setLocation(x, y);
+    }
+    
     public Dimension getSize() {
         return dialog.getSize();
     }

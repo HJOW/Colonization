@@ -824,6 +824,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     		try {
     			Object res = null;
         		if(rootEngine == null) rootEngine = newScriptEngine();
+        		rootEngine.put("colony", getSelectColonyInfo());
+        		rootEngine.put("uix", broker);
         		
         		ScriptPatternDetector detector = new ScriptPatternDetector();
         		detector.checkReflection(commands);
@@ -844,8 +846,10 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	if(c == null) return false;
     	
     	Colony col = getSelectedColony();
+    	if(col == null) return false;
     	
     	// 인증 제거
+    	if(col.isCheckEnabled()) logGlobals(t("Cheat 사용으로 정착지 [COLONY] 의 인증이 무효화됩니다.").replace("[COLONY]", col.getName()));
     	col.disableChecked();
     	
     	// 실행

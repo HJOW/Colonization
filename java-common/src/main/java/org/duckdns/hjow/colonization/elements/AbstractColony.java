@@ -1076,8 +1076,15 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 인증 제거 (인증 제거 사유 발생 시 호출) */
+    @Override
     public void disableChecked() {
     	checked = false;
+    }
+    
+    /** 인증 유효 여부 반환 */
+    @Override
+    public boolean isCheckEnabled() {
+    	return checked;
     }
 
     /** 파일로 저장 */

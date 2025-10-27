@@ -73,4 +73,6 @@ public interface Colony extends ColonyElements {
     public String getCheckerSerial();
     /** 인증 비활성화 */
     public void disableChecked();
+    /** 인증 유효 여부 반환 */
+    public boolean isCheckEnabled();
 }

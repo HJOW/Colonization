@@ -53,6 +53,16 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
 	}
 	
 	/** 시뮬레이션 정지 */
+	public void pause() {
+		pauseSimulation();
+	}
+	
+	/** 시뮬레이션 재개 */
+	public void resume() {
+		resumeSimulation(-1);
+	}
+	
+	/** 시뮬레이션 정지 */
 	@Override
 	public void pauseSimulation() {
 		originals.pauseSimulation();
