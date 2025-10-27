@@ -519,7 +519,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 gridBagConst.fill = GridBagConstraints.HORIZONTAL;
                 gridBagConst.anchor = GridBagConstraints.NORTH;
                 
-                lb = new JLabel(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(p.getMonthlyFee())));
+                lb = new JLabel(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(p.getMonthlyFee(colony, city))));
                 lbPoliFees.add(lb);
                 pnPolicies.add(lb, gridBagConst);
                 
@@ -579,7 +579,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 	ch.setSelected(current.isEnabled());
                 }
                 
-                lbFee.setText(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(current.getMonthlyFee())));
+                lbFee.setText(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(current.getMonthlyFee(colony, city))));
         	}
         }
         

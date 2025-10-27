@@ -67,7 +67,7 @@ public abstract class Policy implements ColonyElements {
 	public boolean isAvail(Colony col, City ct) { return true; }
 
 	/** 월간 비용 반환 */
-	public abstract long getMonthlyFee();
+	public abstract long getMonthlyFee(Colony col, City ct);
 	
 	/** 발전량 증감 배율 반환 */
 	public double getPowerSupplyRate() { return 1.0; }

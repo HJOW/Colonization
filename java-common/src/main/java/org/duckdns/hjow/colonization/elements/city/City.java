@@ -380,7 +380,7 @@ public abstract class City implements ColonyElements {
         	
         	// 비용 처리
         	if(cycle % (60 * 24 * 30) == 0) {
-        		colony.modifyingMoney((-1) * p.getMonthlyFee(), city, p, "Policy", ColonyManager.t("월간 정책 집행 예산"));
+        		colony.modifyingMoney((-1) * p.getMonthlyFee(colony, city), city, p, "Policy", ColonyManager.t("월간 정책 집행 예산"));
         	}
         	
         	// 효과 처리
