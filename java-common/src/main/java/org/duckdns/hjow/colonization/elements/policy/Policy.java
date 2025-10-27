@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
@@ -67,6 +68,18 @@ public abstract class Policy implements ColonyElements {
 
 	/** 월간 비용 반환 */
 	public abstract long getMonthlyFee();
+	
+	/** 발전량 증감 배율 반환 */
+	public double getPowerSupplyRate() { return 1.0; }
+	
+	/** 교통수용량 증감 배율 반환 */
+	public double getTransSupplyRate() { return 1.0; }
+	
+	/** 네트워크 증감 배율 반환 */
+	public double getNetworkSupplyRate() { return 1.0; }
+	
+	/** 시설 보너스 배율 반환 */
+	public double getFacilityBonusRate(Facility f) { return 1.0; }
 
 	@Override
 	public int cycleGap(Colony colony) {

@@ -61,6 +61,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     protected transient List<CitizenPanel>  citizenPns  = new Vector<CitizenPanel>();
     
     protected transient List<JLabel>       lbPolicies = new Vector<JLabel>();
+    protected transient List<JLabel>       lbPoliFees = new Vector<JLabel>();
     protected transient List<JCheckBox>    chPolicies = new Vector<JCheckBox>();
     protected transient List<ItemListener> evPolicies = new Vector<ItemListener>();
     
@@ -294,6 +295,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             	box.removeItemListener(evPolicies.get(idx));
             }
             lbPolicies.clear();
+            lbPoliFees.clear();
             chPolicies.clear();
             evPolicies.clear();
             setEditable(false);
@@ -483,6 +485,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             	box.removeItemListener(evPolicies.get(idx));
             }
             lbPolicies.clear();
+            lbPoliFees.clear();
             chPolicies.clear();
             evPolicies.clear();
             
@@ -497,14 +500,27 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             	gridBagConst = new GridBagConstraints();
                 gridBagConst.gridx = colNo; colNo++;
                 gridBagConst.gridy = rowNo;
-                gridBagConst.gridwidth = 8;
+                gridBagConst.gridwidth = 6;
                 gridBagConst.gridheight = 1;
-                gridBagConst.weightx = 0.8;
+                gridBagConst.weightx = 0.6;
                 gridBagConst.fill = GridBagConstraints.HORIZONTAL;
                 gridBagConst.anchor = GridBagConstraints.NORTH;
                 
                 lb = new JLabel(ColonyManager.t(p.getName()));
                 lbPolicies.add(lb);
+                pnPolicies.add(lb, gridBagConst);
+                
+                gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = colNo; colNo++;
+                gridBagConst.gridy = rowNo;
+                gridBagConst.gridwidth = 2;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 0.2;
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                lb = new JLabel(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(p.getMonthlyFee())));
+                lbPoliFees.add(lb);
                 pnPolicies.add(lb, gridBagConst);
                 
                 gridBagConst = new GridBagConstraints();
@@ -555,12 +571,15 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         	for(idx=0; idx<policies.size(); idx++) {
         		Policy current = policies.get(idx);
         		JCheckBox ch = chPolicies.get(idx);
+        		JLabel lbFee = lbPoliFees.get(idx);
         		
         		boolean avail = current.isAvail(colony, city);
                 ch.setEnabled(avail);
                 if(avail) {
                 	ch.setSelected(current.isEnabled());
                 }
+                
+                lbFee.setText(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(current.getMonthlyFee())));
         	}
         }
         

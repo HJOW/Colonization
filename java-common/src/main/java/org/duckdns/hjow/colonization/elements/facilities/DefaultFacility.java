@@ -22,6 +22,7 @@ public abstract class DefaultFacility implements Facility {
     private static final long serialVersionUID = 8012568139388326869L;
     protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;
+    protected transient double boostRate = 0.0;
     
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected int hp = getMaxHp();
@@ -378,6 +379,11 @@ public abstract class DefaultFacility implements Facility {
     /** 레벨 당 Capacity 증가율 */
     protected double increateCapacityRate() {
         return 0.1;
+    }
+    
+    @Override
+    public void setBoostRate(double boostRate) {
+    	this.boostRate = boostRate;
     }
     
     @Override

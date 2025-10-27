@@ -267,11 +267,31 @@ public abstract class City implements ColonyElements {
         long trans    = getDefaultTransportPoint(); 
         long networks = getNetworkCapacity(colony);
         
+        double powBoostRate = 1.0;
+        double traBoostRate = 1.0;
+        double netBoostRate = 1.0;
+        
+        for(Policy p : policies) {
+        	powBoostRate = powBoostRate * p.getPowerSupplyRate();
+        	traBoostRate = traBoostRate * p.getTransSupplyRate();
+        	netBoostRate = netBoostRate * p.getNetworkSupplyRate();
+        }
+        
+        power    = new BigDecimal(String.valueOf(power   )).multiply(new BigDecimal(String.valueOf(powBoostRate))).longValue();
+        trans    = new BigDecimal(String.valueOf(trans   )).multiply(new BigDecimal(String.valueOf(traBoostRate))).longValue();
+        networks = new BigDecimal(String.valueOf(networks)).multiply(new BigDecimal(String.valueOf(netBoostRate))).longValue();
+        
         // 시설 파워 및 효율성 계산, 효과 처리
         for(Facility f : getFacility()) {
             int efficiency = efficiency100;
+            double boostRate = 1.0;
             
-            // Calculates power supply
+            for(Policy p : policies) {
+            	boostRate = boostRate * p.getFacilityBonusRate(f);
+            }
+            f.setBoostRate(boostRate);
+            
+            // 전력 사용량 계산
             int efficiencyPow = efficiency100;
             int consume = f.getPowerConsume();
             

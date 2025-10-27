@@ -73,6 +73,9 @@ public interface Facility extends ColonyElements {
     /** 이 시설의 업그레이드 소요 시간 반환 */
     public int getUpgradeCycle(Colony col, City city);
     
+    /** 추가 활성화 수치 설정 (City 의 oneCycle 에서 호출됨, 직접 호출해봤자 소용없음.) */
+    public void setBoostRate(double boostRate);
+    
     /*
      * 이 Facility 구현 클래스는 다음 static 메소드들을 반드시 구현해야 함.
      * 
