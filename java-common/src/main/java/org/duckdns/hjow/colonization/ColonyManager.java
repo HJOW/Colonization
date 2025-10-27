@@ -748,13 +748,13 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             cycle = time.intValue();
         }
         
-        logGlobals("Running main cycle " + cycle, 1);
+        // logGlobals("Running main cycle " + cycle, 1);
         
         if(cycle % col.cycleGap(col) == 0) {
             try { col.oneCycle(cycle, null, col, 100, getColonyPanel(col)); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         }
         
-        logGlobals("Running refreshing UI cycle " + cycle, 1);
+        // logGlobals("Running refreshing UI cycle " + cycle, 1);
         
         try {
             refreshArenaPanel(cycle);
@@ -836,8 +836,6 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     			GlobalLogs.processExceptionOccured(ex, true);
     		}
     	}
-    	
-    	reserveRefresh();
     }
     
     /** 치트 적용 */
@@ -854,6 +852,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	
     	// 실행
     	c.onCodeInput(this, params);
+    	
+    	reserveRefresh();
     	logGlobals(t("Cheat [CODE] 적용.").replace("[CODE]", c.getCode()));
     	return true;
     }
