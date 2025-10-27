@@ -19,6 +19,7 @@ import java.util.Vector;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
@@ -802,6 +803,32 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             }
         }
         return null;
+    }
+    
+    /** 치트 적용 */
+    public void applyCheat(String cheatCodeAll) {
+    	if(cheatCodeAll == null) return;
+    	StringTokenizer spaceTokenizer = new StringTokenizer(cheatCodeAll, " ");
+    	String code, param;
+    	
+    	code = spaceTokenizer.nextToken().trim();
+    	
+    	if(spaceTokenizer.hasMoreTokens()) param = spaceTokenizer.nextToken();
+    	else param = "";
+    	
+    	applyCheat(code, param);
+    }
+    
+    /** 치트 적용 */
+    public void applyCheat(String cheatCode, String params) {
+    	Cheat c = Cheat.map().get(cheatCode);
+    	if(c == null) return;
+    	
+    	Colony col = getSelectedColony(); // 인증 제거
+    	col.disableChecked();
+    	
+    	c.onCodeInput(this, params); // 실행
+    	logGlobals(t("Cheat [CODE] 적용.").replace("[CODE]", c.getCode()));
     }
     
     /** 설정 객체 자체를 반환 */
