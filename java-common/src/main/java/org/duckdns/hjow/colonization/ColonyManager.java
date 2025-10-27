@@ -73,6 +73,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     protected transient ColonyManagerBroker broker;
     
     protected transient ScriptEngineManager scriptEngineManager = null;
+    protected transient ScriptEngine        rootEngine          = null;
     protected transient String scriptLanguage = "JavaScript";
     protected transient String scriptVarPrefix = "a" + (100000 + (int) (Math.random() * 899999));
     
@@ -647,6 +648,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         if((! flagAlreadyDisposed) && (! colonies.isEmpty())) saveColonies();
         ColonyClassLoader.clearAll();
         broker = null;
+        if(rootEngine != null) rootEngine = null;
     }
     
     /** 메시지 출력 */
@@ -805,10 +807,12 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         return null;
     }
     
-    /** 치트 적용 */
-    public void applyCheat(String cheatCodeAll) {
-    	if(cheatCodeAll == null) return;
-    	StringTokenizer spaceTokenizer = new StringTokenizer(cheatCodeAll, " ");
+    /** 커맨드 적용 */
+    public void runCommand(String commands) {
+    	if(commands == null) return;
+    	logGlobals(">> " + commands);
+    	
+    	StringTokenizer spaceTokenizer = new StringTokenizer(commands, " ");
     	String code, param;
     	
     	code = spaceTokenizer.nextToken().trim();
@@ -816,19 +820,38 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	if(spaceTokenizer.hasMoreTokens()) param = spaceTokenizer.nextToken();
     	else param = "";
     	
-    	applyCheat(code, param);
+    	if(! applyCheat(code, param)) {
+    		try {
+    			Object res = null;
+        		if(rootEngine == null) rootEngine = newScriptEngine();
+        		
+        		ScriptPatternDetector detector = new ScriptPatternDetector();
+        		detector.checkReflection(commands);
+        		
+        		res = rootEngine.eval(commands);
+        		if(res != null) logGlobals(res.toString());
+    		} catch(Exception ex) {
+    			GlobalLogs.processExceptionOccured(ex, true);
+    		}
+    	}
+    	
+    	reserveRefresh();
     }
     
     /** 치트 적용 */
-    public void applyCheat(String cheatCode, String params) {
+    private boolean applyCheat(String cheatCode, String params) {
     	Cheat c = Cheat.map().get(cheatCode);
-    	if(c == null) return;
+    	if(c == null) return false;
     	
-    	Colony col = getSelectedColony(); // 인증 제거
+    	Colony col = getSelectedColony();
+    	
+    	// 인증 제거
     	col.disableChecked();
     	
-    	c.onCodeInput(this, params); // 실행
+    	// 실행
+    	c.onCodeInput(this, params);
     	logGlobals(t("Cheat [CODE] 적용.").replace("[CODE]", c.getCode()));
+    	return true;
     }
     
     /** 설정 객체 자체를 반환 */

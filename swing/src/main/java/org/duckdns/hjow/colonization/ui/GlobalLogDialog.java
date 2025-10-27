@@ -16,6 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
@@ -29,6 +30,8 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 public class GlobalLogDialog implements GlobalLogUI {
     protected JLogArea taLog;
     protected JDialog dialog;
+    protected JPanel pnCommand;
+    protected JTextField tfCommand;
     protected int detailLevel = 0;
     protected boolean threadSwitch = true;
     protected boolean autoOutput = false;
@@ -166,6 +169,25 @@ public class GlobalLogDialog implements GlobalLogUI {
 			}
 		});
         
+        pnCommand = new JPanel();
+        pnCommand.setLayout(new BorderLayout());
+        pnMain.add(pnCommand, BorderLayout.SOUTH);
+        
+        tfCommand = new JTextField();
+        pnCommand.add(tfCommand, BorderLayout.CENTER);
+        tfCommand.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(superInstance instanceof GUIColonyManager) {
+					String cmd = tfCommand.getText();
+					tfCommand.setText("");
+					((GUIColonyManager) superInstance).runCommand(cmd);
+					tfCommand.requestFocus();
+				}
+			}
+		});
+        pnCommand.setVisible(false);
+        
         threadSwitch = true;
         new Thread(new Runnable() {
             @Override
@@ -176,6 +198,15 @@ public class GlobalLogDialog implements GlobalLogUI {
                 }
             }
         }).start();
+    }
+    
+    public void openCommands() {
+    	pnCommand.setVisible(true);
+    	tfCommand.requestFocus();
+    }
+    
+    public void hideCommands() {
+    	pnCommand.setVisible(false);
     }
     
     public JDialog getDialog() {

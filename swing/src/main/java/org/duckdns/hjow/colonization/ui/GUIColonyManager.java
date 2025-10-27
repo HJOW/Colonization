@@ -633,6 +633,11 @@ public class GUIColonyManager extends ColonyManager {
                 if(dialogGlobalLog != null) {
                 	if(flagDebugMode) dialogGlobalLog.setDetailLevel(1);
                     else              dialogGlobalLog.setDetailLevel(2);
+                	
+                	if(dialogGlobalLog instanceof GlobalLogDialog) {
+                		if(flagDebugMode) ((GlobalLogDialog) dialogGlobalLog).openCommands();
+                		else              ((GlobalLogDialog) dialogGlobalLog).hideCommands();
+                	}
                 }
             }
         });
@@ -1074,12 +1079,6 @@ public class GUIColonyManager extends ColonyManager {
         }
     }
 
-    @Override
-    public void dispose() {
-        dispose(true);
-        flagAlreadyDisposed = true;
-    }
-    
     /** 이 객체 사용 중단 - 관련 리소스 모두 해제, 대화상자 닫기 여부도 지정 */
     @Override
     public void dispose(boolean closeDialog) {
@@ -1125,6 +1124,8 @@ public class GUIColonyManager extends ColonyManager {
             dialogGlobalLog.dispose();
             dialogGlobalLog = null;
         }
+        
+        if(rootEngine != null) rootEngine = null;
         
         for(ModDialog diag : modDialogs) {
         	diag.dispose();
