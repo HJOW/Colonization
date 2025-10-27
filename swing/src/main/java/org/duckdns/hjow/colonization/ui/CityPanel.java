@@ -19,6 +19,7 @@ import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -37,6 +38,7 @@ import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.SupportGUIFacility;
+import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.commons.stream.SimultaneousWork;
 import org.duckdns.hjow.commons.stream.SingleAction;
 
@@ -48,15 +50,19 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     protected transient JProgressBar progHp;
     protected transient JTextArea ta;
     protected transient JTextField tfName, tfSearchCitizen, tfSearchFacility;
-    protected transient JPanel pnFrontRoot, pnFacRoot, pnCitiRoot;
-    protected transient JPanel pnGrid, pnCitizens, pnFacilities, pnHoldings;
+    protected transient JPanel pnFrontRoot, pnFacRoot, pnCitiRoot, pnPolicyRoot;
+    protected transient JPanel pnGrid, pnCitizens, pnFacilities, pnHoldings, pnPolicies;
     protected transient JPanel toolbarCity;
     protected transient JButton btnNewFac;
     protected transient JComboBox<String> cbxTax;
-    protected transient GridBagLayout layoutFacility, layoutCitizen;
+    protected transient GridBagLayout layoutFacility, layoutCitizen, layoutPolicies;
     protected transient NewFacilityManager dialogNewFac;
     protected transient List<FacilityPanel> facilityPns = new Vector<FacilityPanel>();
     protected transient List<CitizenPanel>  citizenPns  = new Vector<CitizenPanel>();
+    
+    protected transient List<JLabel>       lbPolicies = new Vector<JLabel>();
+    protected transient List<JCheckBox>    chPolicies = new Vector<JCheckBox>();
+    protected transient List<ItemListener> evPolicies = new Vector<ItemListener>();
     
     protected transient boolean flagEditable = true;
     
@@ -157,13 +163,15 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         tab = new JTabbedPane();
         pnGrid.add(tab, BorderLayout.CENTER);
         
-        pnFrontRoot = new JPanel();
-        pnFacRoot   = new JPanel();
-        pnCitiRoot  = new JPanel();
+        pnFrontRoot  = new JPanel();
+        pnFacRoot    = new JPanel();
+        pnCitiRoot   = new JPanel();
+        pnPolicyRoot = new JPanel();
         
         pnFrontRoot.setLayout(new BorderLayout());
         pnFacRoot.setLayout(new BorderLayout());
         pnCitiRoot.setLayout(new BorderLayout());
+        pnPolicyRoot.setLayout(new BorderLayout());
         
         JPanel pnTextStatus = new JPanel();
         pnTextStatus.setLayout(new BorderLayout());
@@ -181,19 +189,24 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         
         pnFacilities = new JPanel();
         pnCitizens   = new JPanel();
+        pnPolicies   = new JPanel();
         
         layoutFacility = new GridBagLayout();
         layoutCitizen  = new GridBagLayout();
+        layoutPolicies = new GridBagLayout();
         
         pnFacilities.setLayout(layoutFacility);
         pnCitizens.setLayout(layoutCitizen);
+        pnPolicies.setLayout(layoutPolicies);
         
         pnFacRoot.add(new JScrollPane(pnFacilities, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         pnCitiRoot.add(new JScrollPane(pnCitizens), BorderLayout.CENTER);
+        pnPolicyRoot.add(new JScrollPane(pnPolicies), BorderLayout.CENTER);
         
         tab.add(ColonyManager.t("홈")  , pnFrontRoot);
         tab.add(ColonyManager.t("시설"), pnFacRoot);
         tab.add(ColonyManager.t("시민"), pnCitiRoot);
+        tab.add(ColonyManager.t("정책"), pnPolicyRoot);
         
         tab.setSelectedComponent(pnFrontRoot);
         
@@ -275,6 +288,14 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             ta.setText("");
             pnFacilities.removeAll();
             pnCitizens.removeAll();
+            pnPolicies.removeAll();
+            for(int idx=0; idx<chPolicies.size(); idx++) {
+            	JCheckBox box = chPolicies.get(idx);
+            	box.removeItemListener(evPolicies.get(idx));
+            }
+            lbPolicies.clear();
+            chPolicies.clear();
+            evPolicies.clear();
             setEditable(false);
             return;
         }
@@ -407,6 +428,8 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         final List<Citizen> citizens = city.getCitizens();
         sizes = citizens.size();
         
+        if(! fullRefresh) { if(sizes != citizenPns.size()) fullRefresh = true; }
+        
         if(fullRefresh) {
         	pnCitizens.removeAll();
             for(CitizenPanel p : citizenPns) { p.dispose(); }
@@ -446,22 +469,100 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             gridBagConst.weighty = 1.0;
             
             pnCitizens.add(pnEmpty, gridBagConst);
-        }/* else if(sizes >= 1) {
-        	workList = new Vector<SingleAction>();
-            for(idx=0; idx<sizes; idx++) {
-            	SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {	
-    				@Override
-    				public void run(int r) throws Throwable {
-    					CitizenPanel pn = citizenPns.get(r);
-    		            pn.refresh(cycle, city, colony, superInstance);
-    				}
-    			};
-            	
-            	workList.add(act);
+        }
+        
+        final List<Policy> policies = city.getPolicies();
+        sizes = citizens.size();
+        
+        if(! fullRefresh) { if(sizes != chPolicies.size()) fullRefresh = true; }
+        
+        if(fullRefresh) {
+            pnPolicies.removeAll();
+            for(idx=0; idx<chPolicies.size(); idx++) {
+            	JCheckBox box = chPolicies.get(idx);
+            	box.removeItemListener(evPolicies.get(idx));
             }
-            simulWork = new SimultaneousWork(workList);
-            simulWork.start();
-        } */
+            lbPolicies.clear();
+            chPolicies.clear();
+            evPolicies.clear();
+            
+            JLabel lb;
+            JCheckBox ch;
+            ItemListener ev;
+            rowNo = 0;
+            colNo = 0;
+            
+            for(Policy p : policies) {
+            	
+            	gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = colNo; colNo++;
+                gridBagConst.gridy = rowNo;
+                gridBagConst.gridwidth = 8;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 0.8;
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                lb = new JLabel(ColonyManager.t(p.getName()));
+                lbPolicies.add(lb);
+                pnPolicies.add(lb, gridBagConst);
+                
+                gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = colNo; colNo++;
+                gridBagConst.gridy = rowNo;
+                gridBagConst.gridwidth = 2;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 0.2;
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                ch = new JCheckBox(ColonyManager.t("활성화"));
+                chPolicies.add(ch);
+                pnPolicies.add(ch, gridBagConst);
+            	
+                final Policy current = p;
+                ev = new ItemListener() {
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						current.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+					}
+				};
+                
+                ch.addItemListener(ev);
+                
+                boolean avail = current.isAvail(colony, city);
+                ch.setEnabled(avail);
+                if(avail) {
+                	ch.setSelected(current.isEnabled());
+                }
+                
+                rowNo++;
+            }
+            
+            pnEmpty = new JPanel();
+            
+            gridBagConst = new GridBagConstraints();
+            gridBagConst.gridx = colNo;
+            gridBagConst.gridy = rowNo;
+            gridBagConst.gridwidth = 10;
+            gridBagConst.gridheight = 1;
+            gridBagConst.weightx = 1.0;
+            gridBagConst.fill = GridBagConstraints.BOTH;
+            gridBagConst.weighty = 1.0;
+            
+            pnPolicies.add(pnEmpty, gridBagConst);
+        } else {
+        	for(idx=0; idx<policies.size(); idx++) {
+        		Policy current = policies.get(idx);
+        		JCheckBox ch = chPolicies.get(idx);
+        		
+        		boolean avail = current.isAvail(colony, city);
+                ch.setEnabled(avail);
+                if(avail) {
+                	ch.setSelected(current.isEnabled());
+                }
+        	}
+        }
         
         // 작업중 항목 출력
         refreshHoldingJobs();
