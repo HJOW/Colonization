@@ -19,6 +19,7 @@ import java.util.Vector;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -961,12 +962,147 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 정수 포맷 설정 */
     public static String formatInt(long num) {
-    	return FORMATTER_INT.format(num);
+    	return formatInt(num, true, 2);
+    }
+    
+    /** 정수 포맷 설정 */
+    public static String formatInt(long num, boolean simple, int disp) {
+    	long unit = 10000000000L;
+    	if(simple || num < unit) return FORMATTER_INT.format(num);
+    	
+    	List<String> list = new ArrayList<String>();
+    	
+    	long upper = 0L;
+    	long left  = num;
+    	
+    	unit = 1000000L;
+    	upper = (long) (left / unit);
+		left  = (long) (left % unit);
+		if(left > 0) list.add(FORMATTER_INT.format(left));
+    	
+		unit = 1000L;
+		left = upper;
+		upper = (long) (left / unit);
+		left  = (long) (left % unit);
+		if(left > 0) list.add(FORMATTER_INT.format(left) + "M");
+		
+		if(upper >= 1) {
+			left = upper;
+			upper = (long) (left / unit);
+			left  = (long) (left % unit);
+			if(left > 0) list.add(FORMATTER_INT.format(left) + "G");
+		}
+		
+		if(upper >= 1) {
+			left = upper;
+			upper = (long) (left / unit);
+			left  = (long) (left % unit);
+			if(left > 0) list.add(FORMATTER_INT.format(left) + "T");
+		}
+		
+		if(upper >= 1) {
+			left = upper;
+			upper = (long) (left / unit);
+			left  = (long) (left % unit);
+			if(left > 0) list.add(FORMATTER_INT.format(left) + "F");
+		}
+		
+		if(upper >= 1) {
+			left = upper;
+			upper = (long) (left / unit);
+			left  = (long) (left % unit);
+			if(left > 0) list.add(FORMATTER_INT.format(left) + "E");
+		}
+		
+		if(upper >= 1) {
+			left = upper;
+			upper = 0L;
+			if(left > 0) list.add(FORMATTER_INT.format(left) + "Z");
+		}
+		
+    	StringBuilder res = new StringBuilder("");
+    	for(int idx=list.size()-1; idx>=0; idx--) {
+    		res = res.append(" ").append(list.get(idx));
+    		disp--;
+    		if(disp == 0) break;
+    	}
+    	return res.toString().trim();
     }
     
     /** 정수 포맷 설정 */
     public static String formatInt(BigInteger num) {
-    	return FORMATTER_INT.format(num);
+    	return formatInt(num, true, 2);
+    }
+    
+    /** 정수 포맷 설정 */
+    public static String formatInt(BigInteger num, boolean simple, int disp) {
+    	BigInteger unit = Constants.BIGINTEGER_10000000000;
+    	if(simple || num.compareTo(unit) < 0) return FORMATTER_INT.format(num);
+    	
+        List<String> list = new ArrayList<String>();
+    	
+    	BigInteger upper = BigInteger.ZERO;
+    	BigInteger left  = num;
+    	
+    	unit = Constants.BIGINTEGER_1000000;
+    	upper = left.divide(unit);
+		left  = left.mod(unit);
+		if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left));
+    	
+		unit = Constants.BIGINTEGER_1000;
+		left = upper;
+		upper = left.divide(unit);
+		left  = left.mod(unit);
+		if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "M");
+		
+		if(upper.compareTo(BigInteger.ONE) > 0) {
+			left = upper;
+			upper = left.divide(unit);
+			left  = left.mod(unit);
+			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "G");
+		}
+		
+		if(upper.compareTo(BigInteger.ONE) > 0) {
+			left = upper;
+			upper = left.divide(unit);
+			left  = left.mod(unit);
+			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "T");
+		}
+		
+		if(upper.compareTo(BigInteger.ONE) > 0) {
+			left = upper;
+			upper = left.divide(unit);
+			left  = left.mod(unit);
+			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "F");
+		}
+		
+		if(upper.compareTo(BigInteger.ONE) > 0) {
+			left = upper;
+			upper = left.divide(unit);
+			left  = left.mod(unit);
+			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "E");
+		}
+		
+		if(upper.compareTo(BigInteger.ONE) > 0) {
+			left = upper;
+			upper = left.divide(unit);
+			left  = left.mod(unit);
+			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "Z");
+		}
+		
+		if(upper.compareTo(BigInteger.ONE) > 0) {
+			left = upper;
+			upper = BigInteger.ZERO;
+			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "Y");
+		}
+		
+    	StringBuilder res = new StringBuilder("");
+    	for(int idx=list.size()-1; idx>=0; idx--) {
+    		res = res.append(" ").append(list.get(idx));
+    		disp--;
+    		if(disp == 0) break;
+    	}
+    	return res.toString().trim();
     }
     
     /** 실수 포맷 설정 */

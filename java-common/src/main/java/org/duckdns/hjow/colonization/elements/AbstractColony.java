@@ -814,7 +814,7 @@ public abstract class AbstractColony implements Colony {
     public String getStatusString(ColonyManagerUI superInstance) {
         StringBuilder desc = new StringBuilder("");
         desc = desc.append("\t").append("HP : ").append(ColonyManager.formatInt(getHp())).append(" / ").append(ColonyManager.formatInt(getMaxHp()));
-        desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(ColonyManager.formatInt(getMoneyTotals()));
+        desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(ColonyManager.formatInt(getMoneyTotals(), false, 2));
         desc = desc.append("\t").append(ColonyManager.t("기술") + " : ").append(ColonyManager.formatInt(getTech()));
         desc = desc.append("\t").append(ColonyManager.t("도시 수") + " : ").append(ColonyManager.formatInt(getCityCount())).append(" / ").append(ColonyManager.formatInt(getMaxCityCount()));
         desc = desc.append("\t").append(ColonyManager.t("총 인구") + " : ").append(ColonyManager.formatInt(getCitizenCount()));
