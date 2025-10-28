@@ -571,6 +571,9 @@ namespace WinLauncher
                 string packClassName = null;
 
                 if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { indexes++; continue;  }
+                if (!libUrl.StartsWith("http")) libUrl = ROOTURL + libUrl;
+
+
                 SetStatusMessage("라이브러리 " + libName + " 다운로드 중...");
 
                 using (System.Net.WebClient client = new System.Net.WebClient())

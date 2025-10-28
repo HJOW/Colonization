@@ -84,6 +84,34 @@ if os.path.exists(jreListHome):
             jreBinPath = currentJreBinPath;
             break
 
+# Download libs
+packClassList = []
+libs = swingInfo['libs']
+for libOne in libs:
+    libUrl  = str(libOne['url'])
+    libName = str(libOne['name'])
+    if libUrl == None:
+        continue
+    if not libUrl.startswith('http'):
+        libUrl = rootUrl + libUrl
+    libFile = libHome + os.path.sep + libName
+    with open(libFile, 'wb') as file:
+        responseFile = requests.get(libUrl)
+        file.write(responseFile.content)
+    if libOne['pack'] != None:
+        packClassOne = str(libOne['pack'])
+        packClassList.append(packClassOne)
+
+packClassFile = libHome + os.path.sep + 'packs.txt'
+if not os.path.exists(packClassFile):
+    with open(packClassFile, 'a', encoding='utf-8') as file:
+        firstLine = True
+        for packClassOne in packClassList:
+            if firstLine:
+                file.write('\n')
+            file.write(packClassOne)
+            firstLine = False
+
 # Download JRE
 if (not os.path.exists(jreBinPath)) or (jreBinPath == ''):
     jreInfo = webConfigs['jre']
