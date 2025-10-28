@@ -30,6 +30,11 @@ public abstract class State implements ColonyElements {
     }
     
     @Override
+    public String getTooltip() {
+    	return getName();
+    }
+    
+    @Override
     public final String getClassName() {
     	return getClass().getSimpleName();
     }

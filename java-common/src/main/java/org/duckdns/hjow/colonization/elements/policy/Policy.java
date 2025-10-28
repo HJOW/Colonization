@@ -32,6 +32,14 @@ public abstract class Policy implements ColonyElements {
 	public String getClassName() {
 		return getClass().getSimpleName();
 	}
+	
+	@Override
+	public String getName() {
+		return getClassName();
+	}
+	
+	public abstract String getTitle();
+	public String getTooltip() { return null; };
 
 	@Override
 	public int getHp() {

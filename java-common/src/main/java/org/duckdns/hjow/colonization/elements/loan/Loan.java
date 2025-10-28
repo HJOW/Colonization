@@ -61,6 +61,11 @@ public class Loan implements ColonyElements {
     }
     
     public void setName(String str) { this.name = str; }
+    
+    @Override
+    public String getTooltip() {
+    	return getName();
+    }
 
     @Override
     public int getHp() {

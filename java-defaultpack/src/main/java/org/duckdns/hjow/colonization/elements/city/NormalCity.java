@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.city;
 
 import java.io.IOException;
 
+import org.duckdns.hjow.colonization.elements.policies.PowerEfficiencyProtocol;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 일반 도시 구현 클래스 */
@@ -14,5 +15,11 @@ public final class NormalCity extends City {
     
     public NormalCity(JsonObject json) throws IOException {
         super(json);
+    }
+    
+    /** 정책 목록 갱신 */
+    public void resetPolicies() {
+    	policies.clear();
+    	policies.add(new PowerEfficiencyProtocol());
     }
 }

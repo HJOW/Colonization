@@ -44,6 +44,11 @@ public abstract class Research implements ColonyElements {
     public String getName() {
         return getClass().getSimpleName();
     }
+    
+    @Override
+    public String getTooltip() {
+    	return getName();
+    }
 
     @Override
     public int getHp() {

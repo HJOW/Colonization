@@ -177,6 +177,11 @@ public abstract class AbstractColony implements Colony {
         this.name = name;
     }
     
+    @Override
+    public String getTooltip() {
+    	return getName();
+    }
+    
     /** 이 정착지를 마지막으로 저장한 ColonyManager 의 버전 반환 */
     public String getClientVersion() {
         return clientVersion;

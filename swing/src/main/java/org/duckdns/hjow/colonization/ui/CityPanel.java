@@ -29,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import org.duckdns.hjow.colonization.ColonyManager;
@@ -199,15 +200,24 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         pnFacilities.setLayout(layoutFacility);
         pnCitizens.setLayout(layoutCitizen);
         pnPolicies.setLayout(layoutPolicies);
+        pnPolicies.setBorder(new EmptyBorder(1, 1, 1, 1));
         
         pnFacRoot.add(new JScrollPane(pnFacilities, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
         pnCitiRoot.add(new JScrollPane(pnCitizens), BorderLayout.CENTER);
-        pnPolicyRoot.add(new JScrollPane(pnPolicies), BorderLayout.CENTER);
+        pnPolicyRoot.add(pnPolicies, BorderLayout.CENTER);
+        
+        JPanel pnEmpty = new JPanel();
+        pnEmpty.setBorder(new EmptyBorder(1, 1, 1, 1));
+        pnPolicyRoot.add(pnEmpty, BorderLayout.WEST);
+        
+        pnEmpty = new JPanel();
+        pnEmpty.setBorder(new EmptyBorder(1, 1, 1, 1));
+        pnPolicyRoot.add(pnEmpty, BorderLayout.EAST);
         
         tab.add(ColonyManager.t("홈")  , pnFrontRoot);
         tab.add(ColonyManager.t("시설"), pnFacRoot);
         tab.add(ColonyManager.t("시민"), pnCitiRoot);
-        tab.add(ColonyManager.t("정책"), pnPolicyRoot);
+        tab.add(ColonyManager.t("정책"), new JScrollPane(pnPolicyRoot));
         
         tab.setSelectedComponent(pnFrontRoot);
         
@@ -336,7 +346,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         rowNo = 0;
         colNo = 0;
         
-        boolean fullRefresh = (sizes != facilityPns.size() || cycle == 0 || cycle % 36000 == 0);
+        boolean fullRefresh = (sizes != facilityPns.size() || cycle == 0);
         
         if(fullRefresh) {
             for(FacilityPanel p : facilityPns) { p.dispose(); }
@@ -500,20 +510,21 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             	gridBagConst = new GridBagConstraints();
                 gridBagConst.gridx = colNo; colNo++;
                 gridBagConst.gridy = rowNo;
-                gridBagConst.gridwidth = 6;
+                gridBagConst.gridwidth  = 1;
                 gridBagConst.gridheight = 1;
                 gridBagConst.weightx = 0.6;
                 gridBagConst.fill = GridBagConstraints.HORIZONTAL;
                 gridBagConst.anchor = GridBagConstraints.NORTH;
                 
-                lb = new JLabel(ColonyManager.t(p.getName()));
+                lb = new JLabel(ColonyManager.t(p.getTitle()));
                 lbPolicies.add(lb);
                 pnPolicies.add(lb, gridBagConst);
+                if(p.getTooltip() != null) lb.setToolTipText(p.getTooltip());
                 
                 gridBagConst = new GridBagConstraints();
                 gridBagConst.gridx = colNo; colNo++;
                 gridBagConst.gridy = rowNo;
-                gridBagConst.gridwidth = 2;
+                gridBagConst.gridwidth  = 1;
                 gridBagConst.gridheight = 1;
                 gridBagConst.weightx = 0.2;
                 gridBagConst.fill = GridBagConstraints.HORIZONTAL;
@@ -526,7 +537,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 gridBagConst = new GridBagConstraints();
                 gridBagConst.gridx = colNo; colNo++;
                 gridBagConst.gridy = rowNo;
-                gridBagConst.gridwidth = 2;
+                gridBagConst.gridwidth  = 1;
                 gridBagConst.gridheight = 1;
                 gridBagConst.weightx = 0.2;
                 gridBagConst.fill = GridBagConstraints.HORIZONTAL;
@@ -560,7 +571,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             gridBagConst = new GridBagConstraints();
             gridBagConst.gridx = colNo;
             gridBagConst.gridy = rowNo;
-            gridBagConst.gridwidth = 10;
+            gridBagConst.gridwidth  = 1;
             gridBagConst.gridheight = 1;
             gridBagConst.weightx = 1.0;
             gridBagConst.fill = GridBagConstraints.BOTH;

@@ -79,9 +79,15 @@ public abstract class City implements ColonyElements {
     public String getName() {
         return name;
     }
+    
     @Override
     public final String getClassName() {
     	return getClass().getSimpleName();
+    }
+    
+    @Override
+    public String getTooltip() {
+    	return getName();
     }
     
     public List<Facility> getFacility() {
@@ -272,6 +278,12 @@ public abstract class City implements ColonyElements {
         double netBoostRate = 1.0;
         
         for(Policy p : policies) {
+        	if(! p.isEnabled()) continue;
+        	if(! p.isAvail(colony, city)) {
+        		p.setEnabled(false);
+        		continue;
+        	}
+        	
         	powBoostRate = powBoostRate * p.getPowerSupplyRate();
         	traBoostRate = traBoostRate * p.getTransSupplyRate();
         	netBoostRate = netBoostRate * p.getNetworkSupplyRate();
@@ -287,6 +299,12 @@ public abstract class City implements ColonyElements {
             double boostRate = 1.0;
             
             for(Policy p : policies) {
+            	if(! p.isEnabled()) continue;
+            	if(! p.isAvail(colony, city)) {
+            		p.setEnabled(false);
+            		continue;
+            	}
+            	
             	boostRate = boostRate * p.getFacilityBonusRate(f);
             }
             f.setBoostRate(boostRate);
@@ -1244,7 +1262,6 @@ public abstract class City implements ColonyElements {
     /** 정책 목록 갱신 */
     public void resetPolicies() {
     	policies.clear();
-    	// TODO
     }
     
     @Override

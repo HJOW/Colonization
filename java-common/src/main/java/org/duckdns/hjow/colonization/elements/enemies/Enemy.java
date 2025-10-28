@@ -33,6 +33,11 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     public long getKey() {
         return key;
     }
+    
+    @Override
+    public String getTooltip() {
+    	return getName();
+    }
 
     public int getHp() {
         return hp;
