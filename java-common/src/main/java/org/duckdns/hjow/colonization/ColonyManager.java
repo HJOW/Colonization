@@ -196,6 +196,11 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         return getHomeDir("colonization", "scripts");
     }
     
+    /** 정착지 lib 기본 경로 반환 */
+    public File getColonyLibRootDirectory() {
+        return getHomeDir("colonization", "lib");
+    }
+    
     /** Colonization 기본 설정 불러오기 */
     public void loadLocalConfigs() {
         File root = getColonyConfigRootDirectory();
@@ -237,7 +242,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         	BufferedFileStringTable stringTable = new BufferedFileStringTable(fileStringTable);
         	STRINGTABLE.setOriginalInstance(stringTable);
             
-            // 설정들 중 클래스 관련 설정 적용
+            // 설정들 중 클래스 관련 설정 적용, Pack 불러오기
             ColonyClassLoader.clearAll();
             ColonyClassLoader.applyLocalConfigs(configs, this);
             
@@ -445,6 +450,16 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	while(commaTokenizer.hasMoreTokens()) {
     		String classNames = commaTokenizer.nextToken().trim();
     		addMod(classNames, false, false);
+    	}
+    	
+    	// lib 에 등록된 Mods 도 불러오기
+    	for(Class<?> classes : ColonyClassLoader.getModClasses()) {
+    		try {
+                Mod m = (Mod) classes.newInstance();
+                if(! modsList.contains(m)) modsList.add(m);
+    		} catch(Exception ex) {
+            	GlobalLogs.processExceptionOccured(ex, false);
+            }
     	}
     	
     	// 예약어 등록된 Library 도 불러오기

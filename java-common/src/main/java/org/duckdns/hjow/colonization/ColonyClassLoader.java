@@ -9,6 +9,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
@@ -22,11 +23,13 @@ import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 
 /** 정착지 시나리오, 시설, 연구, 시설과 시민의 상태 타입 등 클래스들과 타입 리스트를 관리하는 클래스 */
 public class ColonyClassLoader {
     private static final List<Pack> packs = new Vector<Pack>();
+    private static List<Class<?>> modClasses = new ArrayList<Class<?>>();
     
     private static final List<ColonyInformation> colonyInfoList     = new Vector<ColonyInformation>();
     private static       boolean                 colonyInfoListFlag = false; 
@@ -319,10 +322,11 @@ public class ColonyClassLoader {
     	return newArr;
     }
     
-    /** 공통 로컬 설정 정보 적용 */
+    /** 공통 로컬 설정 정보 적용, Pack 불러오기 */
 	public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
         // 설정 파일에서 Pack 목록 불러오기
         List<Object> packList = null;
+        
         try {
             packList = cfg.getList("Packs");
         } catch(Exception ex) {
@@ -363,19 +367,30 @@ public class ColonyClassLoader {
         
         // addpacks 불러오기
         for(String resv : RESERVED_LIB_NAMES) {
-        	processAddPack(resv, man);
+        	processAddClass(resv, man);
         }
         
-        // Mod 도 탐색
-        for(Mod m : man.getMods()) {
+        // Pack class file 탐색
+        File libDir = man.getColonyLibRootDirectory();
+        if(! libDir.exists()) libDir.mkdirs();
+        File packClassFile = new File(libDir.getAbsolutePath() + File.separator + "packs.txt");
+        if(packClassFile.exists()) {
         	try {
-        		Class<? extends Mod> modClass = m.getClass();
-        		Method mthd = modClass.getMethod("getAdditionalPacks");
-        		Pack packOne = (Pack) mthd.invoke(m);
-        		if(! packs.contains(packOne)) packs.add(packOne);
-        	} catch(Throwable tx) {
-        		GlobalLogs.processExceptionOccured(tx, false);
+        		String packClassContent = FileUtil.readString(packClassFile, "UTF-8");
+        		StringTokenizer lineTokenizer = new StringTokenizer(packClassContent, "\n");
+        		while(lineTokenizer.hasMoreTokens()) {
+        			String line = lineTokenizer.nextToken().trim();
+        			if(line.startsWith("#")) continue;
+        			if(DataUtil.isEmpty(line)) continue;
+        			processAddClass(line, man);
+        		}
+        		
+        	} catch(Exception ex) {
+        		GlobalLogs.processExceptionOccured(ex, false);
         	}
+        } else {
+        	String newContent = "# 불러올 Pack 의 class name 을 이 파일에 기재해 주세요. 한줄에 하나씩 입력해 주세요. # 기호로 시작하는 줄은 무시됩니다.\n";
+        	try { FileUtil.writeString(packClassFile, "UTF-8", newContent); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         }
         
         // Pack 모두 열어 내용물 적용
@@ -392,17 +407,34 @@ public class ColonyClassLoader {
 		if(modClassName.contains(" ") || modClassName.contains("\t") || modClassName.contains("\n")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 공백 기호가 들어갈 수 없습니다."));
     }
     
-    /** addpacks 불러오기 (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) */
-	@SuppressWarnings("unchecked")
-	protected static void processAddPack(String className, ColonyManager man) {
-		Library instances = null;
+    /** 클래스 불러오기, Library 나 Pack, Mod 인식. (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) */
+    @SuppressWarnings("unchecked")
+	protected static void processAddClass(String className, ColonyManager man) {
+    	Object instances = null;
     	try {
-        	Class<?> addPackClass = Class.forName(className);
-        	instances = (Library) addPackClass.newInstance();
+        	Class<?> classSomeone = Class.forName(className);
+        	instances = classSomeone.newInstance();
         	
-        	List<Pack> addPacks = instances.getPacks();
-        	for(Pack packOne : addPacks) {
-        		if(! packs.contains(packOne)) packs.add(packOne);
+        	if(instances instanceof Library) {
+        		Library library = (Library) instances;
+        		List<Pack> addPacks = library.getPacks();
+            	for(Pack packOne : addPacks) {
+            		if(! packs.contains(packOne)) packs.add(packOne);
+            	}
+            	List<Mod> mods = library.getMods();
+            	if(mods != null) {
+            		for(Mod m : mods) {
+            			Class<?> modClass = m.getClass();
+            			if(! modClasses.contains(modClass)) modClasses.add(modClass);
+            		}
+            	}
+        	} else if(instances instanceof Pack) {
+        		Pack pack = (Pack) instances;
+        		if(! packs.contains(pack)) packs.add(pack);
+        	} else if(instances instanceof Mod) {
+        		if(! modClasses.contains(classSomeone)) modClasses.add(classSomeone);
+        	} else if(instances instanceof Cheat) {
+        		Cheat.register((Cheat) instances);
         	}
         } catch(ClassNotFoundException ex) {
         	// DO Nothing
@@ -498,6 +530,13 @@ public class ColonyClassLoader {
     		if(p.newFeatures() != null) list.addAll(p.newFeatures());
     	}
     	return list;
+    }
+    
+    /** lib 안에 등록되어 있던 MOD 지원 클래스들 반환 */
+    public static List<Class<?>> getModClasses() {
+    	List<Class<?>> newList = new ArrayList<Class<?>>();
+    	newList.addAll(modClasses);
+    	return newList;
     }
     
     /** 클래스 정보들과, 불러온 Pack 모두 다시 확인 */
