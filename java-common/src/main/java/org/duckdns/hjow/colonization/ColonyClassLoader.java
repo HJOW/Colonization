@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
+import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
 import org.duckdns.hjow.colonization.elements.policy.Policy;
@@ -392,10 +393,13 @@ public class ColonyClassLoader {
     }
     
     /** addpacks 불러오기 (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) */
+	@SuppressWarnings("unchecked")
 	protected static void processAddPack(String className, ColonyManager man) {
+		Library instances = null;
     	try {
         	Class<?> addPackClass = Class.forName(className);
-        	Library instances = (Library) addPackClass.newInstance();
+        	instances = (Library) addPackClass.newInstance();
+        	
         	List<Pack> addPacks = instances.getPacks();
         	for(Pack packOne : addPacks) {
         		if(! packs.contains(packOne)) packs.add(packOne);
@@ -405,6 +409,20 @@ public class ColonyClassLoader {
         } catch(Exception ex) {
         	GlobalLogs.processExceptionOccured(ex, false);
         }
+    	
+    	if(instances != null) {
+    		try {
+    			// Cheat 목록도 제공하는지 확인 (선택사항이므로 리플렉션으로 접근)
+    			Class<?> libClass = instances.getClass();
+            	Method mthd = libClass.getMethod("getCheats");
+            	List<Cheat> cheats = (List<Cheat>) mthd.invoke(instances);
+            	for(Cheat c : cheats) { Cheat.register(c); }
+    		} catch(NoSuchMethodException ex) {
+            	// DO Nothing
+    		} catch(Exception ex) {
+            	GlobalLogs.processExceptionOccured(ex, false);
+            }
+    	}
     }
     
     /** Pack 모두 열어 내용물 적용 */

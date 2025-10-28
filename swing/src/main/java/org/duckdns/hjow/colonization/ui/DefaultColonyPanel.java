@@ -83,7 +83,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         tabMain.add(ColonyManager.t("도시"), pnColonyCardCity);
         
         pnResearches = new JPanel();
-        tabMain.add(ColonyManager.t("연구"), pnResearches);
+        tabMain.add(ColonyManager.t("연구"), new JScrollPane(pnResearches));
         
         pnAccountingMain = new JPanel();
         tabMain.add(ColonyManager.t("예산"), pnAccountingMain);
@@ -306,15 +306,28 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             
             gridBagConst = new GridBagConstraints();
             gridBagConst.gridx = 0;
-            gridBagConst.gridy = rowNo; rowNo++;
+            gridBagConst.gridy = rowNo;
             gridBagConst.gridwidth = 1;
             gridBagConst.gridheight = 1;
-            gridBagConst.weightx = 1.0;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+            gridBagConst.weightx = 0.99;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
             gridBagConst.fill = GridBagConstraints.HORIZONTAL;
             gridBagConst.anchor = GridBagConstraints.NORTH;
             
             pnResearches.add(pnRes, gridBagConst);
             pnRes.refresh(cycle, city, colony);
+            
+            // 우측 스크롤 영역 가리는 문제 대응
+            gridBagConst = new GridBagConstraints();
+            gridBagConst.gridx = 1;
+            gridBagConst.gridy = rowNo; rowNo++;
+            gridBagConst.gridwidth = 1;
+            gridBagConst.gridheight = 1;
+            gridBagConst.weightx = 0.01;
+            gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+            gridBagConst.anchor = GridBagConstraints.NORTH;
+            
+            pnResearches.add(new JPanel(), gridBagConst);
+            rowNo++;
         }
         
         gridBagConst = new GridBagConstraints();
