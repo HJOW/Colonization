@@ -610,6 +610,7 @@ public class GUIColonyManager extends ColonyManager {
                 superInstance.restart();
             }
         });
+        menuItem.setVisible(false); // 재시작 기능 비활성화 - jar 파일 추가사항은 이 재시작 기능으로 적용이 안됨.
         
         menuItem = new JMenuItem(t("종료"));
         menuFile.add(menuItem);
