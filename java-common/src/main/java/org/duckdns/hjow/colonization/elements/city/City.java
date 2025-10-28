@@ -284,9 +284,9 @@ public abstract class City implements ColonyElements {
         		continue;
         	}
         	
-        	powBoostRate = powBoostRate * p.getPowerSupplyRate();
-        	traBoostRate = traBoostRate * p.getTransSupplyRate();
-        	netBoostRate = netBoostRate * p.getNetworkSupplyRate();
+        	powBoostRate = powBoostRate * p.getPowerSupplyRate(colony, this);
+        	traBoostRate = traBoostRate * p.getTransSupplyRate(colony, this);
+        	netBoostRate = netBoostRate * p.getNetworkSupplyRate(colony, this);
         }
         
         power    = new BigDecimal(String.valueOf(power   )).multiply(new BigDecimal(String.valueOf(powBoostRate))).longValue();
@@ -305,7 +305,7 @@ public abstract class City implements ColonyElements {
             		continue;
             	}
             	
-            	boostRate = boostRate * p.getFacilityBonusRate(f);
+            	boostRate = boostRate * p.getFacilityBonusRate(colony, this, f);
             }
             f.setBoostRate(boostRate);
             

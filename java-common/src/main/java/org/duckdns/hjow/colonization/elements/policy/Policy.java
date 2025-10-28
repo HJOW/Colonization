@@ -78,16 +78,16 @@ public abstract class Policy implements ColonyElements {
 	public abstract long getMonthlyFee(Colony col, City ct);
 	
 	/** 발전량 증감 배율 반환 */
-	public double getPowerSupplyRate() { return 1.0; }
+	public double getPowerSupplyRate(Colony col, City ct) { return 1.0; }
 	
 	/** 교통수용량 증감 배율 반환 */
-	public double getTransSupplyRate() { return 1.0; }
+	public double getTransSupplyRate(Colony col, City ct) { return 1.0; }
 	
 	/** 네트워크 증감 배율 반환 */
-	public double getNetworkSupplyRate() { return 1.0; }
+	public double getNetworkSupplyRate(Colony col, City ct) { return 1.0; }
 	
 	/** 시설 보너스 배율 반환 */
-	public double getFacilityBonusRate(Facility f) { return 1.0; }
+	public double getFacilityBonusRate(Colony col, City ct, Facility f) { return 1.0; }
 
 	@Override
 	public int cycleGap(Colony colony) {

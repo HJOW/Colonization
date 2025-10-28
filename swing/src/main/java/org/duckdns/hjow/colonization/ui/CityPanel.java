@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
@@ -491,8 +492,12 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         if(fullRefresh) {
             pnPolicies.removeAll();
             for(idx=0; idx<chPolicies.size(); idx++) {
-            	JCheckBox box = chPolicies.get(idx);
-            	box.removeItemListener(evPolicies.get(idx));
+            	try {
+            	    JCheckBox box = chPolicies.get(idx);
+            	    box.removeItemListener(evPolicies.get(idx));
+            	} catch(ArrayIndexOutOfBoundsException ex) {
+            		GlobalLogs.processExceptionOccured(ex, false);
+            	}
             }
             lbPolicies.clear();
             lbPoliFees.clear();
@@ -506,6 +511,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             colNo = 0;
             
             for(Policy p : policies) {
+            	if(! p.isAvail(colony, city)) continue;
             	
             	gridBagConst = new GridBagConstraints();
                 gridBagConst.gridx = colNo; colNo++;
@@ -533,6 +539,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 lb = new JLabel(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(p.getMonthlyFee(colony, city))));
                 lbPoliFees.add(lb);
                 pnPolicies.add(lb, gridBagConst);
+                if(p.getTooltip() != null) lb.setToolTipText(p.getTooltip());
                 
                 gridBagConst = new GridBagConstraints();
                 gridBagConst.gridx = colNo; colNo++;
@@ -546,6 +553,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 ch = new JCheckBox(ColonyManager.t("활성화"));
                 chPolicies.add(ch);
                 pnPolicies.add(ch, gridBagConst);
+                if(p.getTooltip() != null) ch.setToolTipText(p.getTooltip());
             	
                 final Policy current = p;
                 ev = new ItemListener() {
@@ -554,7 +562,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
 						current.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
 					}
 				};
-                
+				evPolicies.add(ev);
                 ch.addItemListener(ev);
                 
                 boolean avail = current.isAvail(colony, city);

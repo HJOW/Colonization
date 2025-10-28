@@ -6,6 +6,8 @@ import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.PowerPlant;
 import org.duckdns.hjow.colonization.elements.policy.Policy;
+import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 /** 발전 고효율 촉매 사용 */
@@ -31,7 +33,32 @@ public class PowerEfficiencyProtocol extends Policy {
         }
 		return fee;
 	}
+	
+	@Override
+	public boolean isAvail(Colony col, City ct) {
+		for(Research r : col.getResearches()) {
+			if((r instanceof EnergyTech) && r.getLevel() >= 3) return true;
+		}
+		return false; 
+	}
 
 	@Override
-	public double getPowerSupplyRate() { return 1.3; }
+	public double getPowerSupplyRate(Colony col, City ct) {
+		double rate = 1.1;
+		
+		for(Research r : col.getResearches()) {
+			if(r instanceof EnergyTech) rate += (0.1 * (r.getLevel() / 4.0));
+		}
+		
+		return rate;
+	}
+	
+	@Override
+	public double getTransSupplyRate(Colony col, City ct) { return 1.0; }
+	
+	@Override
+	public double getNetworkSupplyRate(Colony col, City ct) { return 1.0; }
+	
+	@Override
+	public double getFacilityBonusRate(Colony col, City ct, Facility f) { return 1.0; }
 }
