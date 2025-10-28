@@ -532,16 +532,43 @@ namespace WinLauncher
                 System.IO.Directory.CreateDirectory(libDir);
             }
 
+            // Check pack class list files
+            string packClassListAll = "";
+            string packListComments = "";
+            string packListFile = libDir + System.IO.Path.DirectorySeparatorChar + "packs.txt";
+            
+            if (System.IO.File.Exists(packListFile))
+            {
+                packClassListAll = File.ReadAllText(packListFile, Encoding.UTF8);
+            }
+            List<string> packClassList = new List<string>();
+            foreach (string l in packClassListAll.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None))
+            {
+                string line = l.Trim();
+                if(line.StartsWith("#"))
+                {
+                    packListComments = packListComments + "\n" + line;
+                }
+                else
+                {
+                    packClassList.Add(line);
+                }
+            }
+            packClassListAll = "";
+            
             SetStatusMessage("추가 라이브러리 다운로드 중...");
             SetProgrssValue(1);
 
             JArray libArr = (swingBuild["libs"] as JArray);
             int libCount = libArr.Count;
             int indexes = 0;
+
+            // Download each libs
             foreach (JObject libOne in libArr)
             {
                 string libUrl  = libOne["url"].ToString();
                 string libName = libOne["name"].ToString();
+                string packClassName = null;
 
                 if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { indexes++; continue;  }
                 SetStatusMessage("라이브러리 " + libName + " 다운로드 중...");
@@ -553,8 +580,32 @@ namespace WinLauncher
                     SetStatusMessage("다운로드 완료 : " + libDir + System.IO.Path.DirectorySeparatorChar + libName);
                 }
 
+                if (libOne["pack"] != null)
+                {
+                    packClassName = libOne["pack"].ToString();
+                    if (!packClassList.Contains(packClassName)) packClassList.Add(packClassName);
+                }
+
                 SetProgrssValue(1 + indexes);
                 indexes++;
+            }
+
+            // Check comments on pack class list files
+            if (packListComments == null) packListComments = "";
+            else packListComments = packListComments.Trim();
+            if (string.IsNullOrEmpty(packListComments))
+            {
+                packListComments = "# 불러올 Pack 의 class name 을 이 파일에 기재해 주세요. 한줄에 하나씩 입력해 주세요. # 기호로 시작하는 줄은 무시됩니다.";
+            }
+
+            // Re-write pack class list files
+            using (StreamWriter writer = new StreamWriter(packListFile, false, Encoding.UTF8))
+            {
+                writer.WriteLine(packListComments);
+                foreach (string line in packClassList)
+                {
+                    writer.WriteLine(line);
+                }
             }
 
             SetStatusMessage("Colonization 실행 준비 완료");
