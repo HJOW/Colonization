@@ -129,6 +129,9 @@ namespace WinLauncher
             bool err = false;
             bool installNeeded = false;
 
+            offlineJarPath = null;
+            offlineJarName = null;
+
             try
             {
                 SetStatusMessage("서버에 접속하여 최신 버전 정보 확인 중...");
@@ -303,6 +306,7 @@ namespace WinLauncher
                         {
                             offlineJarPath = offlineDir;
                             offlineJarName = name;
+                            installNeeded = false;
                         }
                     }
                 }
@@ -344,9 +348,11 @@ namespace WinLauncher
 
                 if (!err)
                 {
-                    string noticeUrl = swingBuild["noticeKo"].ToString();
+                    string noticeUrl = swingBuild["noticeKoEnc"].ToString();
                     if (!noticeUrl.StartsWith("http")) noticeUrl = ROOTURL + noticeUrl;
-                    webMain.Address = noticeUrl;
+
+                    // webMain.Address = noticeUrl; // CefSharp
+                    webMain.Navigate(noticeUrl);
                 }
                 
                 SetStatusMessage(statusMsg);

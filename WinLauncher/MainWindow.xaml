@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WinLauncher"
-        xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
         Title="Colonization 실행 도우미" Name="mainWindow" Height="600" Width="800" Closed="Window_Closed" Initialized="Window_Initialized">
     <Grid>
@@ -57,7 +56,7 @@
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
-                    <cef:ChromiumWebBrowser Name="webMain" Grid.Row="0" Grid.Column="0" FontFamily="/WinLauncher;component/Resources/#NanumGothicCoding"/>
+                    <WebBrowser Name="webMain" Grid.Row="0" Grid.Column="0" />
                     <ProgressBar Name="progMain" Grid.Row="2" Grid.Column="0" Maximum="230"/>
                     <Grid Grid.Row="4" Grid.Column="0">
                         <Grid.ColumnDefinitions>
