@@ -1,0 +1,28 @@
+# Build generated
+.build/
+DerivedData/
+
+# Swift Package Manager
+# Exclude source code from SPM dependencies (if desired)
+# Pods/  # Only if you are using CocoaPods, which is less common for pure CLI tools
+
+# Xcode
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+
+# macOS
+.DS_Store
+
+# Other
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
