@@ -57,7 +57,7 @@
 					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
@@ -69,7 +69,7 @@
                         </manifest>
                     </archive>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -78,6 +78,8 @@
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
+                    <finalName>${project.artifactId}-0.${project.version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
 							<addClasspath>true</addClasspath>
@@ -94,39 +96,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--
-            <plugin>
-                <groupId>com.akathist.maven.plugins.launch4j</groupId>
-                <artifactId>launch4j-maven-plugin</artifactId>
-                <version>2.6.0</version>
-                <executions>
-                    <execution>
-                        <id>l4j</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>launch4j</goal>
-                        </goals>
-                        <configuration>
-                            <jar>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</jar>
-                            <dontWrapJar>false</dontWrapJar>
-                            <headerType>gui</headerType>
-                            <mainClass>org.duckdns.hjow.colonization.Colonization</mainClass>
-                            <jre>
-                                <minVersion>1.8.0</minVersion>
-                            </jre>
-                            <outfile>${project.build.directory}/colonization.exe</outfile>
-                            <versionInfo>
-                                <productName>Colonization</productName>
-                                <originalFilename>colonization.exe</originalFilename>
-                                <language>KOREAN</language>
-                                <copyright>Copyright HJOW 2025</copyright>
-                                <fileDescription>Colonization game launcher for Windows.</fileDescription>
-                            </versionInfo>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
 	    </plugins>
 	</build>
 </project>
