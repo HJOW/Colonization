@@ -26,7 +26,7 @@ public class PreWorks {
     
     /** 사전 작업 수행 */
     public final void work() {
-        try { prepareLibs(); } catch(Exception ex) { ex.printStackTrace(); } // UI 초기화 전이므로 표준 출력 사용
+        try { prepareLibs(); } catch(Throwable ex) { ex.printStackTrace(); } // UI 초기화 전이므로 표준 출력 사용
     }
     
     /** lib 누락사항 다운로드 받기 (단, 이 항목들은 다음 실행 때 적용됨. 이번 런타임에는 적용되지 않음.) */

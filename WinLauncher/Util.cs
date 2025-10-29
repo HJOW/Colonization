@@ -32,10 +32,18 @@ namespace WinLauncher
             throw new Exception("Wrong boolean value " + obj);
         }
 
-        /** 실행 파일의 위치 경로를 반환 (DLL 라이브러리로 빠지면 DLL 파일의 경로를 리턴할 수 있으니 주의 !) */
+        /** 실행 파일의 위치 경로를 반환 (DLL 라이브러리로 빠지면 DLL 파일의 경로를 리턴할 수 있으니 주의 !) exe 파일 전체경로를 반환 */
         public static string GetThisExePath()
         {
             return System.Reflection.Assembly.GetExecutingAssembly().Location;
+        }
+
+        /** 실행 파일의 위치 경로를 반환 (DLL 라이브러리로 빠지면 DLL 파일의 경로를 리턴할 수 있으니 주의 !) 디렉토리를 반환 */
+        public static string GetThisExeDir()
+        {
+            string exes = GetThisExePath();
+            FileInfo info = new FileInfo(exes);
+            return info.DirectoryName;
         }
 
         /** 사용자 홈 폴더 경로 반환 */

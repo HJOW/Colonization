@@ -38,6 +38,9 @@ namespace WinLauncher
         private string jarPath = null;
         private string pathInstalled = null;
 
+        private string offlineJarPath = null;
+        private string offlineJarName = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -203,16 +206,16 @@ namespace WinLauncher
                         SetStatusMessage("설치되어 있는 Java Runtime 은 Colonization 과 호환되지 않습니다.");
                     }
                 }
-
+                
                 SetStatusMessage("버전 정보 해석 중...");
-
+                
                 // Check version
-                versionString = swingBuild["version"].ToString();
+                versionString = swingBuild["version"].ToString();                                 
                 JObject versionInfo = (swingBuild["builds"] as JObject)[versionString] as JObject;
-                string versionUrl = versionInfo["url"].ToString();
-                if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;
-
-                string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";
+                string versionUrl = versionInfo["url"].ToString();                                
+                if (!versionUrl.StartsWith("http")) versionUrl = ROOTURL + versionUrl;            
+                                                                                                  
+                string libDir = ROOTPATH + System.IO.Path.DirectorySeparatorChar + "lib";         
 
                 if (!installNeeded)
                 {
@@ -247,7 +250,7 @@ namespace WinLauncher
                         }
                     }
                 }
-
+                
                 if (!installNeeded)
                 {
                     // Check libraries are exists
@@ -277,6 +280,9 @@ namespace WinLauncher
                         }
                     }
                 }
+
+                offlineJarPath = null;
+                offlineJarName = null;
             }
             catch (Exception ex)
             {
@@ -284,6 +290,22 @@ namespace WinLauncher
                 statusMsg = "오류 : " + ex.Message;
                 Console.WriteLine(statusMsg);
                 Console.WriteLine(ex.StackTrace);
+
+                string offlineDir = Util.GetThisExeDir();
+                if (Directory.Exists(offlineDir))
+                {
+                    string[] files = Directory.GetFiles(offlineDir);
+                    foreach (string f in files)
+                    {
+                        FileInfo fileInfo = new FileInfo(f);
+                        string name = fileInfo.Name;
+                        if (name.StartsWith("colonization-swing-") && name.EndsWith(".jar"))
+                        {
+                            offlineJarPath = offlineDir;
+                            offlineJarName = name;
+                        }
+                    }
+                }
             }
 
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
@@ -296,7 +318,16 @@ namespace WinLauncher
                 {
                     btnInst.IsEnabled = false;
                     btnInst.Visibility = Visibility.Hidden;
-                    btnRun.IsEnabled = false;
+
+                    if (offlineJarPath == null)
+                    {
+                        btnRun.IsEnabled = false;
+                    }
+                    else
+                    {
+                        btnRun.IsEnabled = true;
+                        statusMsg = "Colonization 서버 접속 실패, 오프라인 모드";
+                    }
                 }
                 else if (installNeeded)
                 {
@@ -661,8 +692,18 @@ namespace WinLauncher
             info.FileName = javaBinPath + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
             info.CreateNoWindow  = true;
             info.UseShellExecute = false;
-            info.WorkingDirectory = jarPath;
-            info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
+
+            if (offlineJarPath == null)
+            {
+                info.WorkingDirectory = jarPath;
+                info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
+            }
+            else
+            {
+                jarPath = offlineJarPath;
+                info.WorkingDirectory = offlineJarPath;
+                info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + offlineJarName + "\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
+            }
 
             info.RedirectStandardInput  = true;
             info.RedirectStandardOutput = true;
@@ -690,6 +731,7 @@ namespace WinLauncher
 
         private void SetStatusMessage(string msg)
         {
+            Console.WriteLine(msg);
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
                 lbStatus.Content = msg;
