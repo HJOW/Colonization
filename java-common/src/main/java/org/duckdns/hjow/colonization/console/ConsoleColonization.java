@@ -22,6 +22,7 @@ public class ConsoleColonization implements ColonizationMainClass {
     /** 사전 준비, 프로그램 실행 시 받은 매개변수 입력 */
     protected void prepare(Map<String, String> args) {
         if(args != null) this.arguments.putAll(args);
+        preWorks(args);
     }
 
     @Override
@@ -42,5 +43,10 @@ public class ConsoleColonization implements ColonizationMainClass {
     @Override
     public void exit() {
         System.exit(0);
+    }
+    
+    /** 메인 UI 호출 전 선 작업 수행 */
+    protected void preWorks(Map<String, String> args) {
+    	new PreWorks(args).work();
     }
 }

@@ -21,6 +21,7 @@ import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
+import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
@@ -257,50 +258,86 @@ public class ColonyClassLoader {
     
     /** 공지사항 웹 URL 반환 */
     public static String htmlNoticeUrl() {
-        return "http://hjow.duckdns.org/colonization/notice_ko.html";
+        return getWebConfigSwingNoticeKorean();
     }
     
     /** 공통 설정 URL 반환 (이 안에서 최신 버전 코드와 추가 컨텐츠 정보 등을 얻게 됨) */
     public static String htmlConfigJsonUrl() {
-        return "http://hjow.duckdns.org/colonization/content.json";
+        return htmlRootUrl() + "content.json";
+    }
+    
+    /** 공통 설정 최상단 URL 반환 */
+    public static String htmlRootUrl() {
+    	return "http://hjow.duckdns.org/colonization/";
+    }
+    
+    /** 웹 공통 설정 전체를 Json 으로 반환 */
+    public static JsonObject getWebConfigRoot() {
+    	InputStream       inp1 = null;
+        InputStreamReader inp2 = null;
+        BufferedReader    inp3 = null;
+    	try {
+    		StringBuilder res = new StringBuilder("");
+    		String line;
+    		
+    		URL url = new URL(htmlConfigJsonUrl());
+    		inp1 = url.openStream();
+    		inp2 = new InputStreamReader(inp1, "UTF-8");
+    		inp3 = new BufferedReader(inp2);
+    		while(true) {
+    			line = inp3.readLine();
+    			if(line == null) break;
+    			res = res.append(line).append("\n");
+    		}
+    		ClassUtil.closeAll(inp3, inp2, inp1);
+    		inp3 = null;
+    		inp2 = null;
+    		inp1 = null;
+    		
+    		return (JsonObject) JsonObject.parseJson(res.toString().trim());
+    	} catch(java.net.UnknownHostException ex) {
+    		throw new RuntimeException("Cannot connect to web config server. Please check the internet status.", ex);
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	} finally {
+    		ClassUtil.closeAll(inp3, inp2, inp1);
+    	}
+    }
+    
+    /** 웹 공통 설정 중 Swing 파트를 Json 으로 반환 */
+    public static JsonObject getWebConfigSwing() {
+    	JsonObject roots = getWebConfigRoot();
+    	return (JsonObject) roots.get("swing");
+    }
+    
+    /** 웹 공통 설정 중 Swing 파트의 최신 버전을 문자열로 반환 */
+    public static String getWebConfigSwingNewVersion() {
+    	return getWebConfigSwing().get("version").toString();
+    }
+    
+    /** 웹 공통 설정 중 Swing 파트의 한글 공지사항 파일명 혹은 URL을 문자열로 반환 */
+    public static String getWebConfigSwingNoticeKorean() {
+    	String res = getWebConfigSwing().get("noticeKo").toString();
+    	if(! res.startsWith("http")) res = htmlRootUrl() + res;
+    	return res;
+    }
+    
+    /** 웹 공통 설정 중 Swing 파트의 빌드 목록을 Json 객체로 반환 */
+    public static JsonObject getWebConfigSwingBuilds() {
+    	return (JsonObject) getWebConfigSwing().get("builds");
+    }
+    
+    /** 웹 공통 설정 중 Swing 파트의 lib 내 들어갈 목록을 Json 배열로 반환 */
+    public static JsonArray getWebConfigSwingLibs() {
+    	return (JsonArray) getWebConfigSwing().get("libs");
     }
     
     /** 공통 설정 정보 조회 */
     public static synchronized void loadWebConfigs(ColonyManager man) {
-        InputStream       inp1 = null;
-        InputStreamReader inp2 = null;
-        BufferedReader    inp3 = null;
         try {
-            StringBuilder str = new StringBuilder("");
-            String line;
-            
-            URL url = new URL(htmlConfigJsonUrl());
-            inp1 = url.openStream();
-            inp2 = new InputStreamReader(inp1, "UTF-8");
-            inp3 = new BufferedReader(inp2);
-            
-            while(true) {
-                line = inp3.readLine();
-                if(line == null) break;
-                str = str.append("\n").append(line);
-            }
-            
-            inp3.close(); inp3 = null;
-            inp2.close(); inp2 = null;
-            inp1.close(); inp1 = null;
-            
-            JsonObject json = (JsonObject) JsonObject.parseJson(str.toString().trim());
-            str = null;
-            
-            json = (JsonObject) json.get("swing");
-            
-            applyWebConfigs(json, man);
-        } catch(java.net.UnknownHostException ex) {
-            GlobalLogs.log("Cannot connect to web config server. Please check the internet status.");
+        	applyWebConfigs(getWebConfigSwing(), man);
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, true);
-        } finally {
-            ClassUtil.closeAll(inp3, inp2, inp1);
         }
     }
     
