@@ -1010,9 +1010,9 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     /** 버전 문자열을 버전 배열로 반환 */
     public static int[] parseVersionString(String versionString) {
         String str = versionString.toLowerCase().replace("version", "").replace("ver", "").replace("v", "").trim();
-        int[] arr = new int[4];
         
         StringTokenizer dotTokenizer = new StringTokenizer(str, ".");
+        int[] arr = new int[dotTokenizer.countTokens()];
         for(int idx=0; idx<arr.length; idx++) {
             arr[idx] = Integer.parseInt(dotTokenizer.nextToken().trim());
         }

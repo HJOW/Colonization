@@ -1,9 +1,6 @@
 package org.duckdns.hjow.colonization;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -26,6 +23,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
+import org.duckdns.hjow.commons.util.NetUtil;
 
 /** 정착지 시나리오, 시설, 연구, 시설과 시민의 상태 타입 등 클래스들과 타입 리스트를 관리하는 클래스 */
 public class ColonyClassLoader {
@@ -273,34 +271,12 @@ public class ColonyClassLoader {
     
     /** 웹 공통 설정 전체를 Json 으로 반환 */
     public static JsonObject getWebConfigRoot() {
-    	InputStream       inp1 = null;
-        InputStreamReader inp2 = null;
-        BufferedReader    inp3 = null;
     	try {
-    		StringBuilder res = new StringBuilder("");
-    		String line;
-    		
-    		URL url = new URL(htmlConfigJsonUrl());
-    		inp1 = url.openStream();
-    		inp2 = new InputStreamReader(inp1, "UTF-8");
-    		inp3 = new BufferedReader(inp2);
-    		while(true) {
-    			line = inp3.readLine();
-    			if(line == null) break;
-    			res = res.append(line).append("\n");
-    		}
-    		ClassUtil.closeAll(inp3, inp2, inp1);
-    		inp3 = null;
-    		inp2 = null;
-    		inp1 = null;
-    		
-    		return (JsonObject) JsonObject.parseJson(res.toString().trim());
+    		return (JsonObject) JsonObject.parseJson(NetUtil.sendGet(new URL(htmlConfigJsonUrl()), "UTF-8"));
     	} catch(java.net.UnknownHostException ex) {
     		throw new RuntimeException("Cannot connect to web config server. Please check the internet status.", ex);
-    	} catch(Exception ex) {
+    	} catch(Throwable ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
-    	} finally {
-    		ClassUtil.closeAll(inp3, inp2, inp1);
     	}
     }
     
