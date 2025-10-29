@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -15,6 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -23,11 +23,11 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 
+import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.commons.core.Disposeable;
-import org.duckdns.hjow.commons.json.JsonArray;
-import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** 설정 변경 대화상자 */
@@ -290,7 +290,6 @@ public class ConfigManager implements Disposeable {
     protected void onSaveRequested() {
     	String val = null;
     	File f = null;
-    	JsonArray arr;
     	
     	// 룩앤필
     	val = cbxLookAndFeel.getSelectedItem() == null ? "Nimbus" : cbxLookAndFeel.getSelectedItem().toString();
@@ -313,45 +312,40 @@ public class ConfigManager implements Disposeable {
     	// Packs
     	val = taPacks.getText();
     	try {
-    		arr = (JsonArray) JsonObject.parseJson(val.trim());
+    		File libDir = ColonyClassLoader.getHomeLibDir();
+    		if(! libDir.exists()) libDir.mkdirs();
+    		
+    		File packClassFile = ColonyClassLoader.getLibPackClassFile();
+    		FileUtil.writeString(packClassFile, "UTF-8", val);
     	} catch(Exception ex) {
-    		GlobalLogs.processExceptionOccured(ex, true); 
-    		arr = new JsonArray();
+    		GlobalLogs.processExceptionOccured(ex, true);
     	}
-    	superInstance.getConfig().set("Packs", arr);
-    	
     	superInstance.saveLocalConfigs();
     }
     
     /** 설정 창 열기 */
     public void open() {
     	dialog.setVisible(false);
+    	Exception caused = null;
     	
     	cbxLookAndFeel.setSelectedItem(superInstance.getConfig().getString("LookAndFeel"));
     	tfStringTable.setText(superInstance.getConfig().getString("StringTableFile"));
     	tfModClasses.setText(superInstance.getConfig().getString("Mods"));
     	
-    	List<Object> packList = superInstance.getConfig().getList("Packs");
-    	JsonArray arr = new JsonArray();
-    	for(Object obj : packList) {
-    		Object current = obj;
-        	if(current instanceof CharSequence) {
-        		String str = current.toString().trim();
-        		if(str.startsWith("{")) {
-        			current = (JsonObject) JsonObject.parseJson(str);
-        		}
-        	}
-        	
-        	if(current instanceof JsonObject) {
-        		JsonObject jsonObj = (JsonObject) obj;
-        		arr.add(jsonObj);
-        	} else {
-        		arr.add(current.toString().trim());
-        	}
+    	String packClasses = "";
+    	File packClassFile = ColonyClassLoader.getLibPackClassFile();
+    	if(packClassFile.exists()) {
+    		try {
+    		    packClasses = FileUtil.readString(packClassFile, "UTF-8");
+    		} catch(Exception ex) {
+    			caused = ex;
+    		}
     	}
-    	taPacks.setText(arr.toJSON());
     	
+    	taPacks.setText(packClasses);
     	dialog.setVisible(true);
+    	
+    	if(caused != null) JOptionPane.showMessageDialog(dialog, ColonyManager.t("Error") + " : " + caused.getMessage());
     }
     
     /** 설정 창 닫기 */

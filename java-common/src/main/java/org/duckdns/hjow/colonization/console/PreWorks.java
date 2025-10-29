@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
@@ -33,13 +32,13 @@ public class PreWorks {
     /** lib 누락사항 다운로드 받기 (단, 이 항목들은 다음 실행 때 적용됨. 이번 런타임에는 적용되지 않음.) */
     protected void prepareLibs() throws Exception {
     	// lib 폴더 (사용자홈 / .colonization / )
-        File libRoot = ColonyManager.getHomeDir("colonization", "lib");
+        File libRoot = ColonyClassLoader.getHomeLibDir();
         if(! libRoot.exists()) libRoot.mkdirs();
         
         // 기존 Pack 클래스들 목록 읽기
         List<String> packClasses = new ArrayList<String>();
         String packClassComments = "";
-        File packClassFile = new File(libRoot.getAbsolutePath() + File.separator + "packs.txt");
+        File packClassFile = ColonyClassLoader.getLibPackClassFile();
         
         if(packClassFile.exists()) {
             String packClassText = FileUtil.readString(packClassFile, "UTF-8");

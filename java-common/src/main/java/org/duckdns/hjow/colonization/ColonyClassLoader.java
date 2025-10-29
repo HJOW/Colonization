@@ -332,6 +332,16 @@ public class ColonyClassLoader {
     	return (JsonArray) getWebConfigSwing().get("libs");
     }
     
+    /** 저장 경로 내 lib 디렉토리 반환 */
+    public static File getHomeLibDir() {
+    	return ColonyManager.getHomeDir("colonization", "lib");
+    }
+    
+    /** lib 디렉토리 내 packs.txt 파일 반환 */
+    public static File getLibPackClassFile() {
+    	return new File(getHomeLibDir().getAbsolutePath() + File.separator + "packs.txt");
+    }
+    
     /** 공통 설정 정보 조회 */
     public static synchronized void loadWebConfigs(ColonyManager man) {
         try {
@@ -361,48 +371,7 @@ public class ColonyClassLoader {
     
     /** 공통 로컬 설정 정보 적용, Pack 불러오기 */
 	public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
-        // 설정 파일에서 Pack 목록 불러오기
-        List<Object> packList = null;
-        
-        try {
-            packList = cfg.getList("Packs");
-        } catch(Exception ex) {
-            GlobalLogs.processExceptionOccured(ex, false);
-        }
-        
-        if(packList == null) {
-            packList = new ArrayList<Object>();
-            cfg.set("Packs", packList);
-        }
-        
-        for(Object o : packList) {
-            try {
-            	Object current = o;
-            	Class<?> classObj = null;
-            	if(current instanceof CharSequence) {
-            		String str = current.toString().trim();
-            		if(str.startsWith("{")) {
-            			current = (JsonObject) JsonObject.parseJson(str);
-            		}
-            	}
-            	
-            	if(current instanceof JsonObject) {
-            		ColonyManagerConfig child = new ColonyManagerConfig();
-                	child.fromJson((JsonObject) current);
-                	
-                    classObj = loadClassFrom(child);
-            	} else {
-            		classObj = Class.forName(current.toString().trim());
-            	}
-            	
-            	Pack packOne = (Pack) classObj.newInstance();
-                if(! packs.contains(packOne)) packs.add(packOne);
-            } catch(Exception ex) {
-                GlobalLogs.processExceptionOccured(ex, false);
-            }
-        }
-        
-        // addpacks 불러오기
+        // 예약어로 지정된 Pack 불러오기
         for(String resv : RESERVED_LIB_NAMES) {
         	processAddClass(resv, man);
         }
