@@ -8,10 +8,15 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
-public class FissionReactor extends Research {
-	private static final long serialVersionUID = 6658907007666189048L;
+public class Laser extends Research {
+	private static final long serialVersionUID = 1636336604448677624L;
 
 	@Override
+    public String getName() {
+        return getClass().getSimpleName();
+    }
+    
+    @Override
     public int getMaxLevel() {
         return Integer.MAX_VALUE;
     }
@@ -22,14 +27,14 @@ public class FissionReactor extends Research {
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
     	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("EnergyTech", 40, 6.0));
-    	list.add(new ResearchCondition("Nuclear", 1, 1.0));
-    	list.add(new ResearchCondition("BasicBuildingTech", 30, 3.0));
+    	list.add(new ResearchCondition("Mathematics", 20, 20));
+    	list.add(new ResearchCondition("EnergyTech", 5, 1.5));
+    	list.add(new ResearchCondition("LightTech", 10, 1.5));
     	return list;
     }
 
     @Override
     public String getTitle() {
-        return ColonyManager.t("핵분열 반응로 기술");
+        return ColonyManager.t("레이저");
     }
 }
