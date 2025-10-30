@@ -98,7 +98,7 @@ public class PreWorks {
                 String libUrl  = libOne.get("url").toString();
                 String libName = libOne.get("name").toString();
                 
-                if(! libUrl.startsWith("http")) libUrl = ColonyClassLoader.getWebConfigRoot() + libUrl;
+                if(! libUrl.startsWith("http")) libUrl = ColonyClassLoader.htmlRootUrl() + libUrl;
                 
                 // 해당 lib 미존재 시 다운로드
                 File file = new File(libRoot.getAbsolutePath() + File.separator + libName);
