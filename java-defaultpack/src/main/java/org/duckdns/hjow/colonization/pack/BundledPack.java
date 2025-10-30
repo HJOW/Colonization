@@ -19,6 +19,7 @@ import org.duckdns.hjow.colonization.elements.facilities.SmallResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.SolarStation;
 import org.duckdns.hjow.colonization.elements.facilities.TownHouse;
 import org.duckdns.hjow.colonization.elements.facilities.Turret;
+import org.duckdns.hjow.colonization.elements.policies.FertilityPromotionPolicy;
 import org.duckdns.hjow.colonization.elements.policies.PowerEfficiencyProtocol;
 import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
@@ -105,5 +106,6 @@ public final class BundledPack extends DefaultPack {
         productClasses.add(NutritionBlock.class);
         
         policyClasses.add(PowerEfficiencyProtocol.class);
+        policyClasses.add(FertilityPromotionPolicy.class);
     }
 }

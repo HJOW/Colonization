@@ -258,24 +258,22 @@ public abstract class City implements ColonyElements {
     
     @Override
     public int cycleGap(Colony colony) { return 1; }
+    
+    /** 어떤 값이 std 이상의 값임을 보장함. std 보다 작은 경우 std 반환. 양수인 경우만 값을 반환. 절대값과는 다르니 주의 ! */
+    private double guaranteeBiggerValue(double val, double std) {
+    	if(val < std) return std;
+    	return val;
+    }
 
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { // city should be a self
         int idx;
         
-        // 출산율 및 이주 계산
-        processBornChance(cycle, colony, efficiency100);
-        processMoveInChance(cycle, colony, efficiency100);
-        processMoveOutChance(cycle, colony, efficiency100);
-        
-        // 전력 생산량 및 교통점수 계산
-        long power    = getPowerGenerate(colony);
-        long trans    = getDefaultTransportPoint(); 
-        long networks = getNetworkCapacity(colony);
-        
-        double powBoostRate = 1.0;
-        double traBoostRate = 1.0;
-        double netBoostRate = 1.0;
+        // 각종 보너스 정책들
+        double powBoostRate   = 1.0;
+        double traBoostRate   = 1.0;
+        double netBoostRate   = 1.0;
+        double birthBoostRate = 1.0;
         
         for(Policy p : policies) {
         	if(! p.isEnabled()) continue;
@@ -284,10 +282,21 @@ public abstract class City implements ColonyElements {
         		continue;
         	}
         	
-        	powBoostRate = powBoostRate * p.getPowerSupplyRate(colony, this);
-        	traBoostRate = traBoostRate * p.getTransSupplyRate(colony, this);
-        	netBoostRate = netBoostRate * p.getNetworkSupplyRate(colony, this);
+        	powBoostRate   = powBoostRate   * guaranteeBiggerValue(p.getPowerSupplyRate(  colony, this), 0.5);
+        	traBoostRate   = traBoostRate   * guaranteeBiggerValue(p.getTransSupplyRate(  colony, this), 0.5);
+        	netBoostRate   = netBoostRate   * guaranteeBiggerValue(p.getNetworkSupplyRate(colony, this), 0.5);
+        	birthBoostRate = birthBoostRate * guaranteeBiggerValue(p.getBirthBonusRate(   colony, this), 0.5);
         }
+        
+        // 출산율 및 이주 계산
+        processBornChance(cycle, colony, efficiency100, birthBoostRate);
+        processMoveInChance(cycle, colony, efficiency100);
+        processMoveOutChance(cycle, colony, efficiency100);
+        
+        // 전력 생산량 및 교통점수 계산
+        long power    = getPowerGenerate(colony);
+        long trans    = getDefaultTransportPoint(); 
+        long networks = getNetworkCapacity(colony);
         
         power    = new BigDecimal(String.valueOf(power   )).multiply(new BigDecimal(String.valueOf(powBoostRate))).longValue();
         trans    = new BigDecimal(String.valueOf(trans   )).multiply(new BigDecimal(String.valueOf(traBoostRate))).longValue();
@@ -899,19 +908,19 @@ public abstract class City implements ColonyElements {
     
     
     /** 출산률 계산 */
-    public double getBornChanceRate(Colony col, int efficiency100) {
+    public double getBornChanceRate(Colony col, int efficiency100, double birthBoostRate) {
         double res = efficiency100 / 100.0;
         if(res > 50.0) res = 50.0;
-        return res;
+        return res * birthBoostRate;
     }
     
     /** 출산률 적용 */
-    public void processBornChance(int cycle, Colony col, int efficiency100) {
+    public void processBornChance(int cycle, Colony col, int efficiency100, double birthBoostRate) {
         if(getCitizenCount() >= Integer.MAX_VALUE) return;
         
         if(cycle % 600 == 0) {
             if(getHomeCapacity() > getCitizenCount()) {
-                if(Math.random() < ( getBornChanceRate(col, efficiency100))) {
+                if(Math.random() < ( getBornChanceRate(col, efficiency100, birthBoostRate))) {
                     createNewCitizen();
                 }
             }

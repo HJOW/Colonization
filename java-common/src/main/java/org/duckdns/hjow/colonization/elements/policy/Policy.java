@@ -88,6 +88,9 @@ public abstract class Policy implements ColonyElements {
 	
 	/** 시설 보너스 배율 반환 */
 	public double getFacilityBonusRate(Colony col, City ct, Facility f) { return 1.0; }
+	
+	/** 출산률 배율 반환 */
+	public double getBirthBonusRate(Colony col, City ct) { return 1.0; }
 
 	@Override
 	public int cycleGap(Colony colony) {
