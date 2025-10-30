@@ -74,6 +74,8 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 public class GUIColonyManager extends ColonyManager {
     private static final long serialVersionUID = -2483528821790634383L;
     
+    private static transient boolean flagLookAndFeelInitialized = false;
+    
     protected transient JFrame frame;
     protected transient JPanel pnMain, pnLocalRoot, pnLocalSecond, pnFront;
     protected transient JProgressBar progFront;
@@ -125,9 +127,12 @@ public class GUIColonyManager extends ColonyManager {
         loadLocalConfigs();
         
         // LookAndFeel 설정
-        String lookAndFeel = configs.getString("LookAndFeel");
-        if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel); }
-        GUIUtil.setLookAndFeel(lookAndFeel.trim()); 
+        if(! flagLookAndFeelInitialized) {
+            String lookAndFeel = configs.getString("LookAndFeel");
+            if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel); }
+            GUIUtil.setLookAndFeel(lookAndFeel.trim());
+            flagLookAndFeelInitialized = true;
+        }
         
         // JFrame 생성
         frame = new JFrame();

@@ -76,6 +76,9 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 - Apache Tomcat 9    (See https://tomcat.apache.org/legal.html                             )
 - Maven 3.8          (See https://maven.apache.org/index.html                              )
 
+## Swing 빌드만 해당
+- sciss SyntaxPane   (See https://codeberg.org/sciss/SyntaxPane/src/branch/main/LICENSE    ) - 아직 미사용
+
 ## Servlet 빌드만 해당
 - Servlet API 2.5    (See https://javaee.github.io/servlet-spec/LICENSE                    )
 - JSTL 1.2           (See https://javaee.github.io/javaee-spec/LICENSE                     )

@@ -39,8 +39,12 @@ public class PreWorks {
         
         if(! runOffline) {
             try { downloadNewVersion(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  } // 새 버전 다운로드 및 실행되는 경우 새 버전 실행 후 이 프로세스는 종료됨 !
-            System.out.println("Run current version of colonization."); // 새 버전 다운로드가 된 경우 이 지점에 도달 못함
+            // 위 downloadNewVersion 에서, 새 버전 실행이 되면, 이 프로세스가 종료되므로
+            //    이 시점에서 메소드 동작이 중단됨 !
         }
+        
+        // 기타 사항 준비 (현재의 버전으로 구동 시에만 호출됨)
+        try { prepareOthers(); } catch(Throwable ex) { ex.printStackTrace(); }
     }
     
     /** 버전 체크 */
@@ -207,6 +211,11 @@ public class PreWorks {
     	procBuilder.start();
     	
     	System.exit(0);
+    }
+    
+    /** 기타 사항 준비 */
+    protected void prepareOthers() throws Throwable {
+    	System.out.println("Run current version of colonization.");
     }
     
     public Map<String, String> getParams() {
