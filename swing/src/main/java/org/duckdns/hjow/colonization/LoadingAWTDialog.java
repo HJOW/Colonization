@@ -80,7 +80,7 @@ public class LoadingAWTDialog implements Runnable {
         pnSub1 = new Panel();
         pnSub2 = new Panel();
         pnSub1.setLayout(new FlowLayout(FlowLayout.CENTER));
-        pnSub2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pnSub2.setLayout(new FlowLayout(FlowLayout.RIGHT));
         pnSub.add(pnSub1, BorderLayout.CENTER);
         pnSub.add(pnSub2, BorderLayout.SOUTH);
         

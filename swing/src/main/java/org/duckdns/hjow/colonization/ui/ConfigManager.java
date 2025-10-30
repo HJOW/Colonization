@@ -27,6 +27,7 @@ import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -86,7 +87,7 @@ public class ConfigManager implements Disposeable {
         pn = new JPanel();
         pn.setLayout(new FlowLayout(FlowLayout.LEFT));
         
-        lb = new JLabel(ColonyManager.t("Look And Feel"));
+        lb = new JLabel(ColonyManager.t("룩앤필(테마)"));
         pn.add(lb);
         
         pnConfigs.add(pn, gridBagConst);
@@ -265,7 +266,7 @@ public class ConfigManager implements Disposeable {
         pnCtrl.setLayout(new FlowLayout(FlowLayout.RIGHT));
         pnDown.add(pnCtrl, BorderLayout.CENTER);
         
-        btnSave = new JButton(ColonyManager.t("저장 (재시작 시 적용)"));
+        btnSave = new JButton(ColonyManager.t("저장 (일부 항목은 재시작 시 적용)"));
         btnSave.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -292,8 +293,8 @@ public class ConfigManager implements Disposeable {
     	File f = null;
     	
     	// 룩앤필
-    	val = cbxLookAndFeel.getSelectedItem() == null ? "Nimbus" : cbxLookAndFeel.getSelectedItem().toString();
-    	superInstance.getConfig().set("LookAndFeel", val);
+    	String lookAndFeel = cbxLookAndFeel.getSelectedItem() == null ? "Nimbus" : cbxLookAndFeel.getSelectedItem().toString();
+    	superInstance.getConfig().set("LookAndFeel", lookAndFeel);
     	
     	// 언어 설정 파일
     	val = tfStringTable.getText();
@@ -320,6 +321,13 @@ public class ConfigManager implements Disposeable {
     	} catch(Exception ex) {
     		GlobalLogs.processExceptionOccured(ex, true);
     	}
+    	
+    	// 룩앤필 적용 시도
+        if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; }
+        GUIUtil.setLookAndFeel(lookAndFeel.trim());
+        superInstance.refreshLookAndFeel();
+    	
+    	// 설정 파일 저장
     	superInstance.saveLocalConfigs();
     }
     

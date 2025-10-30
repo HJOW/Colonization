@@ -819,6 +819,11 @@ public class GUIColonyManager extends ColonyManager {
         });
     }
     
+    /** 룩앤필 변경 시 호출되어야 함 */
+    public void refreshLookAndFeel() {
+    	SwingUtilities.updateComponentTreeUI(frame);
+    }
+    
     /** 별도 쓰레드에서 웹 서버에서 설정 불러오기 */
     protected void loadWebConfigs() {
         new Thread(new Runnable() {

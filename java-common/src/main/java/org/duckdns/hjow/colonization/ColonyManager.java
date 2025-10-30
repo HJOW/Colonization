@@ -1002,11 +1002,10 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 현재 버전의 버전 배열 반환 */
     public static int[] getVersionArray() {
-        int[] arr = new int[4];
+        int[] arr = new int[3];
         arr[0] = VERSION_MAIN;
         arr[1] = VERSION_SUB1;
         arr[2] = VERSION_SUB2;
-        arr[3] = BUILD_NO;
         return arr;
     }
     
@@ -1029,7 +1028,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 버전 배열을 문자열로 변환 */
     public static String getVersionString(int[] num) {
-        return num[0] + "." + num[1] + "." + num[2] + "." + num[3];
+        return num[0] + "." + num[1] + "." + num[2];
     }
     
     /** 정수 포맷 설정 */
