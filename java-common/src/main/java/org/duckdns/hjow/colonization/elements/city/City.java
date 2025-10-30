@@ -999,7 +999,8 @@ public abstract class City implements ColonyElements {
         double moveRate = getMoveChangeRate(col, efficiency100);
         if(cycle % 600 == 0) {
             if(Math.random() < moveRate) {
-                createNewCitizen();
+            	int ageYear = 25 + ((int) ( Math.random() * 10 ) - 5);
+                createNewCitizen(ageYear);
             }
         }
     }
