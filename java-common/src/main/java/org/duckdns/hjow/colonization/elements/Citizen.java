@@ -43,7 +43,7 @@ public class Citizen implements ColonyElements {
     protected long money           = 100L;
     protected long experience      =   0L;
     
-    protected BigInteger age = Constants.BIGINTEGER_20;
+    protected BigInteger age = BigInteger.ZERO;
     
     protected long workingFacility  = 0L;
     protected long workingCity      = 0L;

@@ -13,6 +13,7 @@ import java.util.Vector;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
@@ -852,9 +853,18 @@ public abstract class City implements ColonyElements {
         return now;
     }
     
-    /** 새 시민 생성 */
+    /** 새 시민 생성 (20세로 생성됨) */
     public Citizen createNewCitizen() {
+    	Citizen c = new Citizen();
+    	c.setAgeYear(Constants.BIGINTEGER_20);
+        getCitizens().add(c);
+        return c;
+    }
+    
+    /** 새 시민 생성 (나이 지정) */
+    public Citizen createNewCitizen(int ageYear) {
         Citizen c = new Citizen();
+        c.setAgeYear(String.valueOf(ageYear));
         getCitizens().add(c);
         return c;
     }
@@ -921,7 +931,7 @@ public abstract class City implements ColonyElements {
         if(cycle % 600 == 0) {
             if(getHomeCapacity() > getCitizenCount()) {
                 if(Math.random() < ( getBornChanceRate(col, efficiency100, birthBoostRate))) {
-                    createNewCitizen();
+                    createNewCitizen(0);
                 }
             }
         }
