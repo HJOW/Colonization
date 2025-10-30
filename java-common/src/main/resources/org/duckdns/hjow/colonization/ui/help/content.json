@@ -20,6 +20,11 @@
         "file" : "facilities.html"
     },
     {
+        "name" : "정책",
+        "contentType" : "text/html",
+        "file" : "policies.html"
+    },
+    {
         "name" : "MOD",
         "contentType" : "text/html",
         "file" : "mod.html"

@@ -26,6 +26,7 @@ public class Printing3DStructure extends Research {
     	list.add(new ResearchCondition("LightTech", 1, 5.0));
     	list.add(new ResearchCondition("ComputerTech", 1, 5.0));
     	list.add(new ResearchCondition("Plasteel", 1, 1.0));
+    	list.add(new ResearchCondition("Physics", 1, 10.0));
     	return list;
     }
 

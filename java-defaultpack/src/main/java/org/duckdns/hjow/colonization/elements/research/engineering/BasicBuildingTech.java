@@ -26,6 +26,7 @@ public class BasicBuildingTech extends Research {
     	list.add(new ResearchCondition("BasicEngineering", 1, 2.0));
     	list.add(new ResearchCondition("NewMetals", 10, 0.0));
     	list.add(new ResearchCondition("NewMetals", 1, 1.0, 25));
+    	list.add(new ResearchCondition("Physics", 1, 2.0));
     	list.add(new ResearchCondition("BasicHumanities", 1, 1.0, 15));
     	return list;
     }

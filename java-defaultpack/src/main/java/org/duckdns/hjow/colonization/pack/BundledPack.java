@@ -39,6 +39,8 @@ import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionD
 import org.duckdns.hjow.colonization.elements.research.engineering.Printing3DStructure;
 import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 import org.duckdns.hjow.colonization.elements.research.military.MilitaryTech;
+import org.duckdns.hjow.colonization.elements.research.physics.Mathematics;
+import org.duckdns.hjow.colonization.elements.research.physics.Physics;
 import org.duckdns.hjow.colonization.elements.states.ImmuneInfluenza;
 import org.duckdns.hjow.colonization.elements.states.Influenza;
 import org.duckdns.hjow.colonization.elements.states.SuperAngry;
@@ -81,6 +83,7 @@ public final class BundledPack extends DefaultPack {
         facilityClasses.add(FissionReactorStation.class);
         facilityClasses.add(CargoRailSystem.class);
         
+        researchClasses.add(Mathematics.class);
         researchClasses.add(BasicScience.class);
         researchClasses.add(BasicHumanities.class);
         researchClasses.add(MilitaryTech.class);
@@ -93,6 +96,7 @@ public final class BundledPack extends DefaultPack {
         researchClasses.add(NewMetals.class);
         researchClasses.add(LightTech.class);
         researchClasses.add(Chemical.class);
+        researchClasses.add(Physics.class);
         researchClasses.add(GeneTech.class);
         researchClasses.add(FissionReactor.class);
         researchClasses.add(Plasteel.class);

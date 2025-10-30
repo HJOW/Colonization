@@ -26,6 +26,8 @@ public class ConstructionDrones extends Research {
     	list.add(new ResearchCondition("LightTech", 1, 10.0));
     	list.add(new ResearchCondition("BasicEngineering", 1, 10.0));
     	list.add(new ResearchCondition("MilitaryTech", 1, 10.0));
+    	list.add(new ResearchCondition("ComputerTech", 1, 1.0));
+    	list.add(new ResearchCondition("Physics", 1, 4.0));
     	list.add(new ResearchCondition("BasicHumanities", 1, 20));
     	return list;
     }
