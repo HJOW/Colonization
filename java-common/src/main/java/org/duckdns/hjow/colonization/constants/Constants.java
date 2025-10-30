@@ -10,6 +10,7 @@ public class Constants {
     public static final BigInteger BIGINTEGER_10          = new BigInteger(String.valueOf(10));
     public static final BigInteger BIGINTEGER_12          = new BigInteger(String.valueOf(12));
     public static final BigInteger BIGINTEGER_17          = new BigInteger(String.valueOf(17));
+    public static final BigInteger BIGINTEGER_20          = new BigInteger(String.valueOf(20));
     public static final BigInteger BIGINTEGER_23          = new BigInteger(String.valueOf(23));
     public static final BigInteger BIGINTEGER_24          = new BigInteger(String.valueOf(24));
     public static final BigInteger BIGINTEGER_30          = new BigInteger(String.valueOf(30));

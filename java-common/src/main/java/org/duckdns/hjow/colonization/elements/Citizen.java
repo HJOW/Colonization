@@ -11,6 +11,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.states.State;
@@ -42,17 +43,17 @@ public class Citizen implements ColonyElements {
     protected long money           = 100L;
     protected long experience      =   0L;
     
+    protected BigInteger age = Constants.BIGINTEGER_20;
+    
     protected long workingFacility  = 0L;
     protected long workingCity      = 0L;
     protected long livingHome       = 0L;
     protected long buildingFacility = 0L;
     
-    public Citizen() {
-        
-    }
-    
+    public Citizen() { super(); }
+    public Citizen(long age) { this(); this.age = new BigInteger(String.valueOf(age)); }
     public Citizen(JsonObject json) {
-        super();
+        this();
         fromJson(json);
     }
 
@@ -159,6 +160,9 @@ public class Citizen implements ColonyElements {
             }
             std++;
         }
+        
+        // 연령 처리
+        age = age.add(BigInteger.ONE);
     }
     
     @Override
@@ -238,7 +242,37 @@ public class Citizen implements ColonyElements {
         this.buildingFacility = buildingFacility;
     }
     
-    /** 일자리 찾는 중인지를 반환 */
+    public BigInteger getAge() {
+		return age;
+	}
+	public void setAge(BigInteger age) {
+		this.age = age;
+	}
+	public void setAge(String age) {
+		this.age = new BigInteger(age);
+	}
+	public BigInteger getAgeYear() {
+		BigInteger ageYear = getAge();
+		ageYear = ageYear.divide(Constants.BIGINTEGER_10); // 초 to 분
+        ageYear = ageYear.divide(Constants.BIGINTEGER_60); // 분 to 시
+        ageYear = ageYear.divide(Constants.BIGINTEGER_24); // 시 to 일
+        ageYear = ageYear.divide(Constants.BIGINTEGER_30); // 일 to 월
+        ageYear = ageYear.divide(Constants.BIGINTEGER_12); // 월 to 년
+        return ageYear;
+	}
+	public void setAgeYear(BigInteger year) {
+		BigInteger ageYear = year;
+		ageYear = ageYear.multiply(Constants.BIGINTEGER_12); // 년 to 월
+		ageYear = ageYear.multiply(Constants.BIGINTEGER_30); // 월 to 일
+		ageYear = ageYear.multiply(Constants.BIGINTEGER_24); // 일 to 시
+		ageYear = ageYear.multiply(Constants.BIGINTEGER_60); // 시 to 분
+		ageYear = ageYear.multiply(Constants.BIGINTEGER_10); // 분 to 초
+        setAge(ageYear);
+	}
+	public void setAgeYear(String year) {
+		setAgeYear(new BigInteger(year));
+	}
+	/** 일자리 찾는 중인지를 반환 */
     public boolean isJobSeeker() {
         if(getWorkingFacility()  != 0L) return false;
         if(getBuildingFacility() != 0L) return false;
@@ -385,6 +419,7 @@ public class Citizen implements ColonyElements {
         json.put("educatedIntel"     , new Integer(getEducatedIntelligence()));
         json.put("educatedPhysical"  , new Integer(getEducatedPhysical()));
         json.put("money"             , String.valueOf(getMoney()));
+        json.put("age"               , String.valueOf(getAge()));
         json.put("experience"        , String.valueOf(getExperience()));
         json.put("workingFacility"   , String.valueOf(getWorkingFacility()));
         json.put("buildingFacility"  , String.valueOf(getBuildingFacility()));
@@ -413,6 +448,7 @@ public class Citizen implements ColonyElements {
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
         setMoney(Long.parseLong(json.get("money").toString()));
+        setAge(new BigInteger(json.get("age").toString()));
         
         setHunger(     Integer.parseInt(json.get("hunger"     ).toString()));
         setStamina(    Integer.parseInt(json.get("stamina"    ).toString()));
@@ -459,6 +495,7 @@ public class Citizen implements ColonyElements {
         StringBuilder desc = new StringBuilder("");
         desc = desc.append("\n").append(ColonyManager.t("자금") + " : ").append(formatterInt.format(getMoney()));
         desc = desc.append("\n").append(ColonyManager.t("행복도") + " : ").append(formatterInt.format(getHappy())).append(" / ").append("100");
+        desc = desc.append("\n").append(ColonyManager.t("나이") + " : ").append(formatterInt.format(getAgeYear()));
         
         Facility f = null;
         Facility h = null;
