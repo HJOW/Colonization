@@ -528,23 +528,24 @@ public class Citizen implements ColonyElements {
     @Override
     public BigInteger getCheckerValue() {
         BigInteger res = new BigInteger(String.valueOf(getKey()));
-        res = res.add(new BigInteger(String.valueOf(getHp())));
-        res = res.add(new BigInteger(String.valueOf(getHunger())));
-        res = res.add(new BigInteger(String.valueOf(getStamina())));
-        res = res.add(new BigInteger(String.valueOf(getHappy())));
-        res = res.add(new BigInteger(String.valueOf(getStrength())));
-        res = res.add(new BigInteger(String.valueOf(getAgility())));
-        res = res.add(new BigInteger(String.valueOf(getCarisma())));
-        res = res.add(new BigInteger(String.valueOf(getIntelligent())));
-        res = res.add(new BigInteger(String.valueOf(getEducatedIntelligence())));
-        res = res.add(new BigInteger(String.valueOf(getEducatedPhysical())));
-        res = res.add(new BigInteger(String.valueOf(getExperience())));
-        res = res.add(new BigInteger(String.valueOf(getWorkingFacility())));
-        res = res.add(new BigInteger(String.valueOf(getBuildingFacility())));
-        res = res.add(new BigInteger(String.valueOf(getWorkingCity())));
-        res = res.add(new BigInteger(String.valueOf(getLivingHome())));
+        res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
+        res = res.add(getAge().multiply(Constants.BIGINTEGER_5));
+        res = res.add(new BigInteger(String.valueOf(getHunger())).multiply(Constants.BIGINTEGER_7));
+        res = res.add(new BigInteger(String.valueOf(getStamina())).multiply(Constants.BIGINTEGER_11));
+        res = res.add(new BigInteger(String.valueOf(getHappy())).multiply(Constants.BIGINTEGER_13));
+        res = res.add(new BigInteger(String.valueOf(getStrength())).multiply(Constants.BIGINTEGER_17));
+        res = res.add(new BigInteger(String.valueOf(getAgility())).multiply(Constants.BIGINTEGER_19));
+        res = res.add(new BigInteger(String.valueOf(getCarisma())).multiply(Constants.BIGINTEGER_23));
+        res = res.add(new BigInteger(String.valueOf(getIntelligent())).multiply(Constants.BIGINTEGER_29));
+        res = res.add(new BigInteger(String.valueOf(getEducatedIntelligence())).multiply(Constants.BIGINTEGER_31));
+        res = res.add(new BigInteger(String.valueOf(getEducatedPhysical())).multiply(Constants.BIGINTEGER_37));
+        res = res.add(new BigInteger(String.valueOf(getExperience())).multiply(Constants.BIGINTEGER_41));
+        res = res.add(new BigInteger(String.valueOf(getWorkingFacility())).multiply(Constants.BIGINTEGER_43));
+        res = res.add(new BigInteger(String.valueOf(getBuildingFacility())).multiply(Constants.BIGINTEGER_47));
+        res = res.add(new BigInteger(String.valueOf(getWorkingCity())).multiply(Constants.BIGINTEGER_53));
+        res = res.add(new BigInteger(String.valueOf(getLivingHome())).multiply(Constants.BIGINTEGER_59));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
-        for(State st : getStates()) { res = res.add(st.getCheckerValue()); }
+        for(State st : getStates()) { res = res.add(st.getCheckerValue().multiply(Constants.BIGINTEGER_61)); }
         return res;
     }
     
