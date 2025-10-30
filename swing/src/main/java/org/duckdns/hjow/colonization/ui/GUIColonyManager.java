@@ -62,6 +62,7 @@ import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.script.UIObject;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
+import org.duckdns.hjow.colonization.ui.licenses.LicenseDialog;
 import org.duckdns.hjow.colonization.ui.tools.CDOCViewer;
 import org.duckdns.hjow.colonization.ui.tools.GUITCPSimpleDaemonManager;
 import org.duckdns.hjow.commons.data.CompressedDocument;
@@ -102,7 +103,7 @@ public class GUIColonyManager extends ColonyManager {
     protected transient GUITCPSimpleDaemonManager daemonManager;
     protected transient ConfigManager configManager;
     protected transient ModManager modManager;
-    protected transient HelpDialog helpDialog;
+    protected transient HelpDialog helpDialog, licenseDialog;
     protected transient ServletClientPanel servletClient;
     protected transient CDOCViewer cdocViewer;
     
@@ -744,10 +745,20 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
+        menuItem = new JMenuItem(t("저작권 및 라이센스"));
+        menuHelp.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	licenseDialog.open();
+            }
+        });
+        
         benchManager  = new BenchmarkManager(frame);
         backupManager = new BackupManager(this);
         daemonManager = new GUITCPSimpleDaemonManager(frame);
         helpDialog    = new HelpDialog(this);
+        licenseDialog = new LicenseDialog(this);
         configManager = new ConfigManager(this);
         modManager    = new ModManager(this);
         
@@ -1144,6 +1155,9 @@ public class GUIColonyManager extends ColonyManager {
         
         if(helpDialog != null) helpDialog.dispose();
         helpDialog = null;
+        
+        if(licenseDialog != null) licenseDialog.dispose();
+        licenseDialog = null;
         
         if(servletClient != null) servletClient.dispose();
         servletClient = null;

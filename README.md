@@ -73,7 +73,6 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 
 ## 공통
 - OpenJDK 8          (See https://openjdk.org/legal/                                       )
-- Apache Tomcat 9    (See https://tomcat.apache.org/legal.html                             )
 - Maven 3.8          (See https://maven.apache.org/index.html                              )
 
 ## Swing 빌드만 해당
@@ -82,6 +81,7 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 ## Servlet 빌드만 해당
 - Servlet API 2.5    (See https://javaee.github.io/servlet-spec/LICENSE                    )
 - JSTL 1.2           (See https://javaee.github.io/javaee-spec/LICENSE                     )
+- Apache Tomcat 9    (See https://tomcat.apache.org/legal.html                             )
 - auth0 / java-jwt   (See https://github.com/auth0/java-jwt/blob/master/LICENSE            )
 - HJOW-Lib           (See https://github.com/HJOW/HJOW-Libs/blob/main/LICENSE              )
 - HyperSQL           (See https://hsqldb.org/web/hsqlLicense.html                          )
@@ -96,6 +96,5 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 
 ## WinLauncher 빌드만 해당
 - Eclipse Temurin    (See https://adoptium.net/about                                       )
-- Cefsharp           (See https://www.nuget.org/packages/CefSharp.Wpf/140.1.140/license    )
 - Newtonsoft.Json    (See https://licenses.nuget.org/MIT                                   )
 - NanumGothicCoding  (See https://github.com/naver/nanumfont                               )

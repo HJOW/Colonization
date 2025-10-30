@@ -70,7 +70,7 @@ public class HelpDialog implements Disposeable {
     /** 도움말 컨텐츠 반환 */
     public Vector<HelpContent> getHelpContents() {
     	Vector<HelpContent> list = new Vector<HelpContent>();
-    	list.addAll(HelpContent.getHelpContentsFrom("content.json"));
+    	list.addAll(HelpContent.getHelpContentsFrom(this.getClass(), "content.json"));
     	
     	return list;
     }

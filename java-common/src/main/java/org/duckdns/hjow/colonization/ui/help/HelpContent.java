@@ -51,7 +51,13 @@ public class HelpContent implements Serializable {
     	return getName();
     }
     
+    /** content.json 에서 해당 리소스를 찾아 도움말 컨텐츠 꺼내 반환 */
     public static List<HelpContent> getHelpContentsFrom(String resources) {
+    	return getHelpContentsFrom(HelpContent.class, resources);
+    }
+    
+    /** content.json 에서 해당 리소스를 찾아 도움말 컨텐츠 꺼내 반환 */
+    public static List<HelpContent> getHelpContentsFrom(Class<?> basisClass, String resources) {
     	List<HelpContent> list = new ArrayList<HelpContent>();
     	
     	InputStream       inp1 = null;
@@ -61,7 +67,7 @@ public class HelpContent implements Serializable {
     	StringBuilder strContent = new StringBuilder("");
     	try {
     		// 컨텐츠 정보 요약 json 읽기
-    		inp1 = HelpContent.class.getResourceAsStream("content.json");
+    		inp1 = basisClass.getResourceAsStream("content.json");
     		inp2 = new InputStreamReader(inp1, "UTF-8");
     		inp3 = new BufferedReader(inp2);
     		String line;
@@ -91,7 +97,7 @@ public class HelpContent implements Serializable {
     			String fileName = json.get("file") == null ? null : json.get("file").toString();
     			strContent = new StringBuilder("");
     			if(fileName != null) {
-    				inp1 = HelpContent.class.getResourceAsStream(fileName);
+    				inp1 = basisClass.getResourceAsStream(fileName);
     				if(inp1 == null) continue;
     				
     				inp2 = new InputStreamReader(inp1, "UTF-8");
