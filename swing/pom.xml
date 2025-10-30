@@ -103,6 +103,17 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- license-maven-plugin 는 mvn install 로 자동 구동되지 않는다. mvn license:add-third-party 명령어로 따로 구동해야 한다.  -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>2.7.0</version>
+                <configuration>
+                    <thirdPartyFilename>LICENSE_THIRD_PARTY.txt</thirdPartyFilename>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+            </plugin>
 	    </plugins>
 	</build>
 </project>

@@ -5,12 +5,18 @@
     <version>0.0.1</version>
     <name>colonization-java-common</name>
     <description>Java common libs for Colonization game</description>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
     <dependencies>
-   	<dependency>
-        <groupId>org.duckdns.hjow</groupId>
-        <artifactId>hjow-commons</artifactId>
-        <version>0.0.21</version>
-    </dependency>
+   	    <dependency>
+            <groupId>org.duckdns.hjow</groupId>
+            <artifactId>hjow-commons</artifactId>
+            <version>0.0.21</version>
+        </dependency>
     </dependencies>
     <build>
         <defaultGoal>install</defaultGoal>
