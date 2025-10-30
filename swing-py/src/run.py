@@ -138,5 +138,5 @@ if (not os.path.exists(jreBinPath)) or (jreBinPath == ''):
             break
 
 # Run Game
-commands = ['java', '-jar', swingFileFull]
+commands = ['java', '-jar', swingFileFull, '-cp', libHome + os.path.sep + '*', '--updator', 'N']
 subprocess.call(commands, cwd=jreBinPath)

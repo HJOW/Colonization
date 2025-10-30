@@ -699,16 +699,23 @@ namespace WinLauncher
             info.CreateNoWindow  = true;
             info.UseShellExecute = false;
 
+            string argJarPath;
             if (offlineJarPath == null)
             {
+                argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar";
+                argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
+
                 info.WorkingDirectory = jarPath;
-                info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
+                info.Arguments = " -jar \"" + argJarPath + "\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
             }
             else
             {
                 jarPath = offlineJarPath;
+                argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + offlineJarName;
+                argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
+
                 info.WorkingDirectory = offlineJarPath;
-                info.Arguments = " -jar \"" + jarPath + System.IO.Path.DirectorySeparatorChar + offlineJarName + "\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\"";
+                info.Arguments = " -jar \"" + argJarPath + "\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
             }
 
             info.RedirectStandardInput  = true;

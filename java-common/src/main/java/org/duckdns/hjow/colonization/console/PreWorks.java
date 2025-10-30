@@ -30,15 +30,16 @@ public class PreWorks {
     
     /** 사전 작업 수행 */
     public final void work() {
-    	String strRunThisOpt = params.get("runnow");
-    	boolean runOffline = false;
-    	if(DataUtil.isNotEmpty(strRunThisOpt)) runOffline = DataUtil.parseBoolean(strRunThisOpt.trim());
+    	String strUsingUpdator = params.get("--updator");
+    	boolean runOffline = true;
+    	if(DataUtil.isNotEmpty(strUsingUpdator)) runOffline = (! DataUtil.parseBoolean(strUsingUpdator.trim()));
     	
     	try { prepareNets(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true; jsonConfigSwing = null; return; }// 서버 접속을 아예 못한 경우 PreWork 작업 자체를 중단
         try { prepareLibs(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  }
         
         if(! runOffline) {
-            try { downloadNewVersion(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  }
+            try { downloadNewVersion(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  } // 새 버전 다운로드 및 실행되는 경우 새 버전 실행 후 이 프로세스는 종료됨 !
+            System.out.println("Run current version of colonization."); // 새 버전 다운로드가 된 경우 이 지점에 도달 못함
         }
     }
     
@@ -125,7 +126,7 @@ public class PreWorks {
         FileUtil.writeString(packClassFile, "UTF-8", packRebuild.toString().trim());        
     }
     
-    /** 필요 시 새 버전 다운로드, 다운로드한 jar 실행 후 이 프로세스는 종료 */
+    /** 필요 시 새 버전 다운로드, 다운로드한 jar 실행 후 이 프로세스는 종료가 됨 ! 반대로, 다운로드 혹은 실행에 실패할 경우 이 메소드가 예외처리 혹은 return으로 빠져 나가므로 종료되지 않음. */
     protected void downloadNewVersion() throws Throwable {
     	if(jsonConfigSwing == null) return;
     	if(runOffline) return;
@@ -196,8 +197,8 @@ public class PreWorks {
     	commands.add(targetToRun.getAbsolutePath());
     	commands.add("-cp");
     	commands.add(libRoot.getAbsolutePath() + File.separator + "*");
-    	commands.add("--runnow");
-    	commands.add("Y");
+    	commands.add("--updator");
+    	commands.add("N");
     	
     	ProcessBuilder procBuilder = new ProcessBuilder(commands);
     	procBuilder.directory(jreBinPath);
