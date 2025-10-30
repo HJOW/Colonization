@@ -29,6 +29,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.pack.Library;
+import org.duckdns.hjow.colonization.script.NetObject;
 import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
@@ -262,6 +263,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
         scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
         scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
+        scriptEngineManager.put(NetObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, NetObject.getInstance());
     }
     
     /** 기본함수 선언 스크립트 실행 */
@@ -269,8 +271,9 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
 		engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
 		engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
 		engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
+		engine.eval(NetObject.getInstance().getInitScript(scriptVarPrefix));
 	}
-    
+	
     /** 정착지들을 기본 경로에서 불러오기 */
     public void loadColonies() {
         File root = getColonySaveRootDirectory();
