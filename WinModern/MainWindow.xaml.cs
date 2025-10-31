@@ -348,11 +348,12 @@ namespace WinModern
 
                 if (!err)
                 {
-                    string noticeUrl = swingBuild["noticeKoEnc"].ToString();
+                    string noticeUrl = swingBuild["noticeKo"].ToString();
                     if (!noticeUrl.StartsWith("http")) noticeUrl = ROOTURL + noticeUrl;
 
                     // webMain.Address = noticeUrl; // CefSharp
-                    webMain.Navigate(noticeUrl);
+                    // webMain.Navigate(noticeUrl);
+                    webMain.Source = new Uri(noticeUrl);
                 }
                 
                 SetStatusMessage(statusMsg);
