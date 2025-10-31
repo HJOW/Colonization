@@ -81,7 +81,7 @@ public class SolarStation extends PowerPlant {
         return new Long(35);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

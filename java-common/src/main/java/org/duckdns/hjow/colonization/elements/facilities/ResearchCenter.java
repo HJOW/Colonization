@@ -168,7 +168,7 @@ public abstract class ResearchCenter extends DefaultFacility {
         return new Long(0);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

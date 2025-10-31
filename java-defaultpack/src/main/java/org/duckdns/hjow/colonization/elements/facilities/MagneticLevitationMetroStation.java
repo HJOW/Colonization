@@ -77,7 +77,7 @@ public class MagneticLevitationMetroStation extends TransportStation {
         return new Long(35);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

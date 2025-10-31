@@ -144,7 +144,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
         return new Long(10);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

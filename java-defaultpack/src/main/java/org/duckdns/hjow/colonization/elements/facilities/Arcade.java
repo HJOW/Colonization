@@ -202,7 +202,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     	return FACILITY_UNIQUE_GRADE_NONE;
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

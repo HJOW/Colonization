@@ -225,7 +225,7 @@ public abstract class Residence extends DefaultFacility implements Home {
         return new Long(0);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

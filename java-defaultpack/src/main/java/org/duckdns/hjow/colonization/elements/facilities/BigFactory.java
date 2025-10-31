@@ -82,7 +82,7 @@ public class BigFactory extends Factory {
         return new Long(40);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

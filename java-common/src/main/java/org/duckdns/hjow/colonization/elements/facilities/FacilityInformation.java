@@ -14,7 +14,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 public class FacilityInformation implements Serializable {
     private static final long serialVersionUID = -5378970571423008845L;
     protected String name, description, title;
-    protected String imageHex;
+    protected Object image;
     protected Long price = new Long(0L);
     protected Long tech  = new Long(0L);
     protected int buildingCycle = 1200;
@@ -46,9 +46,9 @@ public class FacilityInformation implements Serializable {
             method = facilityClass.getMethod("getUniqueFacilityGrade");
             setUniqueGrade((Integer) method.invoke(null));
             
-            method = facilityClass.getMethod("getImageHex");
+            method = facilityClass.getMethod("getImage");
             Object obj = method.invoke(null);
-            if(obj != null) setImageHex(obj.toString());
+            if(obj != null) setImage(obj);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -65,7 +65,10 @@ public class FacilityInformation implements Serializable {
     	json.put("price", String.valueOf(getPrice()));
     	json.put("buildingCycle", new Integer(getBuildingCycle()));
     	json.put("tech", String.valueOf(getTech()));
-    	json.put("imageHex", getImageHex());
+    	json.put("imagehex", "");
+    	if(getImage() != null) {
+    		if(getImage() instanceof CharSequence) json.put("imagehex", getImage().toString());
+    	}
     	
     	return json;
     }
@@ -111,11 +114,11 @@ public class FacilityInformation implements Serializable {
     public void setTech(Long tech) {
         this.tech = tech;
     }
-    public String getImageHex() {
-        return imageHex;
+    public Object getImage() {
+        return image;
     }
-    public void setImageHex(String imageHex) {
-        this.imageHex = imageHex;
+    public void setImage(Object image) {
+        this.image = image;
     }
     @Override
     public String toString() {

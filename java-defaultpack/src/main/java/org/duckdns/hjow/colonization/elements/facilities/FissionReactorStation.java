@@ -83,7 +83,7 @@ public class FissionReactorStation extends PowerPlant {
         return new Long(50);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

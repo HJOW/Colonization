@@ -171,7 +171,7 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
         return new Long(10);
     }
     
-    public static String getImageHex() {
+    public static Object getImage() {
         return null;
     }
     

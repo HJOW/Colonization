@@ -86,7 +86,7 @@ public interface Facility extends ColonyElements {
      *    public static Integer getFacilityBuildingCycle()
      *    public static Long getTechNeeded()
      *    public static int getUniqueFacilityGrade()
-     *    public static String getImageHex()
+     *    public static Object getImage()
      *    public static String isBuildAvail(Colony col, City city)
      */
 }
