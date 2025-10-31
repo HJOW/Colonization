@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="colonization-swing:jar">
+    <output-path>$PROJECT_DIR$/target/artifacts/colonization_swing_jar</output-path>
+    <root id="archive" name="colonization-swing.jar">
+      <element id="module-output" name="colonization-swing" />
+      <element id="module-output" name="colonization-java-common" />
+      <element id="module-output" name="colonization-java-default" />
+      <element id="module-output" name="colonization-daemon" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../Maven/repository/org/duckdns/hjow/hjow-commons/0.0.21/hjow-commons-0.0.21.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
