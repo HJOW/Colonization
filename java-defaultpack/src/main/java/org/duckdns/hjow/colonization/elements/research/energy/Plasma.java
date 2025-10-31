@@ -1,4 +1,4 @@
-package org.duckdns.hjow.colonization.elements.research.chemical;
+package org.duckdns.hjow.colonization.elements.research.energy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +8,13 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
-public class Chemical extends Research {
-    private static final long serialVersionUID = -5288682651598045570L;
+/** 플라즈마 */
+public class Plasma extends Research {
+	private static final long serialVersionUID = -8026610470560139921L;
 
-    @Override
+	@Override
     public String getName() {
-        return "Chemical";
+        return getClass().getSimpleName();
     }
     
     @Override
@@ -21,20 +22,21 @@ public class Chemical extends Research {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 600L; }
-    public double getMaxProgressIncreaseRate() { return 1.1;  }
+    public long   getMaxProgressStarts()       { return 1500L; }
+    public double getMaxProgressIncreaseRate() { return 1.5;  }
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
     	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicScience", 1, 5.0));
-    	list.add(new ResearchCondition("BasicScience", 6, 1.0));
-    	list.add(new ResearchCondition("ElectroMagneticTech", 1, 1.0, 5));
+    	list.add(new ResearchCondition("Chemical", 50, 1.5));
+    	list.add(new ResearchCondition("EnergyTech", 30, 10.0));
+    	list.add(new ResearchCondition("LightTech", 20, 1.5));
+    	list.add(new ResearchCondition("ElectroMagneticTech", 30, 1.5));
     	return list;
     }
-    
+
     @Override
     public String getTitle() {
-        return ColonyManager.t("화학");
+        return ColonyManager.t("플라즈마");
     }
 }

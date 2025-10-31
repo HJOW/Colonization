@@ -32,6 +32,7 @@ public class LightTech extends Research {
     	list.add(new ResearchCondition("BasicEngineering", 1, 3.0));
     	list.add(new ResearchCondition("BasicEngineering", 6, 0.0));
     	list.add(new ResearchCondition("EnergyTech", 1, 1.0));
+    	list.add(new ResearchCondition("ElectroMagneticTech", 1, 2.0));
     	return list;
     }
 

@@ -30,6 +30,7 @@ import org.duckdns.hjow.colonization.elements.research.biology.GeneTech;
 import org.duckdns.hjow.colonization.elements.research.chemical.Chemical;
 import org.duckdns.hjow.colonization.elements.research.chemical.NewMetals;
 import org.duckdns.hjow.colonization.elements.research.chemical.Plasteel;
+import org.duckdns.hjow.colonization.elements.research.energy.ElectroMagneticTech;
 import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
 import org.duckdns.hjow.colonization.elements.research.energy.FissionReactor;
 import org.duckdns.hjow.colonization.elements.research.energy.Laser;
@@ -89,6 +90,7 @@ public final class BundledPack extends DefaultPack {
         
         researchClasses.add(Mathematics.class);
         researchClasses.add(BasicScience.class);
+        researchClasses.add(ElectroMagneticTech.class);
         researchClasses.add(BasicHumanities.class);
         researchClasses.add(MilitaryTech.class);
         researchClasses.add(BasicBuildingTech.class);

@@ -9,20 +9,20 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
 import org.duckdns.hjow.colonization.elements.research.energy.FissionReactor;
 import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
-import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.ComputerTech;
+import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionDrones;
 
 public class FissionReactorStation extends PowerPlant {
     private static final long serialVersionUID = 4079646708867981024L;
 
     @Override
     protected String getDefaultNamePrefix() {
-        return ColonyManager.t("핵분열_발전소");
+        return ColonyManager.t("핵분열_발전_모듈");
     }
 
     @Override
     protected int getDefaultCapacity() {
-        return 250;
+        return 750;
     }
     
     @Override
@@ -56,7 +56,7 @@ public class FissionReactorStation extends PowerPlant {
     }
     
     public static String getFacilityName() {
-        return ColonyManager.t("핵분열 발전소");
+        return ColonyManager.t("핵분열 발전 모듈");
     }
     
     public static String getFacilityTitle() {
@@ -64,7 +64,7 @@ public class FissionReactorStation extends PowerPlant {
     }
     
     public static String getFacilityDescription() {
-        return ColonyManager.t("핵분열 반응로를 이용하여 전력을 생산하는 발전소입니다. 기술의 발전으로, 사고 가능성이 매우 낮습니다.");
+        return ColonyManager.t("핵분열 반응을 이용한 고출력 전력 생산 시설입니다. 원자로가 소형화되어 있어 공간 활용도와 안정성이 높습니다.");
     }
     
     public static Long getFacilityPrice() {
@@ -80,7 +80,7 @@ public class FissionReactorStation extends PowerPlant {
     }
     
     public static Long getTechNeeded() {
-        return new Long(20);
+        return new Long(50);
     }
     
     public static String getImageHex() {
@@ -102,8 +102,8 @@ public class FissionReactorStation extends PowerPlant {
             if(r instanceof LightTech) {
                 if(r.getLevel() >= 30) cond2 = true;
             }
-            if(r instanceof BasicBuildingTech) {
-                if(r.getLevel() >= 30) cond3 = true;
+            if(r instanceof ConstructionDrones) {
+                if(r.getLevel() >= 3) cond3 = true;
             }
             if(r instanceof ComputerTech) {
                 if(r.getLevel() >= 5) cond4 = true;
@@ -115,7 +115,7 @@ public class FissionReactorStation extends PowerPlant {
         
         if(! cond1) return ColonyManager.t("에너지 연구가 부족합니다.");
         if(! cond2) return ColonyManager.t("광학 연구가 부족합니다.");
-        if(! cond3) return ColonyManager.t("기초건축학 연구가 부족합니다.");
+        if(! cond3) return ColonyManager.t("건설용 드론 기술 연구가 부족합니다.");
         if(! cond4) return ColonyManager.t("컴퓨터 기술 연구가 부족합니다.");
         if(! cond5) return ColonyManager.t("핵분열 반응로 기술 연구가 부족합니다.");
         return null;

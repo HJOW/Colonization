@@ -31,6 +31,7 @@ public class ComputerTech extends Research {
     	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
     	list.add(new ResearchCondition("Mathematics", 1, 10.0));
     	list.add(new ResearchCondition("BasicScience", 1, 5.0));
+    	list.add(new ResearchCondition("ElectroMagneticTech", 1, 4.0));
     	list.add(new ResearchCondition("BasicHumanities", 1, 5.0));
     	list.add(new ResearchCondition("BasicEngineering", 1, 1.0));
     	return list;

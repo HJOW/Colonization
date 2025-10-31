@@ -7,6 +7,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
+import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionDrones;
 import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 
 public class SmallApartment extends Residence {
@@ -61,7 +62,7 @@ public class SmallApartment extends Residence {
     }
     
     public static String getFacilityDescription() {
-        return ColonyManager.t("고층으로 된 주거 단지로, 많은 시민이 생활할 수 있습니다.");
+        return ColonyManager.t("고층 주거 모듈로 수많은 시민이 거주할 수 있는 시설입니다.");
     }
     
     public static Long getFacilityPrice() {
@@ -88,6 +89,7 @@ public class SmallApartment extends Residence {
     public static String isBuildAvail(Colony col, City city) { 
         boolean cond1 = false;
         boolean cond2 = false;
+        boolean cond3 = false;
         List<Research> researches = col.getResearches();
         for(Research r : researches) {
             if(r instanceof BasicBuildingTech) {
@@ -96,10 +98,14 @@ public class SmallApartment extends Residence {
             if(r instanceof BasicHumanities) {
                 if(r.getLevel() >= 30) cond2 = true;
             }
+            if(r instanceof ConstructionDrones) {
+                if(r.getLevel() >= 1) cond3 = true;
+            }
         }
         
         if(! cond1) return ColonyManager.t("기초건축학 연구가 부족합니다.");
-        if(! cond2) return ColonyManager.t("기초인문학 연구가 부족합니다.");
+        if(! cond2) return ColonyManager.t("기초 인문학 연구가 부족합니다.");
+        if(! cond3) return ColonyManager.t("건설용 드론 기술 연구가 부족합니다.");
         return null;
     }
 }

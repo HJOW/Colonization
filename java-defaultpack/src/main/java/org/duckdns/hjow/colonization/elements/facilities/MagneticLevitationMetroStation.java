@@ -6,10 +6,10 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
-import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
+import org.duckdns.hjow.colonization.elements.research.energy.ElectroMagneticTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
+import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionDrones;
 
 public class MagneticLevitationMetroStation extends TransportStation {
 	private static final long serialVersionUID = -2098189817987614924L;
@@ -74,7 +74,7 @@ public class MagneticLevitationMetroStation extends TransportStation {
     }
     
     public static Long getTechNeeded() {
-        return new Long(0);
+        return new Long(35);
     }
     
     public static String getImageHex() {
@@ -95,18 +95,18 @@ public class MagneticLevitationMetroStation extends TransportStation {
             if(r instanceof BasicBuildingTech) {
                 if(r.getLevel() >= 20) cond2 = true;
             }
-            if(r instanceof EnergyTech) {
-                if(r.getLevel() >= 7) cond3 = true;
+            if(r instanceof ElectroMagneticTech) {
+                if(r.getLevel() >= 2) cond3 = true;
             }
-            if(r instanceof LightTech) {
-                if(r.getLevel() >= 3) cond4 = true;
+            if(r instanceof ConstructionDrones) {
+                if(r.getLevel() >= 2) cond4 = true;
             }
         }
         
         if(! cond1) return ColonyManager.t("공학기초 연구가 부족합니다.");
         if(! cond2) return ColonyManager.t("기초건축학 연구가 부족합니다.");
-        if(! cond3) return ColonyManager.t("에너지 연구가 부족합니다.");
-        if(! cond4) return ColonyManager.t("광학 연구가 부족합니다.");
+        if(! cond3) return ColonyManager.t("전자기학 연구가 부족합니다.");
+        if(! cond4) return ColonyManager.t("건설용 드론 기술 연구가 부족합니다.");
         return null;
     }
 }

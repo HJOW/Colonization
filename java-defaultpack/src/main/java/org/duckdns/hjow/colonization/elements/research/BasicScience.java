@@ -32,7 +32,7 @@ public class BasicScience extends Research {
 
     @Override
     public String getTitle() {
-        return ColonyManager.t("기초과학");
+        return ColonyManager.t("기초 과학");
     }
 
 }

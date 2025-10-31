@@ -31,6 +31,7 @@ public class Physics extends Research {
     	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
     	list.add(new ResearchCondition("BasicScience", 1, 1.2));
     	list.add(new ResearchCondition("BasicHumanities", 10, 1.0));
+    	list.add(new ResearchCondition("ElectroMagneticTech", 1, 1.0, 10));
     	return list;
     }
 

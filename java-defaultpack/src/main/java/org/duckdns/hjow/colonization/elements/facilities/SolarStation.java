@@ -15,7 +15,7 @@ public class SolarStation extends PowerPlant {
 
     @Override
     protected String getDefaultNamePrefix() {
-        return ColonyManager.t("광학_발전소");
+        return ColonyManager.t("광학_발전_모듈");
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SolarStation extends PowerPlant {
     }
     
     public static String getFacilityName() {
-        return ColonyManager.t("광학 발전소");
+        return ColonyManager.t("광학 발전 모듈");
     }
     
     public static String getFacilityTitle() {
@@ -78,7 +78,7 @@ public class SolarStation extends PowerPlant {
     }
     
     public static Long getTechNeeded() {
-        return new Long(20);
+        return new Long(35);
     }
     
     public static String getImageHex() {
