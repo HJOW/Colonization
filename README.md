@@ -3,17 +3,25 @@ GUI 요소들로 간단히 만드는 우주시대 정착지 개척 시뮬레이�
 여러 플랫폼 연습 겸해 손대고 있는 토이 프로젝트입니다.
 
 # 실행
-Swing 빌드를 데스크톱 PC에서 실행해 플레이할 수 있습니다.   
-Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 설치가 필요합니다.
+Swing 빌드를 데스크톱 PC에서 실행해 플레이할 수 있습니다.    
+Windows 의 경우 WinLauncher 를 이용해 플레이가 가능합니다.
+    
+기타 플랫폼의 경우    
+Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 별도 설치가 필요합니다.
 
 # 빌드
+## colonization-java-group (java-mvn)
+여러 Java 기반 구성요소들을 한번에 Maven 으로 관리하기 위한 부모 프로젝트로,    
+이 프로젝트 내 pom.xml 에서 버전 등의 공통정보만을 정의할 뿐 그외 소스코드는 없습니다.    
+이용 시 Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
+
 ## colonization-java-common (java-common)
 Java 기반 빌드의 공통 파트입니다.   
 Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
 
 ## colonization-java-default (java-defaultpack)
-Java 기반 빌드 중 기본 제공되는 컨텐츠 파트입니다.
-기본 제공되는 정착지, 도시, 연구, 시설들을 구현합니다.
+Java 기반 빌드 중 기본 제공되는 컨텐츠 파트입니다.    
+기본 제공되는 정착지, 도시, 연구, 시설들을 이 프로젝트에서 구현합니다.    
 Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
 
 ## Swing 빌드 (swing)
@@ -49,7 +57,6 @@ Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.
 ## 기타 파일
 ### packages.zip
 WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, Nuget 로 라이브러리를 설치하며 생성된 packages 폴더를 압축한 파일입니다.    
-용량 문제로 CefSharp 는 제외되어 있습니다. [패키지](http://hjow.duckdns.org/colonization/packages.zip)
 
 # License
 
