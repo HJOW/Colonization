@@ -93,6 +93,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>WinLauncher.App</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -208,6 +211,22 @@
       <ProductName>Visual C++ "14" Runtime Libraries %28x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Libraries\Microsoft.CSharp.dll" />
+    <EmbeddedResource Include="Libraries\Newtonsoft.Json.dll" />
+    <EmbeddedResource Include="Libraries\Newtonsoft.Json.xml" />
+    <EmbeddedResource Include="Libraries\PresentationCore.dll" />
+    <EmbeddedResource Include="Libraries\PresentationFramework.dll" />
+    <EmbeddedResource Include="Libraries\System.Data.DataSetExtensions.dll" />
+    <EmbeddedResource Include="Libraries\System.Data.dll" />
+    <EmbeddedResource Include="Libraries\System.dll" />
+    <EmbeddedResource Include="Libraries\System.IO.Compression.FileSystem.dll" />
+    <EmbeddedResource Include="Libraries\System.Net.Http.dll" />
+    <EmbeddedResource Include="Libraries\System.Xaml.dll" />
+    <EmbeddedResource Include="Libraries\System.Xml.dll" />
+    <EmbeddedResource Include="Libraries\System.Xml.Linq.dll" />
+    <EmbeddedResource Include="Libraries\WindowsBase.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
