@@ -79,6 +79,7 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 사용되었습니다. (또는 사용에 필요합니다.)
 
 ## 공통
+- 아이콘 이미지      - Google Gemini 이미지 생성
 - OpenJDK 8          (See https://openjdk.org/legal/                                       )
 - Maven 3.8          (See https://maven.apache.org/index.html                              )
 
