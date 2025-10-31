@@ -62,6 +62,7 @@ public class BackupManager implements Disposeable {
         dialog.setTitle("백업");
         dialog.setSize(500, 300);
         GUIUtil.centerWindow(dialog);
+        dialog.setIconImage(GUIColonyManager.getIcon());
         dialog.setLayout(new BorderLayout());
         
         JPanel pnMain = new JPanel();

@@ -20,6 +20,7 @@ import javax.swing.SpinnerNumberModel;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
+import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.ui.JLogArea;
 import org.duckdns.hjow.commons.util.GUIUtil;
@@ -47,7 +48,7 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
             @Override
             public void windowClosing(WindowEvent e) { dispose(true); }
         });
-        
+        dialog.setIconImage(GUIColonyManager.getIcon());
         dialog.setLayout(new BorderLayout());
         
         JPanel pnMain = new JPanel();

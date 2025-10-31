@@ -46,6 +46,7 @@ public class ModManager implements Disposeable {
     	
     	dialog.setTitle(ColonyManager.t("MOD Manager"));
     	dialog.setSize(500, 400);
+    	dialog.setIconImage(GUIColonyManager.getIcon());
     	dialog.setLayout(new BorderLayout());
     	
         GUIUtil.centerWindow(dialog);

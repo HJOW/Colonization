@@ -72,6 +72,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         setSize(400, 300);
         setLayout(new BorderLayout());
         setTitle(ColonyManager.t("새 시설 건설"));
+        setIconImage(GUIColonyManager.getIcon());
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

@@ -15,17 +15,18 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
@@ -68,6 +69,7 @@ import org.duckdns.hjow.colonization.ui.tools.GUITCPSimpleDaemonManager;
 import org.duckdns.hjow.commons.data.CompressedDocument;
 import org.duckdns.hjow.commons.script.MathObject;
 import org.duckdns.hjow.commons.script.SecurityObject;
+import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -137,8 +139,8 @@ public class GUIColonyManager extends ColonyManager {
         
         // JFrame 생성
         frame = new JFrame();
-    	
-    	// JFrame 설정
+        
+        // JFrame 설정
         Dimension winSize = GUIUtil.getScreenSize();
         int w, h;
         w = (int) (winSize.getWidth()  * 0.8);
@@ -155,7 +157,7 @@ public class GUIColonyManager extends ColonyManager {
         GUIUtil.centerWindow(frame);
         frame.setSize(w, h - logHeight); // 로그 대화상자 들어갈 자리 마련
         frame.setTitle("Colonization");
-        frame.setIconImage(GUIUtil.iconToImage(getIcon()));
+        frame.setIconImage(getIcon());
         frame.setLayout(new BorderLayout());
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -164,23 +166,23 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         frame.addComponentListener(new ComponentAdapter() {
-        	@Override
-        	public void componentMoved(ComponentEvent e) {
-        		int x = frame.getX();
-        		int y = frame.getY() + frame.getHeight();
-        		if(dialogGlobalLog instanceof GlobalLogDialog) {
-        			GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
-        			d.setLocation(x, y);
-        		}
-        	}
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                int x = frame.getX();
+                int y = frame.getY() + frame.getHeight();
+                if(dialogGlobalLog instanceof GlobalLogDialog) {
+                    GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
+                    d.setLocation(x, y);
+                }
+            }
             @Override
             public void componentResized(ComponentEvent e) {
                 int w = frame.getWidth();
                 if(dialogGlobalLog instanceof GlobalLogDialog) {
-        			GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
-        			d.setSize(w, (int) d.getSize().getHeight());
-        			componentMoved(e);
-        		}
+                    GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
+                    d.setSize(w, (int) d.getSize().getHeight());
+                    componentMoved(e);
+                }
             }
         });
         
@@ -189,7 +191,7 @@ public class GUIColonyManager extends ColonyManager {
     
     /** UI 파트 초기화 */
     public void initializeUI() {
-    	Dimension winSize = GUIUtil.getScreenSize();
+        Dimension winSize = GUIUtil.getScreenSize();
         int w, h;
         w = (int) (winSize.getWidth()  * 0.8);
         h = (int) (winSize.getHeight() * 0.8);
@@ -245,10 +247,10 @@ public class GUIColonyManager extends ColonyManager {
         }
         
         if(pnMain == null) {
-        	pnMain = new JPanel();
+            pnMain = new JPanel();
             frame.add(pnMain, BorderLayout.CENTER);
         } else {
-        	pnMain.removeAll();
+            pnMain.removeAll();
         }
         
         
@@ -590,19 +592,19 @@ public class GUIColonyManager extends ColonyManager {
         menuFile.add(menuFileConfig);
         menuFileConfig.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.CTRL_MASK));
         menuFileConfig.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				configManager.open();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                configManager.open();
+            }
+        });
         
         menuFileMods = new JMenuItem(t("MOD 관리"));
         menuFile.add(menuFileMods);
         menuFileMods.addActionListener(new ActionListener() {
-        	@Override
-			public void actionPerformed(ActionEvent e) {
-        		modManager.open();
-			}
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                modManager.open();
+            }
         });
         
         menuFile.addSeparator();
@@ -655,19 +657,19 @@ public class GUIColonyManager extends ColonyManager {
                 lbRunningTime.setVisible(isDebugModeEnabled());
                 
                 if(dialogGlobalLog != null) {
-                	if(flagDebugMode) dialogGlobalLog.setDetailLevel(1);
+                    if(flagDebugMode) dialogGlobalLog.setDetailLevel(1);
                     else              dialogGlobalLog.setDetailLevel(2);
-                	
-                	if(dialogGlobalLog instanceof GlobalLogDialog) {
-                		if(flagDebugMode) ((GlobalLogDialog) dialogGlobalLog).openCommands();
-                		else              ((GlobalLogDialog) dialogGlobalLog).hideCommands();
-                	}
+                    
+                    if(dialogGlobalLog instanceof GlobalLogDialog) {
+                        if(flagDebugMode) ((GlobalLogDialog) dialogGlobalLog).openCommands();
+                        else              ((GlobalLogDialog) dialogGlobalLog).hideCommands();
+                    }
                 }
             }
         });
         ((JCheckBoxMenuItem) menuItem).setSelected(isDebugModeEnabled());
         if(! ColonyClassLoader.getInstalledPackNewFeatures().contains("DebugEnable")) {
-        	menuItem.setVisible(false);
+            menuItem.setVisible(false);
         }
 
         
@@ -714,7 +716,7 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	cdocViewer.open();
+                cdocViewer.open();
             }
         });
         
@@ -723,7 +725,7 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	try { new ScriptTester(getDialog()).open(newScriptEngine()); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); }
+                try { new ScriptTester(getDialog()).open(newScriptEngine()); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); }
             }
         });
         
@@ -741,7 +743,7 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	helpDialog.open();
+                helpDialog.open();
             }
         });
         
@@ -750,7 +752,7 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	licenseDialog.open();
+                licenseDialog.open();
             }
         });
         
@@ -809,8 +811,8 @@ public class GUIColonyManager extends ColonyManager {
         
         // 전역 로그 대화상자 세팅
         if(dialogGlobalLog == null) {
-        	dialogGlobalLog = new GlobalLogDialog(this);
-        	dialogGlobalLog.setDetailLevel(2);
+            dialogGlobalLog = new GlobalLogDialog(this);
+            dialogGlobalLog.setDetailLevel(2);
         }
         
         // 전체 새로고침
@@ -832,7 +834,7 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 룩앤필 변경 시 호출되어야 함 */
     public void refreshLookAndFeel() {
-    	SwingUtilities.updateComponentTreeUI(frame);
+        SwingUtilities.updateComponentTreeUI(frame);
     }
     
     /** 별도 쓰레드에서 웹 서버에서 설정 불러오기 */
@@ -897,8 +899,8 @@ public class GUIColonyManager extends ColonyManager {
         
         // 실행 횟수 제한이 있는 경우 차감 (단, 음수인 경우는 무제한이라고 판단)
         if(cycleRunCount > 0 && (! threadPaused)) {
-        	cycleRunCount--;
-        	if(cycleRunCount <= 0) pauseSimulation();
+            cycleRunCount--;
+            if(cycleRunCount <= 0) pauseSimulation();
         }
         
         // 저장 요청 수행
@@ -907,11 +909,11 @@ public class GUIColonyManager extends ColonyManager {
         // 리프레시 요청 수행
         if(reserveRefresh) {
             try {
-            	refreshColonyContent();
+                refreshColonyContent();
             } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
             reserveRefresh = false;
         } else {
-        	handleRefreshRequests();
+            handleRefreshRequests();
         }
         
         // 일시정지 후 쓰레드가 실제 정지 중인지 판단하는 플래그
@@ -1170,12 +1172,12 @@ public class GUIColonyManager extends ColonyManager {
         if(rootEngine != null) rootEngine = null;
         
         for(ModDialog diag : modDialogs) {
-        	diag.dispose();
+            diag.dispose();
         }
         modDialogs.clear();
         
         for(Mod mod : modsList) {
-        	mod.dispose();
+            mod.dispose();
         }
         modsList.clear();
         modsEnabled.clear();
@@ -1239,15 +1241,6 @@ public class GUIColonyManager extends ColonyManager {
         JOptionPane.showMessageDialog(getDialog(), msg);
     }
 
-    public Icon getIcon() {
-        Icon icon = UIManager.getIcon("OptionPane.informationIcon");
-        Image img = GUIUtil.iconToImage(icon);
-        img = img.getScaledInstance(12, 12, Image.SCALE_SMOOTH);
-        ImageIcon newIcon = new ImageIcon(img);
-        
-        return newIcon;
-    }
-
     /** 대화상자 객체 반환 */
     public JFrame getDialog() {
         return frame;
@@ -1264,11 +1257,11 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     public int getDialogX() {
-    	return getDialog().getX();
+        return getDialog().getX();
     }
     
     public int getDialogY() {
-    	return getDialog().getY();
+        return getDialog().getY();
     }
     
     /** 현재 선택된 정착지 반환 */
@@ -1300,7 +1293,7 @@ public class GUIColonyManager extends ColonyManager {
         if(resv) {
             pauseSimulation();
         } else {
-        	int selOptIndex = cbxSimuCount.getSelectedIndex();
+            int selOptIndex = cbxSimuCount.getSelectedIndex();
             int resumeCycle = -1;
             
             if(selOptIndex == 0)      resumeCycle =  -1;
@@ -1336,7 +1329,7 @@ public class GUIColonyManager extends ColonyManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-            	// 쓰레드가 완전히 종료될 때까지 대기
+                // 쓰레드가 완전히 종료될 때까지 대기
                 try {
                     int prefInfLoop = 10;
                     while(! bCheckerPauseCompleted) {
@@ -1354,16 +1347,16 @@ public class GUIColonyManager extends ColonyManager {
                     if(col.getHp() <= 0) return;
                     c.setEditable(true); 
                 }
-            	
-                SwingUtilities.invokeLater(new Runnable() {	
-					@Override
-					public void run() {
-						cardLocalLoading2.show(pnLocalSecond, "C1F");
-						btnThrPlay.setEnabled(true);
-		                menuActionThrPlay.setEnabled(true);
-		                cbxSimuCount.setEnabled(true);
-					}
-				});
+                
+                SwingUtilities.invokeLater(new Runnable() {    
+                    @Override
+                    public void run() {
+                        cardLocalLoading2.show(pnLocalSecond, "C1F");
+                        btnThrPlay.setEnabled(true);
+                        menuActionThrPlay.setEnabled(true);
+                        cbxSimuCount.setEnabled(true);
+                    }
+                });
             }
         }).start();
     }
@@ -1418,8 +1411,8 @@ public class GUIColonyManager extends ColonyManager {
     /** 정착지 화면 내용 갱신 */
     @Override
     public void refreshColonyContent() {
-    	int s = cbxColony.getSelectedIndex();
-    	if(s != selectedColony) time = null;
+        int s = cbxColony.getSelectedIndex();
+        if(s != selectedColony) time = null;
         selectedColony = s;
         assureMainThreadRunning();
         refreshArenaPanel(0);
@@ -1457,18 +1450,18 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 화면 새로고침 요청 처리 */
     protected synchronized void handleRefreshRequests() {
-    	SwingUtilities.invokeLater(new Runnable() {	
-			@Override
-			public void run() {
-				while(! queueRefreshes.isEmpty()) {
-					RefreshRequest r = queueRefreshes.poll();
-					int cycle = r.getCycle();
-					if(cycle == 0) cardLocalLoading2.show(pnLocalSecond, "C1S");
-					refreshArenaPanelIn(cycle);
-					if(cycle == 0) queueRefreshes.clear();
-				}
-			}
-		});
+        SwingUtilities.invokeLater(new Runnable() {    
+            @Override
+            public void run() {
+                while(! queueRefreshes.isEmpty()) {
+                    RefreshRequest r = queueRefreshes.poll();
+                    int cycle = r.getCycle();
+                    if(cycle == 0) cardLocalLoading2.show(pnLocalSecond, "C1S");
+                    refreshArenaPanelIn(cycle);
+                    if(cycle == 0) queueRefreshes.clear();
+                }
+            }
+        });
     }
     
     /** 사이클 진행에 따른 정착지 화면 내용 갱신 */
@@ -1499,12 +1492,12 @@ public class GUIColonyManager extends ColonyManager {
         else colPn.refreshColonyBasicMeta(col, this);
         
         for(Mod mod : modsEnabled) {
-        	if(mod.isReadOnly()) {
-        		if(cycle % 4 == 0) mod.refresh(cycle, col.toJson(), broker); // 읽기 전용인 경우 JSON으로 변환해 반환
-        	} else {
-        		col.disableChecked(); // 쓰기 허용 MOD 사용 시 인증 비활성화
-        	    mod.refresh(cycle, col, broker);
-        	}
+            if(mod.isReadOnly()) {
+                if(cycle % 4 == 0) mod.refresh(cycle, col.toJson(), broker); // 읽기 전용인 경우 JSON으로 변환해 반환
+            } else {
+                col.disableChecked(); // 쓰기 허용 MOD 사용 시 인증 비활성화
+                mod.refresh(cycle, col, broker);
+            }
         }
         
         cardLocalLoading2.show(pnLocalSecond, "C1F");
@@ -1548,7 +1541,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 스크립트 엔진 매니저 준비 */
     @Override
     protected void initScriptEngineManager() {
-    	scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
+        scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
         scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
         scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
         scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
@@ -1560,38 +1553,57 @@ public class GUIColonyManager extends ColonyManager {
     
     /** 기본함수 선언 스크립트 실행 */
     @Override
-	protected void evalInitScripts(ScriptEngine engine) throws Exception {
-		engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
-		engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
-		engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
-		engine.eval(NetObject.getInstance().getInitScript(scriptVarPrefix));
-		engine.eval(uiScriptBroker.getInitScript(scriptVarPrefix));
-	}
+    protected void evalInitScripts(ScriptEngine engine) throws Exception {
+        engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
+        engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
+        engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
+        engine.eval(NetObject.getInstance().getInitScript(scriptVarPrefix));
+        engine.eval(uiScriptBroker.getInitScript(scriptVarPrefix));
+    }
     
     @Override
     protected void applyModOnUI() {
-    	menuMods.removeAll();
-    	
-    	for(final Mod mod : modsList) {
-    		JMenuItem menuItem = new JMenuItem(t(mod.getName()));
-    		menuMods.add(menuItem);
-    		
-    		if(mod.getLocation() == 0) {
-    		    final ModDialog dialog = new ModDialog(getDialog(), mod);
-        		modDialogs.add(dialog);
-        	    if(mod instanceof ScriptMod) { ((ScriptMod) mod).injectParentComponent(dialog); }
-        		
-        		menuItem.addActionListener(new ActionListener() {
-    				@Override
-    				public void actionPerformed(ActionEvent e) {
-    					if(! dialog.isOpenedOnce()) {
-    						mod.init(broker);
-    						if(! modsEnabled.contains(mod)) modsEnabled.add(mod);
-    					}
-    					dialog.open();
-    				}
-    			});
-    		}
-    	}
+        menuMods.removeAll();
+        
+        for(final Mod mod : modsList) {
+            JMenuItem menuItem = new JMenuItem(t(mod.getName()));
+            menuMods.add(menuItem);
+            
+            if(mod.getLocation() == 0) {
+                final ModDialog dialog = new ModDialog(getDialog(), mod);
+                modDialogs.add(dialog);
+                if(mod instanceof ScriptMod) { ((ScriptMod) mod).injectParentComponent(dialog); }
+                
+                menuItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(! dialog.isOpenedOnce()) {
+                            mod.init(broker);
+                            if(! modsEnabled.contains(mod)) modsEnabled.add(mod);
+                        }
+                        dialog.open();
+                    }
+                });
+            }
+        }
+    }
+    
+    /** 기본 ICON 반환 */
+    public static Image getIcon() {
+        InputStream inp = null;
+        Image img = null;
+        try {
+            inp = GUIColonyManager.class.getResourceAsStream("icon256.png");
+            img = ImageIO.read(inp);
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, false);
+            Icon icon = UIManager.getIcon("OptionPane.informationIcon");
+            img = GUIUtil.iconToImage(icon);
+        } finally {
+            ClassUtil.closeAll(inp);
+        }
+        
+        img = img.getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+        return img;
     }
 }

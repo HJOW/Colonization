@@ -1,16 +1,22 @@
-package org.duckdns.hjow.colonization;
+package org.duckdns.hjow.colonization.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+
+import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** 로딩용 임시 대화상자 팝업, AWT로 구현 (Swing과 동시사용 가능) */
@@ -40,6 +46,7 @@ public class LoadingAWTDialog implements Runnable {
                 System.exit(0);
             }
         });
+        setIconImage(getDefaultIcon());
         
         lbTitle = new Label(title);
         lbSub   = new Label(sub);
@@ -94,6 +101,10 @@ public class LoadingAWTDialog implements Runnable {
         pnDown.add(pnProg, BorderLayout.CENTER);
     }
     
+    public void setIconImage(Image img) {
+    	dialog.setIconImage(img);
+    }
+    
     public void open() {
         threadSwitch = true;
         new Thread(this).start();
@@ -112,6 +123,22 @@ public class LoadingAWTDialog implements Runnable {
     public boolean isVisible() {
         if(dialog == null) return false;
         return dialog.isVisible();
+    }
+    
+    public Image getDefaultIcon() {
+    	InputStream inp = null;
+    	Image img = null;
+    	try {
+    		inp = this.getClass().getResourceAsStream("icon256.png");
+    		img = ImageIO.read(inp);
+    		img = img.getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+    		return img;
+    	} catch(Exception ex) {
+    		GlobalLogs.processExceptionOccured(ex, false);
+    	} finally {
+    		ClassUtil.closeAll(inp);
+    	}
+        return img;
     }
 
     @Override

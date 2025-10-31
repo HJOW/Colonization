@@ -96,6 +96,9 @@
   <PropertyGroup>
     <StartupObject>WinLauncher.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\icon256.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -227,6 +230,9 @@
     <EmbeddedResource Include="Libraries\System.Xml.dll" />
     <EmbeddedResource Include="Libraries\System.Xml.Linq.dll" />
     <EmbeddedResource Include="Libraries\WindowsBase.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon256.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

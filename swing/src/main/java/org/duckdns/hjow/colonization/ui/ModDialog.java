@@ -24,6 +24,7 @@ public class ModDialog implements Disposeable {
     	
     	dialog.setTitle(mod.getName());
     	dialog.setSize(500, 400);
+    	dialog.setIconImage(GUIColonyManager.getIcon());
     	GUIUtil.centerWindow(dialog);
     	
     	dialog.setLayout(new BorderLayout());

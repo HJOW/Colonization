@@ -46,6 +46,7 @@ public class ConfigManager implements Disposeable {
     	dialog.setSize(400, 350);
     	dialog.setTitle(ColonyManager.t("설정"));
     	GUIUtil.centerWindow(dialog);
+    	dialog.setIconImage(GUIColonyManager.getIcon());
     	dialog.setLayout(new BorderLayout());
     	
     	JPanel pnMain = new JPanel();

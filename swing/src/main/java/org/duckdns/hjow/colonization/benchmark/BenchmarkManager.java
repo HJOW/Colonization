@@ -25,6 +25,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 public class BenchmarkManager {
@@ -53,6 +54,7 @@ public class BenchmarkManager {
                 dispose();
             }
         });
+        dialog.setIconImage(GUIColonyManager.getIcon());
         
         dialog.setLayout(new BorderLayout());
         

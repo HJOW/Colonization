@@ -55,6 +55,7 @@ public class ScriptTester {
     	dialog.setSize(width, height);
     	dialog.setTitle(ColonyManager.t("Script Tester"));
     	GUIUtil.centerWindow(dialog);
+    	dialog.setIconImage(GUIColonyManager.getIcon());
     	dialog.setLayout(new BorderLayout());
     	
     	JTabbedPane tab = new JTabbedPane();

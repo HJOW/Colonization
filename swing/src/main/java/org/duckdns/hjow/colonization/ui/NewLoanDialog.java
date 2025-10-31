@@ -50,7 +50,7 @@ public class NewLoanDialog implements Disposeable {
                 dispose();
             }
         });
-        
+        dialog.setIconImage(GUIColonyManager.getIcon());
         dialog.setLayout(new BorderLayout());
         
         JPanel pnMain = new JPanel();

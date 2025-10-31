@@ -43,6 +43,7 @@ public class HelpDialog implements Disposeable {
     	
     	dialog.setSize(width, height);
     	GUIUtil.centerWindow(dialog);
+    	dialog.setIconImage(GUIColonyManager.getIcon());
     	dialog.setLayout(new BorderLayout());
     	
     	JPanel pnMain = new JPanel();

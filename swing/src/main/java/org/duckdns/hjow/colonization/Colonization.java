@@ -6,6 +6,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.colonization.ui.GUIPreWorks;
+import org.duckdns.hjow.colonization.ui.LoadingAWTDialog;
 import org.duckdns.hjow.commons.ui.LogComponent;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;

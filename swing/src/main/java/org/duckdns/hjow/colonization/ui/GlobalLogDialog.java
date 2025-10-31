@@ -46,7 +46,7 @@ public class GlobalLogDialog implements GlobalLogUI {
         dialog.setSize(600, 400);
         dialog.setTitle(ColonyManager.t("로그"));
         GUIUtil.centerWindow(dialog);
-
+        dialog.setIconImage(GUIColonyManager.getIcon());
         dialog.setLayout(new BorderLayout());
         
         JPanel pnMain, pnDown;
