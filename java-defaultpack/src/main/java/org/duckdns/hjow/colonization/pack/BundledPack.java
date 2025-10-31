@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.pack;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.NormalColony;
+import org.duckdns.hjow.colonization.elements.facilities.Academy;
 import org.duckdns.hjow.colonization.elements.facilities.Arcade;
 import org.duckdns.hjow.colonization.elements.facilities.ArchitectOffice;
 import org.duckdns.hjow.colonization.elements.facilities.BigFactory;
@@ -91,6 +92,7 @@ public final class BundledPack extends DefaultPack {
         facilityClasses.add(SolarStation.class);
         facilityClasses.add(FissionReactorStation.class);
         facilityClasses.add(CargoRailSystem.class);
+        facilityClasses.add(Academy.class);
         
         researchClasses.add(Mathematics.class);
         researchClasses.add(BasicScience.class);

@@ -391,6 +391,10 @@ public abstract class DefaultFacility implements Facility {
     	this.boostRate = boostRate;
     }
     
+    public double getBoostRate() {
+    	return this.boostRate;
+    }
+    
     @Override
     public boolean isMarkedAsRefresh() {
         return fNeedRefresh;
