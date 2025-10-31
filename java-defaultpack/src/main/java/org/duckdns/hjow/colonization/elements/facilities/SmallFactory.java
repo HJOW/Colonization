@@ -9,7 +9,7 @@ public class SmallFactory extends Factory {
     
     @Override
     protected String getDefaultNamePrefix() {
-        return ColonyManager.t("공장");
+        return ColonyManager.t("소형 생산 시설");
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SmallFactory extends Factory {
     }
     
     public static String getFacilityName() {
-        return ColonyManager.t("생산 시설");
+        return ColonyManager.t("소형 생산 시설");
     }
     
     public static String getFacilityTitle() {

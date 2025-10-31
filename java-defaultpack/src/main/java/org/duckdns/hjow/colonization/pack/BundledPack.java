@@ -4,6 +4,7 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.facilities.Arcade;
 import org.duckdns.hjow.colonization.elements.facilities.ArchitectOffice;
+import org.duckdns.hjow.colonization.elements.facilities.BigFactory;
 import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
 import org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem;
 import org.duckdns.hjow.colonization.elements.facilities.FissionReactorStation;
@@ -36,6 +37,8 @@ import org.duckdns.hjow.colonization.elements.research.energy.FissionReactor;
 import org.duckdns.hjow.colonization.elements.research.energy.Laser;
 import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
 import org.duckdns.hjow.colonization.elements.research.energy.Nuclear;
+import org.duckdns.hjow.colonization.elements.research.energy.NuclearFusion;
+import org.duckdns.hjow.colonization.elements.research.energy.Plasma;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
 import org.duckdns.hjow.colonization.elements.research.engineering.BasicEngineering;
 import org.duckdns.hjow.colonization.elements.research.engineering.ComputerTech;
@@ -70,10 +73,13 @@ public final class BundledPack extends DefaultPack {
         colonyClasses.add(NormalColony.class);
         
         facilityClasses.add(ResidenceModule.class);
+        facilityClasses.add(TownHouse.class);
+        facilityClasses.add(SmallApartment.class);
         facilityClasses.add(PowerStation.class);
         facilityClasses.add(Restaurant.class);
         facilityClasses.add(Arcade.class);
         facilityClasses.add(SmallFactory.class);
+        facilityClasses.add(BigFactory.class);
         facilityClasses.add(SmallResearchCenter.class);
         facilityClasses.add(ArchitectOffice.class);
         facilityClasses.add(CapsuleBusStation.class);
@@ -82,8 +88,6 @@ public final class BundledPack extends DefaultPack {
         facilityClasses.add(LaserCannon.class);
         facilityClasses.add(SmallAntenna.class);
         facilityClasses.add(MiniCenter.class);
-        facilityClasses.add(TownHouse.class);
-        facilityClasses.add(SmallApartment.class);
         facilityClasses.add(SolarStation.class);
         facilityClasses.add(FissionReactorStation.class);
         facilityClasses.add(CargoRailSystem.class);
@@ -102,6 +106,7 @@ public final class BundledPack extends DefaultPack {
         researchClasses.add(NewMetals.class);
         researchClasses.add(LightTech.class);
         researchClasses.add(Laser.class);
+        researchClasses.add(Plasma.class);
         researchClasses.add(Chemical.class);
         researchClasses.add(Physics.class);
         researchClasses.add(GeneTech.class);
@@ -110,6 +115,7 @@ public final class BundledPack extends DefaultPack {
         researchClasses.add(Plasteel.class);
         researchClasses.add(Printing3DStructure.class);
         researchClasses.add(ConstructionDrones.class);
+        researchClasses.add(NuclearFusion.class);
         
         stateClasses.add(Influenza.class);
         stateClasses.add(ImmuneInfluenza.class);
