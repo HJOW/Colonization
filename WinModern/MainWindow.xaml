@@ -1,0 +1,88 @@
+﻿<Window x:Class="WinModern.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WinModern"
+        mc:Ignorable="d"
+        Title="Colonization 실행 도우미" Name="mainWindow" Height="600" Width="800" Closed="Window_Closed" Initialized="Window_Initialized">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="10"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition />
+            <RowDefinition Height="10"/>
+        </Grid.RowDefinitions>
+        <TabControl Name="tabMain" Grid.Column="1" Grid.Row="1">
+            <TabItem Header="약관" Name="tabItemAgreement">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <TextBox Name="taAgreements" IsReadOnly="True" Grid.Column="0" Grid.Row="0" FontFamily="/WinModern;component/Resources/#NanumGothicCoding"/>
+                    <Grid Grid.Column="0" Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Button Name="btnAgreeOk" Grid.Column="1" Grid.Row="0" Click="BtnAgreeOk_Click">동의</Button>
+                        <Button Name="btnAgreeCancel" Grid.Column="3" Grid.Row="0" Click="BtnAgreeCancel_Click">거절</Button>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="동작" Name="tabItemMainAction" IsEnabled="False">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <WebBrowser Name="webMain" Grid.Row="0" Grid.Column="0" />
+                    <ProgressBar Name="progMain" Grid.Row="2" Grid.Column="0" Maximum="230"/>
+                    <Grid Grid.Row="4" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Name="lbStatus" Grid.Row="0" Grid.Column="0"></Label>
+                        <Button Name="btnExplore" Grid.Row="0" Grid.Column="1" Click="BtnExplore_Click" Visibility="Hidden">탐색</Button>
+                        <Button Name="btnInst" Grid.Row="0" Grid.Column="3" IsEnabled="False" Click="BtnInst_Click">설치</Button>
+                        <Button Name="btnRun" Grid.Row="0" Grid.Column="5" IsEnabled="False" Click="BtnRun_Click">실행</Button>
+                        <Button Name="btnExit" Grid.Row="0" Grid.Column="7" Click="BtnExit_Click">종료</Button>
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Logs" Name="tabItemLogs" Visibility="Hidden">
+                <TextBox Name="taLogs" IsReadOnly="True" FontFamily="/WinModern;component/Resources/#NanumGothicCoding"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

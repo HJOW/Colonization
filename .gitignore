@@ -3,6 +3,7 @@ swing/target/**
 WinModern/bin/**
 WinModern/obj/**
 WinModern/publish/**
+WinModern/.vs/**
 WinLauncher/bin/**
 WinLauncher/obj/**
 WinLauncher/publish/**
