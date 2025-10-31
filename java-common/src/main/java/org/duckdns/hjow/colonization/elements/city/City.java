@@ -269,6 +269,7 @@ public abstract class City implements ColonyElements {
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { // city should be a self
         int idx;
+        boolean warnNetworkNeeded = false;
         
         // 각종 보너스 정책들
         double powBoostRate   = 1.0;
@@ -329,9 +330,11 @@ public abstract class City implements ColonyElements {
             } else if(consume >= 1 && power >= 1 && power < consume) {
                 efficiencyPow = (int) (power * efficiency100) / consume;
                 power = 0L;
+                ColonyManager.logGlobals(ColonyManager.t("전력 부족으로 [FACILITY] 효율 저하").replace("[FACILITY]", f.getName()), 1);
             } else {
                 efficiencyPow = 0;
                 power = 0L;
+                ColonyManager.logGlobals(ColonyManager.t("전력 부족으로 [FACILITY] 효율 저하").replace("[FACILITY]", f.getName()), 1);
             }
             
             // 직원 부족 시 효율 저하 (절반으로)
@@ -351,6 +354,7 @@ public abstract class City implements ColonyElements {
                 	double lowerRate = 0.8;
                 	if(f instanceof BusinessCenter) lowerRate = 0.25; 
                     efficiencyNetwork = (int) Math.round(efficiencyNetwork * lowerRate);
+                    ColonyManager.logGlobals(ColonyManager.t("네트워크 인프라 부족으로 [FACILITY] 효율 저하").replace("[FACILITY]", f.getName()), 1);
                 } else {
                     networks = networks - 1L;
                 }
@@ -393,6 +397,11 @@ public abstract class City implements ColonyElements {
             
             if(networks <= 0L) {
                 if(ct.getHappy() > 70) ct.setHappy(70); // 네트워크 사용 불가 시 행복도 상한 적용
+                
+                if(! warnNetworkNeeded) {
+                	ColonyManager.logGlobals(ColonyManager.t("네트워크 인프라 부족으로 시민 행복도 저하 중"), 1);
+                	warnNetworkNeeded = true;
+                }
             } else {
                 networks = networks - 1L;
             }
@@ -488,6 +497,7 @@ public abstract class City implements ColonyElements {
         		if(c.getHappy() > 30) c.setHappy(30);
         		if(cycle % 60 == 0) c.addHappy(-1);
         	}
+        	ColonyManager.logGlobals(ColonyManager.t("도시 부도 사태로 시민 행복도 저하 중"), 1);
         }
     }
     

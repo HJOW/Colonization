@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
@@ -760,6 +762,20 @@ public abstract class AbstractColony implements Colony {
         
         try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.CargoRailSystem").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
         city.getFacility().add(fac);
+        
+        Collections.sort(city.getFacility(), new Comparator<Facility>() {
+			@Override
+			public int compare(Facility o1, Facility o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+        
+        Collections.sort(city.getCitizens(), new Comparator<Citizen>() {
+			@Override
+			public int compare(Citizen o1, Citizen o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
     }
     
     /** 이 정착지가 감당 가능한 도시 수를 반환 */
