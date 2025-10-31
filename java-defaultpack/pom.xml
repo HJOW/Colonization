@@ -1,8 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.duckdns.hjow</groupId>
     <artifactId>colonization-java-default</artifactId>
-    <version>0.0.1</version>
     <name>Bundled default packs for Colonozation game</name>
     <licenses>
         <license>
@@ -10,6 +8,12 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
+    <parent>
+        <groupId>org.duckdns.hjow</groupId>
+        <artifactId>colonization-java-group</artifactId>
+        <version>0.0.1</version>
+        <relativePath>../java-mvn/pom.xml</relativePath>
+    </parent>
     <dependencies>
         <dependency>
             <groupId>org.duckdns.hjow</groupId>
