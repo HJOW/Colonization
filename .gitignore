@@ -1,8 +1,8 @@
 java-common/target/**
 swing/target/**
-JavaLauncher/bin/**
-JavaLauncher/obj/**
-JavaLauncher/publish/**
+WinModern/bin/**
+WinModern/obj/**
+WinModern/publish/**
 WinLauncher/bin/**
 WinLauncher/obj/**
 WinLauncher/publish/**
