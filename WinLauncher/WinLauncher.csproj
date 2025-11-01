@@ -103,6 +103,7 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Royale" />
     <Reference Include="System">
       <Private>True</Private>
     </Reference>
@@ -233,6 +234,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\icon256.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Libraries\PresentationFramework.Royale.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
