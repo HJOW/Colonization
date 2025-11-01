@@ -342,7 +342,9 @@ namespace WinModern
                 {
                     btnInst.IsEnabled = false;
                     btnInst.Visibility = Visibility.Hidden;
+                    btnExplore.Visibility = Visibility.Visible;
                     btnRun.IsEnabled = true;
+                    if (pathInstalled == null) pathInstalled = ROOTPATH;
                     statusMsg = "Colonization 실행 준비 완료";
                 }
 

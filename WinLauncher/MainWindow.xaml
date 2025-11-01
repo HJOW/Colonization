@@ -55,14 +55,24 @@
                         <RowDefinition Height="15"/>
                         <RowDefinition Height="5"/>
                         <RowDefinition Height="25"/>
+                        <RowDefinition Height="5"/>
+                        <RowDefinition Height="25"/>
                     </Grid.RowDefinitions>
                     <WebBrowser Name="webMain" Grid.Row="0" Grid.Column="0" />
                     <ProgressBar Name="progMain" Grid.Row="2" Grid.Column="0" Maximum="230"/>
                     <Grid Grid.Row="4" Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label Name="lbStatus" Grid.Row="0" Grid.Column="0"></Label>
+                    </Grid>
+                    <Grid Grid.Row="6" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="60"/>
-                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition/>
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="5"/>
                             <ColumnDefinition Width="60"/>
@@ -72,11 +82,10 @@
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Label Name="lbStatus" Grid.Row="0" Grid.Column="0"></Label>
-                        <Button Name="btnExplore" Grid.Row="0" Grid.Column="1" Click="BtnExplore_Click" Visibility="Hidden">탐색</Button>
-                        <Button Name="btnInst" Grid.Row="0" Grid.Column="3" IsEnabled="False" Click="BtnInst_Click">설치</Button>
-                        <Button Name="btnRun" Grid.Row="0" Grid.Column="5" IsEnabled="False" Click="BtnRun_Click">실행</Button>
-                        <Button Name="btnExit" Grid.Row="0" Grid.Column="7" Click="BtnExit_Click">종료</Button>
+                        <Button Name="btnExplore" Grid.Row="0" Grid.Column="0" Click="BtnExplore_Click" Visibility="Hidden">탐색</Button>
+                        <Button Name="btnInst" Grid.Row="0" Grid.Column="2" IsEnabled="False" Click="BtnInst_Click">설치</Button>
+                        <Button Name="btnRun" Grid.Row="0" Grid.Column="4" IsEnabled="False" Click="BtnRun_Click">실행</Button>
+                        <Button Name="btnExit" Grid.Row="0" Grid.Column="6" Click="BtnExit_Click">종료</Button>
                     </Grid>
                 </Grid>
             </TabItem>
