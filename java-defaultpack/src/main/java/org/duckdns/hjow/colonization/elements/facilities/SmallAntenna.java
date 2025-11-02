@@ -1,14 +1,12 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
-import org.duckdns.hjow.colonization.elements.research.energy.LightTech;
-import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class SmallAntenna extends NetworkFacility {
     private static final long serialVersionUID = -7296133463450746092L;
@@ -114,27 +112,16 @@ public class SmallAntenna extends NetworkFacility {
         return null;
     }
     
+    public static List<ResearchCondition> getResearchCoditions(Colony col) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("EnergyTech", 1));
+    	list.add(new ResearchCondition("LightTech", 1));
+    	list.add(new ResearchCondition("BasicBuildingTech", 1));
+    	return list;
+    }
+    
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
-    public static String isBuildAvail(Colony col, City city) { 
-        boolean cond1 = false;
-        boolean cond2 = false;
-        boolean cond3 = false;
-        List<Research> researches = col.getResearches();
-        for(Research r : researches) {
-            if(r instanceof EnergyTech) {
-                if(r.getLevel() >= 1) cond1 = true;
-            }
-            if(r instanceof LightTech) {
-                if(r.getLevel() >= 1) cond2 = true;
-            }
-            if(r instanceof BasicBuildingTech) {
-                if(r.getLevel() >= 1) cond3 = true;
-            }
-        }
-        
-        if(! cond1) return ColonyManager.t("에너지 연구가 부족합니다.");
-        if(! cond2) return ColonyManager.t("광학 연구가 부족합니다.");
-        if(! cond3) return ColonyManager.t("기초건축학 연구가 부족합니다.");
+    public static String isBuildAvail(Colony col, City city) {
         return null;
     }
 }

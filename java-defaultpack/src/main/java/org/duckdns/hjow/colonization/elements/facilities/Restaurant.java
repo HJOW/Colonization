@@ -15,6 +15,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 public class Restaurant extends DefaultFacility implements ServiceFacility, Storage {
@@ -316,6 +317,11 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     
     public static Object getImage() {
         return null;
+    }
+    
+    public static List<ResearchCondition> getResearchCoditions(Colony col) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	return list;
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

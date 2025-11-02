@@ -1,16 +1,12 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.chemical.NewMetals;
-import org.duckdns.hjow.colonization.elements.research.engineering.BasicBuildingTech;
-import org.duckdns.hjow.colonization.elements.research.engineering.ComputerTech;
-import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionDrones;
-import org.duckdns.hjow.colonization.elements.research.engineering.Printing3DStructure;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class BigFactory extends Factory {
 	private static final long serialVersionUID = -3039009660687368839L;
@@ -86,39 +82,18 @@ public class BigFactory extends Factory {
         return null;
     }
     
+    public static List<ResearchCondition> getResearchCoditions(Colony col) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("BasicBuildingTech", 20));
+    	list.add(new ResearchCondition("ComputerTech", 20));
+    	list.add(new ResearchCondition("NewMetals", 15));
+    	list.add(new ResearchCondition("ConstructionDrones", 2));
+    	list.add(new ResearchCondition("Printing3DStructure", 2));
+    	return list;
+    }
+    
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
-    public static String isBuildAvail(Colony col, City city) { 
-        boolean cond1 = false;
-        boolean cond2 = false;
-        boolean cond3 = false;
-        boolean cond4 = false;
-        boolean cond5 = false;
-        List<Research> researches = col.getResearches();
-        for(Research r : researches) {
-            if(r instanceof BasicBuildingTech) {
-                if(r.getLevel() >= 20) cond1 = true;
-            }
-            if(r instanceof ComputerTech) {
-                if(r.getLevel() >= 20) cond2 = true;
-            }
-            if(r instanceof NewMetals) {
-                if(r.getLevel() >= 15) cond3 = true;
-            }
-            if(r instanceof ConstructionDrones) {
-                if(r.getLevel() >= 2) cond4 = true;
-            }
-            if(r instanceof Printing3DStructure) {
-                if(r.getLevel() >= 2) cond5 = true;
-            }
-        }
-        
-        if(! cond1) return ColonyManager.t("기초건축학 연구가 부족합니다.");
-        if(! cond2) return ColonyManager.t("컴퓨터 기술 연구가 부족합니다.");
-        if(! cond3) return ColonyManager.t("신금속공학 연구가 부족합니다.");
-        if(! cond4) return ColonyManager.t("건설용 드론 기술 연구가 부족합니다.");
-        if(! cond5) return ColonyManager.t("3D 프린팅 건축 연구가 부족합니다.");
-        
-        
+    public static String isBuildAvail(Colony col, City city) {
         return null;
     }
 }

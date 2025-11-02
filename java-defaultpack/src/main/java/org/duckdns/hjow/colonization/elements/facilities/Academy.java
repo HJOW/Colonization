@@ -1,12 +1,12 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class Academy extends School {
 	private static final long serialVersionUID = -5410352140322320308L;
@@ -90,17 +90,14 @@ public class Academy extends School {
         return null;
     }
     
+    public static List<ResearchCondition> getResearchCoditions(Colony col) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("BasicHumanities", 5));
+    	return list;
+    }
+    
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
-    public static String isBuildAvail(Colony col, City city) { 
-        boolean cond1 = false;
-        List<Research> researches = col.getResearches();
-        for(Research r : researches) {
-            if(r instanceof BasicHumanities) {
-                if(r.getLevel() >= 5) cond1 = true;
-            }
-        }
-        
-        if(! cond1) return ColonyManager.t("기초인문학 연구가 부족합니다.");
+    public static String isBuildAvail(Colony col, City city) {
         return null;
     }
 }

@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
@@ -8,10 +9,7 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.research.Research;
-import org.duckdns.hjow.colonization.elements.research.energy.Laser;
-import org.duckdns.hjow.colonization.elements.research.engineering.ConstructionDrones;
-import org.duckdns.hjow.colonization.elements.research.military.MilitaryTech;
+import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 public class LaserCannon extends DefenceFacility implements AttackableObject {
@@ -149,28 +147,16 @@ public class LaserCannon extends DefenceFacility implements AttackableObject {
         return null;
     }
     
+    public static List<ResearchCondition> getResearchCoditions(Colony col) {
+    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+    	list.add(new ResearchCondition("MilitaryTech", 30));
+    	list.add(new ResearchCondition("ConstructionDrones", 2));
+    	list.add(new ResearchCondition("Laser", 1));
+    	return list;
+    }
+    
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
     public static String isBuildAvail(Colony col, City city) {
-        boolean cond1 = false;
-        boolean cond2 = false;
-        boolean cond3 = false;
-        
-        List<Research> researches = col.getResearches();
-        for(Research r : researches) {
-            if(r instanceof MilitaryTech) {
-                if(r.getLevel() >= 30) cond1 = true;
-            }
-            if(r instanceof ConstructionDrones) {
-                if(r.getLevel() >= 2) cond2 = true;
-            }
-            if(r instanceof Laser) {
-                if(r.getLevel() >= 1) cond3 = true;
-            }
-        }
-        
-        if(! cond1) return ColonyManager.t("군사학 연구가 부족합니다.");
-        if(! cond2) return ColonyManager.t("건설용 드론 기술 연구가 부족합니다.");
-        if(! cond3) return ColonyManager.t("레이저 연구가 부족합니다.");
         return null;
     }
 }
