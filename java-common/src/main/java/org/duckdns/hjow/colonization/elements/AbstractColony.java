@@ -210,6 +210,16 @@ public abstract class AbstractColony implements Colony {
         return null;
     }
     
+    /** 모든 도시의 시설 목록 반환 (모든 소속 도시들 다 스캔) */
+    @Override
+    public List<Facility> getFacilities() {
+    	List<Facility> list = new ArrayList<Facility>();
+    	for(City c : getCities()) {
+    		list.addAll(c.getFacility());
+    	}
+    	return list;
+    }
+    
     /** 특정 타입의 시설 목록 반환 (모든 소속 도시들 다 스캔) */
     @Override
     public List<Facility> getFacilities(Class<?> facilityClass) {

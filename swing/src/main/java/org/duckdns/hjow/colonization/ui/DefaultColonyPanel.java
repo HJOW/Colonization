@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -49,6 +50,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     protected transient JTextArea taStatus, taLoans;
     protected transient JPanel toolbar;
     protected transient JButton btnNewCity, btnNewLoan;
+    
+    protected transient List<ResearchPanel> rsPanels = new ArrayList<ResearchPanel>();
     
     protected transient boolean flagEditable = true;
     
@@ -228,6 +231,11 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         }
         pnCities.clear();
         
+        for(ResearchPanel pnRes : rsPanels) {
+        	pnRes.dispose();
+        }
+        rsPanels.clear();
+        
         removeAll();
         superInstance = null;
     }
@@ -295,50 +303,66 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             }
         }
         
-        pnHoldings.removeAll();
-        pnResearches.removeAll();
-        GridBagConstraints gridBagConst;
-        int rowNo = 0;
-        for(Research r : colony.getResearches()) {
-            if(r.getLevel() <= 0 && r.getProgress() <= 0) continue;
+        pnHoldings.removeAll(); // 작업중 영역 비우기 (지금은 사용되지 않음) // TODO
+        
+        // 연구 쪽 새로고침
+        List<Research> researches = colony.getResearches();
+        if(rsPanels.size() != researches.size()) {
+        	for(ResearchPanel pnRes : rsPanels) {
+        		pnRes.dispose();
+        	}
+        	rsPanels.clear();
+        	pnResearches.removeAll();
+        	
+            GridBagConstraints gridBagConst;
+            int rowNo = 0;
             
-            ResearchPanel pnRes = new ResearchPanel(r);
+            for(Research r : colony.getResearches()) {
+                if(r.getLevel() <= 0 && r.getProgress() <= 0) continue;
+                
+                ResearchPanel pnRes = new ResearchPanel(r);
+                rsPanels.add(pnRes);
+                
+                gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = 0;
+                gridBagConst.gridy = rowNo;
+                gridBagConst.gridwidth = 1;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 0.99;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                pnResearches.add(pnRes, gridBagConst);
+                pnRes.refresh(cycle, city, colony);
+                
+                // 우측 스크롤 영역 가리는 문제 대응
+                gridBagConst = new GridBagConstraints();
+                gridBagConst.gridx = 1;
+                gridBagConst.gridy = rowNo; rowNo++;
+                gridBagConst.gridwidth = 1;
+                gridBagConst.gridheight = 1;
+                gridBagConst.weightx = 0.01;
+                gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+                gridBagConst.anchor = GridBagConstraints.NORTH;
+                
+                pnResearches.add(new JPanel(), gridBagConst);
+                rowNo++;
+            }
             
             gridBagConst = new GridBagConstraints();
             gridBagConst.gridx = 0;
-            gridBagConst.gridy = rowNo;
-            gridBagConst.gridwidth = 1;
-            gridBagConst.gridheight = 1;
-            gridBagConst.weightx = 0.99;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
-            gridBagConst.fill = GridBagConstraints.HORIZONTAL;
-            gridBagConst.anchor = GridBagConstraints.NORTH;
-            
-            pnResearches.add(pnRes, gridBagConst);
-            pnRes.refresh(cycle, city, colony);
-            
-            // 우측 스크롤 영역 가리는 문제 대응
-            gridBagConst = new GridBagConstraints();
-            gridBagConst.gridx = 1;
             gridBagConst.gridy = rowNo; rowNo++;
             gridBagConst.gridwidth = 1;
             gridBagConst.gridheight = 1;
-            gridBagConst.weightx = 0.01;
-            gridBagConst.fill = GridBagConstraints.HORIZONTAL;
-            gridBagConst.anchor = GridBagConstraints.NORTH;
-            
+            gridBagConst.weightx = 1.0;
+            gridBagConst.weighty = 1.0;
+            gridBagConst.fill = GridBagConstraints.BOTH;
             pnResearches.add(new JPanel(), gridBagConst);
-            rowNo++;
+        } else {
+        	for(ResearchPanel pnRes : rsPanels) {
+        		pnRes.refresh(cycle, city, colony);
+        	}
         }
-        
-        gridBagConst = new GridBagConstraints();
-        gridBagConst.gridx = 0;
-        gridBagConst.gridy = rowNo; rowNo++;
-        gridBagConst.gridwidth = 1;
-        gridBagConst.gridheight = 1;
-        gridBagConst.weightx = 1.0;
-        gridBagConst.weighty = 1.0;
-        gridBagConst.fill = GridBagConstraints.BOTH;
-        pnResearches.add(new JPanel(), gridBagConst);
         
         refreshAccoutingTable();
         refreshLoanHaveList();
