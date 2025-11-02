@@ -1190,7 +1190,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     public static final int VERSION_MAIN = 0;
     public static final int VERSION_SUB1 = 0;
     public static final int VERSION_SUB2 = 1;
-    public static final int BUILD_NO     = 1;
+    public static final int BUILD_NO     = 2;
     
     /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
     public static final short ATTACKTYPE_NORMAL = 0;
