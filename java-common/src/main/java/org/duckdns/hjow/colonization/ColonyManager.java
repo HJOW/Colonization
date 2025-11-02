@@ -268,6 +268,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 기본함수 선언 스크립트 실행 */
 	protected void evalInitScripts(ScriptEngine engine) throws Exception {
+		engine.put("BUILD_NO", String.valueOf(BUILD_NO));
+		
 		engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
 		engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
 		engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
