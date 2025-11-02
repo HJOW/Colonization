@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -39,6 +40,7 @@ public class ConfigManager implements Disposeable {
     protected JComboBox<String> cbxLookAndFeel;
     protected JTextField tfStringTable, tfModClasses;
     protected JTextArea taPacks;
+    protected JCheckBox chkOldVer;
     
     public ConfigManager(GUIColonyManager superInstance) {
     	this.superInstance = superInstance;
@@ -197,7 +199,7 @@ public class ConfigManager implements Disposeable {
         pn = new JPanel();
         pn.setLayout(new FlowLayout(FlowLayout.LEFT));
         
-        lb = new JLabel(ColonyManager.t("MOD 클래스"));
+        lb = new JLabel(ColonyManager.t("MOD 설정"));
         pn.add(lb);
         
         pnConfigs.add(pn, gridBagConst);
@@ -221,7 +223,28 @@ public class ConfigManager implements Disposeable {
         
         rowNo++;
         
-        // 4. Packs
+        // 4. Y/N 설정들
+        
+        gridBagConst = new GridBagConstraints();
+        gridBagConst.gridx = 0;
+        gridBagConst.gridy = rowNo;
+        gridBagConst.gridwidth = GridBagConstraints.REMAINDER;
+        gridBagConst.gridheight = 1;
+        gridBagConst.weightx = 1.0;  // fill 옵션으로 가로 채우기가 안되면 이 옵션이 필요함.
+        gridBagConst.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConst.anchor = GridBagConstraints.NORTH;
+        
+        pn = new JPanel();
+        pn.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        chkOldVer = new JCheckBox(ColonyManager.t("구버전 세이브 사용"));
+        pn.add(chkOldVer);
+        
+        pnConfigs.add(pn, gridBagConst);
+        
+        rowNo++;
+        
+        // 5. Packs
         
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 0;
@@ -311,6 +334,9 @@ public class ConfigManager implements Disposeable {
     	val = tfModClasses.getText();
     	superInstance.getConfig().set("Mods", val);
     	
+    	// Y/Ns
+    	superInstance.getConfig().set("LoadOldVersion", chkOldVer.isSelected() ? "Y" : "N");
+    	
     	// Packs
     	val = taPacks.getText();
     	try {
@@ -350,6 +376,8 @@ public class ConfigManager implements Disposeable {
     			caused = ex;
     		}
     	}
+    	
+    	chkOldVer.setSelected(superInstance.getConfig().getBool("LoadOldVersion"));
     	
     	taPacks.setText(packClasses);
     	dialog.setVisible(true);

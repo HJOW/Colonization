@@ -75,4 +75,8 @@ public interface Colony extends ColonyElements {
     public void disableChecked();
     /** 인증 유효 여부 반환 */
     public boolean isCheckEnabled();
+    /** 이 정착지를 마지막으로 저장한 ColonyManager 의 버전 반환 */
+    public String getClientVersion();
+    /** 이 정착지를 마지막으로 저장한 ColonyManager 의 빌드 번호 반환 */
+    public long getClientBuildNo();
 }

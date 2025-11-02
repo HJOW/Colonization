@@ -186,8 +186,15 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 이 정착지를 마지막으로 저장한 ColonyManager 의 버전 반환 */
+    @Override
     public String getClientVersion() {
         return clientVersion;
+    }
+    
+    /** 이 정착지를 마지막으로 저장한 ColonyManager 의 빌드 번호 반환 */
+    @Override
+    public long getClientBuildNo() {
+    	return new Long(clientBuildNo);
     }
 
     /** 이 정착지 내 도시들 반환 */
@@ -251,6 +258,22 @@ public abstract class AbstractColony implements Colony {
     public void resetResearches() {
         researches.clear();
         researches.addAll(ResearchManager.initList(this));
+    }
+    
+    /** 누락된 연구 추가 */
+    protected void addOmittedResearches() {
+    	List<Research> allZeros = ResearchManager.initList(this);
+    	List<Research> nows = researches;
+    	
+    	for(Research r : allZeros) {
+    		boolean exists = false;
+    		for(Research rc : nows) {
+    			if(rc.getClassName().equals(r.getClassName())) { exists = true; break; }
+    		}
+    		if(! exists) {
+    			researches.add(r);
+    		}
+    	}
     }
     
     /** 총 인구 수 구하기 */
@@ -564,61 +587,22 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public int cycleGap(Colony colony) { return 1; }
+    
+    
 
     @Override
     public void oneCycle(final int cycle, City city, Colony colony, int efficiency100, final ColonyPanel colPanel) { // city may be null
         int idx;
         colony = this;
         
-        // 체력이 없는 도시 삭제
-        idx = 0;
-        while(idx < getCities().size()) {
-            City cityOne = getCities().get(idx);
-            if(cityOne.getHp() <= 0) {
-                cityOne.dispose();
-                getCities().remove(idx);
-                ColonyManager.logGlobals(ColonyManager.t("도시 [CITY] 파괴됨").replace("[CITY]", cityOne.getName()), 1);
-                continue;
-            }
-            idx++;
-        }
-        
-        // 체력이 없는 적 삭제
-        idx = 0;
-        while(idx < getEnemies().size()) {
-            Enemy en = getEnemies().get(idx);
-            if(en.getHp() <= 0) {
-                en.dispose();
-                getEnemies().remove(idx);
-                ColonyManager.logGlobals(ColonyManager.t("적 [ENEMY] 파괴됨").replace("[ENEMY]", en.getName()), 1);
-                continue;
-            }
-            idx++;
-        }
-        
-        // 잔액이 없는 대출 삭제
-        idx = 0;
-        while(idx < getLoanHave().size()) {
-            Loan en = getLoanHave().get(idx);
-            if(en.getAmount() <= 0) {
-                en.dispose();
-                getLoanHave().remove(idx);
-                ColonyManager.logGlobals(ColonyManager.t("대출 [LOAN] 상환됨").replace("[LOAN]", en.getName()), 1);
-                continue;
-            }
-            idx++;
-        }
+        /** 체력이 없는 객체 삭제 */
+        removeDeadObjects();
         
         // 대출 사이클 처리
-        for(Loan l : getLoanHave()) {
-            if(cycle % l.cycleGap(colony) == 0) l.oneCycle(cycle, city, colony, efficiency100, colPanel);
-        }
+        processLoans(cycle, colPanel);
         
-        // 1년 지날 때마다, 사용 가능한 대출 목록 갱신
-        if(cycle % 60 * 24 * 30 * 12 == 0) {
-            resetAvailLoans();
-            ColonyManager.logGlobals(ColonyManager.t("사용 가능한 대출 목록이 변경됨"), 1);
-        }
+        // 누락 연구 추가
+        if(cycle == 0 || cycle % 600 == 0) addOmittedResearches();
         
         // 도시별 사이클 처리 (멀티쓰레드 처리)
         actionsOnCycle.clear();
@@ -683,6 +667,63 @@ public abstract class AbstractColony implements Colony {
         
         // 시간 지남
         time = time.add(BigInteger.ONE);
+    }
+    
+    /** 체력이 없는 객체 삭제 */
+    protected void removeDeadObjects() {
+    	int idx;
+    	
+    	// 체력이 없는 도시 삭제
+        idx = 0;
+        while(idx < getCities().size()) {
+            City cityOne = getCities().get(idx);
+            if(cityOne.getHp() <= 0) {
+                cityOne.dispose();
+                getCities().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("도시 [CITY] 파괴됨").replace("[CITY]", cityOne.getName()), 1);
+                continue;
+            }
+            idx++;
+        }
+        
+        // 체력이 없는 적 삭제
+        idx = 0;
+        while(idx < getEnemies().size()) {
+            Enemy en = getEnemies().get(idx);
+            if(en.getHp() <= 0) {
+                en.dispose();
+                getEnemies().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("적 [ENEMY] 파괴됨").replace("[ENEMY]", en.getName()), 1);
+                continue;
+            }
+            idx++;
+        }
+        
+        // 잔액이 없는 대출 삭제
+        idx = 0;
+        while(idx < getLoanHave().size()) {
+            Loan en = getLoanHave().get(idx);
+            if(en.getAmount() <= 0) {
+                en.dispose();
+                getLoanHave().remove(idx);
+                ColonyManager.logGlobals(ColonyManager.t("대출 [LOAN] 상환됨").replace("[LOAN]", en.getName()), 1);
+                continue;
+            }
+            idx++;
+        }
+    }
+    
+    /** 대출 사이클 처리 */
+    protected void processLoans(int cycle, ColonyPanel colPanel) {
+    	for(Loan l : getLoanHave()) {
+            if(cycle % l.cycleGap(this) == 0) l.oneCycle(cycle, null, this, 100, colPanel);
+        }
+    	
+    	// 1년 지날 때마다, 사용 가능한 대출 목록 갱신
+        if(cycle % 60 * 24 * 30 * 12 == 0) {
+            resetAvailLoans();
+            ColonyManager.logGlobals(ColonyManager.t("사용 가능한 대출 목록이 변경됨"), 1);
+        }
     }
     
     /** 예약 작업 처리 */

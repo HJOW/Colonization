@@ -309,10 +309,21 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         try { 
             Colony c = ColonyClassLoader.loadColony(f);
             exists = false;
+            
+            // 이미 불러왔는지 확인
             for(Colony cx : colonies) { if(c.getName().equals(cx.getName())) exists = true; break; }
             if(exists) return;
             
+            // 기본 파일명 세팅
             if(c instanceof AbstractColony) ((AbstractColony) c).setOriginalFileName(f.getName());
+            
+            // 버전 체크
+            long buildNo = c.getClientBuildNo();
+            if(BUILD_NO != buildNo) {
+            	if(! getConfig().getBool("LoadOldVersion")) return;
+            }
+            
+            // 추가
             colonies.add(c); 
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); if(alert) alert("오류 : " + ex.getMessage()); }
     }
