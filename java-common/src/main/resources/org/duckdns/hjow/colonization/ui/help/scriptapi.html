@@ -24,7 +24,10 @@ function myFunction(p1, p2) { // 함수 선언
     return p1 + p2; // p1, p2 값을 더해 반환
 }
 
-alert(myFunction(a, 10)); // 화면에, myFunction 함수의 결과값을 출력
+var b = myFunction(a, 10); // myFunction 함수 호출, 결과값을 b 변수에 할당
+
+alert(b); // b 의 값을 메시지 박스 (새 창으로 나타남) 로 출력
+println(a); // a 의 값을 하단 로그 박스에 출력
         </pre>
         <p>
             웹과 node.js 에서 제공하는 기본 함수들이 지원되지 않습니다.<br/>
@@ -266,8 +269,12 @@ alert(myFunction(a, 10)); // 화면에, myFunction 함수의 결과값을 출력
             p1 컴포넌트를 스크롤 영역으로 감쌉니다. Java Swing 의 JScrollPane 에 대응합니다.
         </p>
         <p>
+            <b>println(p1)</b><br/>
+            p1 문자열을 메시지로 출력합니다. 화면 하단 로그 박스에 출력됩니다.
+        </p>
+        <p>
             <b>alert(p1)</b><br/>
-            p1 문자열을 메시지로 출력합니다.
+            p1 문자열을 메시지로 출력합니다. 새 창으로 메시지 박스가 나타나 출력됩니다.
         </p>
         <p>
             <b>askInput(p1)</b><br/>

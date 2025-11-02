@@ -25,6 +25,7 @@ import javax.swing.JTable;
 import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.commons.data.Binary;
 import org.duckdns.hjow.commons.script.ScriptObject;
 import org.duckdns.hjow.commons.ui.ClassicWebPane;
@@ -84,6 +85,9 @@ public class UIObject extends ScriptObject {
         initScript = initScript.append("};                                                                                   ").append("\n");
         initScript = initScript.append("function ui_scroll(a) {                                                              ").append("\n");
         initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".wrapScrollPane(a);              ").append("\n");
+        initScript = initScript.append("};                                                                                   ").append("\n");
+        initScript = initScript.append("function println(a) {                                                                ").append("\n");
+        initScript = initScript.append("    " + getPrefixName() + "_" + accessKey + ".println(a);                            ").append("\n");
         initScript = initScript.append("};                                                                                   ").append("\n");
         initScript = initScript.append("function alert(a) {                                                                  ").append("\n");
         initScript = initScript.append("    " + getPrefixName() + "_" + accessKey + ".alert(a);                              ").append("\n");
@@ -213,6 +217,9 @@ public class UIObject extends ScriptObject {
     }
     public Object wrapScrollPane(Object component) {
         return new JScrollPane((Component) component);
+    }
+    public void println(Object msg) {
+    	ColonyManager.logGlobals(String.valueOf(msg), 2);
     }
     public void alert(Object msg) {
         JOptionPane.showMessageDialog(frame, String.valueOf(msg));
