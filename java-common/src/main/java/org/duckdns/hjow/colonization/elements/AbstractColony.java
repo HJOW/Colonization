@@ -65,6 +65,7 @@ public abstract class AbstractColony implements Colony {
     protected transient boolean checked = false;
     
     protected transient String clientVersion = ColonyManager.getVersionString();
+    protected transient String clientBuildNo = String.valueOf(ColonyManager.BUILD_NO);
     
     protected transient Vector<SingleAction> actionsOnCycle = new Vector<SingleAction>();
     protected transient SimultaneousWork workOnCycle;
@@ -874,6 +875,7 @@ public abstract class AbstractColony implements Colony {
         json.put("time", getTime().toString());
         json.put("credit", new Integer(getCredit()));
         json.put("version", getClientVersion());
+        json.put("buildNo", clientBuildNo);
         if(getMoneyOvers() != null) json.put("money2", getMoneyOvers().toString());
         
         JsonArray list = new JsonArray();
@@ -941,7 +943,8 @@ public abstract class AbstractColony implements Colony {
             	moneyOvers = new BigInteger(json.get("money2").toString());
             }
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); moneyOvers = BigInteger.ZERO;             }
-        try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.0.0"; }
+        try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.1"; } 
+        try { clientBuildNo = json.get("buildNo").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientBuildNo = "1"; } 
         
         JsonArray list = null;
         try { list = (JsonArray) json.get("cities"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
@@ -1072,6 +1075,8 @@ public abstract class AbstractColony implements Colony {
     public BigInteger getCheckerValue() {
     	BigInteger res = new BigInteger(String.valueOf(getKey()));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
+        for(int idx=0; idx<clientVersion.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientVersion.charAt(idx)))); }
+        for(int idx=0; idx<clientBuildNo.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientBuildNo.charAt(idx))).multiply(Constants.BIGINTEGER_31)); }
         res = res.add(getMoneyTotals()).multiply(Constants.BIGINTEGER_23);
         res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
         res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17));
