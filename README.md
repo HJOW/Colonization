@@ -4,10 +4,16 @@ GUI 요소들로 간단히 만드는 우주시대 정착지 개척 시뮬레이�
 
 # 실행
 Swing 빌드를 데스크톱 PC에서 실행해 플레이할 수 있습니다.    
-Windows 의 경우 WinLauncher 를 이용해 플레이가 가능합니다.
+Windows 의 경우 WinLauncher 를 이용해 플레이가 가능합니다.    
+자세한 사항은 다음 링크를 참고해 주세요.    
+    
+https://github.com/HJOW/Colonization/releases/tag/WinLauncher_20251102    
     
 기타 플랫폼의 경우    
-Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 별도 설치가 필요합니다.
+Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 별도 설치가 필요합니다.    
+자세한 사항은 다음 링크를 참고해 주세요.    
+    
+https://github.com/HJOW/Colonization/releases/tag/Swing_20251102    
 
 # 빌드
 ## colonization-java-group (java-mvn)
