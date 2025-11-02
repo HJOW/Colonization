@@ -656,6 +656,7 @@ public class GUIColonyManager extends ColonyManager {
                 flagDebugMode = ((JCheckBoxMenuItem)e.getSource()).isSelected();
                 lbRunningTime.setVisible(isDebugModeEnabled());
                 
+                if(configManager != null) configManager.setDebugMode(flagDebugMode);
                 if(dialogGlobalLog != null) {
                     if(flagDebugMode) dialogGlobalLog.setDetailLevel(1);
                     else              dialogGlobalLog.setDetailLevel(2);

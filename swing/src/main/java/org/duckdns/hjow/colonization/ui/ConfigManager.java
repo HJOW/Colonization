@@ -217,6 +217,7 @@ public class ConfigManager implements Disposeable {
         pn.setLayout(new BorderLayout());
         
         tfModClasses = new JTextField();
+        tfModClasses.setEditable(false);
         pn.add(tfModClasses, BorderLayout.CENTER);
         
         pnConfigs.add(pn, gridBagConst);
@@ -388,6 +389,11 @@ public class ConfigManager implements Disposeable {
     /** 설정 창 닫기 */
     public void close() {
     	dialog.setVisible(false);
+    }
+    
+    /** 디버그 모드 관련 */
+    protected void setDebugMode(boolean enabled) {
+    	tfModClasses.setEditable(enabled);
     }
 
 	@Override
