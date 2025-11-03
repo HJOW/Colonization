@@ -116,5 +116,5 @@ public abstract class TransportStation extends DefaultFacility {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

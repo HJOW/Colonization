@@ -160,5 +160,5 @@ public class LaserCannon extends DefenceFacility implements AttackableObject {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

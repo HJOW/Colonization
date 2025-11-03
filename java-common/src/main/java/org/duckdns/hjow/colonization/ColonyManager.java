@@ -66,6 +66,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     protected transient volatile boolean flagSaveBeforeClose = true; // 종료 시 저장 플래그
     protected transient volatile boolean flagAlreadyDisposed = false;
+    protected transient volatile boolean flagUseCheckDisablingContent = false; // 인증 해제 요인이 되는 컨텐츠 사용 여부
     
     protected transient BigInteger time;
     
@@ -242,6 +243,11 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         	}
         	BufferedFileStringTable stringTable = new BufferedFileStringTable(fileStringTable);
         	STRINGTABLE.setOriginalInstance(stringTable);
+        	
+        	// 인증 해제 요인이 되는 요소들 사용 여부
+        	String strUseChkDis = configs.getString("UseCheckDisablingContent");
+        	if(DataUtil.isEmpty(strUseChkDis)) { strUseChkDis = "N"; configs.set("UseCheckDisablingContent", strUseChkDis); }
+        	flagUseCheckDisablingContent = DataUtil.parseBoolean(strUseChkDis);
             
             // 설정들 중 클래스 관련 설정 적용, Pack 불러오기
             ColonyClassLoader.clearAll();
@@ -473,6 +479,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	for(Class<?> classes : ColonyClassLoader.getModClasses()) {
     		try {
                 Mod m = (Mod) classes.newInstance();
+                if((! m.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
+                
                 if(! modsList.contains(m)) modsList.add(m);
     		} catch(Exception ex) {
             	GlobalLogs.processExceptionOccured(ex, false);
@@ -486,6 +494,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
                 Library instances = (Library) libClass.newInstance();
                 List<Mod> mods = instances.getMods();
                 for(Mod m : mods) {
+                	if((! m.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
                     if(! modsList.contains(m)) modsList.add(m);
                 }
     		} catch(ClassNotFoundException ignores) {
@@ -542,6 +551,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         		mod.injectScriptEngine(engine);
         		mod.check();
         		
+        		if((! mod.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
+        		
         		// MOD 등록
         		if(! modsList.contains(mod)) modsList.add(mod);
         		
@@ -586,6 +597,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     		
     		Class<?> modClass = Class.forName(modClassName);
 			Mod mod = (Mod) modClass.newInstance();
+			if((! mod.isReadOnly()) && (! flagUseCheckDisablingContent)) return;
+			
 		    if(! modsList.contains(mod)) modsList.add(mod);
     		
     		if(saveConfig) {
@@ -902,6 +915,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     public long getCycleGapEachCity()     { return cycleGapEachCity;     }
     public long getCycleGapEachFacility() { return cycleGapEachFacility; }
+    public boolean isUsingCheckDisablingContent() { return flagUseCheckDisablingContent; }
     
     /** 프로그램 종료 */
     public void exit() {

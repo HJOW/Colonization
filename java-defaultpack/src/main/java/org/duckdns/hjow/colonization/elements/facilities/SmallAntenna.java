@@ -125,5 +125,5 @@ public class SmallAntenna extends NetworkFacility {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

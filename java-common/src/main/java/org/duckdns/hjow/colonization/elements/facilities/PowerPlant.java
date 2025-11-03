@@ -134,5 +134,5 @@ public abstract class PowerPlant extends DefaultFacility {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

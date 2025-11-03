@@ -40,7 +40,7 @@ public class ConfigManager implements Disposeable {
     protected JComboBox<String> cbxLookAndFeel;
     protected JTextField tfStringTable, tfModClasses;
     protected JTextArea taPacks;
-    protected JCheckBox chkOldVer;
+    protected JCheckBox chkOldVer, chkUseDis;
     
     public ConfigManager(GUIColonyManager superInstance) {
     	this.superInstance = superInstance;
@@ -241,6 +241,9 @@ public class ConfigManager implements Disposeable {
         chkOldVer = new JCheckBox(ColonyManager.t("구버전 세이브 사용"));
         pn.add(chkOldVer);
         
+        chkUseDis = new JCheckBox(ColonyManager.t("인증 해제 원인요소 사용"));
+        pn.add(chkUseDis);
+        
         pnConfigs.add(pn, gridBagConst);
         
         rowNo++;
@@ -336,7 +339,8 @@ public class ConfigManager implements Disposeable {
     	superInstance.getConfig().set("Mods", val);
     	
     	// Y/Ns
-    	superInstance.getConfig().set("LoadOldVersion", chkOldVer.isSelected() ? "Y" : "N");
+    	superInstance.getConfig().set("LoadOldVersion"          , chkOldVer.isSelected() ? "Y" : "N");
+    	superInstance.getConfig().set("UseCheckDisablingContent", chkUseDis.isSelected() ? "Y" : "N");
     	
     	// Packs
     	val = taPacks.getText();
@@ -379,6 +383,7 @@ public class ConfigManager implements Disposeable {
     	}
     	
     	chkOldVer.setSelected(superInstance.getConfig().getBool("LoadOldVersion"));
+    	chkUseDis.setSelected(superInstance.getConfig().getBool("UseCheckDisablingContent"));
     	
     	taPacks.setText(packClasses);
     	dialog.setVisible(true);

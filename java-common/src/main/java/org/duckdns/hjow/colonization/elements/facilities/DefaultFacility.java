@@ -468,7 +468,7 @@ public abstract class DefaultFacility implements Facility {
     	return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
     
     public static final int FACILITY_UNIQUE_GRADE_NONE   =   0; // 고유하지 않은, 예산과 공간만 있으면 얼마든지 지을 수 있는 시설
     public static final int FACILITY_UNIQUE_GRADE_CITY   =  10; // 도시 당 하나만 건설이 가능한 시설

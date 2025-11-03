@@ -96,5 +96,5 @@ public class SolarStation extends PowerPlant {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

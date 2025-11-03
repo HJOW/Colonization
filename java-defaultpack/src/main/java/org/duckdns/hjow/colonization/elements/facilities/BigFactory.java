@@ -97,5 +97,5 @@ public class BigFactory extends Factory {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

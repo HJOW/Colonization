@@ -95,5 +95,5 @@ public class MiniCenter extends BusinessCenter {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

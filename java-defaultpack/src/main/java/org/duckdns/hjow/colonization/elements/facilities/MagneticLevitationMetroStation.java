@@ -92,5 +92,5 @@ public class MagneticLevitationMetroStation extends TransportStation {
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

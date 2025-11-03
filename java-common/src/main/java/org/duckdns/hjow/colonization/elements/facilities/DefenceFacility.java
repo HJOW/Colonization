@@ -187,5 +187,5 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
         return null;
     }
     
-    protected static boolean isScriptBasedFacility() { return false; }
+    public static boolean isScriptBasedFacility() { return false; }
 }

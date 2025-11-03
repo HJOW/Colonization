@@ -92,6 +92,6 @@ public interface Facility extends ColonyElements {
      *    public static Object getImage()
      *    public static List<ResearchCondition> getResearchCoditions(Colony col)
      *    public static String isBuildAvail(Colony col, City city)
-     *    protected static boolean isScriptBasedFacility()
+     *    public static boolean isScriptBasedFacility()
      */
 }

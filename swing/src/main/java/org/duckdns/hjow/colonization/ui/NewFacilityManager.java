@@ -149,6 +149,8 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         FacilityInformation beforeSelected = (FacilityInformation) cbxFacInfos.getSelectedItem();
         cbxFacInfos.removeAllItems();
         
+        boolean useCheckDisables = colonyManager.isUsingCheckDisablingContent();
+        
         Colony col = null; 
         if(city != null && colonyManager != null) col = city.getColony(colonyManager);
 
@@ -157,6 +159,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
             lists.addAll(FacilityManager.getFacilityInformations());
             for(FacilityInformation info : lists) {
                 if(! detectBuildAvail(col, info)) continue;
+                if((! useCheckDisables) && info.isScriptBasedFacility()) continue;
                 cbxFacInfos.addItem(info);
             }
         }
