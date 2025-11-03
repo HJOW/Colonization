@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -17,6 +18,7 @@ import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
 
 public abstract class DefaultFacility implements Facility {
@@ -410,6 +412,19 @@ public abstract class DefaultFacility implements Facility {
     public void markAsRefreshChildren(boolean f) {
         markAsRefresh(f);
         for(State s : getStates()) { s.markAsRefreshChildren(f); }
+    }
+    
+    @Override
+    public final boolean isScriptBased() {
+    	try {
+    	    Class<? extends Facility> classThis = getClass();
+    	    Method mthd = classThis.getMethod("isScriptBasedFacility");
+    	    return DataUtil.parseBoolean(String.valueOf(mthd.invoke(null)));
+    	} catch(NoSuchMethodException ex) {
+    		return true; // 알 수 없는 경우 true 로 취급 - 인증 해제됨
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
     }
     
     public static String getFacilityName() {

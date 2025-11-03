@@ -309,6 +309,10 @@ public abstract class City implements ColonyElements {
             int efficiency = efficiency100;
             double boostRate = 1.0;
             
+            // 스크립트 기반 시설이면 정착지 인증 해제
+            if(f.isScriptBased()) colony.disableChecked();
+            
+            // 정책 스캔해서 부스트 보너스 계산
             for(Policy p : policies) {
             	if(! p.isEnabled()) continue;
             	if(! p.isAvail(colony, city)) {
