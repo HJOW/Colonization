@@ -6,7 +6,7 @@ GUI 요소들로 간단히 만드는 우주시대 정착지 개척 시뮬레이�
 Swing 빌드 (기본)를 데스크톱 PC에서 실행해 플레이할 수 있습니다.    
 Windows 의 경우 WinLauncher 를 이용해 플레이가 가능합니다.
 실행 시, 필요한 경우 JRE를 다운로드 받아 설치하며, (설치 버튼 클릭 필요, 인터넷 필요.)
-마찬가지로, 게임 (Swing 빌드) 을 최신 버전으로 다운로드 받아 실행합니다.     
+JRE 확인 이후 게임 (Swing 빌드) 을 최신 버전으로 다운로드 받아 실행합니다.     
 자세한 사항은 다음 링크를 참고해 주세요.    
     
 https://github.com/HJOW/Colonization/releases/tag/WinLauncher_20251102    
