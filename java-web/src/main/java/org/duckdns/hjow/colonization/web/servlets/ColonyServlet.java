@@ -215,7 +215,9 @@ public class ColonyServlet extends CommonServlet {
         
         responses.put("success", new Boolean(true));
         responses.put("message", "");
-        responses.put("detail", col.toJson(true, col, null));
+        
+        String strRefresh = getParameter(req, "refresh");
+        if(DataUtil.isNotEmpty(strRefresh) && DataUtil.parseBoolean(strRefresh)) responses.put("detail", col.toJson(true, col, null));
 	}
 	
 	protected void serviceRename(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
