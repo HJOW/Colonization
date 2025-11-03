@@ -1089,7 +1089,6 @@ public class GUIColonyManager extends ColonyManager {
     
     @Override
     public void log(String msg) {
-        System.out.println(msg);
         GlobalLogs.log(msg);
     }
 

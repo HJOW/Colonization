@@ -14,7 +14,9 @@ import org.duckdns.hjow.commons.util.DataUtil;
 public class Colonization extends ConsoleColonization implements GUIColonizationMainClass {
     private static final Colonization INSTANCES = new Colonization();
     public static void main(String[] args) {
+    	GlobalLogs.tryingToInitLog4j();
     	Constants.prepare();
+    	
     	// Core.loadCore("col", "colonization", ColonyManager.getVersionString(), args);
     	
         Map<String, String> argMap = ClassUtil.convertAppParams(args);

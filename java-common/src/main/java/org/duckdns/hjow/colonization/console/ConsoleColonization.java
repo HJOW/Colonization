@@ -5,12 +5,15 @@ import java.util.Map;
 
 import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.commons.util.ClassUtil;
 
 /** 콘솔 모드로 Colonization 실행 */
 public class ConsoleColonization implements ColonizationMainClass {
     private static final ConsoleColonization INSTANCES = new ConsoleColonization();
     public static void main(String[] args) {
+    	GlobalLogs.tryingToInitLog4j();
+    	
         Map<String, String> argMap = ClassUtil.convertAppParams(args);
         INSTANCES.prepare(argMap);
         INSTANCES.run();
