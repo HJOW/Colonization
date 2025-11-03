@@ -13,6 +13,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 시설 정보 */
 public class FacilityInformation implements Serializable {
@@ -23,6 +24,7 @@ public class FacilityInformation implements Serializable {
     protected Long tech  = new Long(0L);
     protected int buildingCycle = 1200;
     protected int uniqueGrade = DefaultFacility.FACILITY_UNIQUE_GRADE_NONE;
+    protected boolean scriptBasedFacility = false;
     protected Class<?> facilityClass;
     public FacilityInformation() {}
     public FacilityInformation(Class<?> facilityClass) {
@@ -50,6 +52,9 @@ public class FacilityInformation implements Serializable {
             method = facilityClass.getMethod("getUniqueFacilityGrade");
             setUniqueGrade((Integer) method.invoke(null));
             
+            method = facilityClass.getMethod("isScriptBasedFacility");
+            setScriptBasedFacility(DataUtil.parseBoolean( String.valueOf( method.invoke(null) )));
+            
             method = facilityClass.getMethod("getImage");
             Object obj = method.invoke(null);
             if(obj != null) setImage(obj);
@@ -68,6 +73,8 @@ public class FacilityInformation implements Serializable {
     	json.put("class", getFacilityClass().getName());
     	json.put("price", String.valueOf(getPrice()));
     	json.put("buildingCycle", new Integer(getBuildingCycle()));
+    	json.put("uniqueGrade", new Integer(getUniqueGrade()));
+    	json.put("scriptBasedFacility", new Boolean(isScriptBasedFacility()));
     	json.put("tech", String.valueOf(getTech()));
     	json.put("imagehex", "");
     	if(getImage() != null) {
@@ -124,7 +131,13 @@ public class FacilityInformation implements Serializable {
     public void setImage(Object image) {
         this.image = image;
     }
-    @Override
+    public boolean isScriptBasedFacility() {
+		return scriptBasedFacility;
+	}
+	public void setScriptBasedFacility(boolean scriptBasedFacility) {
+		this.scriptBasedFacility = scriptBasedFacility;
+	}
+	@Override
     public String toString() {
         return getTitle();
     }
