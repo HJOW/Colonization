@@ -62,6 +62,9 @@ public class FacilityManager {
         for(FacilityInformation info : facilities) {
             if(info.getFacilityClass().getSimpleName().equals(name)) return info;
         }
+        for(FacilityInformation info : ColonyClassLoader.getScriptFacilityList()) {
+        	if(info.getName().equals(name)) return info;
+        }
         return null;
     }
     

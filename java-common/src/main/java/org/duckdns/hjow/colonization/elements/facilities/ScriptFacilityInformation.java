@@ -7,6 +7,8 @@ import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.facilities.script.ScriptFacility;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -37,6 +39,13 @@ public class ScriptFacilityInformation extends FacilityInformation implements Di
     		getTech();
     	} catch(RuntimeException tx) { throw tx;
         } catch(Throwable        tx) { throw new RuntimeException(tx.getMessage(), tx); }
+    }
+    
+    /** 시설 객체 생성 */
+    @Override
+    public Facility createFacility() {
+    	Facility fac = new ScriptFacility(this, engine);
+    	return fac;
     }
     
     @Override

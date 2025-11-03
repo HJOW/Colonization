@@ -153,6 +153,66 @@ public class ColonyClassLoader {
         return facilityClassList;
     }
     
+    private static final List<ScriptFacilityInformation> scriptFacilityInfo = new Vector<ScriptFacilityInformation>();
+    /** 스크립트 Facility 불러오기 */
+	protected static void loadScriptFacilities(ColonyManagerConfig cfg, ColonyManager man) {
+		// 스크립트 Facility 사용 시 인증이 해제되므로, 설정 먼저 검사
+		if(cfg.containsKey("UseCheckDisablingContent") && cfg.getBool("UseCheckDisablingContent")) {
+			// 디렉토리 검사
+			File scriptRoot = man.getColonyScriptRootDirectory();
+			if(! scriptRoot.exists()) scriptRoot.mkdirs();
+			
+			File facRoot = new File(scriptRoot.getAbsolutePath() + File.separator + "facilities");
+			if(! facRoot.exists()) facRoot.mkdirs();
+			
+			// 디렉토리 내 파일 스캔
+			File[] lists = facRoot.listFiles(new FileFilter() {	
+				@Override
+				public boolean accept(File pathname) {
+					if(pathname.isDirectory()) return false;
+					return pathname.getName().toLowerCase().endsWith(".js"); // js 파일만 스캔
+				}
+			});
+			
+			for(File f : lists) {
+				try {
+					// 스크립트 읽기
+					String scripts = FileUtil.readString(f, "UTF-8");
+					
+					// 엔진 준비
+					ScriptEngine engine = man.newScriptEngine();
+					
+					// 리플렉션 존재여부 체크
+	        		ScriptPatternDetector detector = new ScriptPatternDetector();
+	        		detector.checkReflection(scripts);
+					
+	        		// 등록
+					ScriptFacilityInformation infoOne = new ScriptFacilityInformation(engine, scripts);
+					if(! scriptFacilityInfo.contains(infoOne)) scriptFacilityInfo.add(infoOne);
+				} catch(Throwable tx) {
+					GlobalLogs.processExceptionOccured(tx, false);
+				}
+			}
+		} else {
+			scriptFacilityInfo.clear();
+		}
+	}
+	
+	/** 스크립트 Facility 리스트 반환 */
+	public static List<ScriptFacilityInformation> getScriptFacilityList() {
+		List<ScriptFacilityInformation> newList = new ArrayList<ScriptFacilityInformation>();
+		newList.addAll(scriptFacilityInfo);
+		return newList;
+	}
+	
+	/** 해당 이름의 스크립트 Facility 반환 */
+	public static ScriptFacilityInformation getScriptFacilityOne(String name) {
+		for(ScriptFacilityInformation s : getScriptFacilityList()) {
+			if(s.getName().equals(name)) return s;
+		}
+		return null;
+	}
+    
     private static final List<Class<?>> researchClassList     = new Vector<Class<?>>();
     private static       boolean        researchClassListFlag = false;
     
@@ -242,58 +302,6 @@ public class ColonyClassLoader {
     	}
     	return null;
     }
-    
-    private static final List<ScriptFacilityInformation> scriptFacilityInfo = new Vector<ScriptFacilityInformation>();
-    /** 스크립트 Facility 불러오기 */
-	protected static void loadScriptFacilities(ColonyManagerConfig cfg, ColonyManager man) {
-		// 스크립트 Facility 사용 시 인증이 해제되므로, 설정 먼저 검사
-		if(cfg.containsKey("UseCheckDisablingContent") && cfg.getBool("UseCheckDisablingContent")) {
-			// 디렉토리 검사
-			File scriptRoot = man.getColonyScriptRootDirectory();
-			if(! scriptRoot.exists()) scriptRoot.mkdirs();
-			
-			File facRoot = new File(scriptRoot.getAbsolutePath() + File.separator + "facilities");
-			if(! facRoot.exists()) facRoot.mkdirs();
-			
-			// 디렉토리 내 파일 스캔
-			File[] lists = facRoot.listFiles(new FileFilter() {	
-				@Override
-				public boolean accept(File pathname) {
-					if(pathname.isDirectory()) return false;
-					return pathname.getName().toLowerCase().endsWith(".js"); // js 파일만 스캔
-				}
-			});
-			
-			for(File f : lists) {
-				try {
-					// 스크립트 읽기
-					String scripts = FileUtil.readString(f, "UTF-8");
-					
-					// 엔진 준비
-					ScriptEngine engine = man.newScriptEngine();
-					
-					// 리플렉션 존재여부 체크
-	        		ScriptPatternDetector detector = new ScriptPatternDetector();
-	        		detector.checkReflection(scripts);
-					
-	        		// 등록
-					ScriptFacilityInformation infoOne = new ScriptFacilityInformation(engine, scripts);
-					if(! scriptFacilityInfo.contains(infoOne)) scriptFacilityInfo.add(infoOne);
-				} catch(Throwable tx) {
-					GlobalLogs.processExceptionOccured(tx, false);
-				}
-			}
-		} else {
-			scriptFacilityInfo.clear();
-		}
-	}
-	
-	/** 스크립트 Facility 리스트 반환 */
-	public static List<ScriptFacilityInformation> getScriptFacilityList() {
-		List<ScriptFacilityInformation> newList = new ArrayList<ScriptFacilityInformation>();
-		newList.addAll(scriptFacilityInfo);
-		return newList;
-	}
     
     /** 기본 공지사항 컨텐츠 html 반환 (웹 접근 못했을 시 이 내용 출력) */
     public static String htmlNoticeEmpty() {

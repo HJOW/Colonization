@@ -22,6 +22,7 @@ import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.BusinessCenter;
+import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
 import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
@@ -545,12 +546,14 @@ public abstract class City implements ColonyElements {
                 if(params.equals("")) return;
                 if(getFacility().size() >= getSpaces()) return;
                 
-                Class<?> facilityClass = FacilityManager.getFacilityClass(params);
-                if(facilityClass == null) return;
-                Facility newOne = (Facility) facilityClass.newInstance();
-                getFacility().add(newOne);
+                FacilityInformation info = FacilityManager.getFacilityInformation(params);
+                Facility newOne = info.createFacility();
+                if(newOne != null) {
+                    getFacility().add(newOne);
+                    ColonyManager.logGlobals(ColonyManager.t("시설 [FACILITY] 건설 완료").replace("[FACILITY]", newOne.getName()), 1);
+                }
+                
                 j.setCompleted(true);
-                ColonyManager.logGlobals(ColonyManager.t("시설 [FACILITY] 건설 완료").replace("[FACILITY]", newOne.getName()), 1);
             }
             
             if(command.equalsIgnoreCase("UpgradeFacility")) {

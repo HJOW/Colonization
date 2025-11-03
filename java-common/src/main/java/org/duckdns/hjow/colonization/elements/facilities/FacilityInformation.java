@@ -88,6 +88,12 @@ public class FacilityInformation implements Serializable {
     	
     	return json;
     }
+    
+    /** 시설 객체 생성 */
+    public Facility createFacility() {
+    	try { return (Facility) getFacilityClass().newInstance(); } catch(Exception ex) { throw new RuntimeException(ex.getMessage(), ex); }
+    }
+    
     public String getName() {
         return name;
     }
