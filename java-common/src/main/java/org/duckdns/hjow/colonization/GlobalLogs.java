@@ -81,7 +81,9 @@ public class GlobalLogs implements Serializable {
     /** Log4J2 사용 가능한 경우 설정 */
     public static void tryingToInitLog4j() {
     	try {
-    		// Set XML Path
+    		Class<?> configClass = Class.forName("org.apache.logging.log4j.core.config.Configurator");
+    		
+    		// Detect XML path
     		File cfgRoot = ColonyManager.getHomeDir("colonization", "configs");
     		if(! cfgRoot.exists()) {
     			cfgRoot.mkdirs();
@@ -95,9 +97,9 @@ public class GlobalLogs implements Serializable {
     		
     		URI uri = xmlFile.toURI();
     		
-    		Class<?> configClass = Class.forName("org.apache.logging.log4j.core.config.Configurator");
+    		// Get initialize method
     		Method mthd = configClass.getMethod("initialize", String.class, ClassLoader.class, URI.class);
-    		mthd.invoke(null, null, null, uri);
+    		mthd.invoke(null, null, null, uri); // set XML Path
     		
     		// Get LogManager
     	    Class<?> managerClass = Class.forName("org.apache.logging.log4j.LogManager");
