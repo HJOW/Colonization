@@ -105,6 +105,14 @@ public class FacilityManager {
     public static List<FacilityInformation> getFacilityInformations() {
         List<FacilityInformation> newList = new Vector<FacilityInformation>();
         newList.addAll(facilities);
+        
+        List<ScriptFacilityInformation> scrList = ColonyClassLoader.getScriptFacilityList();
+        if(scrList != null) {
+        	for(ScriptFacilityInformation s : scrList) {
+        		if(! newList.contains(s)) newList.add(s);
+        	}
+        }
+        
         return newList;
     }
     

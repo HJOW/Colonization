@@ -87,6 +87,11 @@ public class ColonyManagerConfig implements Serializable {
     	flagSaveNoKeys = flag;
     }
     
+    /** 해당 설정 값 존재여부 반환 */
+    public boolean containsKey(String key) {
+    	return roots.containsKey(key);
+    }
+    
     /** 설정 값을 문자열로 취급하여 문자열 반환, 강제 형변환될 수 있음. null 일 경우 공란 반환 */
     public String getString(String key) {
         Object obj = roots.get(key);

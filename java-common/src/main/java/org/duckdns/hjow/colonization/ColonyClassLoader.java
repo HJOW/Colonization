@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -10,9 +11,12 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 
+import javax.script.ScriptEngine;
+
 import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
+import org.duckdns.hjow.colonization.elements.facilities.ScriptFacilityInformation;
 import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.pack.Library;
@@ -20,6 +24,7 @@ import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.script.ScriptPatternDetector;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
@@ -238,6 +243,58 @@ public class ColonyClassLoader {
     	return null;
     }
     
+    private static final List<ScriptFacilityInformation> scriptFacilityInfo = new Vector<ScriptFacilityInformation>();
+    /** 스크립트 Facility 불러오기 */
+	protected static void loadScriptFacilities(ColonyManagerConfig cfg, ColonyManager man) {
+		// 스크립트 Facility 사용 시 인증이 해제되므로, 설정 먼저 검사
+		if(cfg.containsKey("UseCheckDisablingContent") && cfg.getBool("UseCheckDisablingContent")) {
+			// 디렉토리 검사
+			File scriptRoot = man.getColonyScriptRootDirectory();
+			if(! scriptRoot.exists()) scriptRoot.mkdirs();
+			
+			File facRoot = new File(scriptRoot.getAbsolutePath() + File.separator + "facilities");
+			if(! facRoot.exists()) facRoot.mkdirs();
+			
+			// 디렉토리 내 파일 스캔
+			File[] lists = facRoot.listFiles(new FileFilter() {	
+				@Override
+				public boolean accept(File pathname) {
+					if(pathname.isDirectory()) return false;
+					return pathname.getName().toLowerCase().endsWith(".js"); // js 파일만 스캔
+				}
+			});
+			
+			for(File f : lists) {
+				try {
+					// 스크립트 읽기
+					String scripts = FileUtil.readString(f, "UTF-8");
+					
+					// 엔진 준비
+					ScriptEngine engine = man.newScriptEngine();
+					
+					// 리플렉션 존재여부 체크
+	        		ScriptPatternDetector detector = new ScriptPatternDetector();
+	        		detector.checkReflection(scripts);
+					
+	        		// 등록
+					ScriptFacilityInformation infoOne = new ScriptFacilityInformation(engine, scripts);
+					if(! scriptFacilityInfo.contains(infoOne)) scriptFacilityInfo.add(infoOne);
+				} catch(Throwable tx) {
+					GlobalLogs.processExceptionOccured(tx, false);
+				}
+			}
+		} else {
+			scriptFacilityInfo.clear();
+		}
+	}
+	
+	/** 스크립트 Facility 리스트 반환 */
+	public static List<ScriptFacilityInformation> getScriptFacilityList() {
+		List<ScriptFacilityInformation> newList = new ArrayList<ScriptFacilityInformation>();
+		newList.addAll(scriptFacilityInfo);
+		return newList;
+	}
+    
     /** 기본 공지사항 컨텐츠 html 반환 (웹 접근 못했을 시 이 내용 출력) */
     public static String htmlNoticeEmpty() {
         StringBuilder res = new StringBuilder("");
@@ -377,8 +434,11 @@ public class ColonyClassLoader {
         
         // Pack 모두 열어 내용물 적용
         loadAllListedPacks();
+        
+        // 스크립트 Facility 적용
+        loadScriptFacilities(cfg, man);
     }
-	
+
 	/** 클래스명 체크 */
     public static void checkModClassName(String modClassName) {
     	if(modClassName.contains(",")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 , 기호가 들어갈 수 없습니다."));
@@ -543,6 +603,8 @@ public class ColonyClassLoader {
         stateClassListFlag    = false; stateClassList.clear();
         productClassListFlag  = false; productClassList.clear();
         policyClassListFlag   = false; policyClassList.clear();
+        for(ScriptFacilityInformation s : scriptFacilityInfo) { s.dispose(); }
+        scriptFacilityInfo.clear();
         packs.clear();
         loadDefaultPacks();
     }

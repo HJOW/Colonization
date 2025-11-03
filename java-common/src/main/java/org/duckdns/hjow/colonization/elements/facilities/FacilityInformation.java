@@ -29,7 +29,12 @@ public class FacilityInformation implements Serializable {
     public FacilityInformation() {}
     public FacilityInformation(Class<?> facilityClass) {
     	this();
-        setFacilityClass(facilityClass);
+    	readClass(facilityClass);
+    }
+    
+    /** 클래스에서 시설 정보 읽기 */
+    protected void readClass(Class<?> facilityClass) {
+    	setFacilityClass(facilityClass);
         try {
             Method method = facilityClass.getMethod("getFacilityName");
             setName((String) method.invoke(null));
