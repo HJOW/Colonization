@@ -427,6 +427,19 @@ public abstract class DefaultFacility implements Facility {
     	}
     }
     
+    @Override
+    public Object getImageContent() {
+    	try {
+    	    Class<? extends Facility> classThis = getClass();
+    	    Method mthd = classThis.getMethod("getImage");
+    	    return mthd.invoke(null);
+    	} catch(NoSuchMethodException ex) {
+    		return null; // 알 수 없는 경우 null
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
     public static String getFacilityName() {
         return "";
     }

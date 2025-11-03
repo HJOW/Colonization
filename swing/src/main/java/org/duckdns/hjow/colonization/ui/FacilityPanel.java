@@ -3,15 +3,22 @@ package org.duckdns.hjow.colonization.ui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.net.URL;
 import java.util.List;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
@@ -34,12 +41,14 @@ import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.states.State;
+import org.duckdns.hjow.commons.util.HexUtil;
 
 public class FacilityPanel extends JPanel implements ColonyElementPanel {
     private static final long serialVersionUID = -6078767714905474678L;
     
     protected transient JProgressBar progHp;
-    protected transient JPanel pnUp, pnCenter, pnDown, pnImage, pnCbxResearch, pnCbxProducts;
+    protected transient JPanel pnUp, pnCenter, pnDown, pnCbxResearch, pnCbxProducts;
+    protected transient ImagePanel pnImage;
     protected transient CardLayout cardResProd;
     protected transient JButton btnToggle, btnDestroy, btnUpgrade;
     protected transient JTextField tfName;
@@ -115,9 +124,9 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         btnToggle = new JButton("▼");
         pnCtrls.add(btnToggle);
 
-        pnImage = new JPanel();
+        pnImage = new ImagePanel();
+        pnImage.setPreferredSize(new Dimension(40, 40));
         pnCenter.add(pnImage, BorderLayout.WEST);
-        pnImage.setLayout(new BorderLayout());
 
         ta = new JTextArea();
         ta.setEditable(false);
@@ -143,13 +152,13 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         pnCbxProducts.add(cbxProducts);
         
         if(! ((f instanceof ResearchCenter) || (f instanceof Factory))) {
-        	pnCenterDown.setVisible(false);
+            pnCenterDown.setVisible(false);
         } else {
-        	pnCenterDown.setVisible(true);
-        	if(f instanceof ResearchCenter) {
-        		ResearchCenter rcenter = (ResearchCenter) f;
-        		
-        		List<Research> tResearches = colony.getResearches();
+            pnCenterDown.setVisible(true);
+            if(f instanceof ResearchCenter) {
+                ResearchCenter rcenter = (ResearchCenter) f;
+                
+                List<Research> tResearches = colony.getResearches();
                 Vector<Research> researches = new Vector<Research>();
                 
                 for(Research r : tResearches) {
@@ -172,33 +181,33 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 }
                 
                 cardResProd.show(pnCenterDown, "Research");
-        	} else if(f instanceof Factory) {
-        		Factory factory = (Factory) f;
-        		List<Product> products = Product.getProductTypeList();
-        		Vector<Product> avails = new Vector<Product>();
-        		avails.add(new Money());
-        		for(Product p : products) {
-        			if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
-        		}
-        		products = null;
-        		
-        		cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
-        		
-        		String producingType = factory.getProductType();
-        		if(producingType == null || producingType == "Money") {
-        			cbxProducts.setSelectedIndex(0);
-        			factory.setProductType(null);
-        		} else {
-        			for(Product p : avails) {
-        				if(producingType.equals(p.getType())) {
-        					cbxProducts.setSelectedItem(p);
-        					break;
-        				}
-        			}
-        		}
-        		
-        		cardResProd.show(pnCenterDown, "Product");
-        	}
+            } else if(f instanceof Factory) {
+                Factory factory = (Factory) f;
+                List<Product> products = Product.getProductTypeList();
+                Vector<Product> avails = new Vector<Product>();
+                avails.add(new Money());
+                for(Product p : products) {
+                    if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
+                }
+                products = null;
+                
+                cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
+                
+                String producingType = factory.getProductType();
+                if(producingType == null || producingType == "Money") {
+                    cbxProducts.setSelectedIndex(0);
+                    factory.setProductType(null);
+                } else {
+                    for(Product p : avails) {
+                        if(producingType.equals(p.getType())) {
+                            cbxProducts.setSelectedItem(p);
+                            break;
+                        }
+                    }
+                }
+                
+                cardResProd.show(pnCenterDown, "Product");
+            }
         }
         
         pnCenter.setVisible(false);
@@ -218,16 +227,16 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         btnDestroy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	long m = f.getDestructionFee(city, colony);
-            	long currentMoney = colony.getMoney();
-            	
-            	if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.formatInt( m - currentMoney ))); return; }
-            	
-            	if(f.getHp() <= 0) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("이미 곧 철거될 예정입니다.")); return; }
-            	
-            	String msg = ColonyManager.t("이 시설을 철거하시겠습니까?");
-            	msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.formatInt(m));
-            	
+                long m = f.getDestructionFee(city, colony);
+                long currentMoney = colony.getMoney();
+                
+                if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.formatInt( m - currentMoney ))); return; }
+                
+                if(f.getHp() <= 0) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("이미 곧 철거될 예정입니다.")); return; }
+                
+                String msg = ColonyManager.t("이 시설을 철거하시겠습니까?");
+                msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.formatInt(m));
+                
                 int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
                 if(sel != JOptionPane.YES_OPTION) return;
                 
@@ -240,28 +249,28 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         });
         
         btnUpgrade.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				long m = f.getUpgradePrice(colony, city);
-				int  c = f.getUpgradeCycle(colony, city);
-				long currentMoney = colony.getMoney();
-				
-				if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.formatInt( m - currentMoney ))); return; }
-				if(f.getLevel() >= f.getMaxLevel()) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("더 이상 증축이 불가능합니다.")); return; }
-				if(! isUpgradeAvail(f, colony, city)) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("증축이 불가능합니다.")); return; }
-				
-				String msg = ColonyManager.t("이 시설을 증축하시겠습니까?");
-				msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.formatInt(m));
-				
-				int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
-				if(sel != JOptionPane.YES_OPTION) return;
-				
-				colony.modifyingMoney(m * (-1L), city, f, "Upgrade", f.getName());
-				
-				HoldingJob newJob = new HoldingJob(c, c, "UpgradeFacility", String.valueOf(f.getKey()));
-				city.addHoldingJob(newJob);
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                long m = f.getUpgradePrice(colony, city);
+                int  c = f.getUpgradeCycle(colony, city);
+                long currentMoney = colony.getMoney();
+                
+                if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.formatInt( m - currentMoney ))); return; }
+                if(f.getLevel() >= f.getMaxLevel()) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("더 이상 증축이 불가능합니다.")); return; }
+                if(! isUpgradeAvail(f, colony, city)) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("증축이 불가능합니다.")); return; }
+                
+                String msg = ColonyManager.t("이 시설을 증축하시겠습니까?");
+                msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.formatInt(m));
+                
+                int sel = JOptionPane.showConfirmDialog(superInstance.getDialog(), msg, ColonyManager.t("확인"), JOptionPane.YES_NO_OPTION);
+                if(sel != JOptionPane.YES_OPTION) return;
+                
+                colony.modifyingMoney(m * (-1L), city, f, "Upgrade", f.getName());
+                
+                HoldingJob newJob = new HoldingJob(c, c, "UpgradeFacility", String.valueOf(f.getKey()));
+                city.addHoldingJob(newJob);
+            }
+        });
         
         cbxResearch.addItemListener(new ItemListener() {
             @Override
@@ -277,21 +286,21 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         });
         
         cbxProducts.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(f instanceof Factory) {
-					Factory factory = (Factory) f;
-					Product p = (Product) cbxProducts.getSelectedItem();
-					if(p != null) {
-						if(p instanceof Money) {
-							factory.setProductType(null);
-						} else {
-							factory.setProductType(p.getType());
-						}
-					}
-				}
-			}
-		});
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(f instanceof Factory) {
+                    Factory factory = (Factory) f;
+                    Product p = (Product) cbxProducts.getSelectedItem();
+                    if(p != null) {
+                        if(p instanceof Money) {
+                            factory.setProductType(null);
+                        } else {
+                            factory.setProductType(p.getType());
+                        }
+                    }
+                }
+            }
+        });
         
         refresh(f, city, colony, superInstance, true);
     }
@@ -322,7 +331,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     
     /** 화면 새로고침 */
     public void refresh(Facility fac, City city, Colony colony, ColonyManager superInstance) {
-    	refresh(fac, city, colony, superInstance, false);
+        refresh(fac, city, colony, superInstance, false);
     }
 
     /** 화면 새로고침 */
@@ -340,11 +349,11 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         setTargetName(fac.getName());
         
         if(! force) {
-        	if(! fac.isMarkedAsRefresh()) {
-        		if(fac.getHp() <= 0) setEditable(false);
+            if(! fac.isMarkedAsRefresh()) {
+                if(fac.getHp() <= 0) setEditable(false);
                 else setEditable(flagEditable);
-        		return;
-        	}
+                return;
+            }
         }
         
         StringBuilder res = new StringBuilder("");
@@ -402,30 +411,30 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 res = res.append(" ").append(research.getTitle() + " ( " + research.getProgressPercents() + " % )");
             }
         } else if(fac instanceof Factory) {
-        	Factory factory = (Factory) fac;
-        	
-        	List<Product> products = Product.getProductTypeList();
-    		Vector<Product> avails = new Vector<Product>();
-    		avails.add(new Money());
-    		for(Product p : products) {
-    			if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
-    		}
-    		products = null;
-    		
-    		cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
-    		
-    		String producingType = factory.getProductType();
-    		if(producingType == null || producingType == "Money") {
-    			cbxProducts.setSelectedIndex(0);
-    			factory.setProductType(null);
-    		} else {
-    			for(Product p : avails) {
-    				if(producingType.equals(p.getType())) {
-    					cbxProducts.setSelectedItem(p);
-    					break;
-    				}
-    			}
-    		}
+            Factory factory = (Factory) fac;
+            
+            List<Product> products = Product.getProductTypeList();
+            Vector<Product> avails = new Vector<Product>();
+            avails.add(new Money());
+            for(Product p : products) {
+                if(factory.isStoreAvail(p) && factory.isProduced(p)) avails.add(p);
+            }
+            products = null;
+            
+            cbxProducts.setModel(new DefaultComboBoxModel<Product>(avails));
+            
+            String producingType = factory.getProductType();
+            if(producingType == null || producingType == "Money") {
+                cbxProducts.setSelectedIndex(0);
+                factory.setProductType(null);
+            } else {
+                for(Product p : avails) {
+                    if(producingType.equals(p.getType())) {
+                        cbxProducts.setSelectedItem(p);
+                        break;
+                    }
+                }
+            }
         }
         
         List<Citizen> workers = fac.getWorkingCitizens(city, colony);
@@ -454,6 +463,61 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         
         btnUpgrade.setVisible(isUpgradeAvail(fac, colony, city));
         fac.markAsRefreshChildren(false);
+        
+        // 이미지 불러오기
+        Image img = loadImage(fac);
+        pnImage.setImage(img);
+    }
+    
+    /** 
+     * <pre>
+     * 시설의 이미지 불러오기
+     * 
+     * 해당 Facility 객체의 getImage 메소드 호출 시, Image 혹은 ImageIcon 타입 객체가 반환되면 그대로 반환,
+     * 그외의 경우 문자열로 강제 형변환하여, 다음 Prefix 에 따라 동작
+     *    resource: - 리소스 경로 내 파일을 찾아 이미지를 읽음
+     *    file:     - 파일 실제경로에서 파일을 읽음
+     *    hex:      - HEX String 을 해석하여 나온 바이너리를 이미지로 변환
+     * </pre>
+     */
+    protected Image loadImage(Facility fac) {
+        Object mayBeImg = fac.getImageContent(); // getImage 와 동일
+        Image img = null;
+        
+        if(mayBeImg != null) {
+            try {
+                if(mayBeImg instanceof Image) {
+                    img = (Image) mayBeImg;
+                } else if(mayBeImg instanceof ImageIcon) {
+                    img = ((ImageIcon) mayBeImg).getImage();
+                } else {
+                    String str = mayBeImg.toString();
+                    if(str.startsWith("resource:")) {
+                        String resName = str.substring(9);
+                        URL url = getClass().getResource(resName);
+                        
+                        ImageIcon icon = new ImageIcon(url);
+                        img = icon.getImage();
+                    } else if(str.startsWith("file:")) {
+                        String fName = str.substring(5);
+                        File file = new File(fName);
+                        
+                        if(! file.exists()) return null;
+                        URL url = file.toURI().toURL();
+                        ImageIcon icon = new ImageIcon(url);
+                        img = icon.getImage();
+                    } else if(str.startsWith("hex:")) {
+                        String hexStr = str.substring(4);
+                        ByteArrayInputStream binStream = new ByteArrayInputStream(HexUtil.decode(hexStr));
+                        img = ImageIO.read(binStream);
+                    }
+                }
+            } catch(Exception ex) {
+                throw new RuntimeException(ex.getMessage(), ex);
+            }
+        }
+        
+        return img;
     }
     
     @Override
@@ -465,18 +529,18 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     
     /** 업그레이드 가능 여부 확인 */
     protected boolean isUpgradeAvail(Facility fac, Colony col, City city) {
-    	if(! fac.isUpgradeAvail(col, city)) return false;
+        if(! fac.isUpgradeAvail(col, city)) return false;
         if(fac.getLevel() >= fac.getMaxLevel()) return false;
         if(col.getMoney() < fac.getUpgradePrice(col, city)) return false;
         
         // 이미 업그레이드 중인지 확인
         for(HoldingJob j : city.getHoldings()) {
-        	if("UpgradeFacility".equalsIgnoreCase(j.getCommand())) {
-        		long key = Long.parseLong(j.getParameter().trim());
-        		if(fac.getKey() == key) {
-        			return false;
-        		}
-        	}
+            if("UpgradeFacility".equalsIgnoreCase(j.getCommand())) {
+                long key = Long.parseLong(j.getParameter().trim());
+                if(fac.getKey() == key) {
+                    return false;
+                }
+            }
         }
         
         return true;
