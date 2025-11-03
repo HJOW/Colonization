@@ -322,6 +322,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             // 버전 체크
             long buildNo = c.getClientBuildNo();
             if(BUILD_NO != buildNo) {
+            	if(getConfig().get("LoadOldVersion") == null) getConfig().set("LoadOldVersion", "N");
             	if(! getConfig().getBool("LoadOldVersion")) return;
             }
             

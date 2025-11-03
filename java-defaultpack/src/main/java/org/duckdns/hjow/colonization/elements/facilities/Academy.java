@@ -100,4 +100,6 @@ public class Academy extends School {
     public static String isBuildAvail(Colony col, City city) {
         return null;
     }
+    
+    protected static boolean isScriptBasedFacility() { return false; }
 }
