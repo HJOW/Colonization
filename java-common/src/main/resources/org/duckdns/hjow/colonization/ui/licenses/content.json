@@ -23,5 +23,15 @@
         "name" : "SyntaxPane",
         "contentType" : "text/html",
         "file" : "syntaxpane.html"
+    },
+    {
+        "name" : "Log4J2",
+        "contentType" : "text/html",
+        "file" : "log4j2.html"
+    },
+    {
+        "name" : "Kotlin Libraries",
+        "contentType" : "text/html",
+        "file" : "kotlin.html"
     }
 ]

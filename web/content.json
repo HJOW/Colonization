@@ -8,11 +8,14 @@
             "0.0.1" : { "version" : "0.0.1", "url" : "colonization-swing-0.0.1.jar", "check" : "0" }
         }
         , "libs" : [
-            { "url" : "lib/syntaxpane-1.3.0.jar"    , "name" : "syntaxpane-1.3.0.jar"     }
-          , { "url" : "lib/commons-codec-1.17.0.jar", "name" : "commons-codec-1.17.0.jar" }
-          , { "url" : "lib/commons-lang-2.6.jar"    , "name" : "commons-lang-2.6.jar"     }
-          , { "url" : "lib/log4j-api-2.25.2.jar"    , "name" : "log4j-api-2.25.2.jar"     }
-          , { "url" : "lib/log4j-core-2.25.2.jar"   , "name" : "log4j-core-2.25.2.jar"    }
+            { "url" : "lib/syntaxpane-1.3.0.jar"          , "name" : "syntaxpane-1.3.0.jar"           }
+          , { "url" : "lib/commons-codec-1.17.0.jar"      , "name" : "commons-codec-1.17.0.jar"       }
+          , { "url" : "lib/commons-lang-2.6.jar"          , "name" : "commons-lang-2.6.jar"           }
+          , { "url" : "lib/log4j-api-2.25.2.jar"          , "name" : "log4j-api-2.25.2.jar"           }
+          , { "url" : "lib/log4j-core-2.25.2.jar"         , "name" : "log4j-core-2.25.2.jar"          }
+          , { "url" : "lib/kotlin-stdlib-1.6.0.jar"       , "name" : "kotlin-stdlib-1.6.0.jar"        }
+          , { "url" : "lib/kotlin-stdlib-common-1.6.0.jar", "name" : "kotlin-stdlib-common-1.6.0.jar" }
+          , { "url" : "lib/kotlin-stdlib-jdk8-1.6.0.jar"  , "name" : "kotlin-stdlib-jdk8-1.6.0.jar"   }
         ]
     }, "jre" : {
           "win_x86" : "OpenJDK8U-jre_x86-32_windows_hotspot_8u462b08.zip"
