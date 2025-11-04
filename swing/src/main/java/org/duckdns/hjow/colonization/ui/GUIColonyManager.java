@@ -93,6 +93,7 @@ public class GUIColonyManager extends ColonyManager {
     protected transient JFileChooser fileChooser;
     protected transient javax.swing.filechooser.FileFilter filterCol, filterColGz;
     
+    protected transient AboutDialog aboutDialog;
     protected transient BackupManager backupManager;
     protected transient ConfigManager configManager;
     protected transient ModManager modManager;
@@ -248,6 +249,7 @@ public class GUIColonyManager extends ColonyManager {
         backupManager = new BackupManager(this);
         helpDialog    = new HelpDialog(this);
         licenseDialog = new LicenseDialog(this);
+        aboutDialog   = new AboutDialog(frame, "Colonization", "", "v" + getVersionString() + " (No. " + BUILD_NO + ")");
         configManager = new ConfigManager(this);
         modManager    = new ModManager(this);
         toolManager   = new ToolManager(frame);
@@ -730,6 +732,17 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
+        menuHelp.addSeparator();
+        
+        menuItem = new JMenuItem(t("이 프로그램은..."));
+        menuHelp.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                aboutDialog.open();
+            }
+        });
+        
         refreshColonyContent();
     }
 
@@ -1122,6 +1135,9 @@ public class GUIColonyManager extends ColonyManager {
         
         if(helpDialog != null) helpDialog.dispose();
         helpDialog = null;
+        
+        if(aboutDialog != null) aboutDialog.dispose();
+        aboutDialog = null;
         
         if(licenseDialog != null) licenseDialog.dispose();
         licenseDialog = null;
