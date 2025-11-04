@@ -17,7 +17,7 @@ public abstract class AbstractTool implements Tool {
 	public AbstractTool(Window win) {
 		if(win == null) dialog = new JDialog();
 		else dialog = new JDialog(dialog);
-		dialog.setSize(600, 400);
+		dialog.setSize(getDialogProperWidth(), getDialogProperHeight());
 		dialog.setTitle(ColonyManager.t(getTitle()));
 		GUIUtil.centerWindow(dialog);
 		dialog.setLayout(new BorderLayout());
@@ -38,6 +38,9 @@ public abstract class AbstractTool implements Tool {
 		
 		init();
 	}
+	
+	protected int getDialogProperWidth( ) { return 600; }
+	protected int getDialogProperHeight() { return 400; }
 	
 	/** UI 초기화 */
 	protected abstract void init();
