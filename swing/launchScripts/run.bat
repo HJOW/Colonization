@@ -12,7 +12,7 @@ IF NOT EXIST "%JAVA_HOME%\bin\java.exe" (
     goto :eof
 )
 
-"%JAVA_HOME%\bin\java.exe" -jar "colonization-swing-0.0.1.jar" -cp "%HOMEDRIVE%%HOMEPATH%\lib\*" --updator Y %*
+"%JAVA_HOME%\bin\java.exe" -cp ".\colonization-swing-0.0.1.jar;%HOMEDRIVE%%HOMEPATH%\lib\*" org.duckdns.hjow.colonization.Colonization --updator Y %*
 
 :EOF
 endlocal

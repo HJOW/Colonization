@@ -700,27 +700,37 @@ namespace WinLauncher
             info.FileName = javaBinPath + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
             info.CreateNoWindow  = true;
             info.UseShellExecute = false;
-
+            
+            // 실행 파일명과 매개변수 준비
             string argJarPath;
-            if (offlineJarPath == null)
+            string fileName = "colonization-swing-" + versionString + ".jar";
+            if (offlineJarPath != null)
             {
-                argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar";
-                argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
-
-                info.WorkingDirectory = jarPath;
-                info.Arguments = " -jar \"" + argJarPath + "\" -classpath \".;..\\lib\\*;" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
+                jarPath  = offlineJarPath;
+                if (offlineJarName != null) fileName = offlineJarName;
             }
-            else
+
+            argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + fileName;
+            argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
+
+            // cp 속성 작성
+            string classPaths = argJarPath;
+            string[] libFiles = Directory.GetFiles(libDir);
+            foreach (string f in libFiles)
             {
-                jarPath = offlineJarPath;
-                argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + offlineJarName;
-                argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
-
-                info.WorkingDirectory = offlineJarPath;
-                info.Arguments = " -jar \"" + argJarPath + "\" -classpath \".;..\\lib\\*;" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
+                if (!f.EndsWith(".jar")) continue;
+                if (classPaths != "") classPaths = classPaths + ";";
+                classPaths = classPaths + f;
             }
-            Console.WriteLine(info.Arguments);
 
+            // 작업 폴더 지정
+            info.WorkingDirectory = jarPath;
+
+            // 매개변수 입력
+            info.Arguments = "-classpath \"" + classPaths + "\" org.duckdns.hjow.colonization.Colonization --updator N";
+
+            // Console.WriteLine(info.Arguments);
+            
             info.RedirectStandardInput  = true;
             info.RedirectStandardOutput = true;
             info.RedirectStandardError  = true;

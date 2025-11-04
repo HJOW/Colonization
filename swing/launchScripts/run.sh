@@ -33,4 +33,4 @@ if [ "$MAJOR_VERSION" -lt 8 ]; then
 fi
 
 # Run the Java application
-"$JAVA_HOME/bin/java" -jar "colonization-swing-0.0.1.jar" -cp "$HOME/.colonization/lib/*" --updator Y
+"$JAVA_HOME/bin/java" -cp "./colonization-swing-0.0.1.jar:$HOME/.colonization/lib/*" org.duckdns.hjow.colonization.Colonization --updator Y
