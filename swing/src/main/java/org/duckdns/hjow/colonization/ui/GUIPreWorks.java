@@ -18,6 +18,20 @@ public class GUIPreWorks extends PreWorks {
     	
     	// sciss SyntaxPane 로딩 시도 (없으면 넘어감)
     	try {
+    		// // lib 폴더 (사용자홈 / .colonization / )
+            // File libRoot = ColonyClassLoader.getHomeLibDir();
+            // if(! libRoot.exists()) libRoot.mkdirs();
+            // 
+            // File[] lists = libRoot.listFiles(new FileFilter() {	
+    		// 	@Override
+    		// 	public boolean accept(File pathname) {
+    		// 		if(pathname.isDirectory()) return false;
+    		// 		return pathname.getName().toLowerCase().endsWith(".jar");
+    		// 	}
+    		// });
+    		// 
+    		// Class<?> scissClass = ClassUtil.loadChainedClass(lists, "de.sciss.syntaxpane.DefaultSyntaxKit");
+    		
     		Class<?> scissClass = Class.forName("de.sciss.syntaxpane.DefaultSyntaxKit");
     		Method mthd = scissClass.getMethod("initKit");
     		mthd.invoke(null);

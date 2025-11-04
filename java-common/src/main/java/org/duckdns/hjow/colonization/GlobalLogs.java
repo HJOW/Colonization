@@ -89,8 +89,19 @@ public class GlobalLogs implements Serializable {
     public static void tryingToInitLog4j() {
     	URLClassLoader loader = null;
     	try {
-    		// loader = PreWorks.LibClassLoader();
-    		// Class<?> configClass = loader.loadClass("org.apache.logging.log4j.core.config.Configurator");
+    		// // lib 폴더 (사용자홈 / .colonization / )
+            // File libRoot = ColonyClassLoader.getHomeLibDir();
+            // if(! libRoot.exists()) libRoot.mkdirs();
+            // 
+            // File[] lists = libRoot.listFiles(new FileFilter() {	
+    		// 	@Override
+    		// 	public boolean accept(File pathname) {
+    		// 		if(pathname.isDirectory()) return false;
+    		// 		return pathname.getName().toLowerCase().endsWith(".jar");
+    		// 	}
+    		// });
+    		// 
+    		// Class<?> configClass = ClassUtil.loadChainedClass(lists, "org.apache.logging.log4j.core.config.Configurator");
     		Class<?> configClass = Class.forName("org.apache.logging.log4j.core.config.Configurator");
     		
     		// Detect XML path
@@ -132,6 +143,7 @@ public class GlobalLogs implements Serializable {
     		methodInfoLogger  = null;
     	} catch(Throwable tx) {
     		log("Using default logging because Initializing log4j failed. (" + tx.getClass().getSimpleName() + ") " + tx.getMessage());
+    		// tx.printStackTrace();
     		logger = null;
     		methodDebugLogger = null;
     		methodInfoLogger  = null;
