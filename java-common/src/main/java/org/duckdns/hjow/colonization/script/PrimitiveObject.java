@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.script;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -105,6 +106,12 @@ public class PrimitiveObject extends ScriptObject {
         initScript = initScript.append("};                                                                                         ").append("\n");
         initScript = initScript.append("function translate(obj) {                                                                  ").append("\n");
         initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".translate(obj);                       ").append("\n");
+        initScript = initScript.append("};                                                                                         ").append("\n");
+        initScript = initScript.append("function formatInt(obj) {                                                                  ").append("\n");
+        initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".formatInt(obj);                       ").append("\n");
+        initScript = initScript.append("};                                                                                         ").append("\n");
+        initScript = initScript.append("function formatRate(obj) {                                                                 ").append("\n");
+        initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".formatRate(obj);                      ").append("\n");
         initScript = initScript.append("};                                                                                         ").append("\n");
         initScript = initScript.append("function maxMem() {                                                                        ").append("\n");
         initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".maxMem();                             ").append("\n");
@@ -222,6 +229,15 @@ public class PrimitiveObject extends ScriptObject {
         if(jsonString instanceof Boolean) return jsonString;
         return JsonObject.parseJson(String.valueOf(jsonString));
     }
+    public String formatInt(Object n) {
+    	if(n instanceof BigInteger) return ColonyManager.formatInt( (BigInteger) n);
+    	return ColonyManager.formatInt(new BigInteger(String.valueOf(n).replace(",", "").trim()));
+    }
+    
+    public String formatRate(Object n) {
+    	if(n instanceof BigDecimal) return ColonyManager.formatRate(  (BigDecimal) n );
+    	return ColonyManager.formatRate(new BigDecimal(String.valueOf(n).replace(",", "").trim()));
+    }
     public BigDecimal maxMem() {
     	return new BigDecimal(String.valueOf(Runtime.getRuntime().maxMemory()));
     }
@@ -233,7 +249,13 @@ public class PrimitiveObject extends ScriptObject {
     	if(max.compareTo(BigDecimal.ZERO) <= 0) return BigDecimal.ZERO;
     	return freeMem().multiply(new BigDecimal("100")).divide(max, 50, RoundingMode.HALF_UP);
     }
+    
+    private transient long lastGcTime = 0L;
     public void gc() {
+    	long now = System.currentTimeMillis();
+    	if(lastGcTime <= now - 8000L) return; // 너무 자주 호출 못하게
+    	
+    	lastGcTime = now;
     	Runtime.getRuntime().gc();
     }
     public String translate(Object obj) {
