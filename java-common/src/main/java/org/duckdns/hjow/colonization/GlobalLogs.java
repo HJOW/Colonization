@@ -78,6 +78,11 @@ public class GlobalLogs implements Serializable {
         log(msg);
     }
     
+    /** Log4J2 사용 가능여부 반환 */
+    public static boolean isLog4jAvail() {
+    	return (logger != null);
+    }
+    
     /** Log4J2 사용 가능한 경우 설정 */
     public static void tryingToInitLog4j() {
     	try {
@@ -128,7 +133,7 @@ public class GlobalLogs implements Serializable {
     }
     
     /** log4j2 설정 샘플 */
-    protected static String getSampleLog4jXml() {
+    public static String getSampleLog4jXml() {
     	StringBuilder sample = new StringBuilder("");
     	
     	sample = sample.append("\n").append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");

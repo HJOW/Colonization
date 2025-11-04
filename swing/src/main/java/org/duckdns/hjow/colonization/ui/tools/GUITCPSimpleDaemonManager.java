@@ -166,4 +166,7 @@ public class GUITCPSimpleDaemonManager implements Tool {
 	public String getTitle() {
 		return "TCP데몬";
 	}
+	
+	@Override
+	public boolean isAvail() { return true; }
 }

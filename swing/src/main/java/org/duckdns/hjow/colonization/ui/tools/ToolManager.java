@@ -9,6 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
 import org.duckdns.hjow.commons.core.Disposeable;
 
@@ -25,6 +26,7 @@ public class ToolManager implements Disposeable {
     	tools.add(new BenchmarkManager(win));
     	tools.add(new GUITCPSimpleDaemonManager(win));
     	tools.add(new CDOCViewer(win));
+    	tools.add(new Log4JManager(win));
     }
     
     public Tool getTool(String name) {
@@ -37,11 +39,14 @@ public class ToolManager implements Disposeable {
     public void open(String name) {
     	Tool t = getTool(name);
     	if(t == null) return;
+    	if(! t.isAvail()) return;
     	t.open();
     }
     
     public void registerJMenu(JMenu menu) {
     	for(Tool t : tools) {
+    		if(! t.isAvail()) continue;
+    		
     		JMenuItem menuItem = new JMenuItem(ColonyManager.t(t.getTitle()));
             menu.add(menuItem);
             final String name = t.getName();
@@ -57,7 +62,7 @@ public class ToolManager implements Disposeable {
     @Override
     public void dispose() {
     	for(Tool t : tools) {
-    		t.dispose();
+    		try { t.dispose(); } catch(Throwable tx) { GlobalLogs.processExceptionOccured(tx, false); }
     	}
     }
 }

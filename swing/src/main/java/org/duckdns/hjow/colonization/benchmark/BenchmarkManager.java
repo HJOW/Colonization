@@ -359,5 +359,8 @@ public class BenchmarkManager implements Tool {
 	public String getTitle() {
 		return "벤치마크";
 	}
+	
+	@Override
+	public boolean isAvail() { return true; }
 }
  
