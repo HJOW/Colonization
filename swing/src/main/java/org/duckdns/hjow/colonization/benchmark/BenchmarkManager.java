@@ -26,9 +26,10 @@ import javax.swing.SwingUtilities;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
+import org.duckdns.hjow.colonization.ui.tools.Tool;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
-public class BenchmarkManager {
+public class BenchmarkManager implements Tool {
     protected JDialog dialog;
     protected CardLayout card;
     protected JPanel pnCard, pnArena;
@@ -330,10 +331,12 @@ public class BenchmarkManager {
         cbxThread.setEnabled(true);
     }
     
+    @Override
     public void open() {
         dialog.setVisible(true);
     }
     
+    @Override
     public void dispose() {
         threadSwitch = false;
         for(JPanel p : pns) {
@@ -346,5 +349,15 @@ public class BenchmarkManager {
         list.clear();
         bars.clear();
     }
+
+	@Override
+	public String getName() {
+		return "BENCH";
+	}
+
+	@Override
+	public String getTitle() {
+		return "벤치마크";
+	}
 }
  

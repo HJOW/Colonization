@@ -53,7 +53,6 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GUIColonizationMainClass;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.SimulationSpeed;
-import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
@@ -62,9 +61,7 @@ import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.script.UIObject;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
 import org.duckdns.hjow.colonization.ui.licenses.LicenseDialog;
-import org.duckdns.hjow.colonization.ui.tools.CDOCViewer;
-import org.duckdns.hjow.colonization.ui.tools.GUITCPSimpleDaemonManager;
-import org.duckdns.hjow.commons.data.CompressedDocument;
+import org.duckdns.hjow.colonization.ui.tools.ToolManager;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
@@ -97,13 +94,11 @@ public class GUIColonyManager extends ColonyManager {
     protected transient javax.swing.filechooser.FileFilter filterCol, filterColGz;
     
     protected transient BackupManager backupManager;
-    protected transient BenchmarkManager benchManager;
-    protected transient GUITCPSimpleDaemonManager daemonManager;
     protected transient ConfigManager configManager;
     protected transient ModManager modManager;
     protected transient HelpDialog helpDialog, licenseDialog;
+    protected transient ToolManager toolManager;
     protected transient ServletClientPanel servletClient;
-    protected transient CDOCViewer cdocViewer;
     
     protected transient JMenuBar menuBar;
     protected transient JMenu menuFile, menuAction, menuView, menuHelp, menuMods;
@@ -250,6 +245,12 @@ public class GUIColonyManager extends ColonyManager {
             pnMain.removeAll();
         }
         
+        backupManager = new BackupManager(this);
+        helpDialog    = new HelpDialog(this);
+        licenseDialog = new LicenseDialog(this);
+        configManager = new ConfigManager(this);
+        modManager    = new ModManager(this);
+        toolManager   = new ToolManager(frame);
         
         tabMain = new JTabbedPane();
         pnMain.setLayout(new BorderLayout());
@@ -688,35 +689,12 @@ public class GUIColonyManager extends ColonyManager {
         
         menuView.addSeparator();
         
-        menuItem = new JMenuItem(t("성능 벤치마크"));
-        menuView.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                benchManager.open();
-            }
-        });
+        JMenu menuTools = new JMenu(t("도구"));
+        menuView.add(menuTools);
         
-        menuItem = new JMenuItem(t("TCP 데몬"));
-        menuView.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                daemonManager.open();
-            }
-        });
+        toolManager.registerJMenu(menuTools);
         
         menuView.addSeparator();
-        
-        cdocViewer = new CDOCViewer(frame);
-        menuItem = new JMenuItem(t(CompressedDocument.FILE_DESC) + " Tool");
-        menuView.add(menuItem);
-        menuItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cdocViewer.open();
-            }
-        });
         
         menuItem = new JMenuItem(t("스크립트 테스터"));
         menuView.add(menuItem);
@@ -726,8 +704,6 @@ public class GUIColonyManager extends ColonyManager {
                 try { new ScriptTester(getDialog()).open(newScriptEngine()); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); }
             }
         });
-        
-        menuView.addSeparator();
         
         menuMods = new JMenu(t("MOD"));
         menuView.add(menuMods);
@@ -753,14 +729,6 @@ public class GUIColonyManager extends ColonyManager {
                 licenseDialog.open();
             }
         });
-        
-        benchManager  = new BenchmarkManager(frame);
-        backupManager = new BackupManager(this);
-        daemonManager = new GUITCPSimpleDaemonManager(frame);
-        helpDialog    = new HelpDialog(this);
-        licenseDialog = new LicenseDialog(this);
-        configManager = new ConfigManager(this);
-        modManager    = new ModManager(this);
         
         refreshColonyContent();
     }
@@ -1143,8 +1111,8 @@ public class GUIColonyManager extends ColonyManager {
         if(backupManager != null) backupManager.dispose();
         backupManager = null;
         
-        if(daemonManager != null) daemonManager.dispose();
-        daemonManager = null;
+        if(toolManager != null) toolManager.dispose();
+        toolManager = null;
         
         if(configManager != null) configManager.dispose();
         configManager = null;

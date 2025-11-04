@@ -21,12 +21,11 @@ import javax.swing.SpinnerNumberModel;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
-import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.ui.JLogArea;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** TCP 데몬 구동 대화상자 */
-public class GUITCPSimpleDaemonManager implements Disposeable {
+public class GUITCPSimpleDaemonManager implements Tool {
     protected JDialog    dialog;
     protected JSplitPane split;
     protected JSpinner   spPort;
@@ -140,8 +139,14 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
         btnToggle.setEnabled(true);
     }
     
+    @Override
     public void open() {
         dialog.setVisible(true);
+    }
+    
+    @Override
+    public String getName() {
+    	return "TCPDAEMON";
     }
     
     @Override
@@ -156,4 +161,9 @@ public class GUITCPSimpleDaemonManager implements Disposeable {
         daemon = null;
         dialog = null;
     }
+
+	@Override
+	public String getTitle() {
+		return "TCP데몬";
+	}
 }

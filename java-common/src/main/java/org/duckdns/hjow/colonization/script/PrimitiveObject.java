@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.script;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -104,6 +105,18 @@ public class PrimitiveObject extends ScriptObject {
         initScript = initScript.append("};                                                                                         ").append("\n");
         initScript = initScript.append("function translate(obj) {                                                                  ").append("\n");
         initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".translate(obj);                       ").append("\n");
+        initScript = initScript.append("};                                                                                         ").append("\n");
+        initScript = initScript.append("function maxMem() {                                                                        ").append("\n");
+        initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".maxMem();                             ").append("\n");
+        initScript = initScript.append("};                                                                                         ").append("\n");
+        initScript = initScript.append("function freeMem() {                                                                       ").append("\n");
+        initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".freeMem();                            ").append("\n");
+        initScript = initScript.append("};                                                                                         ").append("\n");
+        initScript = initScript.append("function memPer() {                                                                        ").append("\n");
+        initScript = initScript.append("    return " + getPrefixName() + "_" + accessKey + ".memPer();                             ").append("\n");
+        initScript = initScript.append("};                                                                                         ").append("\n");
+        initScript = initScript.append("function gc() {                                                                            ").append("\n");
+        initScript = initScript.append("    " + getPrefixName() + "_" + accessKey + ".gc();                                        ").append("\n");
         initScript = initScript.append("};                                                                                         ").append("\n");
         
         return initScript.toString();
@@ -208,6 +221,20 @@ public class PrimitiveObject extends ScriptObject {
         if(jsonString instanceof Number ) return jsonString;
         if(jsonString instanceof Boolean) return jsonString;
         return JsonObject.parseJson(String.valueOf(jsonString));
+    }
+    public BigDecimal maxMem() {
+    	return new BigDecimal(String.valueOf(Runtime.getRuntime().maxMemory()));
+    }
+    public BigDecimal freeMem() {
+    	return new BigDecimal(String.valueOf(Runtime.getRuntime().freeMemory()));
+    }
+    public BigDecimal memPer() {
+    	BigDecimal max = maxMem();
+    	if(max.compareTo(BigDecimal.ZERO) <= 0) return BigDecimal.ZERO;
+    	return freeMem().multiply(new BigDecimal("100")).divide(max, 50, RoundingMode.HALF_UP);
+    }
+    public void gc() {
+    	Runtime.getRuntime().gc();
     }
     public String translate(Object obj) {
         return ColonyManager.t(obj.toString());
