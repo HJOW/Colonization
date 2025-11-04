@@ -226,7 +226,7 @@ namespace WinLauncher
                     SetStatusMessage("Colonization 설치 확인 중...");
                     jarPath = null;
                     string localPath = Util.GetThisExePath();
-                    if (File.Exists(localPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                    if (File.Exists(localPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar"))
                     {
                         jarPath = localPath;
                     }
@@ -245,7 +245,7 @@ namespace WinLauncher
 
                         if (!installNeeded)
                         {
-                            if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                            if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar"))
                             {
                                 installNeeded = true;
                                 statusMsg = "Colonization JAR 다운로드가 필요합니다.";
@@ -533,7 +533,7 @@ namespace WinLauncher
 
             // Check local
             string localPath = Util.GetThisExePath();
-            if (File.Exists(localPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+            if (File.Exists(localPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar"))
             {
                 jarPath = localPath;
             }
@@ -549,14 +549,14 @@ namespace WinLauncher
                     System.IO.Directory.CreateDirectory(jarPath);
                 }
 
-                if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar"))
+                if (!File.Exists(jarPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar"))
                 {
                     SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 중...");
                     using (System.Net.WebClient client = new System.Net.WebClient())
                     {
                         client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
-                        client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
-                        SetStatusMessage("다운로드 완료 : " + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar");
+                        client.DownloadFile(versionUrl, jarPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar");
+                        SetStatusMessage("다운로드 완료 : " + jarPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar");
                     }
                     SetStatusMessage("Colonization 버전 " + versionString + " 다운로드 완료");
                     pathInstalled = ROOTPATH;
@@ -704,7 +704,7 @@ namespace WinLauncher
             string argJarPath;
             if (offlineJarPath == null)
             {
-                argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + "colonization_" + versionString + ".jar";
+                argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + "colonization-swing-" + versionString + ".jar";
                 argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
 
                 info.WorkingDirectory = jarPath;
