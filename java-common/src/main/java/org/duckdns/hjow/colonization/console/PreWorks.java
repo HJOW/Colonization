@@ -2,7 +2,9 @@ package org.duckdns.hjow.colonization.console;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,8 +36,8 @@ public class PreWorks {
     	boolean runOffline = true;
     	if(DataUtil.isNotEmpty(strUsingUpdator)) runOffline = (! DataUtil.parseBoolean(strUsingUpdator.trim()));
     	
-    	try { prepareNets(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true; jsonConfigSwing = null; return; }// 서버 접속을 아예 못한 경우 PreWork 작업 자체를 중단
-        try { prepareLibs(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  }
+    	try { prepareConnectHttp();  } catch(Throwable ex) { ex.printStackTrace(); runOffline = true; jsonConfigSwing = null; return; }// 서버 접속을 아예 못한 경우 PreWork 작업 자체를 중단
+        try { prepareDownloadLibs(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  }
         
         if(! runOffline) {
             try { downloadNewVersion(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  } // 새 버전 다운로드 및 실행되는 경우 새 버전 실행 후 이 프로세스는 종료됨 !
@@ -48,7 +50,7 @@ public class PreWorks {
     }
     
     /** 버전 체크 */
-    protected void prepareNets() throws Throwable {
+    protected void prepareConnectHttp() throws Throwable {
     	JsonObject jsonConfig = ColonyClassLoader.getWebConfigRoot();
     	jsonConfigSwing = (JsonObject) jsonConfig.get("swing");
     	versionNew = jsonConfigSwing.get("version").toString().trim();
@@ -62,7 +64,7 @@ public class PreWorks {
     }
     
     /** lib 누락사항 다운로드 받기 (단, 이 항목들은 다음 실행 때 적용됨. 이번 런타임에는 적용되지 않음.) */
-    protected void prepareLibs() throws Throwable {
+    protected void prepareDownloadLibs() throws Throwable {
     	if(jsonConfigSwing == null) return;
     	
     	// lib 폴더 (사용자홈 / .colonization / )
@@ -211,6 +213,28 @@ public class PreWorks {
     	procBuilder.start();
     	
     	System.exit(0);
+    }
+    
+    /** lib 클래스로더 생성 */
+    public static URLClassLoader LibClassLoader() throws MalformedURLException {
+    	// lib 폴더 (사용자홈 / .colonization / )
+        File libRoot = ColonyClassLoader.getHomeLibDir();
+        if(! libRoot.exists()) libRoot.mkdirs();
+        
+        File[] lists = libRoot.listFiles(new FileFilter() {	
+			@Override
+			public boolean accept(File pathname) {
+				if(pathname.isDirectory()) return false;
+				return pathname.getName().toLowerCase().endsWith(".jar");
+			}
+		}); // TODO 여러 jar 파일이 들어가면 인식을 못함.
+        
+        URL[] urls = new URL[lists.length];
+        for(int idx=0; idx<urls.length; idx++) {
+        	urls[idx] = lists[idx].toURI().toURL();
+        }
+        
+        return new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
     }
     
     /** 기타 사항 준비 */

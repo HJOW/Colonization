@@ -709,7 +709,7 @@ namespace WinModern
                 argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
 
                 info.WorkingDirectory = jarPath;
-                info.Arguments = " -jar \"" + argJarPath + "\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
+                info.Arguments = " -jar \"" + argJarPath + "\" -classpath \".;..\\lib\\*;" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
             }
             else
             {
@@ -718,7 +718,7 @@ namespace WinModern
                 argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
 
                 info.WorkingDirectory = offlineJarPath;
-                info.Arguments = " -jar \"" + argJarPath + "\" -cp \"" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
+                info.Arguments = " -jar \"" + argJarPath + "\" -classpath \".;..\\lib\\*;" + libDir + System.IO.Path.DirectorySeparatorChar + "*" + "\" --updator N";
             }
 
             info.RedirectStandardInput  = true;

@@ -6,9 +6,11 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.net.URLClassLoader;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 
 /** 전역 로그 관리용 클래스, 별도의 UI 클래스와 함께 동작해야 함. Queue 안에 로그를 쌓아두고, UI 클래스에서 이를 꺼내 출력 */
@@ -85,7 +87,10 @@ public class GlobalLogs implements Serializable {
     
     /** Log4J2 사용 가능한 경우 설정 */
     public static void tryingToInitLog4j() {
+    	URLClassLoader loader = null;
     	try {
+    		// loader = PreWorks.LibClassLoader();
+    		// Class<?> configClass = loader.loadClass("org.apache.logging.log4j.core.config.Configurator");
     		Class<?> configClass = Class.forName("org.apache.logging.log4j.core.config.Configurator");
     		
     		// Detect XML path
@@ -121,6 +126,7 @@ public class GlobalLogs implements Serializable {
         	    log("log4j prepared.");
     	    }
     	} catch(ClassNotFoundException e) {
+    		// e.printStackTrace();
     		logger = null;
     		methodDebugLogger = null;
     		methodInfoLogger  = null;
@@ -129,6 +135,8 @@ public class GlobalLogs implements Serializable {
     		logger = null;
     		methodDebugLogger = null;
     		methodInfoLogger  = null;
+    	} finally {
+    		ClassUtil.closeAll(loader);
     	}
     }
     
