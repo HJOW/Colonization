@@ -54,7 +54,7 @@ public abstract class City implements ColonyElements {
     protected List<Enemy>      enemies  = new Vector<Enemy>();
     protected List<HoldingJob> holdings = new Vector<HoldingJob>();
     protected int hp = getMaxHp();
-    protected int spaces = 500 + ((int) ( 700 * Math.random() ));
+    protected int spaces = 500 + ((int) ( 700 * ColonyManager.random() ));
     protected int tax = 10;
     
     protected transient long calculatedTransPoint     = 0L;
@@ -485,12 +485,12 @@ public abstract class City implements ColonyElements {
             
             if(ev.getEventSize() == TimeEvent.EVENTSIZE_CITY) {
                 if(cycle % ev.getOccurCycle(colony, this) == 0) {
-                    if(Math.random() <= ev.getOccurRate(this, colony, this)) ev.onEventOccured(this, colony, this, colPanel);
+                    if(ColonyManager.random() <= ev.getOccurRate(this, colony, this)) ev.onEventOccured(this, colony, this, colPanel);
                 }
             } else if(ev.getEventSize() == TimeEvent.EVENTSIZE_FACILITY) {
                 for(Facility fac : getFacility()) {
                     if(cycle % ev.getOccurCycle(colony, this) == 0) {
-                        if(Math.random() <= ev.getOccurRate(fac, colony, this)) ev.onEventOccured(fac, colony, this, colPanel);
+                        if(ColonyManager.random() <= ev.getOccurRate(fac, colony, this)) ev.onEventOccured(fac, colony, this, colPanel);
                     }
                 }
             }
@@ -947,7 +947,7 @@ public abstract class City implements ColonyElements {
         
         if(cycle % 600 == 0) {
             if(getHomeCapacity() > getCitizenCount()) {
-                if(Math.random() < ( getBornChanceRate(col, efficiency100, birthBoostRate))) {
+                if(ColonyManager.random() < ( getBornChanceRate(col, efficiency100, birthBoostRate))) {
                     createNewCitizen(0);
                 }
             }
@@ -1015,8 +1015,8 @@ public abstract class City implements ColonyElements {
         
         double moveRate = getMoveChangeRate(col, efficiency100);
         if(cycle % 600 == 0) {
-            if(Math.random() < moveRate) {
-            	int ageYear = 25 + ((int) ( Math.random() * 10 ) - 5);
+            if(ColonyManager.random() < moveRate) {
+            	int ageYear = 25 + ((int) ( ColonyManager.random() * 10 ) - 5);
                 createNewCitizen(ageYear);
             }
         }
@@ -1048,7 +1048,7 @@ public abstract class City implements ColonyElements {
                     if(tax <=  5) { multiple = 0.5; }
                     
                     //    세금으로 인한 탈출 적용
-                    if(Math.random() <= rates) {
+                    if(ColonyManager.random() <= rates) {
                         Citizen c = citizens.get(idx);
                         c.dispose();
                         citizens.remove(idx); // 탈출
@@ -1066,7 +1066,7 @@ public abstract class City implements ColonyElements {
                         if(rates < 0.0) rates = 0.0;
                         rates = rates * multiple; // 세금 추가 적용
                         
-                        if(Math.random() <= rates) {
+                        if(ColonyManager.random() <= rates) {
                             Citizen c = citizens.get(idx);
                             c.dispose();
                             citizens.remove(idx); // 탈출

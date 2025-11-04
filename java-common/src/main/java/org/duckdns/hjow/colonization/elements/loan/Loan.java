@@ -281,35 +281,35 @@ public class Loan implements ColonyElements {
             offerCount  = 0;
         }
         
-        offerCount += ((Math.random() * offerCount) / 2.0);
+        offerCount += ((ColonyManager.random() * offerCount) / 2.0);
         
         // 대출 상품 만들기
         for(int idx=0; idx<offerCount; idx++) {
-            interestCnt = 6      + (int)  (Math.random() *       36); // 대출 기한 다양하게 제공
-            amount      = 10000L + (long) (Math.random() * 1000000L); // 대출 금액 다양하게 제공
+            interestCnt = 6      + (int)  (ColonyManager.random() *       36); // 대출 기한 다양하게 제공
+            amount      = 10000L + (long) (ColonyManager.random() * 1000000L); // 대출 금액 다양하게 제공
             
             // 기간이 길 수록 이자 더 높게 설정
             if(interestStd < 8) {
-                if(     interestCnt >= 36) interestStd += (int) Math.round(Math.random() * 5);
-                else if(interestCnt >= 24) interestStd += (int) Math.round(Math.random() * 3);
-                else if(interestCnt >= 18) interestStd += (int) Math.round(Math.random() * 1);
+                if(     interestCnt >= 36) interestStd += (int) Math.round(ColonyManager.random() * 5);
+                else if(interestCnt >= 24) interestStd += (int) Math.round(ColonyManager.random() * 3);
+                else if(interestCnt >= 18) interestStd += (int) Math.round(ColonyManager.random() * 1);
             } else if(interestStd < 15) {
-                if(     interestCnt >= 36) interestStd += (int) Math.round(Math.random() * 7);
-                else if(interestCnt >= 30) interestStd += (int) Math.round(Math.random() * 5);
-                else if(interestCnt >= 24) interestStd += (int) Math.round(Math.random() * 3);
-                else if(interestCnt >= 18) interestStd += (int) Math.round(Math.random() * 2);
-                else if(interestCnt >= 12) interestStd += (int) Math.round(Math.random() * 1);
+                if(     interestCnt >= 36) interestStd += (int) Math.round(ColonyManager.random() * 7);
+                else if(interestCnt >= 30) interestStd += (int) Math.round(ColonyManager.random() * 5);
+                else if(interestCnt >= 24) interestStd += (int) Math.round(ColonyManager.random() * 3);
+                else if(interestCnt >= 18) interestStd += (int) Math.round(ColonyManager.random() * 2);
+                else if(interestCnt >= 12) interestStd += (int) Math.round(ColonyManager.random() * 1);
             } else {
-                if(     interestCnt >= 36) interestStd += (int) Math.round(Math.random() * 9);
-                else if(interestCnt >= 30) interestStd += (int) Math.round(Math.random() * 7);
-                else if(interestCnt >= 24) interestStd += (int) Math.round(Math.random() * 5);
-                else if(interestCnt >= 18) interestStd += (int) Math.round(Math.random() * 3);
-                else if(interestCnt >= 12) interestStd += (int) Math.round(Math.random() * 1);
+                if(     interestCnt >= 36) interestStd += (int) Math.round(ColonyManager.random() * 9);
+                else if(interestCnt >= 30) interestStd += (int) Math.round(ColonyManager.random() * 7);
+                else if(interestCnt >= 24) interestStd += (int) Math.round(ColonyManager.random() * 5);
+                else if(interestCnt >= 18) interestStd += (int) Math.round(ColonyManager.random() * 3);
+                else if(interestCnt >= 12) interestStd += (int) Math.round(ColonyManager.random() * 1);
             }
             
             
             // 상품 생성
-            Loan loan = new Loan(amount, interestCnt, interestStd + (int) ((Math.random() * interestStd) / 2.0) );
+            Loan loan = new Loan(amount, interestCnt, interestStd + (int) ((ColonyManager.random() * interestStd) / 2.0) );
             loan.setName(getRandomLoanName(loan.getInterestRate100(), interestCnt, amount));
             loans.add(loan);
         }
@@ -330,21 +330,21 @@ public class Loan implements ColonyElements {
         if(DataUtil.isNotEmpty(adjectiveCnt)) adjectiveCnt = ColonyManager.t(adjectiveCnt);
         
         if(amount < 100000L) { 
-            rand = Math.random();
+            rand = ColonyManager.random();
             if(rand <= 0.2) adjectiveAmount = "미니";
             else if(rand <= 0.4) adjectiveAmount = "혜성";
             else if(rand <= 0.6) adjectiveAmount = "융통";
             else if(rand <= 0.8) adjectiveAmount = "목돈";
             else adjectiveAmount = "희망";
         } else if(amount < 300000L) {
-            rand = Math.random();
+            rand = ColonyManager.random();
             if(rand <= 0.2) adjectiveAmount = "행성";
             else if(rand <= 0.4) adjectiveAmount = "계획형";
             else if(rand <= 0.6) adjectiveAmount = "하이";
             else if(rand <= 0.8) adjectiveAmount = "포톤";
             else adjectiveAmount = "비지니스";
         } else {
-            rand = Math.random();
+            rand = ColonyManager.random();
             if(rand <= 0.2) adjectiveAmount = "은하";
             else if(rand <= 0.4) adjectiveAmount = "블랙홀";
             else if(rand <= 0.6) adjectiveAmount = "초신성";
@@ -354,14 +354,14 @@ public class Loan implements ColonyElements {
         if(DataUtil.isNotEmpty(adjectiveAmount)) adjectiveAmount = ColonyManager.t(adjectiveAmount);
         
         if(interestRate100 < 10) {
-            rand = Math.random();
+            rand = ColonyManager.random();
             if(rand <= 0.3) adjectiveRate = "알뜰";
             else if(rand <= 0.6) adjectiveRate = "효율";
             else adjectiveRate = "스마트";
         } else if(interestRate100 <= 15) {
             adjectiveRate = "";
         } else {
-            rand = Math.random();
+            rand = ColonyManager.random();
             if(rand <= 0.333) adjectiveRate = "기회";
             else if(rand <= 0.666) adjectiveRate = "욜로";
             else adjectiveRate = "라스트";
@@ -374,7 +374,7 @@ public class Loan implements ColonyElements {
         if(DataUtil.isNotEmpty(adjectiveAmount)) res += " " + adjectiveAmount;
         if(DataUtil.isNotEmpty(adjectiveRate  )) res += " " + adjectiveRate;
         
-        rand = Math.random();
+        rand = ColonyManager.random();
         if(rand <= 0.5) res += "론";
         else res += "대출";
         

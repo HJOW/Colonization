@@ -80,7 +80,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     protected transient JsonObject          storage             = new JsonObject();
     
     protected transient String scriptLanguage = "JavaScript";
-    protected transient String scriptVarPrefix = "a" + (100000 + (int) (Math.random() * 899999));
+    protected transient String scriptVarPrefix = "a" + (100000 + (int) (random() * 899999));
     
     /** 기본 생성자 */
     public ColonyManager() {
@@ -1056,7 +1056,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         // 랜덤성 적용
         //    랜덤값 생성
         double naturalRandom = Math.round(damage * 0.2);
-        naturalRandom = ((naturalRandom / 2.0) * Math.random()) * 2.0;
+        naturalRandom = ((naturalRandom / 2.0) * random()) * 2.0;
         naturalRandom = naturalRandom - (naturalRandom / 2.0); // 반수는 음수로 가도록
         
         //    속성에 따라 랜덤값 추가 변동
@@ -1072,7 +1072,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         if(damage < 1) damage = 1;
         
         // 명중률 적용
-        if(Math.random() > correctRate) return 0; // 명중률이므로, 명중률에 벗어나야 0 리턴, 부등호 방향 주의 !
+        if(random() > correctRate) return 0; // 명중률이므로, 명중률에 벗어나야 0 리턴, 부등호 방향 주의 !
         return damage;
     }
     
@@ -1290,11 +1290,16 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	return FORMATTER_RATE.format(num);
     }
     
+    /** 랜덤 수 (0.0 ~ 1.0) 반환 */
+    public static double random() {
+    	return Math.random();
+    }
+    
     /** 버전 코드 */
     public static final int VERSION_MAIN = 0;
     public static final int VERSION_SUB1 = 0;
     public static final int VERSION_SUB2 = 1;
-    public static final long BUILD_NO = 3L;
+    public static final long BUILD_NO = 4L;
     
     /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
     public static final short ATTACKTYPE_NORMAL = 0;

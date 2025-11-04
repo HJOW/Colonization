@@ -657,7 +657,7 @@ public abstract class AbstractColony implements Colony {
             
             if(ev.getEventSize() == TimeEvent.EVENTSIZE_COLONY) {
                 if(cycle % ev.getOccurCycle(this, city) == 0) {
-                    if(Math.random() <= ev.getOccurRate(this, this, city)) ev.onEventOccured(this, this, city, colPanel);
+                    if(ColonyManager.random() <= ev.getOccurRate(this, this, city)) ev.onEventOccured(this, this, city, colPanel);
                 }
             }
         }

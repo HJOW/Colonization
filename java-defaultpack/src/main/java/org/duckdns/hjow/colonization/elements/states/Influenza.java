@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.states;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
@@ -66,7 +67,7 @@ public class Influenza extends State {
                 if(hosts.getKey() == others.getKey()) continue; // 나 자신은 제외
                 
                 // 전염률
-                if(Math.random() >= contageousRate()) {
+                if(ColonyManager.random() >= contageousRate()) {
                     // 전염
                     others.getStates().add(new Influenza());
                 }
@@ -79,7 +80,7 @@ public class Influenza extends State {
                 if(hosts.getKey() == others.getKey()) continue; // 나 자신은 제외
                 
                 // 전염률
-                if(Math.random() >= contageousRate()) {
+                if(ColonyManager.random() >= contageousRate()) {
                     // 전염
                     others.getStates().add(new Influenza());
                 }
@@ -94,7 +95,7 @@ public class Influenza extends State {
                 if(others.getLivingHome()      == ct.getLivingHome()     ) continue; // 동일거주 제외 (위에서 이미 했으므로)
                 
                 // 전염률
-                if(Math.random() >= contageousRate()) {
+                if(ColonyManager.random() >= contageousRate()) {
                     // 전염
                     others.getStates().add(new Influenza());
                 }
@@ -109,13 +110,13 @@ public class Influenza extends State {
         
         // 자연치유 확률 적용
         if(cycle % 600 == 0) {
-            if(Math.random() >= naturalCuredRate()) addHp(-1);
+            if(ColonyManager.random() >= naturalCuredRate()) addHp(-1);
         }
         
         // 이 전염병의 증상 구현
         if(cycle % 600 == 0) {
             if(ct.getHp() > 1                   ) ct.addHp(-1);
-            else if(Math.random() >= deathRate()) ct.addHp(-1);
+            else if(ColonyManager.random() >= deathRate()) ct.addHp(-1);
         }
         
         if(ct.getHappy() > 20) ct.addHappy(-1);

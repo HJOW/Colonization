@@ -33,7 +33,7 @@ public class EasyGorrdInvasion extends TimeEvent {
     @Override
     public void onEventOccured(ColonyElements target, Colony col, City city, ColonyPanel colPanel) {
         int floatCounts = 5;
-        floatCounts = floatCounts + (int) Math.round(Math.random() * 5 * floatCounts);
+        floatCounts = floatCounts + (int) Math.round(ColonyManager.random() * 5 * floatCounts);
         
         if(floatCounts >= 1) {
         	for(int idx=0; idx<floatCounts; idx++) {

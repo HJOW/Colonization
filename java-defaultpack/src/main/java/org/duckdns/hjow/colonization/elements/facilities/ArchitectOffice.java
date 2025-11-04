@@ -72,7 +72,7 @@ public class ArchitectOffice extends DefaultFacility {
         if(cycle % 60 == 0) {
             for(Facility f : city.getFacility()) {
                 if(f.getHp() < f.getMaxHp()) {
-                    if(Math.random() >= healRate) f.addHp(1); 
+                    if(ColonyManager.random() >= healRate) f.addHp(1); 
                 }
             }
         }

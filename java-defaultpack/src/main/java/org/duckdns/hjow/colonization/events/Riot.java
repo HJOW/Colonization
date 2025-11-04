@@ -59,7 +59,7 @@ public class Riot extends TimeEvent {
             if(happy <= 15) eachRate = 0.5;
             if(happy <= 20) eachRate = 0.3;
             
-            if(Math.random() <= eachRate) {
+            if(ColonyManager.random() <= eachRate) {
                 SuperAngry angry = new SuperAngry();
                 ct.getStates().add(angry);
                 targetted++; 

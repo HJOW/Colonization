@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.states;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
@@ -40,18 +41,18 @@ public class SuperAngry extends State {
         if(cycle % 600 == 0) {
             // 도시 내 랜덤한 시설에 대미지
             List<Facility> facList = city.getFacility();
-            int selection = (int) (Math.random() * facList.size());
+            int selection = (int) (ColonyManager.random() * facList.size());
             
             Facility fac = facList.get(selection);
             fac.addHp(ct.getStrength());
             
             // 본인에게도 랜덤하게 피해
-            if(Math.random() >= 0.3) {
+            if(ColonyManager.random() >= 0.3) {
                 ct.addHp(-1);
             }
             
             // 행복도 증가 (스트레스 해소로 인함)
-            if(Math.random() >= 0.3) {
+            if(ColonyManager.random() >= 0.3) {
                 ct.addHappy(1);
                 if(ct.getHappy() >= 30) { setHp(0); setLefts(0); } // 행복도 30 이상이면 즉시 중단
             }

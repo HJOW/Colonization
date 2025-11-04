@@ -119,19 +119,19 @@ public abstract class School extends DefaultFacility {
     	
     	boolean accept = false;
     	if(intell < propIntell) accept = true;
-    	else if(Math.random() <= defaultIncreaseIntelligenceRate()) accept = true;
+    	else if(ColonyManager.random() <= defaultIncreaseIntelligenceRate()) accept = true;
     	if(accept) {
     		int increases = 1;
-    		if(Math.random() <= getBoostRate()) increases++;
+    		if(ColonyManager.random() <= getBoostRate()) increases++;
     		c.setEducatedIntelligence(c.getEducatedIntelligence() + increases);
     	}
     	
     	accept = false;
     	if(physic < propPhysic) accept = true;
-    	else if(Math.random() <= defaultIncreasePhysicalRate()) accept = true;
+    	else if(ColonyManager.random() <= defaultIncreasePhysicalRate()) accept = true;
     	if(accept) {
     		int increases = 1;
-    		if(Math.random() <= getBoostRate()) increases++;
+    		if(ColonyManager.random() <= getBoostRate()) increases++;
     		c.setEducatedPhysical(c.getEducatedPhysical() + increases);
     	}
     }

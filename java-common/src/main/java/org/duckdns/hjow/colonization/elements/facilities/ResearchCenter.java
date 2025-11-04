@@ -111,7 +111,7 @@ public abstract class ResearchCenter extends DefaultFacility {
                 boolean lvUp = false;
                 if(incFloat < 1) {
                     increases = 1;
-                    if(Math.random() >= incFloat) {
+                    if(ColonyManager.random() >= incFloat) {
                         lvUp = research.increaseProgress(increases);
                     }
                 } else {

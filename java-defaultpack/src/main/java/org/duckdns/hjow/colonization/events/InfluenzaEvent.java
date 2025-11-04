@@ -55,7 +55,7 @@ public class InfluenzaEvent extends TimeEvent {
                 if(already.contains(ct)) continue;
                 
                 Influenza vs = new Influenza();
-                if(Math.random() >= (1.0 - rate)) { 
+                if(ColonyManager.random() >= (1.0 - rate)) { 
                     ct.getStates().add(vs);
                     already.add(ct);
                     infected++; 

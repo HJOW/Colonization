@@ -32,10 +32,10 @@ public class Citizen implements ColonyElements {
     protected int stamina = 50;
     protected int happy   = 50;
     
-    protected int strength    = (int) (Math.random() * 5) + 4;
-    protected int agility     = (int) (Math.random() * 5) + 4;
-    protected int carisma     = (int) (Math.random() * 5) + 4;
-    protected int intelligent = (int) (Math.random() * 5) + 4;
+    protected int strength    = (int) (ColonyManager.random() * 5) + 4;
+    protected int agility     = (int) (ColonyManager.random() * 5) + 4;
+    protected int carisma     = (int) (ColonyManager.random() * 5) + 4;
+    protected int intelligent = (int) (ColonyManager.random() * 5) + 4;
     
     protected int educatedIntelligence = 0;
     protected int educatedPhysical     = 0;

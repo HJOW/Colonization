@@ -119,7 +119,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
             Collections.sort(facs, new Comparator<Facility>() {
 				@Override
 				public int compare(Facility o1, Facility o2) {
-					if(Math.random() >= 0.5) return -1;
+					if(ColonyManager.random() >= 0.5) return -1;
 					return 1;
 				}
 			});
