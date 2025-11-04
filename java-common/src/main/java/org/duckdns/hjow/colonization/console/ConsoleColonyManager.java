@@ -28,6 +28,7 @@ public class ConsoleColonyManager extends ColonyManager {
     	try {
     		reader = new BufferedReader(new InputStreamReader(System.in));
     		loadLocalConfigs();
+    		loadLocalStorage();
         } catch(Exception ex) {
             throw new RuntimeException(ex.getMessage(), ex);
         }
@@ -233,6 +234,7 @@ public class ConsoleColonyManager extends ColonyManager {
                 	}
                 	
                 	loadLocalConfigs();
+                	loadLocalStorage();
                 	System.out.println(t("작업이 완료되었습니다."));
                 	whileSwitch.setLength(0); whileSwitch.append("N"); break;
                 } else {

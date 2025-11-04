@@ -24,7 +24,6 @@ import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.script.ScriptPatternDetector;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
@@ -183,8 +182,7 @@ public class ColonyClassLoader {
 					ScriptEngine engine = man.newScriptEngine();
 					
 					// 리플렉션 존재여부 체크
-	        		ScriptPatternDetector detector = new ScriptPatternDetector();
-	        		detector.checkReflection(scripts);
+					ColonyManager.checkBannedKeywords(scripts);
 					
 	        		// 등록
 					ScriptFacilityInformation infoOne = new ScriptFacilityInformation(engine, scripts);

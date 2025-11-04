@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.facilities.script;
 
 import javax.script.ScriptEngine;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -41,17 +42,17 @@ public class ScriptFacility extends DefaultFacility {
 	
 	@Override
     public int getMaxHp() {
-		try { return Integer.parseInt(String.valueOf(engine.eval("getMaxHp()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
+		try { return Integer.parseInt(String.valueOf(ColonyManager.evaluate(engine, "getMaxHp()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
     }
 	
 	@Override
     public short getDefenceType() {
-		try { return (short) Integer.parseInt(String.valueOf(engine.eval("getDefenceType()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
+		try { return (short) Integer.parseInt(String.valueOf(ColonyManager.evaluate(engine, "getDefenceType()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
     }
 	
 	@Override
 	public long usingFee() {
-		try { return Long.parseLong(String.valueOf(engine.eval("usingFee()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); } 
+		try { return Long.parseLong(String.valueOf(ColonyManager.evaluate(engine, "usingFee()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); } 
 	}
 	
 	@Override
@@ -59,7 +60,7 @@ public class ScriptFacility extends DefaultFacility {
 		try {
 			engine.put("__city"  , city.toJson());
 			engine.put("__colony", colony.toJson());
-			return Long.parseLong(String.valueOf(engine.eval("getMaintainFee(__city, __colony)"))); 
+			return Long.parseLong(String.valueOf(ColonyManager.evaluate(engine, "getMaintainFee(__city, __colony)"))); 
 		} catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
 	}
 	
@@ -68,26 +69,26 @@ public class ScriptFacility extends DefaultFacility {
 		try {
 			engine.put("__city"  , city.toJson());
 			engine.put("__colony", colony.toJson());
-			return Long.parseLong(String.valueOf(engine.eval("getDestructionFee(__city, __colony)"))); 
+			return Long.parseLong(String.valueOf(ColonyManager.evaluate(engine, "getDestructionFee(__city, __colony)"))); 
 		} catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
     }
 
 	@Override
 	public int getPowerConsume() {
-		try { return Integer.parseInt(String.valueOf(engine.eval("getPowerConsume()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
+		try { return Integer.parseInt(String.valueOf(ColonyManager.evaluate(engine, "getPowerConsume()"))); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
 	}
 
 	@Override
 	public int getWorkerSuitability(Citizen citizen) {
 		try {
 			engine.put("__citizen", citizen.toJson());
-			return Integer.parseInt(String.valueOf(engine.eval("getWorkerSuitability(__citizen)"))); 
+			return Integer.parseInt(String.valueOf(ColonyManager.evaluate(engine, "getWorkerSuitability(__citizen)"))); 
 		} catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
 	}
 
 	@Override
 	protected String getDefaultNamePrefix() {
-		try { return String.valueOf(engine.eval("getDefaultNamePrefix()")); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
+		try { return String.valueOf(ColonyManager.evaluate(engine, "getDefaultNamePrefix()")); } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
 	}
 	
 	@Override

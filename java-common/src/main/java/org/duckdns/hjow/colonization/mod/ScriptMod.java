@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization.mod;
 import javax.script.ScriptEngine;
 import javax.swing.JPanel;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.script.ScriptUsingObject;
@@ -32,24 +33,24 @@ public class ScriptMod implements Mod, ScriptUsingObject {
 	
 	@Override
 	public void init(ColonyManagerInterface manager) {
-		try { engine.eval("init(__panel)"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+		try { ColonyManager.evaluate(engine, "init(__panel)"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
 	}
 
 	@Override
 	public String getName() {
-		try { return String.valueOf(engine.eval("getName()")); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
+		try { return String.valueOf(ColonyManager.evaluate(engine, "getName()")); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
 		return null;
 	}
 
 	@Override
 	public String getDescription() {
-		try { return String.valueOf(engine.eval("getDescription()")); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
+		try { return String.valueOf(ColonyManager.evaluate(engine, "getDescription()")); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
 		return null;
 	}
 
 	@Override
 	public int getLocation() {
-		try { return Integer.parseInt(String.valueOf(engine.eval("getLocation()"))); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
+		try { return Integer.parseInt(String.valueOf(ColonyManager.evaluate(engine, "getLocation()"))); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
 		return 0;
 	}
 
@@ -63,18 +64,18 @@ public class ScriptMod implements Mod, ScriptUsingObject {
 		engine.put("__cycle" , new Integer(cycle));
 		engine.put("__colony", colony);
 		engine.put("__manager", manager);
-		try { engine.eval("refresh(__panel, __cycle, __colony, __manager)"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+		try { ColonyManager.evaluate(engine, "refresh(__panel, __cycle, __colony, __manager)"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
 	}
 
 	@Override
 	public boolean isReadOnly() {
-		try { return DataUtil.parseBoolean(String.valueOf(engine.eval("isReadOnly()"))); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
+		try { return DataUtil.parseBoolean(String.valueOf(ColonyManager.evaluate(engine, "isReadOnly()"))); } catch(Exception ex) { if(flagChecking) throw new RuntimeException(ex.getMessage(), ex); GlobalLogs.processExceptionOccured(ex, false); }
 		return true;
 	}
 	
 	@Override
 	public void dispose() {
-		try { engine.eval("dispose(__panel)"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+		try { ColonyManager.evaluate(engine, "dispose(__panel)"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
 		engine = null;
 		parent = null;
 		
@@ -88,18 +89,18 @@ public class ScriptMod implements Mod, ScriptUsingObject {
 			flagChecking = true;
 			
 		    // 이름 체크
-		    String val = String.valueOf(engine.eval("getName()"));
+		    String val = String.valueOf(ColonyManager.evaluate(engine, "getName()"));
 		    if(DataUtil.isEmpty(val)) throw new NullPointerException("getName() return value cannot be null !");
 		    
 		    // 설명 체크
-		    val = String.valueOf(engine.eval("getDescription()"));
+		    val = String.valueOf(ColonyManager.evaluate(engine, "getDescription()"));
 		    if(val == null) throw new NullPointerException("getDescription() return value cannot be null !");
 		    
 		    // 읽기 전용 체크
-		    String.valueOf(engine.eval("isReadOnly()"));
+		    String.valueOf(ColonyManager.evaluate(engine, "isReadOnly()"));
 		    
 		    // location 코드 체크
-		    String.valueOf(engine.eval("getLocation()"));
+		    String.valueOf(ColonyManager.evaluate(engine, "getLocation()"));
 		    
 		    flagChecking = false;
 		} catch(RuntimeException ex) {

@@ -80,6 +80,7 @@ public class Colonization extends ConsoleColonization implements GUIColonization
             try { Thread.sleep(3000L); } catch(InterruptedException ex) { exit(); return; }
             GUIColonyManager guiMan = (GUIColonyManager) manager;
             guiMan.loadLocalConfigs();
+            guiMan.loadLocalStorage();
             guiMan.initializeUI();
             guiMan.open(this);
             closeLoadingDialog();

@@ -19,7 +19,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.commons.script.ScriptPatternDetector;
 import org.duckdns.hjow.commons.ui.JLogArea;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -33,7 +32,6 @@ public class ScriptTester {
     protected JTextArea    taMultiScript, taMultiResult;
     
     protected transient ScriptEngine engine;
-    protected transient ScriptPatternDetector detector = new ScriptPatternDetector();
     
     public ScriptTester(Window w) {
     	dialog = new JDialog(w);
@@ -136,9 +134,9 @@ public class ScriptTester {
     		tfSingleScript.setText("");
     		
     		// 리플렉션 존재여부 체크
-    		detector.checkReflection(scripts);
+    		ColonyManager.checkBannedKeywords(scripts);
     		
-			Object res = engine.eval(scripts);
+			Object res = ColonyManager.evaluate(engine, scripts);
 			if(res == null) res = "[NULL]";
 			taSingleLog.log(String.valueOf(res));
 		} catch(Exception ex) {
@@ -155,9 +153,9 @@ public class ScriptTester {
     		System.out.println(scripts);
     		
     		// 리플렉션 존재여부 체크
-    		detector.checkReflection(scripts);
+    		ColonyManager.checkBannedKeywords(scripts);
     		
-			Object res = engine.eval(scripts);
+			Object res = ColonyManager.evaluate(engine, scripts);
 			if(res == null) res = "[NULL]";
 			taMultiResult.setText(String.valueOf(res));
 		} catch(Exception ex) {

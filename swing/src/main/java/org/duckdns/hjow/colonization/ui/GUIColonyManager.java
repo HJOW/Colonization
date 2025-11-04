@@ -58,8 +58,6 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
-import org.duckdns.hjow.colonization.script.NetObject;
-import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.script.UIObject;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
@@ -67,8 +65,6 @@ import org.duckdns.hjow.colonization.ui.licenses.LicenseDialog;
 import org.duckdns.hjow.colonization.ui.tools.CDOCViewer;
 import org.duckdns.hjow.colonization.ui.tools.GUITCPSimpleDaemonManager;
 import org.duckdns.hjow.commons.data.CompressedDocument;
-import org.duckdns.hjow.commons.script.MathObject;
-import org.duckdns.hjow.commons.script.SecurityObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
@@ -128,6 +124,7 @@ public class GUIColonyManager extends ColonyManager {
     public void init(GUIColonizationMainClass superInstance) {
         // 설정 파일 읽기
         loadLocalConfigs();
+        loadLocalStorage();
         
         // LookAndFeel 설정
         if(! flagLookAndFeelInitialized) {
@@ -1542,10 +1539,7 @@ public class GUIColonyManager extends ColonyManager {
     @Override
     protected void initScriptEngineManager() {
         scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
-        scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
-        scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
-        scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
-        scriptEngineManager.put(NetObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, NetObject.getInstance());
+        initDefaultScriptEngineManager();
         
         uiScriptBroker = new UIObject(getDialog());
         scriptEngineManager.put(uiScriptBroker.getPrefixName() + "_" + scriptVarPrefix, uiScriptBroker);
@@ -1554,10 +1548,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 기본함수 선언 스크립트 실행 */
     @Override
     protected void evalInitScripts(ScriptEngine engine) throws Exception {
-        engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
-        engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
-        engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
-        engine.eval(NetObject.getInstance().getInitScript(scriptVarPrefix));
+    	evalDefaultInitScripts(engine);
         engine.eval(uiScriptBroker.getInitScript(scriptVarPrefix));
     }
     

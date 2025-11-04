@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.constants.Constants;
@@ -76,6 +77,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     protected transient ScriptEngineManager scriptEngineManager = null;
     protected transient ScriptEngine        rootEngine          = null;
+    protected transient JsonObject          storage             = new JsonObject();
+    
     protected transient String scriptLanguage = "JavaScript";
     protected transient String scriptVarPrefix = "a" + (100000 + (int) (Math.random() * 899999));
     
@@ -263,18 +266,72 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         }
     }
     
+    /** 스크립트 엔진에서 액세스하는 스토리지 준비 */
+    protected void loadLocalStorage() {
+    	try {
+    		// 폴더 체크 (없으면 만들기)
+    		File root = getColonyScriptRootDirectory();
+        	if(! root.exists()) root.mkdirs();
+        	
+        	// 저장소 파일
+            File fileStorage = new File(root.getAbsolutePath() + File.separator + "storage.json");
+            if(! fileStorage.exists()) {
+            	FileUtil.writeString(fileStorage, "UTF-8", "{}");
+            }
+            
+            // 읽고 파싱
+            String reads = FileUtil.readString(fileStorage, "UTF-8");
+            JsonObject json = (JsonObject) JsonObject.parseJson(reads);
+            
+            storage.clear();
+            storage.putAll(json);
+    	} catch(Exception ex) {
+    		GlobalLogs.processExceptionOccured(ex, false);
+    	}
+    }
+    
+    /** 스크립트 엔진에서 액세스하는 스토리지 저장 */
+    protected void saveLocalStorage() {
+    	try {
+    		// 폴더 체크 (없으면 만들기)
+    		File root = getColonyScriptRootDirectory();
+        	if(! root.exists()) root.mkdirs();
+        	
+        	// 저장소 파일
+            File fileStorage = new File(root.getAbsolutePath() + File.separator + "storage.json");
+            
+            // 저장
+            FileUtil.writeString(fileStorage, "UTF-8", storage.toJSON());
+    	} catch(Exception ex) {
+    		GlobalLogs.processExceptionOccured(ex, false);
+    	}
+    }
+    
     /** 스크립트 엔진 매니저 준비 */
     protected void initScriptEngineManager() {
     	scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
-        scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
-        scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
-        scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
-        scriptEngineManager.put(NetObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, NetObject.getInstance());
+    	initDefaultScriptEngineManager();
     }
     
     /** 기본함수 선언 스크립트 실행 */
 	protected void evalInitScripts(ScriptEngine engine) throws Exception {
-		engine.put("BUILD_NO", String.valueOf(BUILD_NO));
+		evalDefaultInitScripts(engine);
+	}
+	
+	/** 스크립트 엔진 매니저에 기본적인 객체 삽입 */
+    protected final void initDefaultScriptEngineManager() {
+    	scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
+        scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
+        scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
+        scriptEngineManager.put(NetObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, NetObject.getInstance());
+        
+        scriptEngineManager.put("storage_" + scriptVarPrefix, storage);
+        scriptEngineManager.put("storage", storage);
+    }
+	
+	/** 기본함수 선언 스크립트 실행 - 공통 파트 */
+	protected final void evalDefaultInitScripts(ScriptEngine engine) throws Exception {
+        engine.put("BUILD_NO", String.valueOf(BUILD_NO));
 		
 		engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
 		engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
@@ -540,8 +597,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         		String scripts = FileUtil.readString(f, "UTF-8");
         		
         		// 리플렉션 존재여부 체크
-        		ScriptPatternDetector detector = new ScriptPatternDetector();
-        		detector.checkReflection(scripts);
+        		checkBannedKeywords(scripts);
         		
         		// 스크립트 실행 (함수들이 선언될 것)
         		engine.eval(scripts);
@@ -689,7 +745,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     public void disposeContents() {
         threadSwitch = false;
         waitThreadShutdown();
-        if(! flagAlreadyDisposed) saveLocalConfigs();
+        if(! flagAlreadyDisposed) { saveLocalConfigs(); saveLocalStorage(); }
         if((! flagAlreadyDisposed) && (! colonies.isEmpty())) saveColonies();
         ColonyClassLoader.clearAll();
         broker = null;
@@ -872,10 +928,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         		rootEngine.put("colony", getSelectColonyInfo());
         		rootEngine.put("uix", broker);
         		
-        		ScriptPatternDetector detector = new ScriptPatternDetector();
-        		detector.checkReflection(commands);
-        		
-        		res = rootEngine.eval(commands);
+        		res = evaluate(rootEngine, commands);
         		if(res != null) logGlobals(res.toString());
     		} catch(Exception ex) {
     			GlobalLogs.processExceptionOccured(ex, true);
@@ -1057,6 +1110,29 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     /** 버전 배열을 문자열로 변환 */
     public static String getVersionString(int[] num) {
         return num[0] + "." + num[1] + "." + num[2];
+    }
+    
+    /** 스크립트 실행 */
+    public static Object evaluate(ScriptEngine engine, String scripts) throws ScriptException {
+    	if(scripts == null) return null;
+    	checkBannedKeywords(scripts);
+    	return engine.eval(scripts);
+    }
+    
+    public static final ScriptPatternDetector SCRIPT_PATTERN_DETECTOR = new ScriptPatternDetector();
+    public static final List<String> BANNED_KEYWORDS = new Vector<String>();
+    /** 스크립트 내 금지어 탐지 */
+    public static void checkBannedKeywords(String scripts) {
+    	SCRIPT_PATTERN_DETECTOR.checkReflection(scripts);
+    	
+    	if(BANNED_KEYWORDS.isEmpty()) {
+    		BANNED_KEYWORDS.add("java.");
+    		BANNED_KEYWORDS.add("javax.");
+    		BANNED_KEYWORDS.add("org.");
+    		BANNED_KEYWORDS.add("com.");
+    	}
+    	
+    	SCRIPT_PATTERN_DETECTOR.check(scripts, BANNED_KEYWORDS);
     }
     
     /** 정수 포맷 설정 */
