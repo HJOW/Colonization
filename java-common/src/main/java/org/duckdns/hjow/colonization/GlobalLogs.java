@@ -124,13 +124,13 @@ public class GlobalLogs implements Serializable {
         	    log("log4j prepared.");
     	    }
     	} catch(ClassNotFoundException e) {
-    		e.printStackTrace();
+    		// e.printStackTrace();
     		logger = null;
     		methodDebugLogger = null;
     		methodInfoLogger  = null;
     	} catch(Throwable tx) {
     		log("Using default logging because Initializing log4j failed. (" + tx.getClass().getSimpleName() + ") " + tx.getMessage());
-    		tx.printStackTrace();
+    		// tx.printStackTrace();
     		logger = null;
     		methodDebugLogger = null;
     		methodInfoLogger  = null;
