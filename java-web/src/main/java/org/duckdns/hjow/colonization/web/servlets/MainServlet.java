@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.duckdns.hjow.colonization.web.service.AttributeMap;
 import org.duckdns.hjow.colonization.web.service.Service;
-import org.duckdns.hjow.colonization.web.service.StringMap;
+import org.duckdns.hjow.commons.data.AttributeMap;
+import org.duckdns.hjow.commons.data.StringMap;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 public class MainServlet extends CommonServlet {

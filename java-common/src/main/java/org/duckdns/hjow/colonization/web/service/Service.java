@@ -1,6 +1,8 @@
 package org.duckdns.hjow.colonization.web.service;
 
 import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.commons.data.AttributeMap;
+import org.duckdns.hjow.commons.data.StringMap;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 서비스 (Servlet 대용) - kotlin 사용 시 Servlet API 때문에 문제가 발생하는 듯. */
