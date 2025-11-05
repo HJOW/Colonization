@@ -136,6 +136,10 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 - moment.js             (See https://github.com/moment/moment/blob/develop/LICENSE             )
 - Babel standalone      (See https://github.com/babel/babel/blob/main/LICENSE                  )
 - React                 (See https://github.com/facebook/react/blob/main/LICENSE               )
+- Kotlin libs           (See https://github.com/JetBrains/kotlin-web-site/blob/master/LICENSE  )
+- Log4j2                (See https://logging.apache.org/log4j/2.x/index.html                   )
+- Apache Commons Codec  (See https://commons.apache.org/proper/commons-codec/                  )
+- Apache Commons Lang   (See https://commons.apache.org/proper/commons-lang/                   )
 
 ## WinLauncher, WinModern 빌드만 해당
 - Eclipse Temurin       (See https://adoptium.net/about                                        )
