@@ -31,10 +31,10 @@ public class LoginServlet extends CommonServlet {
         responses.put("result", new Boolean(false));
         
         try {
-        	String svSub1 = getParameter(req, "svSub");
-        	if(svSub1 == null) throw new RuntimeException("No sub keyword !");
-        	if(svSub1.equalsIgnoreCase("login")) {
-        		String strLoginPacket1 = getParameter(req, "login");
+            String svSub1 = getParameter(req, "svSub");
+            if(svSub1 == null) throw new RuntimeException("No sub keyword !");
+            if(svSub1.equalsIgnoreCase("login")) {
+                String strLoginPacket1 = getParameter(req, "login");
                 String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
                 
                 JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
@@ -69,40 +69,40 @@ public class LoginServlet extends CommonServlet {
                 
                 JsonArray arr = new JsonArray();
                 for(Colony c : acc.getColonies()) {
-        			JsonObject row = new JsonObject();
-        			row.put("name", c.getName());
-        			row.put("key" , String.valueOf(c.getKey()));
-        			arr.add(row);
-        		}
+                    JsonObject row = new JsonObject();
+                    row.put("name", c.getName());
+                    row.put("key" , String.valueOf(c.getKey()));
+                    arr.add(row);
+                }
                 
                 responses.put("list", arr);
                 responses.put("success", new Boolean(true));
                 responses.put("message", "");
-        	} else if(svSub1.equals("check")) {
-        		String jwtMaybe = req.getHeader("jwt");
-        		if(jwtMaybe == null || "".equals(jwtMaybe)) jwtMaybe = getParameter(req, "jwt");
-        		if(jwtMaybe == null || "".equals(jwtMaybe)) {
-        			responses.put("success", new Boolean(false));
+            } else if(svSub1.equals("check")) {
+                String jwtMaybe = req.getHeader("jwt");
+                if(jwtMaybe == null || "".equals(jwtMaybe)) jwtMaybe = getParameter(req, "jwt");
+                if(jwtMaybe == null || "".equals(jwtMaybe)) {
+                    responses.put("success", new Boolean(false));
                     responses.put("message", "No JWT token !");
                     responses.put("result", new Boolean(false));
-        		} else {
-        			jwtMaybe = HexUtil.decodeString(jwtMaybe);
-        			Account acc = AccountUtil.verifyJWT(jwtMaybe);
-        			if(acc == null) {
-        				responses.put("success", new Boolean(true));
+                } else {
+                    jwtMaybe = HexUtil.decodeString(jwtMaybe);
+                    Account acc = AccountUtil.verifyJWT(jwtMaybe);
+                    if(acc == null) {
+                        responses.put("success", new Boolean(true));
                         responses.put("message", "");
                         responses.put("result", new Boolean(false));
-        			} else {
-        				responses.put("success", new Boolean(true));
+                    } else {
+                        responses.put("success", new Boolean(true));
                         responses.put("message", "");
                         responses.put("result", new Boolean(true));
                         
                         responses.put("id", acc.getId());
                         responses.put("name", acc.getName());
-        			}
-        		}
-        	} else if(svSub1.equals("join")) {
-        		String strLoginPacket1 = getParameter(req, "login");
+                    }
+                }
+            } else if(svSub1.equals("join")) {
+                String strLoginPacket1 = getParameter(req, "login");
                 String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
                 
                 JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
@@ -139,7 +139,7 @@ public class LoginServlet extends CommonServlet {
                 
                 responses.put("success", new Boolean(true));
                 responses.put("message", "");
-        	}
+            }
         } catch(Exception ex) {
             logger.error("Error on " + this.getName() + " - " + ex.getMessage(), ex);
             responses.put("success", new Boolean(false));

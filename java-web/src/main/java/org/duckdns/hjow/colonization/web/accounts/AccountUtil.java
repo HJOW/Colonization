@@ -38,10 +38,10 @@ public class AccountUtil {
     
     /** 해당 ID 존재여부 확인 */
     public static boolean existingId(String id) {
-    	File file = new File(getAccountRootDirectory().getAbsolutePath() + File.separator + id + ".colacc");
-    	if(! file.exists()) return false;
-    	
-    	try {
+        File file = new File(getAccountRootDirectory().getAbsolutePath() + File.separator + id + ".colacc");
+        if(! file.exists()) return false;
+        
+        try {
             String strJson = FileUtil.readString(file, "UTF-8", GZIPInputStream.class);
             JsonObject json = (JsonObject) JsonObject.parseJson(strJson); strJson = null;
             Account acc = new Account();

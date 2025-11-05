@@ -26,49 +26,49 @@ public class DBUtil {
     
     /** Mapper 받기 */
     public static ColonizationMapper openMapper() {
-    	SqlSession session = openSession();
-    	return session.getMapper(ColonizationMapper.class);
+        SqlSession session = openSession();
+        return session.getMapper(ColonizationMapper.class);
     }
     
     /** Mapper 받기 */
     public static ColonizationMapper openMapper(boolean autoCommit) {
-    	SqlSession session = openSession(autoCommit);
-    	return session.getMapper(ColonizationMapper.class);
+        SqlSession session = openSession(autoCommit);
+        return session.getMapper(ColonizationMapper.class);
     }
     
     protected SqlSessionFactory sessionFactory;
     private DBUtil() {
         InputStream inp1 = null;
         try {
-        	File roots = ColonyManager.getHomeDir("colonizationweb", "db");
-        	if(! roots.exists()) roots.mkdirs();
-        	
-        	File dbFile = new File(roots.getAbsolutePath() + File.separator + "db");
-        	String jdbcUrl = "jdbc:hsqldb:file:" + ( dbFile.getAbsolutePath().replace("\\", "/") );
-        	
-        	PooledDataSource dataSource = new PooledDataSource();
-        	dataSource.setDriver("org.hsqldb.jdbcDriver");
-        	dataSource.setUrl(jdbcUrl);
-        	dataSource.setUsername("sa");
-        	dataSource.setPassword("");
-        	dataSource.setPoolMaximumActiveConnections(10);
-        	dataSource.setPoolMaximumIdleConnections(5);
-        	dataSource.setPoolPingEnabled(true);
-        	dataSource.setPoolPingQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
-        	
-        	Resources.setCharset(Charset.forName("UTF-8"));
+            File roots = ColonyManager.getHomeDir("colonizationweb", "db");
+            if(! roots.exists()) roots.mkdirs();
+            
+            File dbFile = new File(roots.getAbsolutePath() + File.separator + "db");
+            String jdbcUrl = "jdbc:hsqldb:file:" + ( dbFile.getAbsolutePath().replace("\\", "/") );
+            
+            PooledDataSource dataSource = new PooledDataSource();
+            dataSource.setDriver("org.hsqldb.jdbcDriver");
+            dataSource.setUrl(jdbcUrl);
+            dataSource.setUsername("sa");
+            dataSource.setPassword("");
+            dataSource.setPoolMaximumActiveConnections(10);
+            dataSource.setPoolMaximumIdleConnections(5);
+            dataSource.setPoolPingEnabled(true);
+            dataSource.setPoolPingQuery("SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS");
+            
+            Resources.setCharset(Charset.forName("UTF-8"));
             inp1 = Resources.getResourceAsStream("/mapper/colonization.xml");
-        	
-        	Environment env = new Environment("development", new JdbcTransactionFactory(), dataSource);
-        	Configuration conf = new Configuration(env);
-        	conf.addMapper(ColonizationMapper.class);
-        	conf.setMapUnderscoreToCamelCase(true);
-        	conf.setJdbcTypeForNull(JdbcType.NULL);
-        	XMLMapperBuilder mapperParser = new XMLMapperBuilder(inp1, conf, "/mapper/colonization.xml", conf.getSqlFragments());
-        	mapperParser.parse();
-        	
-        	SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-        	sessionFactory = builder.build(conf);
+            
+            Environment env = new Environment("development", new JdbcTransactionFactory(), dataSource);
+            Configuration conf = new Configuration(env);
+            conf.addMapper(ColonizationMapper.class);
+            conf.setMapUnderscoreToCamelCase(true);
+            conf.setJdbcTypeForNull(JdbcType.NULL);
+            XMLMapperBuilder mapperParser = new XMLMapperBuilder(inp1, conf, "/mapper/colonization.xml", conf.getSqlFragments());
+            mapperParser.parse();
+            
+            SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
+            sessionFactory = builder.build(conf);
         } catch(Throwable t) {
             t.printStackTrace();
             throw new RuntimeException(t.getMessage(), t);
