@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace WinModern
 {
@@ -50,6 +51,14 @@ namespace WinModern
         public static string GetUserHomePath()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+        }
+
+        /** 운영체제가 Windows 인지 확인 */
+        public static bool IsWindows()
+        {
+            // 운영체제가 Windows 인지 확인 (64비트/32비트 구분없이)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) return true;
+            return false;
         }
 
         /** JRE 혹은 JDK의 bin 디렉토리 (java.exe와 javaw.exe가 있는 디렉토리를 말함) 경로를 받아, 해당 Java 버전을 정수로 반환, 버전이 1.X 형태인 경우 X 값을 반환, java.exe 가 없으면 -1을 반환  */

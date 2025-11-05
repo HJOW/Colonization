@@ -714,13 +714,20 @@ namespace WinModern
             argJarPath = jarPath + System.IO.Path.DirectorySeparatorChar + fileName;
             argJarPath = argJarPath.Replace('"' + "", '\\' + '"' + "");
 
+            // cp 속성 작성 준비
+            int javaVer = Util.GetJavaVersion(javaBinPath);
+            string cpSep = ";";
+            bool win = Util.IsWindows();
+            if (!win) cpSep = ":";
+
             // cp 속성 작성
             string classPaths = argJarPath;
             string[] libFiles = Directory.GetFiles(libDir);
             foreach (string f in libFiles)
             {
                 if (!f.EndsWith(".jar")) continue;
-                if (classPaths != "") classPaths = classPaths + ";";
+                if (javaVer < 15 && f.StartsWith("nashorn-core")) continue;
+                if (classPaths != "") classPaths = classPaths + cpSep;
                 classPaths = classPaths + f;
             }
 

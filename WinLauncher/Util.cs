@@ -52,6 +52,12 @@ namespace WinLauncher
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
+        /** 운영체제가 Windows 인지 확인 */
+        public static bool IsWindows()
+        {
+            return true;
+        }
+
         /** JRE 혹은 JDK의 bin 디렉토리 (java.exe와 javaw.exe가 있는 디렉토리를 말함) 경로를 받아, 해당 Java 버전을 정수로 반환, 버전이 1.X 형태인 경우 X 값을 반환, java.exe 가 없으면 -1을 반환  */
         public static int GetJavaVersion(string javaBinPath)
         {
