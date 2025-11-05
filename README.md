@@ -122,6 +122,7 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 - Log4j2                (See https://logging.apache.org/log4j/2.x/index.html                   )
 - Apache Commons Codec  (See https://commons.apache.org/proper/commons-codec/                  )
 - Apache Commons Lang   (See https://commons.apache.org/proper/commons-lang/                   )
+- Nashorn               (See https://github.com/openjdk/nashorn/blob/main/LICENSE              )
 
 ## Swing 빌드만 해당 (모두 선택사항)
 - sciss SyntaxPane      (See https://codeberg.org/sciss/SyntaxPane/src/branch/main/LICENSE     )

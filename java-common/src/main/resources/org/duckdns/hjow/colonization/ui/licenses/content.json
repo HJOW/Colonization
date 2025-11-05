@@ -38,5 +38,10 @@
         "name" : "Kotlin Libraries",
         "contentType" : "text/html",
         "file" : "kotlin.html"
+    },
+    {
+        "name" : "Nashorn",
+        "contentType" : "text/html",
+        "file" : "nashorn.html"
     }
 ]
