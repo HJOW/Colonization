@@ -112,23 +112,25 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 사용되었습니다. (또는 사용에 필요합니다.)
 
 ## 공통
-- 아이콘 이미지      - Google Gemini 이미지 생성
+- 아이콘 이미지         Google Gemini 이미지 생성
 - OpenJDK 8             (See https://openjdk.org/legal/                                        )
 - Maven 3.8             (See https://maven.apache.org/index.html                               )
+- HJOW-Lib              (See https://github.com/HJOW/HJOW-Libs/blob/main/LICENSE               )
 
-## Swing 빌드만 해당 (모두 선택사항)
-- sciss SyntaxPane      (See https://codeberg.org/sciss/SyntaxPane/src/branch/main/LICENSE     )
+## 공통 (선택사항으로, 클래스패스 추가 시 추가 기능 활성화)
 - Kotlin libs           (See https://github.com/JetBrains/kotlin-web-site/blob/master/LICENSE  )
 - Log4j2                (See https://logging.apache.org/log4j/2.x/index.html                   )
 - Apache Commons Codec  (See https://commons.apache.org/proper/commons-codec/                  )
 - Apache Commons Lang   (See https://commons.apache.org/proper/commons-lang/                   )
+
+## Swing 빌드만 해당 (모두 선택사항)
+- sciss SyntaxPane      (See https://codeberg.org/sciss/SyntaxPane/src/branch/main/LICENSE     )
 
 ## Servlet 빌드만 해당
 - Servlet API 2.5       (See https://javaee.github.io/servlet-spec/LICENSE                     )
 - JSTL 1.2              (See https://javaee.github.io/javaee-spec/LICENSE                      )
 - Apache Tomcat 9       (See https://tomcat.apache.org/legal.html                              )
 - auth0 / java-jwt      (See https://github.com/auth0/java-jwt/blob/master/LICENSE             )
-- HJOW-Lib              (See https://github.com/HJOW/HJOW-Libs/blob/main/LICENSE               )
 - HyperSQL              (See https://hsqldb.org/web/hsqlLicense.html                           )
 - MyBatis               (See https://mybatis.org/mybatis-3/licenses.html                       )
 - JUnit                 (See https://github.com/junit-team/junit4/blob/main/LICENSE-junit.txt  )
