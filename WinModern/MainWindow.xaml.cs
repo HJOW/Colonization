@@ -725,8 +725,11 @@ namespace WinModern
             string[] libFiles = Directory.GetFiles(libDir);
             foreach (string f in libFiles)
             {
-                if (!f.EndsWith(".jar")) continue;
-                if (javaVer < 15 && f.StartsWith("nashorn-core")) continue;
+                string namePart = f.Substring(libDir.Length);
+                if (namePart.StartsWith("\\")) namePart = namePart.Substring(1);
+
+                if (!namePart.EndsWith(".jar")) continue;
+                if (javaVer < 15 && namePart.StartsWith("nashorn-core")) continue;
                 if (classPaths != "") classPaths = classPaths + cpSep;
                 classPaths = classPaths + f;
             }

@@ -724,8 +724,11 @@ namespace WinLauncher
             string[] libFiles = Directory.GetFiles(libDir);
             foreach (string f in libFiles)
             {
-                if (!f.EndsWith(".jar")) continue;
-                if (javaVer < 15 && f.StartsWith("nashorn-core")) continue;
+                string namePart = f.Substring(libDir.Length);
+                if (namePart.StartsWith("\\")) namePart = namePart.Substring(1);
+                
+                if (!namePart.EndsWith(".jar")) continue;
+                if (javaVer < 15 && namePart.StartsWith("nashorn-core")) continue;
                 if (classPaths != "") classPaths = classPaths + cpSep;
                 classPaths = classPaths + f;
             }
@@ -736,7 +739,8 @@ namespace WinLauncher
             // 매개변수 입력
             info.Arguments = "-classpath \"" + classPaths + "\" org.duckdns.hjow.colonization.Colonization --updator N";
 
-            // Console.WriteLine(info.Arguments);
+            Console.WriteLine("Java Version " + javaVer);
+            Console.WriteLine(info.Arguments);
             
             info.RedirectStandardInput  = true;
             info.RedirectStandardOutput = true;
