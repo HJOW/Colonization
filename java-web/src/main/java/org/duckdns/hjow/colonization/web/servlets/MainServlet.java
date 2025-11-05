@@ -24,7 +24,8 @@ public class MainServlet extends CommonServlet {
     }
     
     /** 소속 서블릿 등록 */
-    protected void registerServlets() {
+    @SuppressWarnings("unchecked")
+	protected void registerServlets() {
     	CommonServlet sv;
         sv = new LoginServlet();
         children.put(sv.getName(), sv);
@@ -36,9 +37,14 @@ public class MainServlet extends CommonServlet {
         children.put(sv.getName(), sv);
         
         try {
+        	Class<? extends CommonServlet> classSv = null;
+        	try { 
+        		classSv = (Class<? extends CommonServlet>) Class.forName("org.duckdns.hjow.colonization.web.TestServlet");
+        		sv = classSv.newInstance(); 
+        		children.put(sv.getName(), sv);
+        	} catch(ClassNotFoundException exc) { exc.printStackTrace(); }
+        	
         	// 추가로 필요한 경우 이 곳에 등록 (Kotlin 기반인 경우 reflection 으로 객체를 생성할 것)
-        	
-        	
         	
         } catch(Exception ex) {
             logger.error("Exception on registering children servlets - " + ex.getMessage(), ex);

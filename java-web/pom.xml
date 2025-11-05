@@ -73,7 +73,7 @@
             <groupId>org.duckdns.hjow</groupId>
             <artifactId>colonization-java-default</artifactId>
             <version>0.0.1</version>
-        </dependency>
+      </dependency>
       <dependency>
           <groupId>org.hsqldb</groupId>
           <artifactId>hsqldb</artifactId>
@@ -147,6 +147,24 @@
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
           <version>3.3.1</version>
+        </plugin>
+        <plugin>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+                <execution>
+                    <id>compile</id>
+                    <goals><goal>compile</goal></goals>
+                    <configuration>
+                        <jvmTarget>1.8</jvmTarget>
+                        <sourceDirs>
+                            <sourceDir>src/main/java</sourceDir>
+                            <sourceDir>src/main/kotlin</sourceDir>
+                        </sourceDirs>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
