@@ -2,14 +2,12 @@ package org.duckdns.hjow.colonization.web.service;
 
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
-import org.duckdns.hjow.commons.core.Disposeable;
-import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.HexUtil;
 
 /** 서비스 (Servlet 대용) - kotlin 사용 시 Servlet API 때문에 문제가 발생하는 듯. */
-public abstract class Service implements Disposeable {
+public abstract class AbstractService implements Service {
 //	protected Logger logger = LogManager.getLogger(this.getClass());
-	public Service() { init(); }
+	public AbstractService() { init(); }
 	
     /** 서비스 초기화 */
     public void init() { }
@@ -18,18 +16,15 @@ public abstract class Service implements Disposeable {
     public void dispose() {};
     
     /** 로그인 필요 여부 반환 */
-    protected boolean isLoginNeeded() { return false; }
+    @Override
+    public boolean isLoginNeeded() { return false; }
     
     /** 해당 등급 이상만 접근 가능한지를 반환 */
-    protected int getMinimumGradeRequired() { return 0; }
-    
-    /** 이 서비스 이름 반환 */
-    public abstract String getName();
-    
-    /** 서비스 동작 후 전송할 응답 반환 */
-    public abstract JsonObject doCommon(StringMap parameters, StringMap headers, AttributeMap attribute) throws Throwable;
+    @Override
+    public int getMinimumGradeRequired() { return 0; }
     
     /** 서비스 동작 사전작업, MainServlet 제외 다른데서 호출하지 말 것 ! */
+    @Override
     public final void doBefore(StringMap parameters, StringMap headers, AttributeMap attributeReferenceMap) {
         boolean logined = false;
         

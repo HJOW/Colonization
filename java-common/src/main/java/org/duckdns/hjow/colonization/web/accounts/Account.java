@@ -12,6 +12,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.SecurityUtil;
 
+/** 서블릿 프로젝트에서의 계정 개념 구현체 */
 public class Account implements Serializable {
     private static final long serialVersionUID = -3588933635720038238L;
     protected long   key = ColonyManager.generateKey();
