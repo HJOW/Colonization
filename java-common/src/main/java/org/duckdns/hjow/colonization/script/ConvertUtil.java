@@ -10,6 +10,10 @@ public class ConvertUtil {
     	targetLanguage = targetLanguage.toLowerCase();
     	if(targetLanguage.equals("javascript") || targetLanguage.equals("js") || targetLanguage.equals("ecmascript") || targetLanguage.equals("nashorn")) return originalScripts;
     	
+    	if(targetLanguage.equals("kotlin") || targetLanguage.equals("kt") || targetLanguage.equals("kts")) {
+    		originalScripts = originalScripts.replace("function ", "fun ");
+    	}
+    	
     	throw new KnownRuntimeException("Unsupported language " + targetLanguage);
     }
 }
