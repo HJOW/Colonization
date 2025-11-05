@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.web.servlets;
 
 import java.util.Hashtable;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,9 +14,18 @@ public class MainServlet extends CommonServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        System.out.println("Colonization Web Servlet initializing...");
+        logger.info("Colonization Web Servlet initializing...");
+        registerServlets();
         
-        CommonServlet sv;
+        Set<String> servletNames = children.keySet();
+        for(String svName : servletNames) {
+        	children.get(svName).init();
+        }
+    }
+    
+    /** 소속 서블릿 등록 */
+    protected void registerServlets() {
+    	CommonServlet sv;
         sv = new LoginServlet();
         children.put(sv.getName(), sv);
         
@@ -24,6 +34,15 @@ public class MainServlet extends CommonServlet {
         
         sv = new AdminServlet();
         children.put(sv.getName(), sv);
+        
+        try {
+        	// 추가로 필요한 경우 이 곳에 등록 (Kotlin 기반인 경우 reflection 으로 객체를 생성할 것)
+        	
+        	
+        	
+        } catch(Exception ex) {
+            logger.error("Exception on registering children servlets - " + ex.getMessage(), ex);
+        }
     }
     
     @Override
