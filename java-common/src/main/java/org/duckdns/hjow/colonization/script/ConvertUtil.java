@@ -8,7 +8,7 @@ public class ConvertUtil {
     public static String convert(String originalScripts, String targetLanguage) {
     	if(targetLanguage == null) targetLanguage = "javascript";
     	targetLanguage = targetLanguage.toLowerCase();
-    	if(targetLanguage.equals("javascript") || targetLanguage.equals("js") || targetLanguage.equals("ecmascript")) return originalScripts;
+    	if(targetLanguage.equals("javascript") || targetLanguage.equals("js") || targetLanguage.equals("ecmascript") || targetLanguage.equals("nashorn")) return originalScripts;
     	
     	throw new KnownRuntimeException("Unsupported language " + targetLanguage);
     }

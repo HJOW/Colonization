@@ -1526,11 +1526,14 @@ public class GUIColonyManager extends ColonyManager {
     /** 스크립트 엔진 매니저 준비 */
     @Override
     protected void initScriptEngineManager() {
-        scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
-        initDefaultScriptEngineManager();
-        
-        uiScriptBroker = new UIObject(getDialog());
-        scriptEngineManager.put(uiScriptBroker.getPrefixName() + "_" + scriptVarPrefix, uiScriptBroker);
+    	uiScriptBroker = new UIObject(getDialog());
+    	try {
+    	    scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
+    	    initDefaultScriptEngineManager();
+    	    scriptEngineManager.put(uiScriptBroker.getPrefixName() + "_" + scriptVarPrefix, uiScriptBroker);
+    	} catch(UnsupportedClassVersionError ex) {
+    		logGlobals(t("이 Java Runtime 에는 이미 스크립트 엔진이 존재하나, 다른 스크립트 엔진 nashorn-core 과 충돌합니다. lib 디렉토리에서 nashorn-core 로 시작하는 파일을 찾아 삭제해 주세요."), 2);
+    	}
     }
     
     /** 기본함수 선언 스크립트 실행 */

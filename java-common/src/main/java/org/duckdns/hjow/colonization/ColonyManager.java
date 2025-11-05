@@ -624,8 +624,18 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 스크립트 엔진 생성해 반환 */
     protected ScriptEngine newScriptEngine() throws Exception {
+    	if(scriptEngineManager == null) {
+    		logGlobals(t("[LANG] 스크립트 엔진 사용 불가").replace("[LANG]", scriptLanguage), 2); return null;
+    	}
+    	
         // 엔진 생성
         ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
+        
+        if(engine == null && ("JavaScript".equals(scriptLanguage) || "js".equals(scriptLanguage) || "ECMAScript".equals(scriptLanguage))) {
+        	scriptLanguage = "nashorn";
+        	engine = scriptEngineManager.getEngineByName(scriptLanguage); // TODO 
+        }
+        
         if(engine == null) { logGlobals(t("[LANG] 스크립트 엔진 사용 불가").replace("[LANG]", scriptLanguage), 2); return null; }
         
         // 스크립트 실행 (기본함수들 제공)
@@ -1037,7 +1047,10 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     /** 전역 로그 출력 */
     public static void logGlobals(String msg, int detailLevel) {
         if(dialogGlobalLog != null) dialogGlobalLog.log(msg, detailLevel);
-        if(detailLevel <= 1 && dialogGlobalLog == null) System.err.println(msg);
+        else {
+        	if(detailLevel <= 1) System.err.println(msg);
+        	else GlobalLogs.log(msg);
+        }
     }
     
     /** 공격자의 대미지에 추가 연산 (랜덤성 부여, 속성 및 방어력, 상태 적용) */
