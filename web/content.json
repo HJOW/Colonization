@@ -13,6 +13,7 @@
           , { "url" : "lib/commons-lang-2.6.jar"          , "name" : "commons-lang-2.6.jar"           }
           , { "url" : "lib/log4j-api-2.25.2.jar"          , "name" : "log4j-api-2.25.2.jar"           }
           , { "url" : "lib/log4j-core-2.25.2.jar"         , "name" : "log4j-core-2.25.2.jar"          }
+          , { "url" : "lib/nashorn-core-15.7.jar"         , "name" : "nashorn-core-15.7.jar"          } 
           , { "url" : "lib/kotlin-stdlib-1.6.0.jar"       , "name" : "kotlin-stdlib-1.6.0.jar"        }
           , { "url" : "lib/kotlin-stdlib-common-1.6.0.jar", "name" : "kotlin-stdlib-common-1.6.0.jar" }
           , { "url" : "lib/kotlin-stdlib-jdk8-1.6.0.jar"  , "name" : "kotlin-stdlib-jdk8-1.6.0.jar"   }
