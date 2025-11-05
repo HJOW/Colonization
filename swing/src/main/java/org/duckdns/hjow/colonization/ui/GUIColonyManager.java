@@ -703,7 +703,11 @@ public class GUIColonyManager extends ColonyManager {
         menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try { new ScriptTester(getDialog()).open(newScriptEngine()); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); }
+                try {
+                	ScriptEngine engine = newScriptEngine();
+                	if(engine == null) { alert(t("스크립트 기능을 지원하지 않는 Java Runtime 입니다.")); return; }
+                	new ScriptTester(getDialog()).open(engine); 
+                } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); }
             }
         });
         

@@ -180,6 +180,7 @@ public class ColonyClassLoader {
                     
                     // 엔진 준비
                     ScriptEngine engine = man.newScriptEngine();
+                    if(engine == null) continue;
                     
                     // 리플렉션 존재여부 체크
                     ColonyManager.checkBannedKeywords(scripts);

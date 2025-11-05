@@ -30,6 +30,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.pack.Library;
+import org.duckdns.hjow.colonization.script.ConvertUtil;
 import org.duckdns.hjow.colonization.script.NetObject;
 import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
@@ -315,6 +316,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 기본함수 선언 스크립트 실행 */
     protected void evalInitScripts(ScriptEngine engine) throws Exception {
+    	if(engine == null) return;
         evalDefaultInitScripts(engine);
     }
     
@@ -592,6 +594,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             try {
                 // 엔진 생성
                 ScriptEngine engine = newScriptEngine();
+                if(engine == null) continue;
                 
                 // 스크립트 불러오기
                 String scripts = FileUtil.readString(f, "UTF-8");
@@ -623,6 +626,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     protected ScriptEngine newScriptEngine() throws Exception {
         // 엔진 생성
         ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
+        if(engine == null) { logGlobals(t("[LANG] 스크립트 엔진 사용 불가").replace("[LANG]", scriptLanguage), 2); return null; }
         
         // 스크립트 실행 (기본함수들 제공)
         evalInitScripts(engine);
@@ -925,6 +929,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             try {
                 Object res = null;
                 if(rootEngine == null) rootEngine = newScriptEngine();
+                if(rootEngine == null) { logGlobals(t("[LANG] 스크립트 엔진 사용 불가").replace("[LANG]", scriptLanguage)); return; }
+                
                 rootEngine.put("colony", getSelectColonyInfo());
                 rootEngine.put("uix", broker);
                 
@@ -1114,8 +1120,15 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 스크립트 실행 */
     public static Object evaluate(ScriptEngine engine, String scripts) throws ScriptException {
+    	if(scripts == null) return null;
+    	return evaluate(engine, scripts, true);
+    }
+    
+    /** 스크립트 실행 */
+    public static Object evaluate(ScriptEngine engine, String scripts, boolean needConvert) throws ScriptException {
         if(scripts == null) return null;
         checkBannedKeywords(scripts);
+        if(needConvert) scripts = ConvertUtil.convert(scripts, engine.getFactory().getLanguageName());
         return engine.eval(scripts);
     }
     
