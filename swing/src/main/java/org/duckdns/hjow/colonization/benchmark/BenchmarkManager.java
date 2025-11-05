@@ -350,17 +350,17 @@ public class BenchmarkManager implements Tool {
         bars.clear();
     }
 
-	@Override
-	public String getName() {
-		return "BENCH";
-	}
+    @Override
+    public String getName() {
+        return "BENCH";
+    }
 
-	@Override
-	public String getTitle() {
-		return "벤치마크";
-	}
-	
-	@Override
-	public boolean isAvail() { return true; }
+    @Override
+    public String getTitle() {
+        return "벤치마크";
+    }
+    
+    @Override
+    public boolean isAvail() { return true; }
 }
  

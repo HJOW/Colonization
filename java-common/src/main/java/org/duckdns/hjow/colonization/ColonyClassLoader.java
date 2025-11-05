@@ -77,7 +77,7 @@ public class ColonyClassLoader {
         
         colonyClassList.clear();
         for(Pack p : packs) { 
-        	if(p.isEnabled()) colonyClassList.addAll(p.getColonyClasses());
+            if(p.isEnabled()) colonyClassList.addAll(p.getColonyClasses());
         }
         try { colonyClassList.add((Class<?>) Class.forName("org.duckdns.hjow.colonization.elements.custom.FreeColony")); } catch(Exception ex) { GlobalLogs.log(ColonyManager.t("java-default-pack not detected.")); }
         
@@ -154,62 +154,62 @@ public class ColonyClassLoader {
     
     private static final List<ScriptFacilityInformation> scriptFacilityInfo = new Vector<ScriptFacilityInformation>();
     /** 스크립트 Facility 불러오기 */
-	protected static void loadScriptFacilities(ColonyManagerConfig cfg, ColonyManager man) {
-		// 스크립트 Facility 사용 시 인증이 해제되므로, 설정 먼저 검사
-		if(cfg.containsKey("UseCheckDisablingContent") && cfg.getBool("UseCheckDisablingContent")) {
-			// 디렉토리 검사
-			File scriptRoot = man.getColonyScriptRootDirectory();
-			if(! scriptRoot.exists()) scriptRoot.mkdirs();
-			
-			File facRoot = new File(scriptRoot.getAbsolutePath() + File.separator + "facilities");
-			if(! facRoot.exists()) facRoot.mkdirs();
-			
-			// 디렉토리 내 파일 스캔
-			File[] lists = facRoot.listFiles(new FileFilter() {	
-				@Override
-				public boolean accept(File pathname) {
-					if(pathname.isDirectory()) return false;
-					return pathname.getName().toLowerCase().endsWith(".js"); // js 파일만 스캔
-				}
-			});
-			
-			for(File f : lists) {
-				try {
-					// 스크립트 읽기
-					String scripts = FileUtil.readString(f, "UTF-8");
-					
-					// 엔진 준비
-					ScriptEngine engine = man.newScriptEngine();
-					
-					// 리플렉션 존재여부 체크
-					ColonyManager.checkBannedKeywords(scripts);
-					
-	        		// 등록
-					ScriptFacilityInformation infoOne = new ScriptFacilityInformation(engine, scripts);
-					if(! scriptFacilityInfo.contains(infoOne)) scriptFacilityInfo.add(infoOne);
-				} catch(Throwable tx) {
-					GlobalLogs.processExceptionOccured(tx, false);
-				}
-			}
-		} else {
-			scriptFacilityInfo.clear();
-		}
-	}
-	
-	/** 스크립트 Facility 리스트 반환 */
-	public static List<ScriptFacilityInformation> getScriptFacilityList() {
-		List<ScriptFacilityInformation> newList = new ArrayList<ScriptFacilityInformation>();
-		newList.addAll(scriptFacilityInfo);
-		return newList;
-	}
-	
-	/** 해당 이름의 스크립트 Facility 반환 */
-	public static ScriptFacilityInformation getScriptFacilityOne(String name) {
-		for(ScriptFacilityInformation s : getScriptFacilityList()) {
-			if(s.getName().equals(name)) return s;
-		}
-		return null;
-	}
+    protected static void loadScriptFacilities(ColonyManagerConfig cfg, ColonyManager man) {
+        // 스크립트 Facility 사용 시 인증이 해제되므로, 설정 먼저 검사
+        if(cfg.containsKey("UseCheckDisablingContent") && cfg.getBool("UseCheckDisablingContent")) {
+            // 디렉토리 검사
+            File scriptRoot = man.getColonyScriptRootDirectory();
+            if(! scriptRoot.exists()) scriptRoot.mkdirs();
+            
+            File facRoot = new File(scriptRoot.getAbsolutePath() + File.separator + "facilities");
+            if(! facRoot.exists()) facRoot.mkdirs();
+            
+            // 디렉토리 내 파일 스캔
+            File[] lists = facRoot.listFiles(new FileFilter() {    
+                @Override
+                public boolean accept(File pathname) {
+                    if(pathname.isDirectory()) return false;
+                    return pathname.getName().toLowerCase().endsWith(".js"); // js 파일만 스캔
+                }
+            });
+            
+            for(File f : lists) {
+                try {
+                    // 스크립트 읽기
+                    String scripts = FileUtil.readString(f, "UTF-8");
+                    
+                    // 엔진 준비
+                    ScriptEngine engine = man.newScriptEngine();
+                    
+                    // 리플렉션 존재여부 체크
+                    ColonyManager.checkBannedKeywords(scripts);
+                    
+                    // 등록
+                    ScriptFacilityInformation infoOne = new ScriptFacilityInformation(engine, scripts);
+                    if(! scriptFacilityInfo.contains(infoOne)) scriptFacilityInfo.add(infoOne);
+                } catch(Throwable tx) {
+                    GlobalLogs.processExceptionOccured(tx, false);
+                }
+            }
+        } else {
+            scriptFacilityInfo.clear();
+        }
+    }
+    
+    /** 스크립트 Facility 리스트 반환 */
+    public static List<ScriptFacilityInformation> getScriptFacilityList() {
+        List<ScriptFacilityInformation> newList = new ArrayList<ScriptFacilityInformation>();
+        newList.addAll(scriptFacilityInfo);
+        return newList;
+    }
+    
+    /** 해당 이름의 스크립트 Facility 반환 */
+    public static ScriptFacilityInformation getScriptFacilityOne(String name) {
+        for(ScriptFacilityInformation s : getScriptFacilityList()) {
+            if(s.getName().equals(name)) return s;
+        }
+        return null;
+    }
     
     private static final List<Class<?>> researchClassList     = new Vector<Class<?>>();
     private static       boolean        researchClassListFlag = false;
@@ -289,16 +289,16 @@ public class ColonyClassLoader {
     
     /** 정책 객체 생성 */
     public static Policy createPolicyInstance(String className) {
-    	for(Class<?> classes : policyClassList) {
-    		if(! (classes.getSimpleName().equals(className) || classes.getName().equals(className))) continue;
-    		try {
-    		    Policy p = (Policy) classes.newInstance();
-    		    return p;
-    		} catch(Exception ex) {
-    			GlobalLogs.processExceptionOccured(ex, false);
-    		}
-    	}
-    	return null;
+        for(Class<?> classes : policyClassList) {
+            if(! (classes.getSimpleName().equals(className) || classes.getName().equals(className))) continue;
+            try {
+                Policy p = (Policy) classes.newInstance();
+                return p;
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+            }
+        }
+        return null;
     }
     
     /** 기본 공지사항 컨텐츠 html 반환 (웹 접근 못했을 시 이 내용 출력) */
@@ -329,62 +329,62 @@ public class ColonyClassLoader {
     
     /** 공통 설정 최상단 URL 반환 */
     public static String htmlRootUrl() {
-    	return "http://hjow.duckdns.org/colonization/";
+        return "http://hjow.duckdns.org/colonization/";
     }
     
     /** 웹 공통 설정 전체를 Json 으로 반환 */
     public static JsonObject getWebConfigRoot() {
-    	try {
-    		return (JsonObject) JsonObject.parseJson(NetUtil.sendGet(new URL(htmlConfigJsonUrl()), "UTF-8"));
-    	} catch(java.net.UnknownHostException ex) {
-    		throw new RuntimeException("Cannot connect to web config server. Please check the internet status.", ex);
-    	} catch(Throwable ex) {
-    		throw new RuntimeException(ex.getMessage(), ex);
-    	}
+        try {
+            return (JsonObject) JsonObject.parseJson(NetUtil.sendGet(new URL(htmlConfigJsonUrl()), "UTF-8"));
+        } catch(java.net.UnknownHostException ex) {
+            throw new RuntimeException("Cannot connect to web config server. Please check the internet status.", ex);
+        } catch(Throwable ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
     }
     
     /** 웹 공통 설정 중 Swing 파트를 Json 으로 반환 */
     public static JsonObject getWebConfigSwing() {
-    	JsonObject roots = getWebConfigRoot();
-    	return (JsonObject) roots.get("swing");
+        JsonObject roots = getWebConfigRoot();
+        return (JsonObject) roots.get("swing");
     }
     
     /** 웹 공통 설정 중 Swing 파트의 최신 버전을 문자열로 반환 */
     public static String getWebConfigSwingNewVersion() {
-    	return getWebConfigSwing().get("version").toString();
+        return getWebConfigSwing().get("version").toString();
     }
     
     /** 웹 공통 설정 중 Swing 파트의 한글 공지사항 파일명 혹은 URL을 문자열로 반환 */
     public static String getWebConfigSwingNoticeKorean() {
-    	String res = getWebConfigSwing().get("noticeKo").toString();
-    	if(! res.startsWith("http")) res = htmlRootUrl() + res;
-    	return res;
+        String res = getWebConfigSwing().get("noticeKo").toString();
+        if(! res.startsWith("http")) res = htmlRootUrl() + res;
+        return res;
     }
     
     /** 웹 공통 설정 중 Swing 파트의 빌드 목록을 Json 객체로 반환 */
     public static JsonObject getWebConfigSwingBuilds() {
-    	return (JsonObject) getWebConfigSwing().get("builds");
+        return (JsonObject) getWebConfigSwing().get("builds");
     }
     
     /** 웹 공통 설정 중 Swing 파트의 lib 내 들어갈 목록을 Json 배열로 반환 */
     public static JsonArray getWebConfigSwingLibs() {
-    	return (JsonArray) getWebConfigSwing().get("libs");
+        return (JsonArray) getWebConfigSwing().get("libs");
     }
     
     /** 저장 경로 내 lib 디렉토리 반환 */
     public static File getHomeLibDir() {
-    	return ColonyManager.getHomeDir("colonization", "lib");
+        return ColonyManager.getHomeDir("colonization", "lib");
     }
     
     /** lib 디렉토리 내 packs.txt 파일 반환 */
     public static File getLibPackClassFile() {
-    	return new File(getHomeLibDir().getAbsolutePath() + File.separator + "packs.txt");
+        return new File(getHomeLibDir().getAbsolutePath() + File.separator + "packs.txt");
     }
     
     /** 공통 설정 정보 조회 */
     public static synchronized void loadWebConfigs(ColonyManager man) {
         try {
-        	applyWebConfigs(getWebConfigSwing(), man);
+            applyWebConfigs(getWebConfigSwing(), man);
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, true);
         }
@@ -403,16 +403,16 @@ public class ColonyClassLoader {
     
     /** 예약된 Library 클래스명 배열 반환 */
     public static String[] getReservedLibraryClassNames() {
-    	String[] newArr = new String[RESERVED_LIB_NAMES.length];
-    	for(int idx=0; idx<newArr.length; idx++) { newArr[idx] = RESERVED_LIB_NAMES[idx]; }
-    	return newArr;
+        String[] newArr = new String[RESERVED_LIB_NAMES.length];
+        for(int idx=0; idx<newArr.length; idx++) { newArr[idx] = RESERVED_LIB_NAMES[idx]; }
+        return newArr;
     }
     
     /** 공통 로컬 설정 정보 적용, Pack 불러오기 */
-	public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
+    public static void applyLocalConfigs(ColonyManagerConfig cfg, ColonyManager man) {
         // 예약어로 지정된 Pack 불러오기
         for(String resv : RESERVED_LIB_NAMES) {
-        	processAddClass(resv, man);
+            processAddClass(resv, man);
         }
         
         // Pack class file 탐색
@@ -420,22 +420,22 @@ public class ColonyClassLoader {
         if(! libDir.exists()) libDir.mkdirs();
         File packClassFile = new File(libDir.getAbsolutePath() + File.separator + "packs.txt");
         if(packClassFile.exists()) {
-        	try {
-        		String packClassContent = FileUtil.readString(packClassFile, "UTF-8");
-        		StringTokenizer lineTokenizer = new StringTokenizer(packClassContent, "\n");
-        		while(lineTokenizer.hasMoreTokens()) {
-        			String line = lineTokenizer.nextToken().trim();
-        			if(line.startsWith("#")) continue;
-        			if(DataUtil.isEmpty(line)) continue;
-        			processAddClass(line, man);
-        		}
-        		
-        	} catch(Exception ex) {
-        		GlobalLogs.processExceptionOccured(ex, false);
-        	}
+            try {
+                String packClassContent = FileUtil.readString(packClassFile, "UTF-8");
+                StringTokenizer lineTokenizer = new StringTokenizer(packClassContent, "\n");
+                while(lineTokenizer.hasMoreTokens()) {
+                    String line = lineTokenizer.nextToken().trim();
+                    if(line.startsWith("#")) continue;
+                    if(DataUtil.isEmpty(line)) continue;
+                    processAddClass(line, man);
+                }
+                
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+            }
         } else {
-        	String newContent = "# 불러올 Pack 의 class name 을 이 파일에 기재해 주세요. 한줄에 하나씩 입력해 주세요. # 기호로 시작하는 줄은 무시됩니다.\n";
-        	try { FileUtil.writeString(packClassFile, "UTF-8", newContent); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+            String newContent = "# 불러올 Pack 의 class name 을 이 파일에 기재해 주세요. 한줄에 하나씩 입력해 주세요. # 기호로 시작하는 줄은 무시됩니다.\n";
+            try { FileUtil.writeString(packClassFile, "UTF-8", newContent); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         }
         
         // Pack 모두 열어 내용물 적용
@@ -445,69 +445,69 @@ public class ColonyClassLoader {
         loadScriptFacilities(cfg, man);
     }
 
-	/** 클래스명 체크 */
+    /** 클래스명 체크 */
     public static void checkModClassName(String modClassName) {
-    	if(modClassName.contains(",")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 , 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains(";")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ; 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains("!")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ! 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains("\"")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 \" 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains("'")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ' 기호가 들어갈 수 없습니다."));
-		if(modClassName.contains(" ") || modClassName.contains("\t") || modClassName.contains("\n")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 공백 기호가 들어갈 수 없습니다."));
+        if(modClassName.contains(",")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 , 기호가 들어갈 수 없습니다."));
+        if(modClassName.contains(";")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ; 기호가 들어갈 수 없습니다."));
+        if(modClassName.contains("!")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ! 기호가 들어갈 수 없습니다."));
+        if(modClassName.contains("\"")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 \" 기호가 들어갈 수 없습니다."));
+        if(modClassName.contains("'")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 ' 기호가 들어갈 수 없습니다."));
+        if(modClassName.contains(" ") || modClassName.contains("\t") || modClassName.contains("\n")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 공백 기호가 들어갈 수 없습니다."));
     }
     
     /** 클래스 불러오기, Library 나 Pack, Mod 인식. (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) */
     @SuppressWarnings("unchecked")
-	protected static void processAddClass(String className, ColonyManager man) {
-    	Object instances = null;
-    	try {
-        	Class<?> classSomeone = Class.forName(className);
-        	instances = classSomeone.newInstance();
-        	
-        	if(instances instanceof Library) {
-        		Library library = (Library) instances;
-        		List<Pack> addPacks = library.getPacks();
-            	for(Pack packOne : addPacks) {
-            		if(! packs.contains(packOne)) packs.add(packOne);
-            	}
-            	List<Mod> mods = library.getMods();
-            	if(mods != null) {
-            		for(Mod m : mods) {
-            			Class<?> modClass = m.getClass();
-            			if(! modClasses.contains(modClass)) modClasses.add(modClass);
-            		}
-            	}
-        	} else if(instances instanceof Pack) {
-        		Pack pack = (Pack) instances;
-        		if(! packs.contains(pack)) packs.add(pack);
-        	} else if(instances instanceof Mod) {
-        		if(! modClasses.contains(classSomeone)) modClasses.add(classSomeone);
-        	} else if(instances instanceof Cheat) {
-        		Cheat.register((Cheat) instances);
-        	}
-        } catch(ClassNotFoundException ex) {
-        	// DO Nothing
-        } catch(Exception ex) {
-        	GlobalLogs.processExceptionOccured(ex, false);
-        }
-    	
-    	if(instances != null) {
-    		try {
-    			// Cheat 목록도 제공하는지 확인 (선택사항이므로 리플렉션으로 접근)
-    			Class<?> libClass = instances.getClass();
-            	Method mthd = libClass.getMethod("getCheats");
-            	List<Cheat> cheats = (List<Cheat>) mthd.invoke(instances);
-            	for(Cheat c : cheats) { Cheat.register(c); }
-    		} catch(NoSuchMethodException ex) {
-            	// DO Nothing
-    		} catch(Exception ex) {
-            	GlobalLogs.processExceptionOccured(ex, false);
+    protected static void processAddClass(String className, ColonyManager man) {
+        Object instances = null;
+        try {
+            Class<?> classSomeone = Class.forName(className);
+            instances = classSomeone.newInstance();
+            
+            if(instances instanceof Library) {
+                Library library = (Library) instances;
+                List<Pack> addPacks = library.getPacks();
+                for(Pack packOne : addPacks) {
+                    if(! packs.contains(packOne)) packs.add(packOne);
+                }
+                List<Mod> mods = library.getMods();
+                if(mods != null) {
+                    for(Mod m : mods) {
+                        Class<?> modClass = m.getClass();
+                        if(! modClasses.contains(modClass)) modClasses.add(modClass);
+                    }
+                }
+            } else if(instances instanceof Pack) {
+                Pack pack = (Pack) instances;
+                if(! packs.contains(pack)) packs.add(pack);
+            } else if(instances instanceof Mod) {
+                if(! modClasses.contains(classSomeone)) modClasses.add(classSomeone);
+            } else if(instances instanceof Cheat) {
+                Cheat.register((Cheat) instances);
             }
-    	}
+        } catch(ClassNotFoundException ex) {
+            // DO Nothing
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, false);
+        }
+        
+        if(instances != null) {
+            try {
+                // Cheat 목록도 제공하는지 확인 (선택사항이므로 리플렉션으로 접근)
+                Class<?> libClass = instances.getClass();
+                Method mthd = libClass.getMethod("getCheats");
+                List<Cheat> cheats = (List<Cheat>) mthd.invoke(instances);
+                for(Cheat c : cheats) { Cheat.register(c); }
+            } catch(NoSuchMethodException ex) {
+                // DO Nothing
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+            }
+        }
     }
     
     /** Pack 모두 열어 내용물 적용 */
     protected static void loadAllListedPacks() {
-    	for(Pack p : getInstalledPacks()) {
+        for(Pack p : getInstalledPacks()) {
             try {
                 loadPack(p);
             } catch(Exception ex) {
@@ -553,38 +553,38 @@ public class ColonyClassLoader {
     
     /** 등록된 Pack 객체들 리턴 (새 List 객체로 리턴) */
     public static synchronized List<Pack> getInstalledPacks() {
-    	List<Pack> newList = new ArrayList<Pack>();
-    	newList.addAll(packs);
-    	return newList;
+        List<Pack> newList = new ArrayList<Pack>();
+        newList.addAll(packs);
+        return newList;
     }
     
     /** 기본 제공 Pack 불러오기 */
     private static void loadDefaultPacks() {
-    	try { packs.add((Pack) Class.forName("org.duckdns.hjow.colonization.pack.BundledPack").newInstance()); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+        try { packs.add((Pack) Class.forName("org.duckdns.hjow.colonization.pack.BundledPack").newInstance()); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
     }
     
     /** Pack class 를 받아, 그에 해당하는 이미 불러온 Pack 객체를 리턴 */
     public static Pack getInstalledPackInstance(Class<?> packClass) {
-    	for(Pack p : getInstalledPacks()) {
-    		if(p.getClass() == packClass) return p;
-    	}
-    	return null;
+        for(Pack p : getInstalledPacks()) {
+            if(p.getClass() == packClass) return p;
+        }
+        return null;
     }
     
     /** Pack 으로 인해 사용 허가되어야 하는 기능 키워드 반환 */
     public static List<String> getInstalledPackNewFeatures() {
-    	List<String> list = new ArrayList<String>();
-    	for(Pack p : getInstalledPacks()) {
-    		if(p.newFeatures() != null) list.addAll(p.newFeatures());
-    	}
-    	return list;
+        List<String> list = new ArrayList<String>();
+        for(Pack p : getInstalledPacks()) {
+            if(p.newFeatures() != null) list.addAll(p.newFeatures());
+        }
+        return list;
     }
     
     /** lib 안에 등록되어 있던 MOD 지원 클래스들 반환 */
     public static List<Class<?>> getModClasses() {
-    	List<Class<?>> newList = new ArrayList<Class<?>>();
-    	newList.addAll(modClasses);
-    	return newList;
+        List<Class<?>> newList = new ArrayList<Class<?>>();
+        newList.addAll(modClasses);
+        return newList;
     }
     
     /** 클래스 정보들과, 불러온 Pack 모두 다시 확인 */

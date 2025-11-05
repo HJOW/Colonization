@@ -130,7 +130,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         btnOk.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	onOkRequested();
+                onOkRequested();
             }
         });
         
@@ -183,7 +183,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
     
     /** 설치 요청 시 호출 */
     protected void onOkRequested() {
-    	FacilityInformation info;
+        FacilityInformation info;
         Colony col;
         
         try {
@@ -203,7 +203,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
             int leftSpaces = city.getLeftSpaces();
             int needSpaces = info.getSpaceSize();
             if(leftSpaces < needSpaces) {
-            	JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("잔여 공간이 부족합니다.\n[SPACE] 의 공간이 더 필요합니다.").replace("[SPACE]", String.valueOf(needSpaces - leftSpaces)));
+                JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("잔여 공간이 부족합니다.\n[SPACE] 의 공간이 더 필요합니다.").replace("[SPACE]", String.valueOf(needSpaces - leftSpaces)));
                 return;
             }
             
@@ -215,7 +215,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
             }
             
             if(! col.supportedFacility(info)) {
-            	JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("이 정착지에는 설치할 수 없는 시설입니다."));
+                JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("이 정착지에는 설치할 수 없는 시설입니다."));
                 return;
             }
             

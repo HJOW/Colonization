@@ -84,20 +84,20 @@ public class ColonyManagerConfig implements Serializable {
     
     /** true 지정 시, 설정값이 없는 키를 기본값으로 입력 */
     public void setConfigSaveOnNotExistingKeys(boolean flag) {
-    	flagSaveNoKeys = flag;
+        flagSaveNoKeys = flag;
     }
     
     /** 해당 설정 값 존재여부 반환 */
     public boolean containsKey(String key) {
-    	return roots.containsKey(key);
+        return roots.containsKey(key);
     }
     
     /** 설정 값을 문자열로 취급하여 문자열 반환, 강제 형변환될 수 있음. null 일 경우 공란 반환 */
     public String getString(String key) {
         Object obj = roots.get(key);
         if(obj == null) {
-        	if(flagSaveNoKeys) roots.put(key, "");
-        	return "";
+            if(flagSaveNoKeys) roots.put(key, "");
+            return "";
         }
         return obj.toString().trim();
     }
@@ -106,8 +106,8 @@ public class ColonyManagerConfig implements Serializable {
     public boolean getBool(String key) {
         Object obj = roots.get(key);
         if(obj == null) {
-        	if(flagSaveNoKeys) { roots.put(key, "Y"); }
-        	return false;
+            if(flagSaveNoKeys) { roots.put(key, "Y"); }
+            return false;
         }
         if(obj instanceof Boolean) return ((Boolean) obj).booleanValue();
         if(obj instanceof Number ) {
@@ -127,8 +127,8 @@ public class ColonyManagerConfig implements Serializable {
     public int getInt(String key) {
         Object obj = roots.get(key);
         if(obj == null) {
-        	if(flagSaveNoKeys) roots.put(key, "0");
-        	return 0;
+            if(flagSaveNoKeys) roots.put(key, "0");
+            return 0;
         }
         if(obj instanceof Number) {
             return ((Number) obj).intValue();
@@ -141,8 +141,8 @@ public class ColonyManagerConfig implements Serializable {
     public double getDouble(String key) {
         Object obj = roots.get(key);
         if(obj == null) {
-        	if(flagSaveNoKeys) roots.put(key, "0");
-        	return 0.0;
+            if(flagSaveNoKeys) roots.put(key, "0");
+            return 0.0;
         }
         if(obj instanceof Number) {
             return ((Number) obj).doubleValue();

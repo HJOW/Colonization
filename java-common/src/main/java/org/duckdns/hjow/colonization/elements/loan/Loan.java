@@ -50,7 +50,7 @@ public class Loan implements ColonyElements {
     
     @Override
     public final String getClassName() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
     
     public void setKey(long key) { this.key = key; }
@@ -64,7 +64,7 @@ public class Loan implements ColonyElements {
     
     @Override
     public String getTooltip() {
-    	return getName();
+        return getName();
     }
 
     @Override

@@ -77,12 +77,12 @@ public class Citizen implements ColonyElements {
     
     @Override
     public String getTooltip() {
-    	return getName();
+        return getName();
     }
     
     @Override
     public final String getClassName() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
     
     @Override
@@ -141,12 +141,12 @@ public class Citizen implements ColonyElements {
         
         // State 영향력 동작
         for(State st : getStates()) {
-        	if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, this, city, colony, colPanel);
+            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, this, city, colony, colPanel);
         }
         
         // State 수명 동작
         for(State st : getStates()) {
-        	if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, city, colony, efficiency100, colPanel);
         }
         
         // 수명 다된 state 제거
@@ -243,36 +243,36 @@ public class Citizen implements ColonyElements {
     }
     
     public BigInteger getAge() {
-		return age;
-	}
-	public void setAge(BigInteger age) {
-		this.age = age;
-	}
-	public void setAge(String age) {
-		this.age = new BigInteger(age);
-	}
-	public BigInteger getAgeYear() {
-		BigInteger ageYear = getAge();
-		ageYear = ageYear.divide(Constants.BIGINTEGER_10); // 초 to 분
+        return age;
+    }
+    public void setAge(BigInteger age) {
+        this.age = age;
+    }
+    public void setAge(String age) {
+        this.age = new BigInteger(age);
+    }
+    public BigInteger getAgeYear() {
+        BigInteger ageYear = getAge();
+        ageYear = ageYear.divide(Constants.BIGINTEGER_10); // 초 to 분
         ageYear = ageYear.divide(Constants.BIGINTEGER_60); // 분 to 시
         ageYear = ageYear.divide(Constants.BIGINTEGER_24); // 시 to 일
         ageYear = ageYear.divide(Constants.BIGINTEGER_30); // 일 to 월
         ageYear = ageYear.divide(Constants.BIGINTEGER_12); // 월 to 년
         return ageYear;
-	}
-	public void setAgeYear(BigInteger year) {
-		BigInteger ageYear = year;
-		ageYear = ageYear.multiply(Constants.BIGINTEGER_12); // 년 to 월
-		ageYear = ageYear.multiply(Constants.BIGINTEGER_30); // 월 to 일
-		ageYear = ageYear.multiply(Constants.BIGINTEGER_24); // 일 to 시
-		ageYear = ageYear.multiply(Constants.BIGINTEGER_60); // 시 to 분
-		ageYear = ageYear.multiply(Constants.BIGINTEGER_10); // 분 to 초
+    }
+    public void setAgeYear(BigInteger year) {
+        BigInteger ageYear = year;
+        ageYear = ageYear.multiply(Constants.BIGINTEGER_12); // 년 to 월
+        ageYear = ageYear.multiply(Constants.BIGINTEGER_30); // 월 to 일
+        ageYear = ageYear.multiply(Constants.BIGINTEGER_24); // 일 to 시
+        ageYear = ageYear.multiply(Constants.BIGINTEGER_60); // 시 to 분
+        ageYear = ageYear.multiply(Constants.BIGINTEGER_10); // 분 to 초
         setAge(ageYear);
-	}
-	public void setAgeYear(String year) {
-		setAgeYear(new BigInteger(year));
-	}
-	/** 일자리 찾는 중인지를 반환 */
+    }
+    public void setAgeYear(String year) {
+        setAgeYear(new BigInteger(year));
+    }
+    /** 일자리 찾는 중인지를 반환 */
     public boolean isJobSeeker() {
         if(getWorkingFacility()  != 0L) return false;
         if(getBuildingFacility() != 0L) return false;

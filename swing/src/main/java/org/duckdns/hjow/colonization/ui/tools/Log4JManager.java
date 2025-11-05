@@ -39,61 +39,61 @@ public class Log4JManager extends AbstractTool {
     protected JTextField tfFileName, tfFilePattern;
     protected JCheckBox chkFile;
     
-	public Log4JManager(Window win) {
-		super(win);
-	}
-	
-	@Override
-	protected void init() {
-		tabMain = new JTabbedPane();
-		pnCenter.add(tabMain, BorderLayout.CENTER);
-		
-		pnTabNow    = new JPanel();
-		pnTabSample = new JPanel();
-		pnTabNow.setLayout(new BorderLayout());
-		pnTabSample.setLayout(new BorderLayout());
-		
-		tabMain.add(ColonyManager.t("현재 설정 XML 수정"), pnTabNow);
-		tabMain.add(ColonyManager.t("XML 생성"), pnTabSample);
-		
-		JToolBar toolbar = new JToolBar();
-		pnTabNow.add(toolbar, BorderLayout.NORTH);
-		
-		taNow = new JEditorPane();
-		pnTabNow.add(new JScrollPane(taNow), BorderLayout.CENTER);
-		
-		if(GUIPreWorks.isSyntaxPaneEnabled()) taNow.setContentType("text/xml");
-		else taNow.setContentType("text/plain");
-		
-		JButton btnSave = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
-		toolbar.add(btnSave);
-		
-		btnSave.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onSaveCalled();
-			}
-		});
-		
-		splitSample = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		pnTabSample.add(splitSample, BorderLayout.CENTER);
-		
-		taSample = new JEditorPane();
-		taSample.setEditable(false);
-		taSample.setText(GlobalLogs.getSampleLog4jXml());
-		splitSample.setRightComponent(new JScrollPane(taSample));
-		
-		JPanel pnSampleCreateRoot = new JPanel();
-		pnSampleCreateRoot.setLayout(new BorderLayout());
-		splitSample.setLeftComponent(pnSampleCreateRoot);
-		
-		JPanel pnSampleCreateCenter = new JPanel();
-		JPanel pnSampleCreateDown   = new JPanel();
-		pnSampleCreateCenter.setLayout(new GridBagLayout());
-		pnSampleCreateDown.setLayout(new FlowLayout(FlowLayout.RIGHT));
-		pnSampleCreateRoot.add(pnSampleCreateCenter, BorderLayout.CENTER);
-		pnSampleCreateRoot.add(pnSampleCreateDown  , BorderLayout.SOUTH);
-		
+    public Log4JManager(Window win) {
+        super(win);
+    }
+    
+    @Override
+    protected void init() {
+        tabMain = new JTabbedPane();
+        pnCenter.add(tabMain, BorderLayout.CENTER);
+        
+        pnTabNow    = new JPanel();
+        pnTabSample = new JPanel();
+        pnTabNow.setLayout(new BorderLayout());
+        pnTabSample.setLayout(new BorderLayout());
+        
+        tabMain.add(ColonyManager.t("현재 설정 XML 수정"), pnTabNow);
+        tabMain.add(ColonyManager.t("XML 생성"), pnTabSample);
+        
+        JToolBar toolbar = new JToolBar();
+        pnTabNow.add(toolbar, BorderLayout.NORTH);
+        
+        taNow = new JEditorPane();
+        pnTabNow.add(new JScrollPane(taNow), BorderLayout.CENTER);
+        
+        if(GUIPreWorks.isSyntaxPaneEnabled()) taNow.setContentType("text/xml");
+        else taNow.setContentType("text/plain");
+        
+        JButton btnSave = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
+        toolbar.add(btnSave);
+        
+        btnSave.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSaveCalled();
+            }
+        });
+        
+        splitSample = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        pnTabSample.add(splitSample, BorderLayout.CENTER);
+        
+        taSample = new JEditorPane();
+        taSample.setEditable(false);
+        taSample.setText(GlobalLogs.getSampleLog4jXml());
+        splitSample.setRightComponent(new JScrollPane(taSample));
+        
+        JPanel pnSampleCreateRoot = new JPanel();
+        pnSampleCreateRoot.setLayout(new BorderLayout());
+        splitSample.setLeftComponent(pnSampleCreateRoot);
+        
+        JPanel pnSampleCreateCenter = new JPanel();
+        JPanel pnSampleCreateDown   = new JPanel();
+        pnSampleCreateCenter.setLayout(new GridBagLayout());
+        pnSampleCreateDown.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        pnSampleCreateRoot.add(pnSampleCreateCenter, BorderLayout.CENTER);
+        pnSampleCreateRoot.add(pnSampleCreateDown  , BorderLayout.SOUTH);
+        
         int rowNo = 0;
         GridBagConstraints gridBagConst;
         JPanel pn;
@@ -113,17 +113,17 @@ public class Log4JManager extends AbstractTool {
         
         chkFile = new JCheckBox(ColonyManager.t("파일로 저장"));
         chkFile.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					tfFileName.setEnabled(true);
-					tfFilePattern.setEnabled(true);
-				} else {
-					tfFileName.setEnabled(false);
-					tfFilePattern.setEnabled(false);
-				}
-			}
-		});
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    tfFileName.setEnabled(true);
+                    tfFilePattern.setEnabled(true);
+                } else {
+                    tfFileName.setEnabled(false);
+                    tfFilePattern.setEnabled(false);
+                }
+            }
+        });
         pn.add(chkFile);
         
         rowNo++;
@@ -203,122 +203,122 @@ public class Log4JManager extends AbstractTool {
         
         JButton btnCreate = new JButton(ColonyManager.t("샘플 생성") + " >");
         pnSampleCreateDown.add(btnCreate);
-        btnCreate.addActionListener(new ActionListener() {	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onCreateCalled();
-			}
-		});
+        btnCreate.addActionListener(new ActionListener() {    
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onCreateCalled();
+            }
+        });
         
         taSample.setText(buildLog4jSample());
-	}
-	
-	protected int getDialogProperWidth( ) { return 800; }
-	protected int getDialogProperHeight() { return 600; }
-	
-	protected void onSaveCalled() {
-		try {
-			String content = taNow.getText();
-			File file = getLog4jXmlFile();
-			
-			FileUtil.writeString(file, "UTF-8", content);
-			
-			GlobalLogs.tryingToInitLog4j();
-		} catch(Exception ex) {
-		    GlobalLogs.processExceptionOccured(ex, true);
-		    JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
-		}
-	}
-	
-	protected void onCreateCalled() {
-		try {
-			taSample.setText("");
-			taSample.setText(buildLog4jSample());
-		} catch(Exception ex) {
-		    GlobalLogs.processExceptionOccured(ex, true);
-		    JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
-		}
-	}
-	
-	protected String buildLog4jSample() {
-    	StringBuilder sample = new StringBuilder("");
-    	
-    	sample = sample.append("\n").append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    	sample = sample.append("\n").append("<Configuration>");
-    	sample = sample.append("\n").append("    <Appenders>");
+    }
+    
+    protected int getDialogProperWidth( ) { return 800; }
+    protected int getDialogProperHeight() { return 600; }
+    
+    protected void onSaveCalled() {
+        try {
+            String content = taNow.getText();
+            File file = getLog4jXmlFile();
+            
+            FileUtil.writeString(file, "UTF-8", content);
+            
+            GlobalLogs.tryingToInitLog4j();
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, true);
+            JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
+        }
+    }
+    
+    protected void onCreateCalled() {
+        try {
+            taSample.setText("");
+            taSample.setText(buildLog4jSample());
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, true);
+            JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
+        }
+    }
+    
+    protected String buildLog4jSample() {
+        StringBuilder sample = new StringBuilder("");
+        
+        sample = sample.append("\n").append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        sample = sample.append("\n").append("<Configuration>");
+        sample = sample.append("\n").append("    <Appenders>");
         sample = sample.append("\n").append("        <Console name=\"console\" target=\"SYSTEM_OUT\" immediateFlush=\"true\">");
         sample = sample.append("\n").append("            <PatternLayout pattern=\"%d %5p [%c] %m%n\" />");
         sample = sample.append("\n").append("        </Console>");
         
         if(chkFile.isSelected()) {
-        	String name    = tfFileName.getText().trim();
-        	String pattern = tfFilePattern.getText().trim();
-        	if(DataUtil.isEmpty(name   )) throw new RuntimeException(ColonyManager.t("파일명을 입력해 주세요."));
-        	if(DataUtil.isEmpty(pattern)) throw new RuntimeException(ColonyManager.t("파일명 패턴을 입력해 주세요."));
-        	if(name.contains("\"") || pattern.contains("\"")) throw new RuntimeException(ColonyManager.t("파일명과 패턴에서는 \" 기호를 사용할 수 없습니다."));
-        	
-        	sample = sample.append("\n").append("        <RollingFile name=\"fileLog\" fileName=\"").append(name).append("\" filePattern=\"").append(pattern).append("\" immediateFlush=\"true\">");
-        	sample = sample.append("\n").append("            <PatternLayout pattern=\"%d %5p [%c] %m%n\" />");
-        	sample = sample.append("\n").append("            <Policies>");
-        	sample = sample.append("\n").append("                <SizeBasedTriggeringPolicy size=\"1000\" />");
-        	sample = sample.append("\n").append("            </Policies>");
-        	sample = sample.append("\n").append("            <DefaultRolloverStrategy max=\"3\" fileIndex=\"min\" />");
-        	sample = sample.append("\n").append("        </RollingFile>");
+            String name    = tfFileName.getText().trim();
+            String pattern = tfFilePattern.getText().trim();
+            if(DataUtil.isEmpty(name   )) throw new RuntimeException(ColonyManager.t("파일명을 입력해 주세요."));
+            if(DataUtil.isEmpty(pattern)) throw new RuntimeException(ColonyManager.t("파일명 패턴을 입력해 주세요."));
+            if(name.contains("\"") || pattern.contains("\"")) throw new RuntimeException(ColonyManager.t("파일명과 패턴에서는 \" 기호를 사용할 수 없습니다."));
+            
+            sample = sample.append("\n").append("        <RollingFile name=\"fileLog\" fileName=\"").append(name).append("\" filePattern=\"").append(pattern).append("\" immediateFlush=\"true\">");
+            sample = sample.append("\n").append("            <PatternLayout pattern=\"%d %5p [%c] %m%n\" />");
+            sample = sample.append("\n").append("            <Policies>");
+            sample = sample.append("\n").append("                <SizeBasedTriggeringPolicy size=\"1000\" />");
+            sample = sample.append("\n").append("            </Policies>");
+            sample = sample.append("\n").append("            <DefaultRolloverStrategy max=\"3\" fileIndex=\"min\" />");
+            sample = sample.append("\n").append("        </RollingFile>");
         }
         
-    	sample = sample.append("\n").append("    </Appenders>");
-    	sample = sample.append("\n").append("    <Loggers>");
-    	sample = sample.append("\n").append("        <Root level=\"INFO\">");
-    	if(chkFile.isSelected()) {
-    		sample = sample.append("\n").append("            <AppenderRef ref=\"fileLog\" />");
-    	} else {
-    		sample = sample.append("\n").append("            <AppenderRef ref=\"console\" />");
-    	}
-    	sample = sample.append("\n").append("        </Root>");
-    	sample = sample.append("\n").append("    </Loggers>");
-    	sample = sample.append("\n").append("</Configuration>");
-    	
-    	return sample.toString().trim();
+        sample = sample.append("\n").append("    </Appenders>");
+        sample = sample.append("\n").append("    <Loggers>");
+        sample = sample.append("\n").append("        <Root level=\"INFO\">");
+        if(chkFile.isSelected()) {
+            sample = sample.append("\n").append("            <AppenderRef ref=\"fileLog\" />");
+        } else {
+            sample = sample.append("\n").append("            <AppenderRef ref=\"console\" />");
+        }
+        sample = sample.append("\n").append("        </Root>");
+        sample = sample.append("\n").append("    </Loggers>");
+        sample = sample.append("\n").append("</Configuration>");
+        
+        return sample.toString().trim();
     } 
 
-	@Override
-	public String getName() {
-		return "LOGGING";
-	}
+    @Override
+    public String getName() {
+        return "LOGGING";
+    }
 
-	@Override
-	public String getTitle() {
-		return "로그 관리자";
-	}
-	
-	@Override
-	public void open() {
-		try {
-			String content = null;
-			File file = getLog4jXmlFile();
-			if(! file.exists()) content = GlobalLogs.getSampleLog4jXml();
-			else content = FileUtil.readString(file, "UTF-8");
-			taNow.setText(content);
-		} catch(Exception ex) {
-		    GlobalLogs.processExceptionOccured(ex, true);
-		}
-		
-		super.open();
-		if(splitSample != null) splitSample.setDividerLocation(0.5);
-	}
+    @Override
+    public String getTitle() {
+        return "로그 관리자";
+    }
+    
+    @Override
+    public void open() {
+        try {
+            String content = null;
+            File file = getLog4jXmlFile();
+            if(! file.exists()) content = GlobalLogs.getSampleLog4jXml();
+            else content = FileUtil.readString(file, "UTF-8");
+            taNow.setText(content);
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, true);
+        }
+        
+        super.open();
+        if(splitSample != null) splitSample.setDividerLocation(0.5);
+    }
 
-	@Override
-	public boolean isAvail() {
-		return (GlobalLogs.isLog4jAvail());
-	}
+    @Override
+    public boolean isAvail() {
+        return (GlobalLogs.isLog4jAvail());
+    }
 
-	/** XML 파일 경로 반환 */
-	protected File getLog4jXmlFile() {
-		File cfgRoot = ColonyManager.getHomeDir("colonization", "configs");
-		if(! cfgRoot.exists()) {
-			cfgRoot.mkdirs();
-		}
-		
-		return new File(cfgRoot.getAbsolutePath() + File.separator + "log4j.xml");
-	}
+    /** XML 파일 경로 반환 */
+    protected File getLog4jXmlFile() {
+        File cfgRoot = ColonyManager.getHomeDir("colonization", "configs");
+        if(! cfgRoot.exists()) {
+            cfgRoot.mkdirs();
+        }
+        
+        return new File(cfgRoot.getAbsolutePath() + File.separator + "log4j.xml");
+    }
 }

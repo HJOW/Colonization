@@ -71,12 +71,12 @@ public class AccountingData implements Serializable {
         this.sourceKey = sourceKey;
     }
     public String getMoreString() {
-		return moreString;
-	}
-	public void setMoreString(String moreString) {
-		this.moreString = moreString;
-	}
-	public boolean isDisposed() {
+        return moreString;
+    }
+    public void setMoreString(String moreString) {
+        this.moreString = moreString;
+    }
+    public boolean isDisposed() {
         return disposed;
     }
     public void dispose() {

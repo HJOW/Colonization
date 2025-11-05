@@ -28,11 +28,11 @@ public class MilitaryTech extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicScience", 1, 4.0));
-    	list.add(new ResearchCondition("BasicEngineering", 1, 2.0));
-    	list.add(new ResearchCondition("BasicHumanities", 1, 1.0, 20));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicScience", 1, 4.0));
+        list.add(new ResearchCondition("BasicEngineering", 1, 2.0));
+        list.add(new ResearchCondition("BasicHumanities", 1, 1.0, 20));
+        return list;
     }
 
     @Override

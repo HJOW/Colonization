@@ -7,9 +7,9 @@ import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 일반 도시 구현 클래스 */
 public final class NormalCity extends City {
-	private static final long serialVersionUID = -393966678915786643L;
+    private static final long serialVersionUID = -393966678915786643L;
 
-	public NormalCity() {
+    public NormalCity() {
         super();
     }
     
@@ -19,7 +19,7 @@ public final class NormalCity extends City {
     
     /** 정책 목록 갱신 */
     public void resetPolicies() {
-    	policies.clear();
-    	policies.add(new PowerEfficiencyProtocol());
+        policies.clear();
+        policies.add(new PowerEfficiencyProtocol());
     }
 }

@@ -6,22 +6,22 @@ import org.duckdns.hjow.commons.json.JsonObject;
 
 /** ColonyManager 인터페이스, Mod 새로고침 호출 등에 사용 */
 public interface ColonyManagerInterface extends Disposeable {
-	/** 프로그램 종료 */
-	public void exit();
-	/** 현재 프로그램 설정 내용을 반환. 객체가 복제되어 반환되므로, 이 객체로 설정을 변경할 수는 없음. */
-	public ColonyManagerConfig getConfig();
-	/** 화면 UI 새로고침 예약 - 화면 새로고침 필요 사유가 발생한 경우 이 메소드를 호출할 것 */
-	public void reserveRefresh();
-	/** 로그 출력 */
-	public void log(String msg);
-	/** 알림 메시지 출력 */
-	public void alert(String msg);
-	/** 시뮬레이션 정지 */
-	public void pauseSimulation();
-	/** 시뮬레이션 재개 */
-	public void resumeSimulation(int cycleCount);
-	/** 현재 선택된 정착지의 정보를 JsonObject 으로 반환 */
-	public JsonObject getSelectColonyInfo();
-	/** 현재 불러온 모든 정착지 정보를 JsonArray 로 반환 */
-	public JsonArray getAllColonies();
+    /** 프로그램 종료 */
+    public void exit();
+    /** 현재 프로그램 설정 내용을 반환. 객체가 복제되어 반환되므로, 이 객체로 설정을 변경할 수는 없음. */
+    public ColonyManagerConfig getConfig();
+    /** 화면 UI 새로고침 예약 - 화면 새로고침 필요 사유가 발생한 경우 이 메소드를 호출할 것 */
+    public void reserveRefresh();
+    /** 로그 출력 */
+    public void log(String msg);
+    /** 알림 메시지 출력 */
+    public void alert(String msg);
+    /** 시뮬레이션 정지 */
+    public void pauseSimulation();
+    /** 시뮬레이션 재개 */
+    public void resumeSimulation(int cycleCount);
+    /** 현재 선택된 정착지의 정보를 JsonObject 으로 반환 */
+    public JsonObject getSelectColonyInfo();
+    /** 현재 불러온 모든 정착지 정보를 JsonArray 로 반환 */
+    public JsonArray getAllColonies();
 }

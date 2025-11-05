@@ -9,9 +9,9 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class Printing3DStructure extends Research {
-	private static final long serialVersionUID = -238086059316650293L;
+    private static final long serialVersionUID = -238086059316650293L;
 
-	@Override
+    @Override
     public int getMaxLevel() {
         return Integer.MAX_VALUE;
     }
@@ -21,13 +21,13 @@ public class Printing3DStructure extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicBuildingTech", 20, 2.0));
-    	list.add(new ResearchCondition("LightTech", 1, 5.0));
-    	list.add(new ResearchCondition("ComputerTech", 1, 5.0));
-    	list.add(new ResearchCondition("Plasteel", 1, 1.0));
-    	list.add(new ResearchCondition("Physics", 1, 10.0));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicBuildingTech", 20, 2.0));
+        list.add(new ResearchCondition("LightTech", 1, 5.0));
+        list.add(new ResearchCondition("ComputerTech", 1, 5.0));
+        list.add(new ResearchCondition("Plasteel", 1, 1.0));
+        list.add(new ResearchCondition("Physics", 1, 10.0));
+        return list;
     }
 
     @Override

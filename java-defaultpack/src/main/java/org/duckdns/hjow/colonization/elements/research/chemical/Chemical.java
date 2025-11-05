@@ -26,11 +26,11 @@ public class Chemical extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicScience", 1, 5.0));
-    	list.add(new ResearchCondition("BasicScience", 6, 1.0));
-    	list.add(new ResearchCondition("ElectroMagneticTech", 1, 1.0, 5));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicScience", 1, 5.0));
+        list.add(new ResearchCondition("BasicScience", 6, 1.0));
+        list.add(new ResearchCondition("ElectroMagneticTech", 1, 1.0, 5));
+        return list;
     }
     
     @Override

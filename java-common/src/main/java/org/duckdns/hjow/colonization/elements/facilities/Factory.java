@@ -76,7 +76,7 @@ public abstract class Factory extends DefaultFacility implements Storage {
     
     /** 1번 생산에 생산되는 결과물 Product 의 양 (재료와 무관, 즉 재료 1번 사용량 소모 당 생산량을 의미) */
     protected int getProduceResultCount(Product p) {
-    	return 1;
+        return 1;
     }
     
     @Override
@@ -135,9 +135,9 @@ public abstract class Factory extends DefaultFacility implements Storage {
                         
                         if(createSuccess) {
                             // 생산품 추가
-                        	for(int idx=0; idx<getProduceResultCount(p); idx++) {
-                        		if(getStoredCount() < getMaxStoredCapacity()) store(Product.createProductInstance(p.getType()));
-                        	}
+                            for(int idx=0; idx<getProduceResultCount(p); idx++) {
+                                if(getStoredCount() < getMaxStoredCapacity()) store(Product.createProductInstance(p.getType()));
+                            }
                         }
                     }
                 } else {
@@ -187,11 +187,11 @@ public abstract class Factory extends DefaultFacility implements Storage {
     
     @Override
     public int getStoredCount(String productType) {
-    	int c = 0;
-    	for(Product p : stored) {
-    		if(p.getType().equals(productType)) c++;
-    	}
-    	return c;
+        int c = 0;
+        for(Product p : stored) {
+            if(p.getType().equals(productType)) c++;
+        }
+        return c;
     }
     
     @Override
@@ -201,13 +201,13 @@ public abstract class Factory extends DefaultFacility implements Storage {
     
     @Override
     public boolean isStoreAvail(Product p) {
-    	if(isProduced(p)) return true;
+        if(isProduced(p)) return true;
         return false;
     }
     
     /** 이 Product 가 이 공장에서 생산 가능한지를 반환, 재료 보유 여부와 저장 가능 (isStoreAvail) 여부는 이 메소드로 검사하지 않으므로 따로 검사해야 함. */
     public boolean isProduced(Product p) {
-    	return true;
+        return true;
     }
     
     /** 생산 중인 Product 의 Type 반환 */
@@ -217,33 +217,33 @@ public abstract class Factory extends DefaultFacility implements Storage {
     
     /** 생산 중인 Product 의 이름(Title) 반환 */
     public String getProducingName() {
-    	Product p = getProducingSample();
-    	if(p == null) p = new Money();
-    	return p.getTitle();
+        Product p = getProducingSample();
+        if(p == null) p = new Money();
+        return p.getTitle();
     }
     
     /** 생산 중인 Product 의 샘플 객체 만들어 반환 */
     public Product getProducingSample() {
-    	if(getProductType() == null) return null;
-    	return Product.createProductInstance(getProductType());
+        if(getProductType() == null) return null;
+        return Product.createProductInstance(getProductType());
     }
     
     /** 생산 중인 Product 의 원재료 리스트 반환 */
     public List<Product> getProducingProductSources() {
-    	if(getProductType() == null) return null;
-    	Product p = Product.createProductInstance(getProductType());
-    	return p.getSourceProducts();
+        if(getProductType() == null) return null;
+        Product p = Product.createProductInstance(getProductType());
+        return p.getSourceProducts();
     }
     
     /** 해당 타입의 Product 가 지금 이 시설에서 생산 중인 Product 의 원재료인지를 반환 */
     public boolean isProducingSource(String type) {
-    	if(getProductType() == null) return false;
-    	List<Product> sources = getProducingProductSources();
-    	if(sources == null) return false;
-    	for(Product s : sources) {
-    		if(getProductType().equals(s.getType())) return true;
-    	}
-    	return false;
+        if(getProductType() == null) return false;
+        List<Product> sources = getProducingProductSources();
+        if(sources == null) return false;
+        for(Product s : sources) {
+            if(getProductType().equals(s.getType())) return true;
+        }
+        return false;
     }
 
     public void setProductType(String productType) {
@@ -319,7 +319,7 @@ public abstract class Factory extends DefaultFacility implements Storage {
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Long getTechNeeded() {
@@ -331,8 +331,8 @@ public abstract class Factory extends DefaultFacility implements Storage {
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        return list;
     }
 
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

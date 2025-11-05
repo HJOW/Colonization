@@ -95,14 +95,14 @@ public class ResearchPanel extends JPanel implements Disposeable {
         StringBuilder centerResearching = new StringBuilder("");
         boolean firsts = true;
         for(Facility f : facs) {
-        	if(f instanceof ResearchCenter) {
-        		ResearchCenter rch = (ResearchCenter) f;
-        		if(rch.getResearchKey() == r.getKey()) {
-        			if(! firsts) centerResearching = centerResearching.append(", ");
-        			centerResearching = centerResearching.append(rch.getName());
-        			firsts = false;
-        		}
-        	}
+            if(f instanceof ResearchCenter) {
+                ResearchCenter rch = (ResearchCenter) f;
+                if(rch.getResearchKey() == r.getKey()) {
+                    if(! firsts) centerResearching = centerResearching.append(", ");
+                    centerResearching = centerResearching.append(rch.getName());
+                    firsts = false;
+                }
+            }
         }
         facs = null;
         
@@ -129,8 +129,8 @@ public class ResearchPanel extends JPanel implements Disposeable {
         ta.setText(r.getDescription());
     }
 
-	@Override
-	public void dispose() {
-		
-	}
+    @Override
+    public void dispose() {
+        
+    }
 }

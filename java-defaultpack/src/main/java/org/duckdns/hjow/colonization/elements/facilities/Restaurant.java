@@ -58,7 +58,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
         super.oneCycle(cycle, city, colony, efficiency100, colPanel);
         
         if(cycle % getProfitCycle() == 0) {
-        	// 효율 계산
+            // 효율 계산
             double efficiencyRate = efficiency100 / 100.0;
             double additionalRate = additionalComportGradeRate(city, colony);
             if(additionalRate < 0.0) additionalRate = 0.0;
@@ -88,17 +88,17 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
                 
                 for(String pt : getProductTypeNeeded()) { needed.add(new String(pt)); }
                 for(Product p : getStored()) {
-                	int idx = 0;
-                	while(idx<needed.size()) {
-                		String needOne = needed.get(idx);
-                		if(p.getType().equals(needOne)) {
-                			using.add(p);
-                    		needed.remove(idx);
-                    		continue;
-                		}
-                		
-                		idx++;
-                	}
+                    int idx = 0;
+                    while(idx<needed.size()) {
+                        String needOne = needed.get(idx);
+                        if(p.getType().equals(needOne)) {
+                            using.add(p);
+                            needed.remove(idx);
+                            continue;
+                        }
+                        
+                        idx++;
+                    }
                 }
                 
                 // 재료가 부족하면 중단
@@ -120,8 +120,8 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
                 
                 // 재료 소모
                 if(servicingCount % 10 == 1) { // 재료 1개 당 10명에게 서비스 (단 무조건 최소 1개 소모)
-                	for(Product p : using) {
-                    	stored.remove(p);
+                    for(Product p : using) {
+                        stored.remove(p);
                     }
                 }
                 
@@ -148,7 +148,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     
     @Override
     public int getSpaceSize() {
-    	return 5;
+        return 5;
     }
 
     @Override
@@ -182,12 +182,12 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     }
     
     @Override
-	public List<Product> getStored() {
-		return stored;
-	}
+    public List<Product> getStored() {
+        return stored;
+    }
     
     public void setStored(List<Product> p) {
-    	this.stored = p;
+        this.stored = p;
     }
 
     @Override
@@ -215,11 +215,11 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     
     @Override
     public int getStoredCount(String productType) {
-    	int c = 0;
-    	for(Product p : stored) {
-    		if(p.getType().equals(productType)) c++;
-    	}
-    	return c;
+        int c = 0;
+        for(Product p : stored) {
+            if(p.getType().equals(productType)) c++;
+        }
+        return c;
     }
     
     @Override
@@ -234,9 +234,9 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     
     @Override
     public List<String> getProductTypeNeeded() {
-    	List<String> list = new ArrayList<String>();
-    	list.add("NutritionBlock");
-    	return list;
+        List<String> list = new ArrayList<String>();
+        list.add("NutritionBlock");
+        return list;
     }
 
     @Override
@@ -308,7 +308,7 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Long getTechNeeded() {
@@ -320,8 +320,8 @@ public class Restaurant extends DefaultFacility implements ServiceFacility, Stor
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        return list;
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

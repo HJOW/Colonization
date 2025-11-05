@@ -10,9 +10,9 @@ import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 /** 전자기학 */
 public class ElectroMagneticTech extends Research {
-	private static final long serialVersionUID = 8942715919409557057L;
+    private static final long serialVersionUID = 8942715919409557057L;
 
-	public ElectroMagneticTech() { super(); }
+    public ElectroMagneticTech() { super(); }
     
     @Override
     public int getMaxLevel() {
@@ -24,10 +24,10 @@ public class ElectroMagneticTech extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicScience", 1, 1.3));
-    	list.add(new ResearchCondition("Mathematics", 1, 1.4));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicScience", 1, 1.3));
+        list.add(new ResearchCondition("Mathematics", 1, 1.4));
+        return list;
     }
 
     @Override

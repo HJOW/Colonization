@@ -8,10 +8,10 @@ import org.duckdns.hjow.commons.util.NetUtil;
 
 /** 공통 Lib 의 NetObject 기능제한판 */
 public class NetObject extends ScriptObject {
-	private static final long serialVersionUID = 2731949774238629654L;
-	private static final NetObject uniqueObject = new NetObject();
-	private NetObject() {  }
-	
+    private static final long serialVersionUID = 2731949774238629654L;
+    private static final NetObject uniqueObject = new NetObject();
+    private NetObject() {  }
+    
     protected org.duckdns.hjow.commons.script.NetObject originObject = org.duckdns.hjow.commons.script.NetObject.getInstance();
     
     @Override
@@ -20,7 +20,7 @@ public class NetObject extends ScriptObject {
     }
     @Override
     public void releaseResource() {
-    	originObject.releaseResource();
+        originObject.releaseResource();
     }
     
     @Override
@@ -38,12 +38,12 @@ public class NetObject extends ScriptObject {
     }
     
     public String sendGet(Object url, Object charset) throws MalformedURLException, Throwable {
-    	if(charset == null) charset = "UTF-8";
-    	return NetUtil.sendGet(new URL(url.toString()), charset.toString());
+        if(charset == null) charset = "UTF-8";
+        return NetUtil.sendGet(new URL(url.toString()), charset.toString());
     }
     
     public String sendPost(Object url, Object parameters, Object contentType, Object parameterEncoding) throws Throwable {
-    	return originObject.sendPost(url, parameters, contentType, parameterEncoding);
+        return originObject.sendPost(url, parameters, contentType, parameterEncoding);
     }
     
     public static NetObject getInstance() {

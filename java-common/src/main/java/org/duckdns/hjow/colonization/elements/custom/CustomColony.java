@@ -8,9 +8,9 @@ import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 
 /** 사용자 정의 정착지 시나라오로, 모든 종류의 시설과 연구 지원 */
 public abstract class CustomColony extends AbstractColony implements CustomElement {
-	private static final long serialVersionUID = -4732649232228406754L;
+    private static final long serialVersionUID = -4732649232228406754L;
 
-	public CustomColony() {
+    public CustomColony() {
         super();
     }
     
@@ -20,13 +20,13 @@ public abstract class CustomColony extends AbstractColony implements CustomEleme
     
     @Override
     public boolean supportedFacility(FacilityInformation info) {
-    	if(info == null) return false;
+        if(info == null) return false;
         return true;
     }
     
     @Override
     public boolean supportedResearch(String researchTypeName) {
-    	if(researchTypeName == null) return false;
+        if(researchTypeName == null) return false;
         return true;
     }
     
@@ -41,7 +41,7 @@ public abstract class CustomColony extends AbstractColony implements CustomEleme
     
     /** 사용 가능한 난이도 목록 반환 */
     public static int[] getAvailableDifficulties() {
-    	return createAvailableDifficulties(1, 9);
+        return createAvailableDifficulties(1, 9);
     }
     
     public static String getColonyClassTitle() {

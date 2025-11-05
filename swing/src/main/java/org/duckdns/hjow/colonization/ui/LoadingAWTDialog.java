@@ -14,7 +14,7 @@ public class LoadingAWTDialog extends AboutDialog implements Runnable {
     }
     
     public LoadingAWTDialog(String title, String sub) {
-    	this(title, sub, "");
+        this(title, sub, "");
     }
     
     public LoadingAWTDialog(String title, String sub, String ver) {
@@ -23,8 +23,8 @@ public class LoadingAWTDialog extends AboutDialog implements Runnable {
     
     @Override
     protected void init(Window win, String title, String sub, String ver) {
-    	super.init(win, title, sub, ver);
-    	pnProg = new AWTProgressBar();
+        super.init(win, title, sub, ver);
+        pnProg = new AWTProgressBar();
         pnDown.add(pnProg, BorderLayout.CENTER);
     }
     
@@ -36,14 +36,14 @@ public class LoadingAWTDialog extends AboutDialog implements Runnable {
     }
     
     @Override
-	public void dispose() {
-    	threadSwitch = false;
-		close();
+    public void dispose() {
+        threadSwitch = false;
+        close();
         dialog.removeAll();
         dialog  = null;
         lbTitle = null;
         lbSub   = null;
-	}
+    }
     
     @Override
     public void run() {

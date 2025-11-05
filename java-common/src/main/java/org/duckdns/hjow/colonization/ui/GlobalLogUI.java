@@ -10,5 +10,5 @@ public interface GlobalLogUI extends Disposeable {
     public void open(ColonyManager superInstance);
     public void close();
     public int getDetailLevel();
-	public void setDetailLevel(int detailLevel);
+    public void setDetailLevel(int detailLevel);
 }

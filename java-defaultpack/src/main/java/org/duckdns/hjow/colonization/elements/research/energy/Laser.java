@@ -10,9 +10,9 @@ import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 /* 레이저 기술 **/
 public class Laser extends Research {
-	private static final long serialVersionUID = 1636336604448677624L;
+    private static final long serialVersionUID = 1636336604448677624L;
 
-	@Override
+    @Override
     public String getName() {
         return getClass().getSimpleName();
     }
@@ -27,12 +27,12 @@ public class Laser extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("Mathematics", 20, 20.0));
-    	list.add(new ResearchCondition("EnergyTech", 5, 1.5));
-    	list.add(new ResearchCondition("LightTech", 10, 1.5));
-    	list.add(new ResearchCondition("ElectroMagneticTech", 15, 1.5));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("Mathematics", 20, 20.0));
+        list.add(new ResearchCondition("EnergyTech", 5, 1.5));
+        list.add(new ResearchCondition("LightTech", 10, 1.5));
+        list.add(new ResearchCondition("ElectroMagneticTech", 15, 1.5));
+        return list;
     }
 
     @Override

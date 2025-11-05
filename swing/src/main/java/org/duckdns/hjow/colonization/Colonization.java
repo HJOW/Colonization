@@ -14,11 +14,11 @@ import org.duckdns.hjow.commons.util.DataUtil;
 public class Colonization extends ConsoleColonization implements GUIColonizationMainClass {
     private static final Colonization INSTANCES = new Colonization();
     public static void main(String[] args) {
-    	GlobalLogs.tryingToInitLog4j();
-    	Constants.prepare();
-    	
-    	// Core.loadCore("col", "colonization", ColonyManager.getVersionString(), args);
-    	
+        GlobalLogs.tryingToInitLog4j();
+        Constants.prepare();
+        
+        // Core.loadCore("col", "colonization", ColonyManager.getVersionString(), args);
+        
         Map<String, String> argMap = ClassUtil.convertAppParams(args);
         INSTANCES.prepare(argMap);
         INSTANCES.run();
@@ -38,37 +38,37 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     /** 프로그램 실행 */
     @Override
     public void run() {
-    	mode = arguments.get("mode");
-    	if(DataUtil.isEmpty(mode)) mode = arguments.get("m");
-    	if(DataUtil.isEmpty(mode)) mode = "gui";
-    	
-    	mode = mode.trim().toLowerCase();
-    	if(mode.equals("console") || mode.equals("c")) {
-    		super.run(); return;
-    	} else if(mode.equals("daemon") || mode.equals("d")) {
-    		String port = arguments.get("port");
-    		if(DataUtil.isEmpty(port)) port = arguments.get("p");
-    		
-    		String charset = "UTF-16";
-    		if(! DataUtil.isEmpty(arguments.get("charset"))) charset = arguments.get("charset").trim();
-    		
-    		TCPSimpleDaemon daemon = new TCPSimpleDaemon(Integer.parseInt(port.trim()), charset, new LogComponent() {
-				@Override
-				public void log(String msg) {
-					System.out.println(msg);
-				}
-			});
-    		daemon.start();
-    	} else if(mode.equals("gui") || mode.equals("g")) {
-    		openLoadingDialog();
+        mode = arguments.get("mode");
+        if(DataUtil.isEmpty(mode)) mode = arguments.get("m");
+        if(DataUtil.isEmpty(mode)) mode = "gui";
+        
+        mode = mode.trim().toLowerCase();
+        if(mode.equals("console") || mode.equals("c")) {
+            super.run(); return;
+        } else if(mode.equals("daemon") || mode.equals("d")) {
+            String port = arguments.get("port");
+            if(DataUtil.isEmpty(port)) port = arguments.get("p");
+            
+            String charset = "UTF-16";
+            if(! DataUtil.isEmpty(arguments.get("charset"))) charset = arguments.get("charset").trim();
+            
+            TCPSimpleDaemon daemon = new TCPSimpleDaemon(Integer.parseInt(port.trim()), charset, new LogComponent() {
+                @Override
+                public void log(String msg) {
+                    System.out.println(msg);
+                }
+            });
+            daemon.start();
+        } else if(mode.equals("gui") || mode.equals("g")) {
+            openLoadingDialog();
             
             if(manager != null) {
-            	manager.dispose();
+                manager.dispose();
                 manager = null;
             }
             manager = new GUIColonyManager(this);
             manager.open(this);
-    	}
+        }
     }
     
     @Override
@@ -85,7 +85,7 @@ public class Colonization extends ConsoleColonization implements GUIColonization
             guiMan.open(this);
             closeLoadingDialog();
         } else {
-        	manager = null;
+            manager = null;
             try { Thread.sleep(3000L); } catch(InterruptedException ex) { exit(); return; }
             run();
         }
@@ -106,6 +106,6 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     /** 메인 UI 호출 전 선 작업 수행 */
     @Override
     protected void preWorks(Map<String, String> args) {
-    	new GUIPreWorks(args).work();
+        new GUIPreWorks(args).work();
     }
 }

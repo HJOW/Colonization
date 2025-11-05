@@ -71,26 +71,26 @@ public class GlobalLogDialog implements GlobalLogUI {
         chooserCLog.setFileSelectionMode(JFileChooser.FILES_ONLY);
         
         chooserText.setFileFilter(new FileFilter() {
-			@Override
-			public String getDescription() {
-				return ColonyManager.t("텍스트 파일") + " (*.txt)";
-			}
-			@Override
-			public boolean accept(File f) {
-				return f.getName().toLowerCase().endsWith(".txt");
-			}
-		});
+            @Override
+            public String getDescription() {
+                return ColonyManager.t("텍스트 파일") + " (*.txt)";
+            }
+            @Override
+            public boolean accept(File f) {
+                return f.getName().toLowerCase().endsWith(".txt");
+            }
+        });
         
         chooserCLog.setFileFilter(new FileFilter() {
-			@Override
-			public String getDescription() {
-				return ColonyManager.t(CompressedDocument.FILE_DESC) + " (*" + "." + CompressedDocument.FILE_EXT + ")";
-			}
-			@Override
-			public boolean accept(File f) {
-				return f.getName().toLowerCase().endsWith("." + CompressedDocument.FILE_EXT);
-			}
-		});
+            @Override
+            public String getDescription() {
+                return ColonyManager.t(CompressedDocument.FILE_DESC) + " (*" + "." + CompressedDocument.FILE_EXT + ")";
+            }
+            @Override
+            public boolean accept(File f) {
+                return f.getName().toLowerCase().endsWith("." + CompressedDocument.FILE_EXT);
+            }
+        });
         
         JToolBar toolbar = new JToolBar();
         pnDown.add(toolbar, BorderLayout.CENTER);
@@ -105,69 +105,69 @@ public class GlobalLogDialog implements GlobalLogUI {
         toolbar.add(btnToggleAutoWrite);
         
         btnSave.addActionListener(new ActionListener() {
-        	@Override
+            @Override
             public void actionPerformed(ActionEvent e) {
-        		try {
-        		    int sel = chooserCLog.showSaveDialog(getDialog());
-			        if(sel != JFileChooser.APPROVE_OPTION) return;
-			        
-			        File file = chooserCLog.getSelectedFile();
-			        String nameLower = file.getName().toLowerCase();
-			        if(! nameLower.endsWith("." + CompressedDocument.FILE_EXT)) {
-			        	file = new File(file.getAbsolutePath() + "." + CompressedDocument.FILE_EXT);
-			        }
-			        
-			        CompressedDocument doc = new CompressedDocument();
-			        doc.setContentType("text/plain");
-			        doc.setContent(taLog.getText());
-			        doc.write(file);
-        		} catch(Exception ex) {
-        			JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
-        		}
-        	}
+                try {
+                    int sel = chooserCLog.showSaveDialog(getDialog());
+                    if(sel != JFileChooser.APPROVE_OPTION) return;
+                    
+                    File file = chooserCLog.getSelectedFile();
+                    String nameLower = file.getName().toLowerCase();
+                    if(! nameLower.endsWith("." + CompressedDocument.FILE_EXT)) {
+                        file = new File(file.getAbsolutePath() + "." + CompressedDocument.FILE_EXT);
+                    }
+                    
+                    CompressedDocument doc = new CompressedDocument();
+                    doc.setContentType("text/plain");
+                    doc.setContent(taLog.getText());
+                    doc.write(file);
+                } catch(Exception ex) {
+                    JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
+                }
+            }
         });
         
         btnClear.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	autoOutput = false;
-            	taLog.closeWriter();
-            	btnToggleAutoWrite.setText(ColonyManager.t("자동기록"));
-            	
+                autoOutput = false;
+                taLog.closeWriter();
+                btnToggleAutoWrite.setText(ColonyManager.t("자동기록"));
+                
                 GlobalLogs.getInstance().clear();
                 taLog.clear();
             }
         });
         
         btnToggleAutoWrite.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				autoOutput = (! autoOutput);
-				
-				if(autoOutput) {
-					try {
-					    int sel = chooserText.showSaveDialog(getDialog());
-					    if(sel != JFileChooser.APPROVE_OPTION) return;
-					    
-					    File file = chooserText.getSelectedFile();
-					    String nameLower = file.getName().toLowerCase();
-					    if(! nameLower.endsWith(".txt")) {
-					    	file = new File(file.getAbsolutePath() + ".txt");
-					    }
-					    
-					    taLog.setWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
-					    btnToggleAutoWrite.setText(ColonyManager.t("자동기록종료"));
-					} catch(Exception ex) {
-						JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
-						taLog.closeWriter();
-						btnToggleAutoWrite.setText(ColonyManager.t("자동기록"));
-					}
-				} else {
-					taLog.closeWriter();
-					btnToggleAutoWrite.setText(ColonyManager.t("자동기록"));
-				}
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                autoOutput = (! autoOutput);
+                
+                if(autoOutput) {
+                    try {
+                        int sel = chooserText.showSaveDialog(getDialog());
+                        if(sel != JFileChooser.APPROVE_OPTION) return;
+                        
+                        File file = chooserText.getSelectedFile();
+                        String nameLower = file.getName().toLowerCase();
+                        if(! nameLower.endsWith(".txt")) {
+                            file = new File(file.getAbsolutePath() + ".txt");
+                        }
+                        
+                        taLog.setWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+                        btnToggleAutoWrite.setText(ColonyManager.t("자동기록종료"));
+                    } catch(Exception ex) {
+                        JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("오류") + " : " + ex.getMessage());
+                        taLog.closeWriter();
+                        btnToggleAutoWrite.setText(ColonyManager.t("자동기록"));
+                    }
+                } else {
+                    taLog.closeWriter();
+                    btnToggleAutoWrite.setText(ColonyManager.t("자동기록"));
+                }
+            }
+        });
         
         pnCommand = new JPanel();
         pnCommand.setLayout(new BorderLayout());
@@ -175,17 +175,17 @@ public class GlobalLogDialog implements GlobalLogUI {
         
         tfCommand = new JTextField();
         pnCommand.add(tfCommand, BorderLayout.CENTER);
-        tfCommand.addActionListener(new ActionListener() {	
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(superInstance instanceof GUIColonyManager) {
-					String cmd = tfCommand.getText();
-					tfCommand.setText("");
-					((GUIColonyManager) superInstance).runCommand(cmd);
-					tfCommand.requestFocus();
-				}
-			}
-		});
+        tfCommand.addActionListener(new ActionListener() {    
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(superInstance instanceof GUIColonyManager) {
+                    String cmd = tfCommand.getText();
+                    tfCommand.setText("");
+                    ((GUIColonyManager) superInstance).runCommand(cmd);
+                    tfCommand.requestFocus();
+                }
+            }
+        });
         pnCommand.setVisible(false);
         
         threadSwitch = true;
@@ -201,16 +201,16 @@ public class GlobalLogDialog implements GlobalLogUI {
     }
     
     public void openCommands() {
-    	pnCommand.setVisible(true);
-    	tfCommand.requestFocus();
+        pnCommand.setVisible(true);
+        tfCommand.requestFocus();
     }
     
     public void hideCommands() {
-    	pnCommand.setVisible(false);
+        pnCommand.setVisible(false);
     }
     
     public JDialog getDialog() {
-    	return dialog;
+        return dialog;
     }
 
     @Override
@@ -246,7 +246,7 @@ public class GlobalLogDialog implements GlobalLogUI {
     }
     
     public void setLocation(int x, int y) {
-    	dialog.setLocation(x, y);
+        dialog.setLocation(x, y);
     }
     
     public Dimension getSize() {
@@ -275,11 +275,11 @@ public class GlobalLogDialog implements GlobalLogUI {
         dialog = null;
     }
 
-	public int getDetailLevel() {
-		return detailLevel;
-	}
+    public int getDetailLevel() {
+        return detailLevel;
+    }
 
-	public void setDetailLevel(int detailLevel) {
-		this.detailLevel = detailLevel;
-	}
+    public void setDetailLevel(int detailLevel) {
+        this.detailLevel = detailLevel;
+    }
 }

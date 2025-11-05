@@ -10,9 +10,9 @@ import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 /** 플라즈마 */
 public class Plasma extends Research {
-	private static final long serialVersionUID = -8026610470560139921L;
+    private static final long serialVersionUID = -8026610470560139921L;
 
-	@Override
+    @Override
     public String getName() {
         return getClass().getSimpleName();
     }
@@ -27,12 +27,12 @@ public class Plasma extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("Chemical", 50, 1.5));
-    	list.add(new ResearchCondition("EnergyTech", 30, 10.0));
-    	list.add(new ResearchCondition("LightTech", 20, 1.5));
-    	list.add(new ResearchCondition("ElectroMagneticTech", 30, 1.5));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("Chemical", 50, 1.5));
+        list.add(new ResearchCondition("EnergyTech", 30, 10.0));
+        list.add(new ResearchCondition("LightTech", 20, 1.5));
+        list.add(new ResearchCondition("ElectroMagneticTech", 30, 1.5));
+        return list;
     }
 
     @Override

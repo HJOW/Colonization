@@ -7,27 +7,27 @@ public class RefreshRequest {
     
     public RefreshRequest() {}
 
-	public RefreshRequest(String request, int cycle) {
-		this();
-		this.request = request;
-		this.cycle = cycle;
-	}
+    public RefreshRequest(String request, int cycle) {
+        this();
+        this.request = request;
+        this.cycle = cycle;
+    }
 
-	public String getRequest() {
-		return request;
-	}
+    public String getRequest() {
+        return request;
+    }
 
-	public void setRequest(String request) {
-		this.request = request;
-	}
+    public void setRequest(String request) {
+        this.request = request;
+    }
 
-	public int getCycle() {
-		return cycle;
-	}
+    public int getCycle() {
+        return cycle;
+    }
 
-	public void setCycle(int cycle) {
-		this.cycle = cycle;
-	}
+    public void setCycle(int cycle) {
+        this.cycle = cycle;
+    }
     
     
 }

@@ -9,9 +9,9 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class SmallApartment extends Residence {
-	private static final long serialVersionUID = 8130774192386570274L;
+    private static final long serialVersionUID = 8130774192386570274L;
 
-	@Override
+    @Override
     protected String getDefaultNamePrefix() {
         return ColonyManager.t("소형APT");
     }
@@ -38,7 +38,7 @@ public class SmallApartment extends Residence {
     
     @Override
     public int getSpaceSize() {
-    	return 10;
+        return 10;
     }
 
     @Override
@@ -72,7 +72,7 @@ public class SmallApartment extends Residence {
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Long getTechNeeded() {
@@ -84,13 +84,13 @@ public class SmallApartment extends Residence {
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicBuildingTech", 15));
-    	list.add(new ResearchCondition("BasicHumanities", 30));
-    	list.add(new ResearchCondition("NewMetals", 15));
-    	list.add(new ResearchCondition("ConstructionDrones", 1));
-    	list.add(new ResearchCondition("Printing3DStructure", 1));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicBuildingTech", 15));
+        list.add(new ResearchCondition("BasicHumanities", 30));
+        list.add(new ResearchCondition("NewMetals", 15));
+        list.add(new ResearchCondition("ConstructionDrones", 1));
+        list.add(new ResearchCondition("Printing3DStructure", 1));
+        return list;
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

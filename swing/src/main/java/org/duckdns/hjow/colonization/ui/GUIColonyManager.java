@@ -1532,7 +1532,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 기본함수 선언 스크립트 실행 */
     @Override
     protected void evalInitScripts(ScriptEngine engine) throws Exception {
-    	evalDefaultInitScripts(engine);
+        evalDefaultInitScripts(engine);
         engine.eval(uiScriptBroker.getInitScript(scriptVarPrefix));
     }
     

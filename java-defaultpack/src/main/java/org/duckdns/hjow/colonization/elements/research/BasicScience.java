@@ -25,9 +25,9 @@ public class BasicScience extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("Mathematics", 1, 1.0));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("Mathematics", 1, 1.0));
+        return list;
     }
 
     @Override

@@ -79,8 +79,8 @@ public class BenchmarkThread extends ColonyManager implements Disposeable {
         return end - start;
     }
 
-	@Override
-	public void open(ColonizationMainClass superInstance) {
-		startBench();
-	}
+    @Override
+    public void open(ColonizationMainClass superInstance) {
+        startBench();
+    }
 }

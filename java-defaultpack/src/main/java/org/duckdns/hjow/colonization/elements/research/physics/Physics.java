@@ -9,11 +9,11 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class Physics extends Research {
-	private static final long serialVersionUID = 8277640950196928464L;
+    private static final long serialVersionUID = 8277640950196928464L;
 
-	public Physics() { super(); }
-	
-	@Override
+    public Physics() { super(); }
+    
+    @Override
     public String getName() {
         return getClass().getSimpleName();
     }
@@ -28,11 +28,11 @@ public class Physics extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicScience", 1, 1.2));
-    	list.add(new ResearchCondition("BasicHumanities", 10, 1.0));
-    	list.add(new ResearchCondition("ElectroMagneticTech", 1, 1.0, 10));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicScience", 1, 1.2));
+        list.add(new ResearchCondition("BasicHumanities", 10, 1.0));
+        list.add(new ResearchCondition("ElectroMagneticTech", 1, 1.0, 10));
+        return list;
     }
 
     @Override

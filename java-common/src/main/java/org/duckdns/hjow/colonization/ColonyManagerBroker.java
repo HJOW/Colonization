@@ -9,122 +9,122 @@ import org.duckdns.hjow.commons.json.JsonObject;
 public class ColonyManagerBroker implements ColonyManagerInterface {
     private transient ColonyManager originals;
     public ColonyManagerBroker(ColonyManager originals) {
-    	this.originals = originals;
+        this.originals = originals;
     }
     
     /** 다국어 지원 번역 */
     public String t(String text) {
-    	return ColonyManager.t(text);
+        return ColonyManager.t(text);
     }
     
     /** 프로그램 종료 시 호출됨. 직접 호출하지 말 것. */
-	@Override
-	public void dispose() {
-		this.originals = null;
-	}
+    @Override
+    public void dispose() {
+        this.originals = null;
+    }
     
-	/** 프로그램 종료 */
-	@Override
-	public void exit() {
-		originals.exit();
-	}
-	
-	/** 현재 프로그램 설정 내용을 복제해 반환 */
-	@Override
-	public ColonyManagerConfig getConfig() {
+    /** 프로그램 종료 */
+    @Override
+    public void exit() {
+        originals.exit();
+    }
+    
+    /** 현재 프로그램 설정 내용을 복제해 반환 */
+    @Override
+    public ColonyManagerConfig getConfig() {
         return originals.getConfig().cloneSelf();
     }
-	
-	@Override
-	public void reserveRefresh() {
-		originals.reserveRefresh();
-	}
-	
-	/** 로그 출력 */
-	@Override
-	public void log(String msg) {
-		originals.log(msg);
-	}
-	
-	/** 알림 메시지 출력 */
-	@Override
-	public void alert(String msg) {
-		originals.alert(msg);
-	}
-	
-	/** 시뮬레이션 정지 */
-	public void pause() {
-		pauseSimulation();
-	}
-	
-	/** 시뮬레이션 재개 */
-	public void resume() {
-		resumeSimulation(-1);
-	}
-	
-	/** 시뮬레이션 정지 */
-	@Override
-	public void pauseSimulation() {
-		originals.pauseSimulation();
-	}
-	
-	/** 시뮬레이션 재개 */
-	@Override
-	public void resumeSimulation(int cycleCount) {
-		originals.resumeSimulation(cycleCount);
-	}
-	
-	@Override
-	public JsonObject getSelectColonyInfo() {
-		return originals.getSelectColonyInfo();
-	}
-	
-	@Override
-	public JsonArray getAllColonies() {
-		return originals.getAllColonies();
-	}
-	
-	public Integer getFrameWidth() {
-		try {
-		    Method mthd = originals.getClass().getMethod("getDialogWidth");
-		    return (Integer) mthd.invoke(originals);
-		} catch(NoSuchMethodException ex) {} catch(Throwable tx) {
-			originals.log(t("Error") + " : " + tx.getMessage());
-		}
-		
-		return null;
-	}
-	
-	public Integer getFrameHeight() {
-		try {
-		    Method mthd = originals.getClass().getMethod("getDialogHeight");
-		    return (Integer) mthd.invoke(originals);
-		} catch(NoSuchMethodException ex) {} catch(Throwable tx) {
-			originals.log(t("Error") + " : " + tx.getMessage());
-		}
-		
-		return null;
-	}
-	
-	public Integer getFrameX() {
-		try {
-		    Method mthd = originals.getClass().getMethod("getDialogX");
-		    return (Integer) mthd.invoke(originals);
-		} catch(NoSuchMethodException ex) {} catch(Throwable tx) {
-			originals.log(t("Error") + " : " + tx.getMessage());
-		}
-		
-		return null;
+    
+    @Override
+    public void reserveRefresh() {
+        originals.reserveRefresh();
+    }
+    
+    /** 로그 출력 */
+    @Override
+    public void log(String msg) {
+        originals.log(msg);
+    }
+    
+    /** 알림 메시지 출력 */
+    @Override
+    public void alert(String msg) {
+        originals.alert(msg);
+    }
+    
+    /** 시뮬레이션 정지 */
+    public void pause() {
+        pauseSimulation();
+    }
+    
+    /** 시뮬레이션 재개 */
+    public void resume() {
+        resumeSimulation(-1);
+    }
+    
+    /** 시뮬레이션 정지 */
+    @Override
+    public void pauseSimulation() {
+        originals.pauseSimulation();
+    }
+    
+    /** 시뮬레이션 재개 */
+    @Override
+    public void resumeSimulation(int cycleCount) {
+        originals.resumeSimulation(cycleCount);
+    }
+    
+    @Override
+    public JsonObject getSelectColonyInfo() {
+        return originals.getSelectColonyInfo();
+    }
+    
+    @Override
+    public JsonArray getAllColonies() {
+        return originals.getAllColonies();
+    }
+    
+    public Integer getFrameWidth() {
+        try {
+            Method mthd = originals.getClass().getMethod("getDialogWidth");
+            return (Integer) mthd.invoke(originals);
+        } catch(NoSuchMethodException ex) {} catch(Throwable tx) {
+            originals.log(t("Error") + " : " + tx.getMessage());
+        }
+        
+        return null;
+    }
+    
+    public Integer getFrameHeight() {
+        try {
+            Method mthd = originals.getClass().getMethod("getDialogHeight");
+            return (Integer) mthd.invoke(originals);
+        } catch(NoSuchMethodException ex) {} catch(Throwable tx) {
+            originals.log(t("Error") + " : " + tx.getMessage());
+        }
+        
+        return null;
+    }
+    
+    public Integer getFrameX() {
+        try {
+            Method mthd = originals.getClass().getMethod("getDialogX");
+            return (Integer) mthd.invoke(originals);
+        } catch(NoSuchMethodException ex) {} catch(Throwable tx) {
+            originals.log(t("Error") + " : " + tx.getMessage());
+        }
+        
+        return null;
     }
     
     public Integer getFrameY() {
-    	try {
-		    Method mthd = originals.getClass().getMethod("getDialogY");
-		    return (Integer) mthd.invoke(originals);
-		} catch(NoSuchMethodException ex) {} catch(Throwable tx) {
-			originals.log(t("Error") + " : " + tx.getMessage());
-		}
-		
-		return null;
+        try {
+            Method mthd = originals.getClass().getMethod("getDialogY");
+            return (Integer) mthd.invoke(originals);
+        } catch(NoSuchMethodException ex) {} catch(Throwable tx) {
+            originals.log(t("Error") + " : " + tx.getMessage());
+        }
+        
+        return null;
     }
 }

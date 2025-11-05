@@ -21,21 +21,21 @@ import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 public class AboutDialog implements Disposeable {
-	protected Dialog dialog;
-	protected Panel pnMain, pnCenter, pnDown;
+    protected Dialog dialog;
+    protected Panel pnMain, pnCenter, pnDown;
     protected Label lbTitle, lbSub, lbVer;
     public AboutDialog() {
-    	this(null, null, null, null);
+        this(null, null, null, null);
     }
     
     public AboutDialog(Window win, String title, String sub, String ver) {
-    	init(win, title, sub, ver);
+        init(win, title, sub, ver);
     }
     
     protected void init(Window win, String title, String sub, String ver) {
-    	if(win == null) dialog = new Dialog(null, false);
-    	else dialog = new Dialog(win);
-    	
+        if(win == null) dialog = new Dialog(null, false);
+        else dialog = new Dialog(win);
+        
         dialog.setSize(300, 170);
         dialog.setTitle(title);
         dialog.setLayout(new BorderLayout());
@@ -93,7 +93,7 @@ public class AboutDialog implements Disposeable {
     }
     
     public void setIconImage(Image img) {
-    	dialog.setIconImage(img);
+        dialog.setIconImage(img);
     }
     
     public void open() {
@@ -110,27 +110,27 @@ public class AboutDialog implements Disposeable {
     }
     
     public Image getDefaultIcon() {
-    	InputStream inp = null;
-    	Image img = null;
-    	try {
-    		inp = this.getClass().getResourceAsStream("icon256.png");
-    		img = ImageIO.read(inp);
-    		img = img.getScaledInstance(12, 12, Image.SCALE_SMOOTH);
-    		return img;
-    	} catch(Exception ex) {
-    		GlobalLogs.processExceptionOccured(ex, false);
-    	} finally {
-    		ClassUtil.closeAll(inp);
-    	}
+        InputStream inp = null;
+        Image img = null;
+        try {
+            inp = this.getClass().getResourceAsStream("icon256.png");
+            img = ImageIO.read(inp);
+            img = img.getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+            return img;
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, false);
+        } finally {
+            ClassUtil.closeAll(inp);
+        }
         return img;
     }
 
-	@Override
-	public void dispose() {
-		close();
+    @Override
+    public void dispose() {
+        close();
         dialog.removeAll();
         dialog  = null;
         lbTitle = null;
         lbSub   = null;
-	}
+    }
 }

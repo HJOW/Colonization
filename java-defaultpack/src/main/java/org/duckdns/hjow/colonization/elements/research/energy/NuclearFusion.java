@@ -9,9 +9,9 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 public class NuclearFusion extends Research {
-	private static final long serialVersionUID = 7873858927668983687L;
+    private static final long serialVersionUID = 7873858927668983687L;
 
-	@Override
+    @Override
     public int getMaxLevel() {
         return Integer.MAX_VALUE;
     }
@@ -21,12 +21,12 @@ public class NuclearFusion extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("EnergyTech", 50, 6.0));
-    	list.add(new ResearchCondition("Nuclear", 5, 1.5));
-    	list.add(new ResearchCondition("Plasma", 5, 1.5));
-    	list.add(new ResearchCondition("Plasteel", 2, 1.2));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("EnergyTech", 50, 6.0));
+        list.add(new ResearchCondition("Nuclear", 5, 1.5));
+        list.add(new ResearchCondition("Plasma", 5, 1.5));
+        list.add(new ResearchCondition("Plasteel", 2, 1.2));
+        return list;
     }
 
     @Override

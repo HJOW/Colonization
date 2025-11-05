@@ -44,23 +44,23 @@ public final class NormalColony extends AbstractColony {
     
     @Override
     protected City createCityInstance(JsonObject json) throws IOException {
-    	return new NormalCity(json);
+        return new NormalCity(json);
     }
     
     @Override
     public boolean supportedFacility(FacilityInformation info) {
-    	if(info == null) return false;
-    	if(parentPack == null) parentPack = new BundledPack(); // 리플렉션을 통해 객체를 생성하면 필드 기본값이 안타는 현상 대응
+        if(info == null) return false;
+        if(parentPack == null) parentPack = new BundledPack(); // 리플렉션을 통해 객체를 생성하면 필드 기본값이 안타는 현상 대응
         return (parentPack.getFacilityClasses().contains(info.getFacilityClass()));
     }
     
     @Override
     public boolean supportedResearch(String researchTypeName) {
-    	if(researchTypeName == null) return false;
-    	Research res = ResearchManager.createResearchInstance(researchTypeName);
-    	if(res == null) return false;
-    	if(parentPack == null) parentPack = new BundledPack(); // 리플렉션을 통해 객체를 생성하면 필드 기본값이 안타는 현상 대응
-    	return (parentPack.getResearchClasses().contains(res.getClass()));
+        if(researchTypeName == null) return false;
+        Research res = ResearchManager.createResearchInstance(researchTypeName);
+        if(res == null) return false;
+        if(parentPack == null) parentPack = new BundledPack(); // 리플렉션을 통해 객체를 생성하면 필드 기본값이 안타는 현상 대응
+        return (parentPack.getResearchClasses().contains(res.getClass()));
     }
     
     /** 새 도시를 생성 */

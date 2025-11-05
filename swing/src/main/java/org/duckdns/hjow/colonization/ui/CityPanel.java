@@ -293,7 +293,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     
     @Override
     public void refresh(final int cycle, City city, final Colony colony, final ColonyManager superInstance) {
-    	tab.setSelectedComponent(pnFrontRoot);
+        tab.setSelectedComponent(pnFrontRoot);
         if(city == null) { city = getCity(); }
         if(city == null) {
             tfName.setText("");
@@ -302,8 +302,8 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             pnCitizens.removeAll();
             pnPolicies.removeAll();
             for(int idx=0; idx<chPolicies.size(); idx++) {
-            	JCheckBox box = chPolicies.get(idx);
-            	box.removeItemListener(evPolicies.get(idx));
+                JCheckBox box = chPolicies.get(idx);
+                box.removeItemListener(evPolicies.get(idx));
             }
             lbPolicies.clear();
             lbPoliFees.clear();
@@ -415,24 +415,24 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         Vector<SingleAction> workList = new Vector<SingleAction>();
         if(fullRefresh) {
             for(idx=0; idx<sizes; idx++) {
-            	SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {	
-    				@Override
-    				public void run(int r) throws Throwable {
-    					FacilityPanel pn = facilityPns.get(this.index);
-    		            Facility fac = facList.get(this.index);
-    		            
-    		            if(fac instanceof SupportGUIFacility) {
-    		            	SupportGUIFacility guiFac = (SupportGUIFacility) fac;
-    		                if(! guiFac.checkPanelAccept(pn) ) {
-    		                    superInstance.reserveRefresh();
-    		                }
-    		            }
-    		            
-    		            pn.refresh(fac, this.city, colony, superInstance);
-    				}
-    			};
-            	
-            	workList.add(act);
+                SingleCityElementLoadAction act = new SingleCityElementLoadAction(idx, city) {    
+                    @Override
+                    public void run(int r) throws Throwable {
+                        FacilityPanel pn = facilityPns.get(this.index);
+                        Facility fac = facList.get(this.index);
+                        
+                        if(fac instanceof SupportGUIFacility) {
+                            SupportGUIFacility guiFac = (SupportGUIFacility) fac;
+                            if(! guiFac.checkPanelAccept(pn) ) {
+                                superInstance.reserveRefresh();
+                            }
+                        }
+                        
+                        pn.refresh(fac, this.city, colony, superInstance);
+                    }
+                };
+                
+                workList.add(act);
             }
             SimultaneousWork simulWork = new SimultaneousWork(workList);
             simulWork.start();
@@ -444,7 +444,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         if(! fullRefresh) { if(sizes != citizenPns.size()) fullRefresh = true; }
         
         if(fullRefresh) {
-        	pnCitizens.removeAll();
+            pnCitizens.removeAll();
             for(CitizenPanel p : citizenPns) { p.dispose(); }
             citizenPns.clear();
             
@@ -492,12 +492,12 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         if(fullRefresh) {
             pnPolicies.removeAll();
             for(idx=0; idx<chPolicies.size(); idx++) {
-            	try {
-            	    JCheckBox box = chPolicies.get(idx);
-            	    box.removeItemListener(evPolicies.get(idx));
-            	} catch(ArrayIndexOutOfBoundsException ex) {
-            		GlobalLogs.processExceptionOccured(ex, false);
-            	}
+                try {
+                    JCheckBox box = chPolicies.get(idx);
+                    box.removeItemListener(evPolicies.get(idx));
+                } catch(ArrayIndexOutOfBoundsException ex) {
+                    GlobalLogs.processExceptionOccured(ex, false);
+                }
             }
             lbPolicies.clear();
             lbPoliFees.clear();
@@ -511,9 +511,9 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             colNo = 0;
             
             for(Policy p : policies) {
-            	if(! p.isAvail(colony, city)) continue;
-            	
-            	gridBagConst = new GridBagConstraints();
+                if(! p.isAvail(colony, city)) continue;
+                
+                gridBagConst = new GridBagConstraints();
                 gridBagConst.gridx = colNo; colNo++;
                 gridBagConst.gridy = rowNo;
                 gridBagConst.gridwidth  = 1;
@@ -554,21 +554,21 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
                 chPolicies.add(ch);
                 pnPolicies.add(ch, gridBagConst);
                 if(p.getTooltip() != null) ch.setToolTipText(p.getTooltip());
-            	
+                
                 final Policy current = p;
                 ev = new ItemListener() {
-					@Override
-					public void itemStateChanged(ItemEvent e) {
-						current.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
-					}
-				};
-				evPolicies.add(ev);
+                    @Override
+                    public void itemStateChanged(ItemEvent e) {
+                        current.setEnabled(e.getStateChange() == ItemEvent.SELECTED);
+                    }
+                };
+                evPolicies.add(ev);
                 ch.addItemListener(ev);
                 
                 boolean avail = current.isAvail(colony, city);
                 ch.setEnabled(avail);
                 if(avail) {
-                	ch.setSelected(current.isEnabled());
+                    ch.setSelected(current.isEnabled());
                 }
                 
                 rowNo++;
@@ -587,19 +587,19 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             
             pnPolicies.add(pnEmpty, gridBagConst);
         } else {
-        	for(idx=0; idx<policies.size(); idx++) {
-        		Policy current = policies.get(idx);
-        		JCheckBox ch = chPolicies.get(idx);
-        		JLabel lbFee = lbPoliFees.get(idx);
-        		
-        		boolean avail = current.isAvail(colony, city);
+            for(idx=0; idx<policies.size(); idx++) {
+                Policy current = policies.get(idx);
+                JCheckBox ch = chPolicies.get(idx);
+                JLabel lbFee = lbPoliFees.get(idx);
+                
+                boolean avail = current.isAvail(colony, city);
                 ch.setEnabled(avail);
                 if(avail) {
-                	ch.setSelected(current.isEnabled());
+                    ch.setSelected(current.isEnabled());
                 }
                 
                 lbFee.setText(ColonyManager.t("월간 비용 : [FEE]").replace("[FEE]", ColonyManager.formatInt(current.getMonthlyFee(colony, city))));
-        	}
+            }
         }
         
         // 작업중 항목 출력
@@ -637,11 +637,11 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         JPanel pnLabel, pnStatus;
         JProgressBar prog;
         if(listJobs.isEmpty()) {
-        	pnHoldingOne = new JPanel();
-        	pnHoldingOne.setLayout(new FlowLayout(FlowLayout.LEFT));
-        	pnHoldingOne.add(new JLabel(ColonyManager.t("진행 중인 작업이 없습니다.")));
-        	
-        	gridBagConst = new GridBagConstraints();
+            pnHoldingOne = new JPanel();
+            pnHoldingOne.setLayout(new FlowLayout(FlowLayout.LEFT));
+            pnHoldingOne.add(new JLabel(ColonyManager.t("진행 중인 작업이 없습니다.")));
+            
+            gridBagConst = new GridBagConstraints();
             gridBagConst.gridx = 0;
             gridBagConst.gridy = rowNo; rowNo++;
             gridBagConst.gridwidth = 1;
@@ -652,7 +652,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
             
             pnHoldings.add(pnHoldingOne, gridBagConst);
         } else {
-        	for(HoldingJob j : listJobs) {
+            for(HoldingJob j : listJobs) {
                 pnHoldingOne = new JPanel();
                 pnHoldingOne.setLayout(new BorderLayout());
                 
@@ -719,7 +719,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         List<FacilityPanel> pns = new ArrayList<FacilityPanel>();
         pns.addAll(facilityPns);
         for(FacilityPanel p : pns) {
-        	if(p == null) continue;
+            if(p == null) continue;
             if(p.getFacility(city).getHp() <= 0) p.setEditable(false);
             else p.setEditable(editable); 
         }

@@ -51,12 +51,12 @@ public class GlobalLogs implements Serializable {
     
     /** 로그 출력 */
     public static void log(String msg) {
-    	System.out.println(msg);
-    	getInstance().add(msg);
-    	
-    	if(logger != null) {
-    		try { methodInfoLogger.invoke(logger, msg); } catch(Throwable ignores) { logger = null; methodInfoLogger = null; methodDebugLogger = null; }
-    	}
+        System.out.println(msg);
+        getInstance().add(msg);
+        
+        if(logger != null) {
+            try { methodInfoLogger.invoke(logger, msg); } catch(Throwable ignores) { logger = null; methodInfoLogger = null; methodDebugLogger = null; }
+        }
     }
     
     /** 오류 처리 (Colony 이내 쪽에서 발생한 예외는 각 패널에서 처리할 것 !) */
@@ -82,81 +82,81 @@ public class GlobalLogs implements Serializable {
     
     /** Log4J2 사용 가능여부 반환 */
     public static boolean isLog4jAvail() {
-    	return (logger != null);
+        return (logger != null);
     }
     
     /** Log4J2 사용 가능한 경우 설정 */
     public static void tryingToInitLog4j() {
-    	URLClassLoader loader = null;
-    	try {
-    		Class<?> configClass = Class.forName("org.apache.logging.log4j.core.config.Configurator");
-    		
-    		// Detect XML path
-    		File cfgRoot = ColonyManager.getHomeDir("colonization", "configs");
-    		if(! cfgRoot.exists()) {
-    			cfgRoot.mkdirs();
-    		}
-    		
-    		File xmlFile = new File(cfgRoot.getAbsolutePath() + File.separator + "log4j.xml");
-    		if(! xmlFile.exists()) {
-    			FileUtil.writeString(xmlFile, "UTF-8", getSampleLog4jXml());
-    			xmlFile = new File(cfgRoot.getAbsolutePath() + File.separator + "log4j.xml");
-    		}
-    		
-    		URI uri = xmlFile.toURI();
-    		
-    		// Get initialize method
-    		Method mthd = configClass.getMethod("initialize", String.class, ClassLoader.class, URI.class);
-    		mthd.invoke(null, null, null, uri); // set XML Path
-    		
-    		// Get LogManager
-    	    Class<?> managerClass = Class.forName("org.apache.logging.log4j.LogManager");
-    	    
-    	    // getLogger
-    	    mthd = managerClass.getMethod("getLogger");
-    	    logger = mthd.invoke(null);
-    	    
-    	    // info and debug methods
-    	    if(logger != null) {
-    	    	Class<?> loggerClass = logger.getClass();
-        	    methodInfoLogger  = loggerClass.getMethod("info" , String.class);
-        	    methodDebugLogger = loggerClass.getMethod("debug", String.class);
-        	    log("log4j prepared.");
-    	    }
-    	} catch(ClassNotFoundException e) {
-    		// e.printStackTrace();
-    		logger = null;
-    		methodDebugLogger = null;
-    		methodInfoLogger  = null;
-    	} catch(Throwable tx) {
-    		log("Using default logging because Initializing log4j failed. (" + tx.getClass().getSimpleName() + ") " + tx.getMessage());
-    		// tx.printStackTrace();
-    		logger = null;
-    		methodDebugLogger = null;
-    		methodInfoLogger  = null;
-    	} finally {
-    		ClassUtil.closeAll(loader);
-    	}
+        URLClassLoader loader = null;
+        try {
+            Class<?> configClass = Class.forName("org.apache.logging.log4j.core.config.Configurator");
+            
+            // Detect XML path
+            File cfgRoot = ColonyManager.getHomeDir("colonization", "configs");
+            if(! cfgRoot.exists()) {
+                cfgRoot.mkdirs();
+            }
+            
+            File xmlFile = new File(cfgRoot.getAbsolutePath() + File.separator + "log4j.xml");
+            if(! xmlFile.exists()) {
+                FileUtil.writeString(xmlFile, "UTF-8", getSampleLog4jXml());
+                xmlFile = new File(cfgRoot.getAbsolutePath() + File.separator + "log4j.xml");
+            }
+            
+            URI uri = xmlFile.toURI();
+            
+            // Get initialize method
+            Method mthd = configClass.getMethod("initialize", String.class, ClassLoader.class, URI.class);
+            mthd.invoke(null, null, null, uri); // set XML Path
+            
+            // Get LogManager
+            Class<?> managerClass = Class.forName("org.apache.logging.log4j.LogManager");
+            
+            // getLogger
+            mthd = managerClass.getMethod("getLogger");
+            logger = mthd.invoke(null);
+            
+            // info and debug methods
+            if(logger != null) {
+                Class<?> loggerClass = logger.getClass();
+                methodInfoLogger  = loggerClass.getMethod("info" , String.class);
+                methodDebugLogger = loggerClass.getMethod("debug", String.class);
+                log("log4j prepared.");
+            }
+        } catch(ClassNotFoundException e) {
+            // e.printStackTrace();
+            logger = null;
+            methodDebugLogger = null;
+            methodInfoLogger  = null;
+        } catch(Throwable tx) {
+            log("Using default logging because Initializing log4j failed. (" + tx.getClass().getSimpleName() + ") " + tx.getMessage());
+            // tx.printStackTrace();
+            logger = null;
+            methodDebugLogger = null;
+            methodInfoLogger  = null;
+        } finally {
+            ClassUtil.closeAll(loader);
+        }
     }
     
     /** log4j2 설정 샘플 */
     public static String getSampleLog4jXml() {
-    	StringBuilder sample = new StringBuilder("");
-    	
-    	sample = sample.append("\n").append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-    	sample = sample.append("\n").append("<Configuration>");
-    	sample = sample.append("\n").append("    <Appenders>");
+        StringBuilder sample = new StringBuilder("");
+        
+        sample = sample.append("\n").append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        sample = sample.append("\n").append("<Configuration>");
+        sample = sample.append("\n").append("    <Appenders>");
         sample = sample.append("\n").append("        <Console name=\"console\" target=\"SYSTEM_OUT\" immediateFlush=\"true\">");
         sample = sample.append("\n").append("            <PatternLayout pattern=\"%d %5p [%c] %m%n\" />");
         sample = sample.append("\n").append("        </Console>");
-    	sample = sample.append("\n").append("    </Appenders>");
-    	sample = sample.append("\n").append("    <Loggers>");
-    	sample = sample.append("\n").append("        <Root level=\"INFO\">");
-    	sample = sample.append("\n").append("            <AppenderRef ref=\"console\" />");
-    	sample = sample.append("\n").append("        </Root>");
-    	sample = sample.append("\n").append("    </Loggers>");
-    	sample = sample.append("\n").append("</Configuration>");
-    	
-    	return sample.toString().trim();
+        sample = sample.append("\n").append("    </Appenders>");
+        sample = sample.append("\n").append("    <Loggers>");
+        sample = sample.append("\n").append("        <Root level=\"INFO\">");
+        sample = sample.append("\n").append("            <AppenderRef ref=\"console\" />");
+        sample = sample.append("\n").append("        </Root>");
+        sample = sample.append("\n").append("    </Loggers>");
+        sample = sample.append("\n").append("</Configuration>");
+        
+        return sample.toString().trim();
     } 
 }

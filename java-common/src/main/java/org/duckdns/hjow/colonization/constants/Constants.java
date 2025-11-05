@@ -4,10 +4,10 @@ import java.math.BigInteger;
 
 /** 자주 쓰는 상수들을 정리한 클래스 (단, Colonization 게임 밸런스 자체와 연관이 깊은 상수는 ColonyManager 에 배치) */
 public class Constants {
-	public static final BigInteger BIGINTEGER_2           = new BigInteger(String.valueOf(2));
-	public static final BigInteger BIGINTEGER_3           = new BigInteger(String.valueOf(3));
-	public static final BigInteger BIGINTEGER_5           = new BigInteger(String.valueOf(5));
-	public static final BigInteger BIGINTEGER_7           = new BigInteger(String.valueOf(7));
+    public static final BigInteger BIGINTEGER_2           = new BigInteger(String.valueOf(2));
+    public static final BigInteger BIGINTEGER_3           = new BigInteger(String.valueOf(3));
+    public static final BigInteger BIGINTEGER_5           = new BigInteger(String.valueOf(5));
+    public static final BigInteger BIGINTEGER_7           = new BigInteger(String.valueOf(7));
     public static final BigInteger BIGINTEGER_10          = new BigInteger(String.valueOf(10));
     public static final BigInteger BIGINTEGER_11          = new BigInteger(String.valueOf(11));
     public static final BigInteger BIGINTEGER_12          = new BigInteger(String.valueOf(12));

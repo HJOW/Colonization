@@ -32,12 +32,12 @@ public abstract class Research implements ColonyElements {
     
     @Override
     public final String getClassName() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
     
     /** 이 객체의 타입 반환, 클래스명과 동일 */
     public final String getType() {
-    	return getClassName();
+        return getClassName();
     }
     
     @Override
@@ -47,7 +47,7 @@ public abstract class Research implements ColonyElements {
     
     @Override
     public String getTooltip() {
-    	return getName();
+        return getName();
     }
 
     @Override
@@ -162,50 +162,50 @@ public abstract class Research implements ColonyElements {
     
     /** 연구에 필요한 사전조건 중 필요 연구와 레벨 목록을 반환 */
     public final List<ResearchCondition> getResearchCoditions(Colony col) {
-    	return getResearchCoditions(col, getLevel());
+        return getResearchCoditions(col, getLevel());
     }
     
     /** 연구/업그레이드에 필요한 사전조건 중 필요 연구와 레벨 목록을 반환, 매개변수 level 에는 현재의 레벨 입력 */
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	return new ArrayList<ResearchCondition>();
+        return new ArrayList<ResearchCondition>();
     }
     
     /** 연구 시작 가능여부 반환 (선행 연구 완료여부만 체크) */
     public boolean isResearchAvail(Colony col) {
-    	boolean cond1, cond2, cond3;
-    	
-    	if(col != null) {
-    		cond1 = col.supportedResearch(getClassName());
-    	    if(! cond1) {
-    	    	ColonyManager.logGlobals(ColonyManager.t("[COLONYTYPE] 유형의 정착지에 [RESEARCH] 연구는 지원되지 않습니다.").replace("[COLONYTYPE]", col.getName()).replace("[RESEARCH]", getClassName()), 1);
-    	    	return false;
-    	    }
-    	}
-    	
-    	boolean avail  = true;
-    	boolean exists = false;
-    	List<ResearchCondition> listRes = getResearchCoditions(col, getLevel());
-    	for(ResearchCondition c : listRes) {
-    		// 이 조건이 활성화되는 시작 레벨 체크 (시작 레벨에 맞지 않으면 이 조건은 맞춘 걸로 치고 건너뜀)
-    		cond1 = (c.getStartLevel() >= 1 && getLevel() < c.getStartLevel());
-    		if(cond1) continue;
-    		
-    		// 조건 검사
-    		exists = false;
-    		for(Research r : col.getResearches()) {
-    			cond1 = (c.getResearchClassName().equals(r.getClassName()));
-    			cond2 = (chooseMaxInt(c.getLevel(), 1) <= r.getLevel());
-    			cond3 = (c.getLevelRate() * chooseMaxInt(getLevel(), 1) <= r.getLevel());
-    			
-    			if(cond1 && cond2 && cond3) {
-    				exists = true;
-    				break;
-    			}
-    		}
-    		if(! exists) { avail = false; break; }
-    	}
-    	
-    	return avail;
+        boolean cond1, cond2, cond3;
+        
+        if(col != null) {
+            cond1 = col.supportedResearch(getClassName());
+            if(! cond1) {
+                ColonyManager.logGlobals(ColonyManager.t("[COLONYTYPE] 유형의 정착지에 [RESEARCH] 연구는 지원되지 않습니다.").replace("[COLONYTYPE]", col.getName()).replace("[RESEARCH]", getClassName()), 1);
+                return false;
+            }
+        }
+        
+        boolean avail  = true;
+        boolean exists = false;
+        List<ResearchCondition> listRes = getResearchCoditions(col, getLevel());
+        for(ResearchCondition c : listRes) {
+            // 이 조건이 활성화되는 시작 레벨 체크 (시작 레벨에 맞지 않으면 이 조건은 맞춘 걸로 치고 건너뜀)
+            cond1 = (c.getStartLevel() >= 1 && getLevel() < c.getStartLevel());
+            if(cond1) continue;
+            
+            // 조건 검사
+            exists = false;
+            for(Research r : col.getResearches()) {
+                cond1 = (c.getResearchClassName().equals(r.getClassName()));
+                cond2 = (chooseMaxInt(c.getLevel(), 1) <= r.getLevel());
+                cond3 = (c.getLevelRate() * chooseMaxInt(getLevel(), 1) <= r.getLevel());
+                
+                if(cond1 && cond2 && cond3) {
+                    exists = true;
+                    break;
+                }
+            }
+            if(! exists) { avail = false; break; }
+        }
+        
+        return avail;
     }
     
     /** 연구 이름 반환 */

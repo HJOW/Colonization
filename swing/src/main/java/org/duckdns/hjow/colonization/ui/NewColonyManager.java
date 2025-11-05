@@ -92,7 +92,7 @@ public class NewColonyManager implements Disposeable {
         
         Vector<String> listDiff = new Vector<String>();
         for(int idx=1; idx<=9; idx++) {
-        	listDiff.add(String.valueOf(idx));
+            listDiff.add(String.valueOf(idx));
         }
         cbxDifficulty = new JComboBox<String>(listDiff);
         
@@ -153,16 +153,16 @@ public class NewColonyManager implements Disposeable {
         
         cbxDifficulty.removeAllItems();
         for(int idx=0; idx<diffs.length; idx++) {
-        	String now = String.valueOf(diffs[idx]);
-        	cbxDifficulty.addItem(now);
-        	if(now.equals(beforeDiff)) beforeValueExists = true;
+            String now = String.valueOf(diffs[idx]);
+            cbxDifficulty.addItem(now);
+            if(now.equals(beforeDiff)) beforeValueExists = true;
         }
         if(beforeValueExists) cbxDifficulty.setSelectedItem(beforeDiff);
         else                  cbxDifficulty.setSelectedIndex(0);
     }
     
     public void open() {
-    	tfName.setText(ColonyManager.t("정착지") + "_" + ColonyManager.generateNaturalNumber());
+        tfName.setText(ColonyManager.t("정착지") + "_" + ColonyManager.generateNaturalNumber());
         dialog.setVisible(true);
     }
     

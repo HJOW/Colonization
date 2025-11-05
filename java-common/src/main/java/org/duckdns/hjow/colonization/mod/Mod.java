@@ -7,10 +7,10 @@ import org.duckdns.hjow.commons.core.Disposeable;
 
 /** MOD, 사용자 정의 컴포넌트가 구현해야 할 인터페이스 */
 public interface Mod extends Disposeable, Serializable {
-	/** UI 초기화 시 호출 */
-	public void init(ColonyManagerInterface manager);
-	
-	/** 이 MOD 의 이름 반환 */
+    /** UI 초기화 시 호출 */
+    public void init(ColonyManagerInterface manager);
+    
+    /** 이 MOD 의 이름 반환 */
     public String getName();
     
     /** 이 MOD 의 설명문 반환 */

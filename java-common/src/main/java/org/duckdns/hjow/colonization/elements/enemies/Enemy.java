@@ -36,7 +36,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     
     @Override
     public String getTooltip() {
-    	return getName();
+        return getName();
     }
 
     public int getHp() {
@@ -110,19 +110,19 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         
         if(cycle % getAttackCycle() == 0) {
             // 시설 먼저 처리
-        	
-        	//     시설 목록 불러오기
-        	List<Facility> facs = new ArrayList<Facility>();
+            
+            //     시설 목록 불러오기
+            List<Facility> facs = new ArrayList<Facility>();
             facs.addAll(city.getFacility());
             
             //     순서 랜덤화 시키기
             Collections.sort(facs, new Comparator<Facility>() {
-				@Override
-				public int compare(Facility o1, Facility o2) {
-					if(ColonyManager.random() >= 0.5) return -1;
-					return 1;
-				}
-			});
+                @Override
+                public int compare(Facility o1, Facility o2) {
+                    if(ColonyManager.random() >= 0.5) return -1;
+                    return 1;
+                }
+            });
             
             //     순서대로 공격 처리
             for(Facility fac : facs) {

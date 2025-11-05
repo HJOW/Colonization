@@ -86,39 +86,39 @@ public class DefaultPack implements Pack {
     
     @Override
     public long getKey() {
-		return key;
-	}
-	public void setKey(long key) {
-		this.key = key;
-	}
-	
-	@Override
-	public String getAuthor() {
-		return author;
-	}
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-	
-	@Override
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public List<String> getFeatureKeywords() {
-		return featureKeywords;
-	}
-	public void setFeatureKeywords(List<String> featureKeywords) {
-		this.featureKeywords = featureKeywords;
-	}
-	protected void addFeatureKeywords(String ... keywords) {
-		for(String str : keywords) {
+        return key;
+    }
+    public void setKey(long key) {
+        this.key = key;
+    }
+    
+    @Override
+    public String getAuthor() {
+        return author;
+    }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+    
+    @Override
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public List<String> getFeatureKeywords() {
+        return featureKeywords;
+    }
+    public void setFeatureKeywords(List<String> featureKeywords) {
+        this.featureKeywords = featureKeywords;
+    }
+    protected void addFeatureKeywords(String ... keywords) {
+        for(String str : keywords) {
             if(! this.featureKeywords.contains(str)) this.featureKeywords.add(str);
-		}
-	}
-	@Override
+        }
+    }
+    @Override
     public List<Class<?>> getProductClasses() {
         return productClasses;
     }
@@ -128,12 +128,12 @@ public class DefaultPack implements Pack {
     }
     
     public List<Class<?>> getPolicyClasses() {
-		return policyClasses;
-	}
-	public void setPolicyClasses(List<Class<?>> policyClasses) {
-		this.policyClasses = policyClasses;
-	}
-	@Override
+        return policyClasses;
+    }
+    public void setPolicyClasses(List<Class<?>> policyClasses) {
+        this.policyClasses = policyClasses;
+    }
+    @Override
     public boolean isEnabled() {
         return enabled;
     }
@@ -157,6 +157,6 @@ public class DefaultPack implements Pack {
     
     @Override
     public List<String> newFeatures() {
-    	return getFeatureKeywords();
+        return getFeatureKeywords();
     }
 }

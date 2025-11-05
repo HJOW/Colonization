@@ -232,7 +232,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         pnCities.clear();
         
         for(ResearchPanel pnRes : rsPanels) {
-        	pnRes.dispose();
+            pnRes.dispose();
         }
         rsPanels.clear();
         
@@ -261,11 +261,11 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     /** 정착지 기본정보만 새로고침 */
     @Override
     public void refreshColonyBasicMeta(Colony colony, ColonyManager superInstance) {
-    	progHp.setMaximum(colony.getMaxHp());
+        progHp.setMaximum(colony.getMaxHp());
         progHp.setValue(colony.getHp());
-    	tfColonyName.setText(colony.getName());
-    	tfColonyTime.setText(colony.getDateString());
-    	taStatus.setText(colony.getStatusString(superInstance));
+        tfColonyName.setText(colony.getName());
+        tfColonyTime.setText(colony.getDateString());
+        taStatus.setText(colony.getStatusString(superInstance));
     }
     
     @Override
@@ -282,8 +282,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         
         List<City> cities = colony.getCities();
         if(cycle == 0 || cycle % 36000 == 0 || tabCities.getTabCount() != cities.size()) {
-        	cardCity.show(pnColonyCardCity, "LOADING");
-        	
+            cardCity.show(pnColonyCardCity, "LOADING");
+            
             tabCities.removeAll();
             for(CityPanel c : pnCities) { c.dispose(); }
             pnCities.clear();
@@ -295,7 +295,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             }
         } else {
             for(int idx=0; idx<pnCities.size(); idx++) {
-            	CityPanel p = pnCities.get(idx);
+                CityPanel p = pnCities.get(idx);
                 City cityCurrent = p.getCity();
                 
                 tabCities.setTitleAt(idx, cityCurrent == null ? "" : cityCurrent.getName());
@@ -308,12 +308,12 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         // 연구 쪽 새로고침
         List<Research> researches = colony.getResearches();
         if(rsPanels.size() != researches.size()) {
-        	for(ResearchPanel pnRes : rsPanels) {
-        		pnRes.dispose();
-        	}
-        	rsPanels.clear();
-        	pnResearches.removeAll();
-        	
+            for(ResearchPanel pnRes : rsPanels) {
+                pnRes.dispose();
+            }
+            rsPanels.clear();
+            pnResearches.removeAll();
+            
             GridBagConstraints gridBagConst;
             int rowNo = 0;
             
@@ -359,9 +359,9 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             gridBagConst.fill = GridBagConstraints.BOTH;
             pnResearches.add(new JPanel(), gridBagConst);
         } else {
-        	for(ResearchPanel pnRes : rsPanels) {
-        		pnRes.refresh(cycle, city, colony);
-        	}
+            for(ResearchPanel pnRes : rsPanels) {
+                pnRes.refresh(cycle, city, colony);
+            }
         }
         
         refreshAccoutingTable();
@@ -514,9 +514,9 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                 
                 String mores = data.getMoreString();
                 if(DataUtil.isNotEmpty(mores)) {
-                	if(sourceName.equals("UNKNOWN") || sourceName.equals("")) sourceName = mores;
-                	else if(sourceName.equals(mores)) sourceName = mores;
-                	if(! sourceName.equals(mores)) sourceName += " " + mores;
+                    if(sourceName.equals("UNKNOWN") || sourceName.equals("")) sourceName = mores;
+                    else if(sourceName.equals(mores)) sourceName = mores;
+                    if(! sourceName.equals(mores)) sourceName += " " + mores;
                 }
                 
                 rows.add(sourceName);

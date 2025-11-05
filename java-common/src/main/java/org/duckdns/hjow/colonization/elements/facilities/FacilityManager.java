@@ -44,7 +44,7 @@ public class FacilityManager {
     public static void register(Class<?> facilityClass) {
         FacilityInformation info = null;
         try {
-        	info = new FacilityInformation(facilityClass);
+            info = new FacilityInformation(facilityClass);
             if(! facilities.contains(info)) facilities.add(info);
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +63,7 @@ public class FacilityManager {
             if(info.getFacilityClass().getSimpleName().equals(name)) return info;
         }
         for(FacilityInformation info : ColonyClassLoader.getScriptFacilityList()) {
-        	if(info.getName().equals(name)) return info;
+            if(info.getName().equals(name)) return info;
         }
         return null;
     }
@@ -111,9 +111,9 @@ public class FacilityManager {
         
         List<ScriptFacilityInformation> scrList = ColonyClassLoader.getScriptFacilityList();
         if(scrList != null) {
-        	for(ScriptFacilityInformation s : scrList) {
-        		if(! newList.contains(s)) newList.add(s);
-        	}
+            for(ScriptFacilityInformation s : scrList) {
+                if(! newList.contains(s)) newList.add(s);
+            }
         }
         
         return newList;

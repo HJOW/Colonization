@@ -72,7 +72,7 @@ public abstract class AbstractColony implements Colony {
     
     /** 기본 밸런스로 초기세팅하여 정착지 객체 생성 */
     public AbstractColony() {
-    	resetAll(0);
+        resetAll(0);
     }
     
     /** 배수를 적용하여 정착지 객체 생성, 초기 예산과 신용도에 배수 적용 */
@@ -83,16 +83,16 @@ public abstract class AbstractColony implements Colony {
     
     /** 완전히 초기화, 난이도 지정 */
     public void resetAll(int difficulty) {
-    	checked = true;
+        checked = true;
         hp = getMaxHp();
-    	accountingData.clear();
-    	cities.clear();    
-    	enemies.clear();   
-    	holdings.clear(); 
-    	loanAvail.clear(); 
-    	loanHave.clear();  
-    	resetResearches();
-    	
+        accountingData.clear();
+        cities.clear();    
+        enemies.clear();   
+        holdings.clear(); 
+        loanAvail.clear(); 
+        loanHave.clear();  
+        resetResearches();
+        
         setDifficulty(difficulty);    // 값 세팅하면서, 최대/최소도 이 메소드에서 적용
         difficulty = getDifficulty(); // 다시 꺼내기 (값이 변경됨)
         
@@ -101,56 +101,56 @@ public abstract class AbstractColony implements Colony {
         
         switch(difficulty) {
         case 1:
-        	multiplyRate = 1.0;
-        	break;
+            multiplyRate = 1.0;
+            break;
         case 2:
-        	multiplyRate = 0.5;
-        	break;
+            multiplyRate = 0.5;
+            break;
         case 3:
-        	multiplyRate = 0.375;
-        	break;
+            multiplyRate = 0.375;
+            break;
         case 4:
-        	multiplyRate = 0.25;
-        	break;
+            multiplyRate = 0.25;
+            break;
         case 5:
-        	multiplyRate = 0.2;
-        	break;
+            multiplyRate = 0.2;
+            break;
         case 6:
-        	multiplyRate = 0.15;
-        	break;
+            multiplyRate = 0.15;
+            break;
         default:
-        	multiplyRate = 0.1;
-        	break;
+            multiplyRate = 0.1;
+            break;
         }
         
         if(difficulty > 1) {
             credit = (int)  Math.round(getStartCredit() * multiplyRate);
             money  = (long) Math.round(getStartMoney()  * multiplyRate);
         } else {
-        	credit = getStartCredit();
+            credit = getStartCredit();
             money  = getStartMoney();
         }
         
         if(difficulty >= 4) {
-        	switch(difficulty) {
+            switch(difficulty) {
             case 4:
-            	startLoan = new Loan(money / 2L, 36, 6);
+                startLoan = new Loan(money / 2L, 36, 6);
             case 5:
-            	startLoan = new Loan(money, 36, 7);
+                startLoan = new Loan(money, 36, 7);
             case 6:
-            	startLoan = new Loan(money + Math.round(money * 1.5), 36, 7);
+                startLoan = new Loan(money + Math.round(money * 1.5), 36, 7);
             case 7:
-            	startLoan = new Loan(money + Math.round(money * 1.75), 36, 9);
+                startLoan = new Loan(money + Math.round(money * 1.75), 36, 9);
             case 8:
-            	startLoan = new Loan(money * 2L, 36, 9);
+                startLoan = new Loan(money * 2L, 36, 9);
             default:
-            	startLoan = new Loan(money * 4L, 36, 9);
+                startLoan = new Loan(money * 4L, 36, 9);
             }
         }
         
         if(credit > getMaxCredit()) credit = getMaxCredit();
         if(startLoan != null) {
-        	loanHave.add(startLoan);
+            loanHave.add(startLoan);
         }
         markAsRefresh(true);
     }
@@ -167,7 +167,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public final String getClassName() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
 
     @Override
@@ -182,7 +182,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public String getTooltip() {
-    	return getName();
+        return getName();
     }
     
     /** 이 정착지를 마지막으로 저장한 ColonyManager 의 버전 반환 */
@@ -194,7 +194,7 @@ public abstract class AbstractColony implements Colony {
     /** 이 정착지를 마지막으로 저장한 ColonyManager 의 빌드 번호 반환 */
     @Override
     public long getClientBuildNo() {
-    	return new Long(clientBuildNo);
+        return new Long(clientBuildNo);
     }
 
     /** 이 정착지 내 도시들 반환 */
@@ -213,23 +213,23 @@ public abstract class AbstractColony implements Colony {
     /** 모든 도시의 시설 목록 반환 (모든 소속 도시들 다 스캔) */
     @Override
     public List<Facility> getFacilities() {
-    	List<Facility> list = new ArrayList<Facility>();
-    	for(City c : getCities()) {
-    		list.addAll(c.getFacility());
-    	}
-    	return list;
+        List<Facility> list = new ArrayList<Facility>();
+        for(City c : getCities()) {
+            list.addAll(c.getFacility());
+        }
+        return list;
     }
     
     /** 특정 타입의 시설 목록 반환 (모든 소속 도시들 다 스캔) */
     @Override
     public List<Facility> getFacilities(Class<?> facilityClass) {
-    	List<Facility> list = new ArrayList<Facility>();
-    	for(City c : getCities()) {
-    		for(Facility f : c.getFacility()) {
-        		if(f.getClass() == facilityClass && (! list.contains(f))) list.add(f);
-        	}
-    	}
-    	return list;
+        List<Facility> list = new ArrayList<Facility>();
+        for(City c : getCities()) {
+            for(Facility f : c.getFacility()) {
+                if(f.getClass() == facilityClass && (! list.contains(f))) list.add(f);
+            }
+        }
+        return list;
     }
 
     public void setCities(List<City> cities) {
@@ -272,18 +272,18 @@ public abstract class AbstractColony implements Colony {
     
     /** 누락된 연구 추가 */
     protected void addOmittedResearches() {
-    	List<Research> allZeros = ResearchManager.initList(this);
-    	List<Research> nows = researches;
-    	
-    	for(Research r : allZeros) {
-    		boolean exists = false;
-    		for(Research rc : nows) {
-    			if(rc.getClassName().equals(r.getClassName())) { exists = true; break; }
-    		}
-    		if(! exists) {
-    			researches.add(r);
-    		}
-    	}
+        List<Research> allZeros = ResearchManager.initList(this);
+        List<Research> nows = researches;
+        
+        for(Research r : allZeros) {
+            boolean exists = false;
+            for(Research rc : nows) {
+                if(rc.getClassName().equals(r.getClassName())) { exists = true; break; }
+            }
+            if(! exists) {
+                researches.add(r);
+            }
+        }
     }
     
     /** 총 인구 수 구하기 */
@@ -329,9 +329,9 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public void setDifficulty(int difficulty) {
-    	if(difficulty < 1) difficulty = 1;
+        if(difficulty < 1) difficulty = 1;
         if(difficulty > 9) difficulty = 9;
-    	
+        
         this.difficulty = difficulty;
     }
 
@@ -346,20 +346,20 @@ public abstract class AbstractColony implements Colony {
     }
     
     public BigInteger getMoneyOvers() {
-		return moneyOvers;
-	}
+        return moneyOvers;
+    }
     
     /** 실질 금액을 반환 */
     @Override
     public BigInteger getMoneyTotals() {
-    	return getMoneyOvers().add(new BigInteger(String.valueOf(getMoney())));
+        return getMoneyOvers().add(new BigInteger(String.valueOf(getMoney())));
     }
 
-	public void setMoneyOvers(BigInteger moneyOvers) {
-		this.moneyOvers = moneyOvers;
-	}
+    public void setMoneyOvers(BigInteger moneyOvers) {
+        this.moneyOvers = moneyOvers;
+    }
 
-	@Override
+    @Override
     public int getCredit() {
         return credit;
     }
@@ -373,45 +373,45 @@ public abstract class AbstractColony implements Colony {
 
     @Override
     public void modifyingMoney(long money, City city, ColonyElements objType, String reason, String moreString) {
-    	BigInteger calculates = new BigInteger(String.valueOf(getMoney()));
-    	BigInteger max        = new BigInteger(String.valueOf(getMaxMoney1()));
-    	
-    	// 더하기
-    	calculates = calculates.add(new BigInteger(String.valueOf(money)));
-    	
-    	// 예산이 늘어나서 long 최대값 초과 시 예산2 필드로 절반 넘기기
-    	if(calculates.compareTo(max) >= 0) {
-    		// 합산 결과가 예산 1 (long 필드) 초과 위험으로 예산 2로 일부 금액 넘기기
-    		BigInteger halfs = calculates.divide(Constants.BIGINTEGER_2); // 계산 결과의 절반
-    		if(moneyOvers == null) moneyOvers = BigInteger.ZERO;
-    		
-    		// 예산2로 옮기기
-    		moneyOvers = moneyOvers.add(halfs);
-    		calculates = calculates.subtract(halfs); // 예산1 에서는 빼기
-    	}
-    	
-    	// 예산이 줄어들어서 long 필드의 절반 이하로 떨어졌으나, 예산2필드에 금액이 남아있는 경우
-    	//     long 필드 지원 가능한 값까지 옮기기
-    	if(calculates.compareTo(max.divide(Constants.BIGINTEGER_2)) >= 0 && getMoneyOvers().compareTo(BigInteger.ONE) > 0) {
-    		// 비교대상 1 - 예산1 -- 예산1 필드 최대값에서 예산1 현재 값을 뺄셈 (즉 예산1에 얼마나 더 들어갈 수 있는지의 값)
-    	    BigInteger comp1 = new BigInteger(String.valueOf( getMaxMoney1() )).subtract(new BigInteger(String.valueOf(getMoney())));
-    	    
-    	    BigInteger lefts = null;
-    	    if(getMoneyOvers().compareTo(comp1) >= 0) {
-    	    	// 예산2 값이 예산1 남은 공간보다 크면 - 예산1의 남은 공간만큼 최대한 옮기기
-    	    	lefts = comp1;
-    	    } else {
-    	    	// 예산2 값이 예산1 남은 공간보다 작으면 - 예산2 전부 예산1로 옮기기
-    	    	lefts = getMoneyOvers();
-    	    }
-    	    if(lefts != null) {
-    	    	// 예산1로 옮기기
-    	    	calculates = calculates.add(lefts);
-    	    	setMoneyOvers(getMoneyOvers().subtract(lefts));
-    	    }
-    	    
-    	}
-    	
+        BigInteger calculates = new BigInteger(String.valueOf(getMoney()));
+        BigInteger max        = new BigInteger(String.valueOf(getMaxMoney1()));
+        
+        // 더하기
+        calculates = calculates.add(new BigInteger(String.valueOf(money)));
+        
+        // 예산이 늘어나서 long 최대값 초과 시 예산2 필드로 절반 넘기기
+        if(calculates.compareTo(max) >= 0) {
+            // 합산 결과가 예산 1 (long 필드) 초과 위험으로 예산 2로 일부 금액 넘기기
+            BigInteger halfs = calculates.divide(Constants.BIGINTEGER_2); // 계산 결과의 절반
+            if(moneyOvers == null) moneyOvers = BigInteger.ZERO;
+            
+            // 예산2로 옮기기
+            moneyOvers = moneyOvers.add(halfs);
+            calculates = calculates.subtract(halfs); // 예산1 에서는 빼기
+        }
+        
+        // 예산이 줄어들어서 long 필드의 절반 이하로 떨어졌으나, 예산2필드에 금액이 남아있는 경우
+        //     long 필드 지원 가능한 값까지 옮기기
+        if(calculates.compareTo(max.divide(Constants.BIGINTEGER_2)) >= 0 && getMoneyOvers().compareTo(BigInteger.ONE) > 0) {
+            // 비교대상 1 - 예산1 -- 예산1 필드 최대값에서 예산1 현재 값을 뺄셈 (즉 예산1에 얼마나 더 들어갈 수 있는지의 값)
+            BigInteger comp1 = new BigInteger(String.valueOf( getMaxMoney1() )).subtract(new BigInteger(String.valueOf(getMoney())));
+            
+            BigInteger lefts = null;
+            if(getMoneyOvers().compareTo(comp1) >= 0) {
+                // 예산2 값이 예산1 남은 공간보다 크면 - 예산1의 남은 공간만큼 최대한 옮기기
+                lefts = comp1;
+            } else {
+                // 예산2 값이 예산1 남은 공간보다 작으면 - 예산2 전부 예산1로 옮기기
+                lefts = getMoneyOvers();
+            }
+            if(lefts != null) {
+                // 예산1로 옮기기
+                calculates = calculates.add(lefts);
+                setMoneyOvers(getMoneyOvers().subtract(lefts));
+            }
+            
+        }
+        
         setMoney(calculates.longValue());
         income = income.add(calculates);
         
@@ -426,8 +426,8 @@ public abstract class AbstractColony implements Colony {
 
     @Override
     public void setTech(long tech) {
-    	if(tech >= Long.MAX_VALUE - Integer.MAX_VALUE - 1) tech = Long.MAX_VALUE - Integer.MAX_VALUE - 1;
-    	if(tech < 0L) tech = 0L;
+        if(tech >= Long.MAX_VALUE - Integer.MAX_VALUE - 1) tech = Long.MAX_VALUE - Integer.MAX_VALUE - 1;
+        if(tech < 0L) tech = 0L;
         this.tech = tech;
     }
 
@@ -439,19 +439,19 @@ public abstract class AbstractColony implements Colony {
     /** 시작 년도 반환 */
     @Override
     public BigInteger getStartYear() {
-    	return Constants.BIGINTEGER_3000;
+        return Constants.BIGINTEGER_3000;
     }
     
     /** 시작 예산 변환 */
     @Override
     public long getStartMoney() {
-    	return 5000000L;
+        return 5000000L;
     }
     
     /** 시작 신용도 반환 */
     @Override
     public int getStartCredit() {
-    	return 500;
+        return 500;
     }
     
     @Override
@@ -617,19 +617,19 @@ public abstract class AbstractColony implements Colony {
         // 도시별 사이클 처리 (멀티쓰레드 처리)
         actionsOnCycle.clear();
         for(final City c : getCities()) {
-        	actionsOnCycle.add(new SingleAction() {	
-		        @Override
-		        public void run(int index) throws Throwable {
-		        	if(cycle % c.cycleGap(getSelf()) == 0) c.oneCycle(cycle, c, getSelf(), 100, colPanel);
-		        }
-		    });
+            actionsOnCycle.add(new SingleAction() {    
+                @Override
+                public void run(int index) throws Throwable {
+                    if(cycle % c.cycleGap(getSelf()) == 0) c.oneCycle(cycle, c, getSelf(), 100, colPanel);
+                }
+            });
         }
         workOnCycle = new SimultaneousWork(actionsOnCycle);
         workOnCycle.start();
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
-        	if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, city, colony, efficiency100, colPanel);
         }
         
         // 예약 작업 처리
@@ -664,15 +664,15 @@ public abstract class AbstractColony implements Colony {
         
         // 예산이 음수인 경우 이자 발생
         if(getMoney() < 0L) {
-        	if(cycle % 60 == 0) {
-        	    long interests = ((long) Math.floor(Math.abs(getMoney()) * 0.009)) * (-1);
-        	    modifyingMoney(interests, city, colony, "Interest", colony.getName());
-        	}
+            if(cycle % 60 == 0) {
+                long interests = ((long) Math.floor(Math.abs(getMoney()) * 0.009)) * (-1);
+                modifyingMoney(interests, city, colony, "Interest", colony.getName());
+            }
         }
         
         // 1시간 마다 수익량 초기화
         if(income.mod(Constants.BIGINTEGER_600).equals(BigInteger.ZERO)) {
-        	income = BigInteger.ZERO;
+            income = BigInteger.ZERO;
         }
         
         // 시간 지남
@@ -681,9 +681,9 @@ public abstract class AbstractColony implements Colony {
     
     /** 체력이 없는 객체 삭제 */
     protected void removeDeadObjects() {
-    	int idx;
-    	
-    	// 체력이 없는 도시 삭제
+        int idx;
+        
+        // 체력이 없는 도시 삭제
         idx = 0;
         while(idx < getCities().size()) {
             City cityOne = getCities().get(idx);
@@ -725,11 +725,11 @@ public abstract class AbstractColony implements Colony {
     
     /** 대출 사이클 처리 */
     protected void processLoans(int cycle, ColonyPanel colPanel) {
-    	for(Loan l : getLoanHave()) {
+        for(Loan l : getLoanHave()) {
             if(cycle % l.cycleGap(this) == 0) l.oneCycle(cycle, null, this, 100, colPanel);
         }
-    	
-    	// 1년 지날 때마다, 사용 가능한 대출 목록 갱신
+        
+        // 1년 지날 때마다, 사용 가능한 대출 목록 갱신
         if(cycle % 60 * 24 * 30 * 12 == 0) {
             resetAvailLoans();
             ColonyManager.logGlobals(ColonyManager.t("사용 가능한 대출 목록이 변경됨"), 1);
@@ -771,31 +771,31 @@ public abstract class AbstractColony implements Colony {
     
     /** 새 도시에 기본 요소들 추가 */
     protected void addDefaultStarts(City city) {
-    	int idx;
-    	for(idx=0; idx<50; idx++) {
+        int idx;
+        for(idx=0; idx<50; idx++) {
             city.createNewCitizen();
         }
         
         Facility fac;
         
         for(idx=0; idx<12; idx++) {
-        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.ResidenceModule").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.ResidenceModule").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
             ((Residence) fac).setComportGrade(0);
             city.getFacility().add(fac);
         }
         
         for(idx=0; idx<3; idx++) {
-        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.PowerStation").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.PowerStation").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
             city.getFacility().add(fac);
         }
         
         for(idx=0; idx<2; idx++) {
-        	try { 
-        		fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.Restaurant").newInstance();
-        		for(idx=0; idx<10; idx++) {
+            try { 
+                fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.Restaurant").newInstance();
+                for(idx=0; idx<10; idx++) {
                     ((Storage) fac).store((Product) Class.forName("org.duckdns.hjow.colonization.elements.products.food.NutritionBlock").newInstance());
                 }
-        	} catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
             city.getFacility().add(fac);
         }
         
@@ -803,12 +803,12 @@ public abstract class AbstractColony implements Colony {
         city.getFacility().add(fac);
         
         for(idx=0; idx<2; idx++) {
-        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.SmallFactory").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.SmallFactory").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
             city.getFacility().add(fac);
         }
         
         for(idx=0; idx<2; idx++) {
-        	try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+            try { fac = (Facility) Class.forName("org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
             city.getFacility().add(fac);
         }
         
@@ -816,18 +816,18 @@ public abstract class AbstractColony implements Colony {
         city.getFacility().add(fac);
         
         Collections.sort(city.getFacility(), new Comparator<Facility>() {
-			@Override
-			public int compare(Facility o1, Facility o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+            @Override
+            public int compare(Facility o1, Facility o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
         
         Collections.sort(city.getCitizens(), new Comparator<Citizen>() {
-			@Override
-			public int compare(Citizen o1, Citizen o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
+            @Override
+            public int compare(Citizen o1, Citizen o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
     }
     
     /** 이 정착지가 감당 가능한 도시 수를 반환 */
@@ -849,12 +849,12 @@ public abstract class AbstractColony implements Colony {
     
     /** 신용도 최대값 반환 */
     public final int getMaxCredit() {
-    	return 1000;
+        return 1000;
     }
     
     /** 예산 1 의 최대값 (이를 넘어가면 예산 2로 넘김) */
     public final long getMaxMoney1() {
-    	return 9000000000000000000L;
+        return 9000000000000000000L;
     }
     
     @Override
@@ -991,7 +991,7 @@ public abstract class AbstractColony implements Colony {
         try { setCredit(Integer.parseInt(json.get("credit").toString()));             } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); credit     = 500;             }
         try {
             if(json.containsKey("money2")) {
-            	moneyOvers = new BigInteger(json.get("money2").toString());
+                moneyOvers = new BigInteger(json.get("money2").toString());
             }
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); moneyOvers = BigInteger.ZERO;             }
         try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.1"; } 
@@ -1005,7 +1005,7 @@ public abstract class AbstractColony implements Colony {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                    	City city = createCityInstance((JsonObject) o);
+                        City city = createCityInstance((JsonObject) o);
                         cities.add(city);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);
@@ -1124,7 +1124,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public BigInteger getCheckerValue() {
-    	BigInteger res = new BigInteger(String.valueOf(getKey()));
+        BigInteger res = new BigInteger(String.valueOf(getKey()));
         for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
         for(int idx=0; idx<clientVersion.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientVersion.charAt(idx)))); }
         for(int idx=0; idx<clientBuildNo.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientBuildNo.charAt(idx))).multiply(Constants.BIGINTEGER_31)); }
@@ -1141,27 +1141,27 @@ public abstract class AbstractColony implements Colony {
     
     /** 인증용 시리얼 문자열 */
     public String getCheckerSerial() {
-    	if(! checked) return "";
-    	
-    	StringBuilder res = new StringBuilder(String.valueOf(getCheckerValue()));
-    	// TODO
-    	
-    	String serial = res.toString().trim();
-    	res = null;
-    	
-    	return SecurityUtil.hash(serial, "SHA-256");
+        if(! checked) return "";
+        
+        StringBuilder res = new StringBuilder(String.valueOf(getCheckerValue()));
+        // TODO
+        
+        String serial = res.toString().trim();
+        res = null;
+        
+        return SecurityUtil.hash(serial, "SHA-256");
     }
     
     /** 인증 제거 (인증 제거 사유 발생 시 호출) */
     @Override
     public void disableChecked() {
-    	checked = false;
+        checked = false;
     }
     
     /** 인증 유효 여부 반환 */
     @Override
     public boolean isCheckEnabled() {
-    	return checked;
+        return checked;
     }
 
     /** 파일로 저장 */
@@ -1208,7 +1208,7 @@ public abstract class AbstractColony implements Colony {
     
     /** 자기자신 반환 */
     public Colony getSelf() {
-    	return this;
+        return this;
     }
     
     public static String getColonyClassName() {
@@ -1217,18 +1217,18 @@ public abstract class AbstractColony implements Colony {
     
     /** 난이도 배열 생성 */
     protected static int[] createAvailableDifficulties(int min, int max) {
-    	int[] arr = new int[max - min+1];
-    	int now = min;
-    	for(int idx=0; idx<arr.length; idx++) {
-    		arr[idx] = now;
-    		now++;
-    	}
-    	return arr;
+        int[] arr = new int[max - min+1];
+        int now = min;
+        for(int idx=0; idx<arr.length; idx++) {
+            arr[idx] = now;
+            now++;
+        }
+        return arr;
     }
     
     /** 사용 가능한 난이도 목록 반환 */
     public static int[] getAvailableDifficulties() {
-    	return createAvailableDifficulties(1, 9);
+        return createAvailableDifficulties(1, 9);
     }
     
     public static String getColonyClassTitle() {

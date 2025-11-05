@@ -40,12 +40,12 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public final String getClassName() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
     
     @Override
     public String getTooltip() {
-    	return getName();
+        return getName();
     }
     
     /** 이름 앞부분 */
@@ -170,12 +170,12 @@ public abstract class DefaultFacility implements Facility {
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
         // State 영향력 동작
         for(State st : getStates()) {
-        	if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, this, city, colony, colPanel);
+            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, this, city, colony, colPanel);
         }
         
         // State 수명 동작
         for(State st : getStates()) {
-        	if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, city, colony, efficiency100, colPanel);
         }
         
         // 수명 다된 state 제거
@@ -203,7 +203,7 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public long getDestructionFee(City city, Colony colony) {
-    	return 1000L;
+        return 1000L;
     }
     
     @Override
@@ -356,7 +356,7 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public int getSpaceSize() {
-    	return 1;
+        return 1;
     }
     
     /** 업그레이드 비용 시작 금액 */
@@ -391,11 +391,11 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public void setBoostRate(double boostRate) {
-    	this.boostRate = boostRate;
+        this.boostRate = boostRate;
     }
     
     public double getBoostRate() {
-    	return this.boostRate;
+        return this.boostRate;
     }
     
     @Override
@@ -416,28 +416,28 @@ public abstract class DefaultFacility implements Facility {
     
     @Override
     public final boolean isScriptBased() {
-    	try {
-    	    Class<? extends Facility> classThis = getClass();
-    	    Method mthd = classThis.getMethod("isScriptBasedFacility");
-    	    return DataUtil.parseBoolean(String.valueOf(mthd.invoke(null)));
-    	} catch(NoSuchMethodException ex) {
-    		return true; // 알 수 없는 경우 true 로 취급 - 인증 해제됨
-    	} catch(Exception ex) {
-    		throw new RuntimeException(ex.getMessage(), ex);
-    	}
+        try {
+            Class<? extends Facility> classThis = getClass();
+            Method mthd = classThis.getMethod("isScriptBasedFacility");
+            return DataUtil.parseBoolean(String.valueOf(mthd.invoke(null)));
+        } catch(NoSuchMethodException ex) {
+            return true; // 알 수 없는 경우 true 로 취급 - 인증 해제됨
+        } catch(Exception ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
     }
     
     @Override
     public Object getImageContent() {
-    	try {
-    	    Class<? extends Facility> classThis = getClass();
-    	    Method mthd = classThis.getMethod("getImage");
-    	    return mthd.invoke(null);
-    	} catch(NoSuchMethodException ex) {
-    		return null; // 알 수 없는 경우 null
-    	} catch(Exception ex) {
-    		throw new RuntimeException(ex.getMessage(), ex);
-    	}
+        try {
+            Class<? extends Facility> classThis = getClass();
+            Method mthd = classThis.getMethod("getImage");
+            return mthd.invoke(null);
+        } catch(NoSuchMethodException ex) {
+            return null; // 알 수 없는 경우 null
+        } catch(Exception ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
     }
     
     public static String getFacilityName() {
@@ -465,7 +465,7 @@ public abstract class DefaultFacility implements Facility {
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Object getImage() {
@@ -473,12 +473,12 @@ public abstract class DefaultFacility implements Facility {
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	return new ArrayList<ResearchCondition>();
+        return new ArrayList<ResearchCondition>();
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */
     public static String isBuildAvail(Colony col, City city) { 
-    	return null;
+        return null;
     }
     
     public static boolean isScriptBasedFacility() { return false; }

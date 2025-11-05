@@ -29,25 +29,25 @@ import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 모든 종류의 시설과 연구를 지원하는 정착지 시나리오 */
 public final class FreeColony extends AbstractColony {
-	private static final long serialVersionUID = 7091084518100557257L;
-	
-	public FreeColony() {
+    private static final long serialVersionUID = 7091084518100557257L;
+    
+    public FreeColony() {
         super();
     }
 
-	public String getType() {
+    public String getType() {
         return getColonyClassName();
     }
     
     @Override
     public boolean supportedFacility(FacilityInformation info) {
-    	if(info == null) return false;
+        if(info == null) return false;
         return true;
     }
     
     @Override
     public boolean supportedResearch(String researchTypeName) {
-    	if(researchTypeName == null) return false;
+        if(researchTypeName == null) return false;
         return true;
     }
     
@@ -62,7 +62,7 @@ public final class FreeColony extends AbstractColony {
     
     /** 사용 가능한 난이도 목록 반환 */
     public static int[] getAvailableDifficulties() {
-    	return createAvailableDifficulties(1, 9);
+        return createAvailableDifficulties(1, 9);
     }
     
     public static String getColonyClassTitle() {
@@ -140,6 +140,6 @@ public final class FreeColony extends AbstractColony {
 
     @Override
     protected City createCityInstance(JsonObject json) throws IOException {
-    	return new NormalCity(json);
+        return new NormalCity(json);
     }
 }

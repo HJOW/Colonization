@@ -36,7 +36,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     
     @Override
     public int getSpaceSize() {
-    	return 5;
+        return 5;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     
     @Override
     public List<String> getProductTypeNeeded() {
-    	return new ArrayList<String>();
+        return new ArrayList<String>();
     }
     
     /** 수익 발생 주기 */
@@ -143,37 +143,37 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     }
     
     @Override
-	public List<Product> getStored() {
-		return new ArrayList<Product>();
-	}
+    public List<Product> getStored() {
+        return new ArrayList<Product>();
+    }
 
-	@Override
-	public Product takeOut(String type) {
-		return null;
-	}
+    @Override
+    public Product takeOut(String type) {
+        return null;
+    }
 
-	@Override
-	public void store(Product p) { throw new KnownRuntimeException("Cannot store here !"); }
+    @Override
+    public void store(Product p) { throw new KnownRuntimeException("Cannot store here !"); }
 
-	@Override
-	public int getStoredCount(String productType) {
-		return 0;
-	}
+    @Override
+    public int getStoredCount(String productType) {
+        return 0;
+    }
 
-	@Override
-	public int getStoredCount() {
-		return 0;
-	}
+    @Override
+    public int getStoredCount() {
+        return 0;
+    }
 
-	@Override
-	public int getMaxStoredCapacity() {
-		return 0;
-	}
+    @Override
+    public int getMaxStoredCapacity() {
+        return 0;
+    }
 
-	@Override
-	public boolean isStoreAvail(Product p) {
-		return false;
-	}
+    @Override
+    public boolean isStoreAvail(Product p) {
+        return false;
+    }
 
     public static String getFacilityName() {
         return ColonyManager.t("아케이드");
@@ -200,7 +200,7 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Object getImage() {
@@ -208,8 +208,8 @@ public class Arcade extends DefaultFacility implements ServiceFacility {
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        return list;
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

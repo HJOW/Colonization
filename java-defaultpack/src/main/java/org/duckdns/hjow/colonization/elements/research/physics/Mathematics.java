@@ -4,11 +4,11 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.research.Research;
 
 public class Mathematics extends Research {
-	private static final long serialVersionUID = -6112245443498463187L;
+    private static final long serialVersionUID = -6112245443498463187L;
 
-	public Mathematics() { super(); }
-	
-	@Override
+    public Mathematics() { super(); }
+    
+    @Override
     public String getName() {
         return getClass().getSimpleName();
     }

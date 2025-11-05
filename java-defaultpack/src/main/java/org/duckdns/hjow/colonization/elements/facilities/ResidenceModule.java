@@ -34,7 +34,7 @@ public class ResidenceModule extends Residence {
     
     @Override
     public int getSpaceSize() {
-    	return 3;
+        return 3;
     }
     
     public static String getFacilityName() {
@@ -58,7 +58,7 @@ public class ResidenceModule extends Residence {
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Long getTechNeeded() {
@@ -70,7 +70,7 @@ public class ResidenceModule extends Residence {
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	return new ArrayList<ResearchCondition>();
+        return new ArrayList<ResearchCondition>();
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

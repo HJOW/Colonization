@@ -23,9 +23,9 @@ import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 공통 Lib 의 PrimitiveObject 기능제한판 */
 public class PrimitiveObject extends ScriptObject {
-	private static final long serialVersionUID = -515055112892161618L;
-	private static final PrimitiveObject uniqueObject = new PrimitiveObject();
-	private PrimitiveObject() { super(); }
+    private static final long serialVersionUID = -515055112892161618L;
+    private static final PrimitiveObject uniqueObject = new PrimitiveObject();
+    private PrimitiveObject() { super(); }
     public static PrimitiveObject getInstance() {
         return uniqueObject;
     }
@@ -230,33 +230,33 @@ public class PrimitiveObject extends ScriptObject {
         return JsonObject.parseJson(String.valueOf(jsonString));
     }
     public String formatInt(Object n) {
-    	if(n instanceof BigInteger) return ColonyManager.formatInt( (BigInteger) n);
-    	return ColonyManager.formatInt(new BigInteger(String.valueOf(n).replace(",", "").trim()));
+        if(n instanceof BigInteger) return ColonyManager.formatInt( (BigInteger) n);
+        return ColonyManager.formatInt(new BigInteger(String.valueOf(n).replace(",", "").trim()));
     }
     
     public String formatRate(Object n) {
-    	if(n instanceof BigDecimal) return ColonyManager.formatRate(  (BigDecimal) n );
-    	return ColonyManager.formatRate(new BigDecimal(String.valueOf(n).replace(",", "").trim()));
+        if(n instanceof BigDecimal) return ColonyManager.formatRate(  (BigDecimal) n );
+        return ColonyManager.formatRate(new BigDecimal(String.valueOf(n).replace(",", "").trim()));
     }
     public BigDecimal maxMem() {
-    	return new BigDecimal(String.valueOf(Runtime.getRuntime().maxMemory()));
+        return new BigDecimal(String.valueOf(Runtime.getRuntime().maxMemory()));
     }
     public BigDecimal freeMem() {
-    	return new BigDecimal(String.valueOf(Runtime.getRuntime().freeMemory()));
+        return new BigDecimal(String.valueOf(Runtime.getRuntime().freeMemory()));
     }
     public BigDecimal memPer() {
-    	BigDecimal max = maxMem();
-    	if(max.compareTo(BigDecimal.ZERO) <= 0) return BigDecimal.ZERO;
-    	return freeMem().multiply(new BigDecimal("100")).divide(max, 50, RoundingMode.HALF_UP);
+        BigDecimal max = maxMem();
+        if(max.compareTo(BigDecimal.ZERO) <= 0) return BigDecimal.ZERO;
+        return freeMem().multiply(new BigDecimal("100")).divide(max, 50, RoundingMode.HALF_UP);
     }
     
     private transient long lastGcTime = 0L;
     public void gc() {
-    	long now = System.currentTimeMillis();
-    	if(lastGcTime <= now - 8000L) return; // 너무 자주 호출 못하게
-    	
-    	lastGcTime = now;
-    	Runtime.getRuntime().gc();
+        long now = System.currentTimeMillis();
+        if(lastGcTime <= now - 8000L) return; // 너무 자주 호출 못하게
+        
+        lastGcTime = now;
+        Runtime.getRuntime().gc();
     }
     public String translate(Object obj) {
         return ColonyManager.t(obj.toString());

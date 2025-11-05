@@ -26,12 +26,12 @@ public class NewMetals extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicScience", 1, 5.0));
-    	list.add(new ResearchCondition("Chemical", 1, 2.0));
-    	list.add(new ResearchCondition("BasicEngineering", 1, 7.0));
-    	list.add(new ResearchCondition("BasicEngineering", 10, 0.0));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicScience", 1, 5.0));
+        list.add(new ResearchCondition("Chemical", 1, 2.0));
+        list.add(new ResearchCondition("BasicEngineering", 1, 7.0));
+        list.add(new ResearchCondition("BasicEngineering", 10, 0.0));
+        return list;
     }
 
     @Override

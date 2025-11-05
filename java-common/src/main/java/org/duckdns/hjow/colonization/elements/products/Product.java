@@ -41,12 +41,12 @@ public abstract class Product implements ColonyElements {
     
     @Override
     public String getTooltip() {
-    	return getName();
+        return getName();
     }
     
     @Override
     public final String getClassName() {
-    	return getClass().getSimpleName();
+        return getClass().getSimpleName();
     }
 
     @Override
@@ -121,7 +121,7 @@ public abstract class Product implements ColonyElements {
     
     @Override
     public String toString() {
-    	return getTitle();
+        return getTitle();
     }
     
     @Override

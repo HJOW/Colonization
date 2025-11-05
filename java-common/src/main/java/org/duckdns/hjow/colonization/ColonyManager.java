@@ -133,8 +133,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         
         // 실행 횟수 제한이 있는 경우 차감 (단, 음수인 경우는 무제한이라고 판단)
         if(cycleRunCount > 0 && (! threadPaused)) {
-        	cycleRunCount--;
-        	if(cycleRunCount <= 0) pauseSimulation();
+            cycleRunCount--;
+            if(cycleRunCount <= 0) pauseSimulation();
         }
         
         // 저장 요청 수행
@@ -161,14 +161,14 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         strSpeeds.add(new SimulationSpeed(3));
         
         for(Mod m : getMods()) {
-        	try {
-        		Class<? extends Mod> modClass = m.getClass();
-        		Method mthdSpeed = modClass.getMethod("getAdditionalSimulationSpeeds");
-        		SimulationSpeed speedOne = (SimulationSpeed) mthdSpeed.invoke(m);
-        		if(! strSpeeds.contains(speedOne)) strSpeeds.add(speedOne);
-        	} catch(Throwable tx) {
-        		GlobalLogs.processExceptionOccured(tx, false);
-        	}
+            try {
+                Class<? extends Mod> modClass = m.getClass();
+                Method mthdSpeed = modClass.getMethod("getAdditionalSimulationSpeeds");
+                SimulationSpeed speedOne = (SimulationSpeed) mthdSpeed.invoke(m);
+                if(! strSpeeds.contains(speedOne)) strSpeeds.add(speedOne);
+            } catch(Throwable tx) {
+                GlobalLogs.processExceptionOccured(tx, false);
+            }
         }
         
         return strSpeeds;
@@ -212,15 +212,15 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         if(! root.exists()) root.mkdirs();
         
         try {
-        	// 기본 설정 파일 불러오기
+            // 기본 설정 파일 불러오기
             File conf = new File(root.getAbsolutePath() + File.separator + "config.json");
             if(conf.exists()) {
                 String strJson = FileUtil.readString(conf, "UTF-8"); // 파일 읽고
                 JsonObject json = (JsonObject) JsonObject.parseJson(strJson); // JSON 파싱
                 configs.fromJson(json); // 설정 넣기
             } else {
-            	JsonObject json = new JsonObject();
-            	FileUtil.writeString(conf, "UTF-8", json.toJSON());
+                JsonObject json = new JsonObject();
+                FileUtil.writeString(conf, "UTF-8", json.toJSON());
             }
             configs.setConfigSaveOnNotExistingKeys(true);
             
@@ -228,29 +228,29 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             String stringTablePath = configs.getString("StringTableFile");
             File fileStringTable = null;
             if(DataUtil.isNotEmpty(stringTablePath)) {
-            	stringTablePath = stringTablePath.replace("[CONFIGPATH]", root.getAbsolutePath());
-            	fileStringTable = new File(stringTablePath.trim());
+                stringTablePath = stringTablePath.replace("[CONFIGPATH]", root.getAbsolutePath());
+                fileStringTable = new File(stringTablePath.trim());
             }
             if(fileStringTable == null) {
-            	fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
-            	configs.set("StringTableFile", fileStringTable.getAbsolutePath().replace(root.getAbsolutePath(), "[CONFIGPATH]"));
+                fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
+                configs.set("StringTableFile", fileStringTable.getAbsolutePath().replace(root.getAbsolutePath(), "[CONFIGPATH]"));
             }
             
             if(! fileStringTable.exists()) {
-            	fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
-            	configs.set("StringTableFile", fileStringTable.getAbsolutePath().replace(root.getAbsolutePath(), "[CONFIGPATH]"));
-            	
-        		Properties newProp = new Properties();
-        		// TODO : 기본 데이터 불러오기
-        		FileUtil.saveProperties(fileStringTable, newProp);
-        	}
-        	BufferedFileStringTable stringTable = new BufferedFileStringTable(fileStringTable);
-        	STRINGTABLE.setOriginalInstance(stringTable);
-        	
-        	// 인증 해제 요인이 되는 요소들 사용 여부
-        	String strUseChkDis = configs.getString("UseCheckDisablingContent");
-        	if(DataUtil.isEmpty(strUseChkDis)) { strUseChkDis = "N"; configs.set("UseCheckDisablingContent", strUseChkDis); }
-        	flagUseCheckDisablingContent = DataUtil.parseBoolean(strUseChkDis);
+                fileStringTable = new File(root.getAbsolutePath() + File.separator + "stringTable.xml");
+                configs.set("StringTableFile", fileStringTable.getAbsolutePath().replace(root.getAbsolutePath(), "[CONFIGPATH]"));
+                
+                Properties newProp = new Properties();
+                // TODO : 기본 데이터 불러오기
+                FileUtil.saveProperties(fileStringTable, newProp);
+            }
+            BufferedFileStringTable stringTable = new BufferedFileStringTable(fileStringTable);
+            STRINGTABLE.setOriginalInstance(stringTable);
+            
+            // 인증 해제 요인이 되는 요소들 사용 여부
+            String strUseChkDis = configs.getString("UseCheckDisablingContent");
+            if(DataUtil.isEmpty(strUseChkDis)) { strUseChkDis = "N"; configs.set("UseCheckDisablingContent", strUseChkDis); }
+            flagUseCheckDisablingContent = DataUtil.parseBoolean(strUseChkDis);
             
             // 설정들 중 클래스 관련 설정 적용, Pack 불러오기
             ColonyClassLoader.clearAll();
@@ -268,15 +268,15 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 스크립트 엔진에서 액세스하는 스토리지 준비 */
     protected void loadLocalStorage() {
-    	try {
-    		// 폴더 체크 (없으면 만들기)
-    		File root = getColonyScriptRootDirectory();
-        	if(! root.exists()) root.mkdirs();
-        	
-        	// 저장소 파일
+        try {
+            // 폴더 체크 (없으면 만들기)
+            File root = getColonyScriptRootDirectory();
+            if(! root.exists()) root.mkdirs();
+            
+            // 저장소 파일
             File fileStorage = new File(root.getAbsolutePath() + File.separator + "storage.json");
             if(! fileStorage.exists()) {
-            	FileUtil.writeString(fileStorage, "UTF-8", "{}");
+                FileUtil.writeString(fileStorage, "UTF-8", "{}");
             }
             
             // 읽고 파싱
@@ -285,42 +285,42 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             
             storage.clear();
             storage.putAll(json);
-    	} catch(Exception ex) {
-    		GlobalLogs.processExceptionOccured(ex, false);
-    	}
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, false);
+        }
     }
     
     /** 스크립트 엔진에서 액세스하는 스토리지 저장 */
     protected void saveLocalStorage() {
-    	try {
-    		// 폴더 체크 (없으면 만들기)
-    		File root = getColonyScriptRootDirectory();
-        	if(! root.exists()) root.mkdirs();
-        	
-        	// 저장소 파일
+        try {
+            // 폴더 체크 (없으면 만들기)
+            File root = getColonyScriptRootDirectory();
+            if(! root.exists()) root.mkdirs();
+            
+            // 저장소 파일
             File fileStorage = new File(root.getAbsolutePath() + File.separator + "storage.json");
             
             // 저장
             FileUtil.writeString(fileStorage, "UTF-8", storage.toJSON());
-    	} catch(Exception ex) {
-    		GlobalLogs.processExceptionOccured(ex, false);
-    	}
+        } catch(Exception ex) {
+            GlobalLogs.processExceptionOccured(ex, false);
+        }
     }
     
     /** 스크립트 엔진 매니저 준비 */
     protected void initScriptEngineManager() {
-    	scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
-    	initDefaultScriptEngineManager();
+        scriptEngineManager = new ScriptEngineManager(new ScriptClassLoader());
+        initDefaultScriptEngineManager();
     }
     
     /** 기본함수 선언 스크립트 실행 */
-	protected void evalInitScripts(ScriptEngine engine) throws Exception {
-		evalDefaultInitScripts(engine);
-	}
-	
-	/** 스크립트 엔진 매니저에 기본적인 객체 삽입 */
+    protected void evalInitScripts(ScriptEngine engine) throws Exception {
+        evalDefaultInitScripts(engine);
+    }
+    
+    /** 스크립트 엔진 매니저에 기본적인 객체 삽입 */
     protected final void initDefaultScriptEngineManager() {
-    	scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
+        scriptEngineManager.put(PrimitiveObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, PrimitiveObject.getInstance());
         scriptEngineManager.put(MathObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, MathObject.getInstance());
         scriptEngineManager.put(SecurityObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, SecurityObject.getInstance());
         scriptEngineManager.put(NetObject.getInstance().getPrefixName() + "_" + scriptVarPrefix, NetObject.getInstance());
@@ -328,17 +328,17 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         scriptEngineManager.put("storage_" + scriptVarPrefix, storage);
         scriptEngineManager.put("storage", storage);
     }
-	
-	/** 기본함수 선언 스크립트 실행 - 공통 파트 */
-	protected final void evalDefaultInitScripts(ScriptEngine engine) throws Exception {
+    
+    /** 기본함수 선언 스크립트 실행 - 공통 파트 */
+    protected final void evalDefaultInitScripts(ScriptEngine engine) throws Exception {
         engine.put("BUILD_NO", String.valueOf(BUILD_NO));
-		
-		engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
-		engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
-		engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
-		engine.eval(NetObject.getInstance().getInitScript(scriptVarPrefix));
-	}
-	
+        
+        engine.eval(PrimitiveObject.getInstance().getInitScript(scriptVarPrefix));
+        engine.eval(MathObject.getInstance().getInitScript(scriptVarPrefix));
+        engine.eval(SecurityObject.getInstance().getInitScript(scriptVarPrefix));
+        engine.eval(NetObject.getInstance().getInitScript(scriptVarPrefix));
+    }
+    
     /** 정착지들을 기본 경로에서 불러오기 */
     public void loadColonies() {
         File root = getColonySaveRootDirectory();
@@ -385,8 +385,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             // 버전 체크
             long buildNo = c.getClientBuildNo();
             if(BUILD_NO != buildNo) {
-            	if(getConfig().get("LoadOldVersion") == null) getConfig().set("LoadOldVersion", "N");
-            	if(! getConfig().getBool("LoadOldVersion")) return;
+                if(getConfig().get("LoadOldVersion") == null) getConfig().set("LoadOldVersion", "N");
+                if(! getConfig().getBool("LoadOldVersion")) return;
             }
             
             // 추가
@@ -471,14 +471,14 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 새 정착지 생성 (기본형으로 생성) */
     public Colony newColony() {
-    	try {
+        try {
             Colony newCol = (Colony) Class.forName("org.duckdns.hjow.colonization.elements.NormalColony").newInstance();
             newColonyAfterJobs(newCol);
             
             return newCol;
-    	} catch(Exception ex) {
-    		throw new RuntimeException("java-default-pack not detected.");
-    	}
+        } catch(Exception ex) {
+            throw new RuntimeException("java-default-pack not detected.");
+        }
     }
     
     /** 새 정착지 생성 (타입 지정) */
@@ -514,201 +514,201 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** Mods 불러오기 */
     protected void loadMods() {
-    	loadMods(true);
+        loadMods(true);
     }
     
     /** Mods 불러오기 */
-	protected void loadMods(boolean refresh) {
-    	// 기존 Mod 들 제거
-    	for(Mod m : modsList) { try {  m.dispose(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); } }
-    	modsList.clear();
-    	modsEnabled.clear();
-    	
-    	// 다시 불러오기
-    	String strMods = configs.getString("Mods");
-    	StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
-    	while(commaTokenizer.hasMoreTokens()) {
-    		String classNames = commaTokenizer.nextToken().trim();
-    		addMod(classNames, false, false);
-    	}
-    	
-    	// lib 에 등록된 Mods 도 불러오기
-    	for(Class<?> classes : ColonyClassLoader.getModClasses()) {
-    		try {
+    protected void loadMods(boolean refresh) {
+        // 기존 Mod 들 제거
+        for(Mod m : modsList) { try {  m.dispose(); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); } }
+        modsList.clear();
+        modsEnabled.clear();
+        
+        // 다시 불러오기
+        String strMods = configs.getString("Mods");
+        StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
+        while(commaTokenizer.hasMoreTokens()) {
+            String classNames = commaTokenizer.nextToken().trim();
+            addMod(classNames, false, false);
+        }
+        
+        // lib 에 등록된 Mods 도 불러오기
+        for(Class<?> classes : ColonyClassLoader.getModClasses()) {
+            try {
                 Mod m = (Mod) classes.newInstance();
                 if((! m.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
                 
                 if(! modsList.contains(m)) modsList.add(m);
-    		} catch(Exception ex) {
-            	GlobalLogs.processExceptionOccured(ex, false);
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
             }
-    	}
-    	
-    	// 예약어 등록된 Library 도 불러오기
-    	for(String reservedLibClassNames : ColonyClassLoader.getReservedLibraryClassNames()) {
-    		try {
+        }
+        
+        // 예약어 등록된 Library 도 불러오기
+        for(String reservedLibClassNames : ColonyClassLoader.getReservedLibraryClassNames()) {
+            try {
                 Class<?> libClass = Class.forName(reservedLibClassNames);
                 Library instances = (Library) libClass.newInstance();
                 List<Mod> mods = instances.getMods();
                 for(Mod m : mods) {
-                	if((! m.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
+                    if((! m.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
                     if(! modsList.contains(m)) modsList.add(m);
                 }
-    		} catch(ClassNotFoundException ignores) {
-    		} catch(Exception ex) {
-            	GlobalLogs.processExceptionOccured(ex, false);
+            } catch(ClassNotFoundException ignores) {
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
             }
-    	}
-    	
-    	// 스크립트 MOD 불러오기
-    	loadScriptMods();
-    	
-    	if(refresh) applyModOnUI();
+        }
+        
+        // 스크립트 MOD 불러오기
+        loadScriptMods();
+        
+        if(refresh) applyModOnUI();
     }
-	
-	/** 스크립트 MOD 불러오기 */
-	protected void loadScriptMods() {
-		// 폴더 체크 (없으면 만들기)
-		File root = getColonyScriptRootDirectory();
-    	if(! root.exists()) root.mkdirs();
+    
+    /** 스크립트 MOD 불러오기 */
+    protected void loadScriptMods() {
+        // 폴더 체크 (없으면 만들기)
+        File root = getColonyScriptRootDirectory();
+        if(! root.exists()) root.mkdirs();
         File dirScriptMods = new File(root.getAbsolutePath() + File.separator + "mods"); // [ROOT] / scripts / mods
         if(! dirScriptMods.exists()) dirScriptMods.mkdirs();
         
         // 폴더 내 js 파일 서치
-        File[] files = dirScriptMods.listFiles(new FileFilter() {	
-			@Override
-			public boolean accept(File pathname) {
-				return pathname.getName().toLowerCase().trim().endsWith(".js");
-			}
-		});
+        File[] files = dirScriptMods.listFiles(new FileFilter() {    
+            @Override
+            public boolean accept(File pathname) {
+                return pathname.getName().toLowerCase().trim().endsWith(".js");
+            }
+        });
         
         // 파일 루프
         for(File f : files) {
-        	if(! f.exists()) continue;
-        	if(f.isDirectory()) continue;
-        	
-        	GlobalLogs.log(t("Trying to load script MOD from [FILE]").replace("[FILE]", f.getName()));
-        	
-        	try {
-        		// 엔진 생성
-        		ScriptEngine engine = newScriptEngine();
-        		
-        		// 스크립트 불러오기
-        		String scripts = FileUtil.readString(f, "UTF-8");
-        		
-        		// 리플렉션 존재여부 체크
-        		checkBannedKeywords(scripts);
-        		
-        		// 스크립트 실행 (함수들이 선언될 것)
-        		engine.eval(scripts);
-        		
-        		// 스크립트 MOD 객체 생성 및 준비
-        		ScriptMod mod = new ScriptMod();
-        		mod.injectScriptEngine(engine);
-        		mod.check();
-        		
-        		if((! mod.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
-        		
-        		// MOD 등록
-        		if(! modsList.contains(mod)) modsList.add(mod);
-        		
-        		GlobalLogs.log(t("Load complete : [FILE]").replace("[FILE]", f.getName()));
-        	} catch(Exception ex) {
-        		GlobalLogs.processExceptionOccured(ex, false);
-        	}
+            if(! f.exists()) continue;
+            if(f.isDirectory()) continue;
+            
+            GlobalLogs.log(t("Trying to load script MOD from [FILE]").replace("[FILE]", f.getName()));
+            
+            try {
+                // 엔진 생성
+                ScriptEngine engine = newScriptEngine();
+                
+                // 스크립트 불러오기
+                String scripts = FileUtil.readString(f, "UTF-8");
+                
+                // 리플렉션 존재여부 체크
+                checkBannedKeywords(scripts);
+                
+                // 스크립트 실행 (함수들이 선언될 것)
+                engine.eval(scripts);
+                
+                // 스크립트 MOD 객체 생성 및 준비
+                ScriptMod mod = new ScriptMod();
+                mod.injectScriptEngine(engine);
+                mod.check();
+                
+                if((! mod.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
+                
+                // MOD 등록
+                if(! modsList.contains(mod)) modsList.add(mod);
+                
+                GlobalLogs.log(t("Load complete : [FILE]").replace("[FILE]", f.getName()));
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+            }
         }
-	}
-	
-	/** 스크립트 엔진 생성해 반환 */
-	protected ScriptEngine newScriptEngine() throws Exception {
-		// 엔진 생성
-		ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
-		
-		// 스크립트 실행 (기본함수들 제공)
-		evalInitScripts(engine);
-		
-		return engine;
-	}
+    }
+    
+    /** 스크립트 엔진 생성해 반환 */
+    protected ScriptEngine newScriptEngine() throws Exception {
+        // 엔진 생성
+        ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
+        
+        // 스크립트 실행 (기본함수들 제공)
+        evalInitScripts(engine);
+        
+        return engine;
+    }
     
     /** 활성화된 모드들을 UI에 반영 */
     protected void applyModOnUI() {};
     
     /** Mods 들 목록 반환 */
     public List<Mod> getMods() {
-    	List<Mod> list = new ArrayList<Mod>();
-    	list.addAll(modsList);
-    	return list;
+        List<Mod> list = new ArrayList<Mod>();
+        list.addAll(modsList);
+        return list;
     }
     
     /** Mod 추가 */
     public void addMod(String modClassName) {
-    	addMod(modClassName, true, true);
+        addMod(modClassName, true, true);
     }
     
     /** Mod 추가 (이 메소드는 ColonyClassLoader 간의 통신을 위해서만 존재하므로 되도록 직접 호출 자제 !) */
     public void addMod(String modClassName, boolean refresh, boolean saveConfig) {
-    	try {
-    		ColonyClassLoader.checkModClassName(modClassName);
-    		modClassName = modClassName.trim();
-    		
-    		Class<?> modClass = Class.forName(modClassName);
-			Mod mod = (Mod) modClass.newInstance();
-			if((! mod.isReadOnly()) && (! flagUseCheckDisablingContent)) return;
-			
-		    if(! modsList.contains(mod)) modsList.add(mod);
-    		
-    		if(saveConfig) {
-    			String strMods = configs.getString("Mods");
-        		if(! strMods.contains(modClassName)) {
-        			if(DataUtil.isNotEmpty(strMods)) strMods += ",";
-        			strMods += modClassName;
-        		}
-        		configs.set("Mods", strMods);
-        		saveLocalConfigs();
-    		}
-		} catch(Throwable tx) {
-			logGlobals(t("Error") + " : " + tx.getMessage(), 2);
-		}
-    	
-    	if(refresh) applyModOnUI();
+        try {
+            ColonyClassLoader.checkModClassName(modClassName);
+            modClassName = modClassName.trim();
+            
+            Class<?> modClass = Class.forName(modClassName);
+            Mod mod = (Mod) modClass.newInstance();
+            if((! mod.isReadOnly()) && (! flagUseCheckDisablingContent)) return;
+            
+            if(! modsList.contains(mod)) modsList.add(mod);
+            
+            if(saveConfig) {
+                String strMods = configs.getString("Mods");
+                if(! strMods.contains(modClassName)) {
+                    if(DataUtil.isNotEmpty(strMods)) strMods += ",";
+                    strMods += modClassName;
+                }
+                configs.set("Mods", strMods);
+                saveLocalConfigs();
+            }
+        } catch(Throwable tx) {
+            logGlobals(t("Error") + " : " + tx.getMessage(), 2);
+        }
+        
+        if(refresh) applyModOnUI();
     }
     
     /** Mod 제거 */
     public void removeMod(String modClassName) {
-    	removeMod(modClassName, true);
+        removeMod(modClassName, true);
     }
     
     /** Mod 제거 */
     public void removeMod(String modClassName, boolean refresh) {
-    	try {
-    		ColonyClassLoader.checkModClassName(modClassName);
-    		modClassName = modClassName.trim();
-    		
-    		// 설정 리스트로 변환
-    		String strMods = configs.getString("Mods");
-    		List<String> list = new ArrayList<String>(); // 리스트로 먼저 변환
-    		StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
-        	while(commaTokenizer.hasMoreTokens()) {
-        		list.add(commaTokenizer.nextToken().trim());
-        	}
-    		strMods = null;
-    		// 설정 제거
-    		list.remove(modClassName);
-    		
-    		// 다시 설정 작성
-    		strMods = "";
-    		for(String s : list) {
-    			if(DataUtil.isNotEmpty(strMods)) strMods += ",";
-    			strMods += s;
-    		}
-    		configs.set("Mods", strMods);
-    		
-    		saveLocalConfigs();
-    	} catch(Throwable tx) {
-			logGlobals(t("Error") + " : " + tx.getMessage(), 2);
-		}
-    	
-    	if(refresh) applyModOnUI();
+        try {
+            ColonyClassLoader.checkModClassName(modClassName);
+            modClassName = modClassName.trim();
+            
+            // 설정 리스트로 변환
+            String strMods = configs.getString("Mods");
+            List<String> list = new ArrayList<String>(); // 리스트로 먼저 변환
+            StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
+            while(commaTokenizer.hasMoreTokens()) {
+                list.add(commaTokenizer.nextToken().trim());
+            }
+            strMods = null;
+            // 설정 제거
+            list.remove(modClassName);
+            
+            // 다시 설정 작성
+            strMods = "";
+            for(String s : list) {
+                if(DataUtil.isNotEmpty(strMods)) strMods += ",";
+                strMods += s;
+            }
+            configs.set("Mods", strMods);
+            
+            saveLocalConfigs();
+        } catch(Throwable tx) {
+            logGlobals(t("Error") + " : " + tx.getMessage(), 2);
+        }
+        
+        if(refresh) applyModOnUI();
     }
 
     /** 로그 출력 */
@@ -759,18 +759,18 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 불러온 모든 정착지 정보 반환 */
     public JsonArray getAllColonies() {
-    	JsonArray arr = new JsonArray();
-    	for(Colony c : colonies) {
-    		arr.add(c.toJson());
-    	}
-    	return arr;
+        JsonArray arr = new JsonArray();
+        for(Colony c : colonies) {
+            arr.add(c.toJson());
+        }
+        return arr;
     }
     
     /** 현재 선택된 정착지 정보 반환 */
     public JsonObject getSelectColonyInfo() {
-    	Colony c = getSelectedColony();
-    	if(c == null) return null;
-    	return c.toJson();
+        Colony c = getSelectedColony();
+        if(c == null) return null;
+        return c.toJson();
     }
     
     /** 현재 선택된 정착지 반환 */
@@ -811,7 +811,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 시뮬레이션 재개 */
     public void resumeSimulation() {
-    	resumeSimulation(-1);
+        resumeSimulation(-1);
     }
     
     /** 시뮬레이션 재개 (사이클 수 지정, 음수를 넣으면 일시 정지 따로 할 때까지 무제한) */
@@ -833,7 +833,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 해당 정착지를 출력하는 영역 반환 */
     public ColonyPanel getColonyPanel(Colony col) {
-    	return null;
+        return null;
     }
     
     /** 쓰레드에서 1 사이클 당 1회 호출됨 */
@@ -910,50 +910,50 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 커맨드 적용 */
     public void runCommand(String commands) {
-    	if(commands == null) return;
-    	logGlobals(">> " + commands);
-    	
-    	StringTokenizer spaceTokenizer = new StringTokenizer(commands, " ");
-    	String code, param;
-    	
-    	code = spaceTokenizer.nextToken().trim();
-    	
-    	if(spaceTokenizer.hasMoreTokens()) param = spaceTokenizer.nextToken();
-    	else param = "";
-    	
-    	if(! applyCheat(code, param)) {
-    		try {
-    			Object res = null;
-        		if(rootEngine == null) rootEngine = newScriptEngine();
-        		rootEngine.put("colony", getSelectColonyInfo());
-        		rootEngine.put("uix", broker);
-        		
-        		res = evaluate(rootEngine, commands);
-        		if(res != null) logGlobals(res.toString());
-    		} catch(Exception ex) {
-    			GlobalLogs.processExceptionOccured(ex, true);
-    		}
-    	}
+        if(commands == null) return;
+        logGlobals(">> " + commands);
+        
+        StringTokenizer spaceTokenizer = new StringTokenizer(commands, " ");
+        String code, param;
+        
+        code = spaceTokenizer.nextToken().trim();
+        
+        if(spaceTokenizer.hasMoreTokens()) param = spaceTokenizer.nextToken();
+        else param = "";
+        
+        if(! applyCheat(code, param)) {
+            try {
+                Object res = null;
+                if(rootEngine == null) rootEngine = newScriptEngine();
+                rootEngine.put("colony", getSelectColonyInfo());
+                rootEngine.put("uix", broker);
+                
+                res = evaluate(rootEngine, commands);
+                if(res != null) logGlobals(res.toString());
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, true);
+            }
+        }
     }
     
     /** 치트 적용 */
     private boolean applyCheat(String cheatCode, String params) {
-    	Cheat c = Cheat.map().get(cheatCode);
-    	if(c == null) return false;
-    	
-    	Colony col = getSelectedColony();
-    	if(col == null) return false;
-    	
-    	// 인증 제거
-    	if(col.isCheckEnabled()) logGlobals(t("Cheat 사용으로 정착지 [COLONY] 의 인증이 무효화됩니다.").replace("[COLONY]", col.getName()));
-    	col.disableChecked();
-    	
-    	// 실행
-    	c.onCodeInput(this, params);
-    	
-    	reserveRefresh();
-    	logGlobals(t("Cheat [CODE] 적용.").replace("[CODE]", c.getCode()));
-    	return true;
+        Cheat c = Cheat.map().get(cheatCode);
+        if(c == null) return false;
+        
+        Colony col = getSelectedColony();
+        if(col == null) return false;
+        
+        // 인증 제거
+        if(col.isCheckEnabled()) logGlobals(t("Cheat 사용으로 정착지 [COLONY] 의 인증이 무효화됩니다.").replace("[COLONY]", col.getName()));
+        col.disableChecked();
+        
+        // 실행
+        c.onCodeInput(this, params);
+        
+        reserveRefresh();
+        logGlobals(t("Cheat [CODE] 적용.").replace("[CODE]", c.getCode()));
+        return true;
     }
     
     /** 설정 객체 자체를 반환 */
@@ -972,9 +972,9 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 프로그램 종료 */
     public void exit() {
-    	dispose(false);
-    	if(superInstance != null) superInstance.exit();
-    	else System.exit(0);
+        dispose(false);
+        if(superInstance != null) superInstance.exit();
+        else System.exit(0);
     }
     
     /** 홈 디렉토리 반환 */
@@ -1005,18 +1005,18 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 키를 받아 자연수 추출 (이름에 사용) */
     public static int getNaturalNumberFrom(long key) {
-    	int res;
-    	
-    	key = Math.abs(key);
-    	String str = String.valueOf(key);
-    	if(str.length() > 9) {
-    		str = str.substring(0, 9);
-    	}
-    	res = Integer.parseInt(str);
-    	str = String.valueOf(res);
-    	
-    	if(str.length() < 9) res += 100000000;
-    	return res;
+        int res;
+        
+        key = Math.abs(key);
+        String str = String.valueOf(key);
+        if(str.length() > 9) {
+            str = str.substring(0, 9);
+        }
+        res = Integer.parseInt(str);
+        str = String.valueOf(res);
+        
+        if(str.length() < 9) res += 100000000;
+        return res;
     }
 
     public static boolean isDebugModeEnabled() {
@@ -1078,7 +1078,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 다국어 번역, 번역 데이터에 없는 텍스트이면 매개변수 그대로 반환 */
     public static String t(String originals) {
-    	return STRINGTABLE.t(originals);
+        return STRINGTABLE.t(originals);
     }
     
     /** 현재 버전의 버전 배열 반환 */
@@ -1114,185 +1114,185 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 스크립트 실행 */
     public static Object evaluate(ScriptEngine engine, String scripts) throws ScriptException {
-    	if(scripts == null) return null;
-    	checkBannedKeywords(scripts);
-    	return engine.eval(scripts);
+        if(scripts == null) return null;
+        checkBannedKeywords(scripts);
+        return engine.eval(scripts);
     }
     
     public static final ScriptPatternDetector SCRIPT_PATTERN_DETECTOR = new ScriptPatternDetector();
     public static final List<String> BANNED_KEYWORDS = new Vector<String>();
     /** 스크립트 내 금지어 탐지 */
     public static void checkBannedKeywords(String scripts) {
-    	SCRIPT_PATTERN_DETECTOR.checkReflection(scripts);
-    	
-    	if(BANNED_KEYWORDS.isEmpty()) {
-    		BANNED_KEYWORDS.add("java.");
-    		BANNED_KEYWORDS.add("javax.");
-    		BANNED_KEYWORDS.add("org.");
-    		BANNED_KEYWORDS.add("com.");
-    	}
-    	
-    	SCRIPT_PATTERN_DETECTOR.check(scripts, BANNED_KEYWORDS);
+        SCRIPT_PATTERN_DETECTOR.checkReflection(scripts);
+        
+        if(BANNED_KEYWORDS.isEmpty()) {
+            BANNED_KEYWORDS.add("java.");
+            BANNED_KEYWORDS.add("javax.");
+            BANNED_KEYWORDS.add("org.");
+            BANNED_KEYWORDS.add("com.");
+        }
+        
+        SCRIPT_PATTERN_DETECTOR.check(scripts, BANNED_KEYWORDS);
     }
     
     /** 정수 포맷 설정 */
     public static String formatInt(long num) {
-    	return formatInt(num, true, 2);
+        return formatInt(num, true, 2);
     }
     
     /** 정수 포맷 설정 */
     public static String formatInt(long num, boolean simple, int disp) {
-    	long unit = 10000000000L;
-    	if(simple || num < unit) return FORMATTER_INT.format(num);
-    	
-    	List<String> list = new ArrayList<String>();
-    	
-    	long upper = 0L;
-    	long left  = num;
-    	
-    	unit = 1000000L;
-    	upper = (long) (left / unit);
-		left  = (long) (left % unit);
-		if(left > 0) list.add(FORMATTER_INT.format(left));
-    	
-		unit = 1000L;
-		left = upper;
-		upper = (long) (left / unit);
-		left  = (long) (left % unit);
-		if(left > 0) list.add(FORMATTER_INT.format(left) + "M");
-		
-		if(upper >= 1) {
-			left = upper;
-			upper = (long) (left / unit);
-			left  = (long) (left % unit);
-			if(left > 0) list.add(FORMATTER_INT.format(left) + "G");
-		}
-		
-		if(upper >= 1) {
-			left = upper;
-			upper = (long) (left / unit);
-			left  = (long) (left % unit);
-			if(left > 0) list.add(FORMATTER_INT.format(left) + "T");
-		}
-		
-		if(upper >= 1) {
-			left = upper;
-			upper = (long) (left / unit);
-			left  = (long) (left % unit);
-			if(left > 0) list.add(FORMATTER_INT.format(left) + "F");
-		}
-		
-		if(upper >= 1) {
-			left = upper;
-			upper = (long) (left / unit);
-			left  = (long) (left % unit);
-			if(left > 0) list.add(FORMATTER_INT.format(left) + "E");
-		}
-		
-		if(upper >= 1) {
-			left = upper;
-			upper = 0L;
-			if(left > 0) list.add(FORMATTER_INT.format(left) + "Z");
-		}
-		
-    	StringBuilder res = new StringBuilder("");
-    	for(int idx=list.size()-1; idx>=0; idx--) {
-    		res = res.append(" ").append(list.get(idx));
-    		disp--;
-    		if(disp == 0) break;
-    	}
-    	return res.toString().trim();
+        long unit = 10000000000L;
+        if(simple || num < unit) return FORMATTER_INT.format(num);
+        
+        List<String> list = new ArrayList<String>();
+        
+        long upper = 0L;
+        long left  = num;
+        
+        unit = 1000000L;
+        upper = (long) (left / unit);
+        left  = (long) (left % unit);
+        if(left > 0) list.add(FORMATTER_INT.format(left));
+        
+        unit = 1000L;
+        left = upper;
+        upper = (long) (left / unit);
+        left  = (long) (left % unit);
+        if(left > 0) list.add(FORMATTER_INT.format(left) + "M");
+        
+        if(upper >= 1) {
+            left = upper;
+            upper = (long) (left / unit);
+            left  = (long) (left % unit);
+            if(left > 0) list.add(FORMATTER_INT.format(left) + "G");
+        }
+        
+        if(upper >= 1) {
+            left = upper;
+            upper = (long) (left / unit);
+            left  = (long) (left % unit);
+            if(left > 0) list.add(FORMATTER_INT.format(left) + "T");
+        }
+        
+        if(upper >= 1) {
+            left = upper;
+            upper = (long) (left / unit);
+            left  = (long) (left % unit);
+            if(left > 0) list.add(FORMATTER_INT.format(left) + "F");
+        }
+        
+        if(upper >= 1) {
+            left = upper;
+            upper = (long) (left / unit);
+            left  = (long) (left % unit);
+            if(left > 0) list.add(FORMATTER_INT.format(left) + "E");
+        }
+        
+        if(upper >= 1) {
+            left = upper;
+            upper = 0L;
+            if(left > 0) list.add(FORMATTER_INT.format(left) + "Z");
+        }
+        
+        StringBuilder res = new StringBuilder("");
+        for(int idx=list.size()-1; idx>=0; idx--) {
+            res = res.append(" ").append(list.get(idx));
+            disp--;
+            if(disp == 0) break;
+        }
+        return res.toString().trim();
     }
     
     /** 정수 포맷 설정 */
     public static String formatInt(BigInteger num) {
-    	return formatInt(num, true, 2);
+        return formatInt(num, true, 2);
     }
     
     /** 정수 포맷 설정 */
     public static String formatInt(BigInteger num, boolean simple, int disp) {
-    	BigInteger unit = Constants.BIGINTEGER_10000000000;
-    	if(simple || num.compareTo(unit) < 0) return FORMATTER_INT.format(num);
-    	
+        BigInteger unit = Constants.BIGINTEGER_10000000000;
+        if(simple || num.compareTo(unit) < 0) return FORMATTER_INT.format(num);
+        
         List<String> list = new ArrayList<String>();
-    	
-    	BigInteger upper = BigInteger.ZERO;
-    	BigInteger left  = num;
-    	
-    	unit = Constants.BIGINTEGER_1000000;
-    	upper = left.divide(unit);
-		left  = left.mod(unit);
-		if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left));
-    	
-		unit = Constants.BIGINTEGER_1000;
-		left = upper;
-		upper = left.divide(unit);
-		left  = left.mod(unit);
-		if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "M");
-		
-		if(upper.compareTo(BigInteger.ONE) > 0) {
-			left = upper;
-			upper = left.divide(unit);
-			left  = left.mod(unit);
-			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "G");
-		}
-		
-		if(upper.compareTo(BigInteger.ONE) > 0) {
-			left = upper;
-			upper = left.divide(unit);
-			left  = left.mod(unit);
-			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "T");
-		}
-		
-		if(upper.compareTo(BigInteger.ONE) > 0) {
-			left = upper;
-			upper = left.divide(unit);
-			left  = left.mod(unit);
-			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "F");
-		}
-		
-		if(upper.compareTo(BigInteger.ONE) > 0) {
-			left = upper;
-			upper = left.divide(unit);
-			left  = left.mod(unit);
-			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "E");
-		}
-		
-		if(upper.compareTo(BigInteger.ONE) > 0) {
-			left = upper;
-			upper = left.divide(unit);
-			left  = left.mod(unit);
-			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "Z");
-		}
-		
-		if(upper.compareTo(BigInteger.ONE) > 0) {
-			left = upper;
-			upper = BigInteger.ZERO;
-			if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "Y");
-		}
-		
-    	StringBuilder res = new StringBuilder("");
-    	for(int idx=list.size()-1; idx>=0; idx--) {
-    		res = res.append(" ").append(list.get(idx));
-    		disp--;
-    		if(disp == 0) break;
-    	}
-    	return res.toString().trim();
+        
+        BigInteger upper = BigInteger.ZERO;
+        BigInteger left  = num;
+        
+        unit = Constants.BIGINTEGER_1000000;
+        upper = left.divide(unit);
+        left  = left.mod(unit);
+        if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left));
+        
+        unit = Constants.BIGINTEGER_1000;
+        left = upper;
+        upper = left.divide(unit);
+        left  = left.mod(unit);
+        if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "M");
+        
+        if(upper.compareTo(BigInteger.ONE) > 0) {
+            left = upper;
+            upper = left.divide(unit);
+            left  = left.mod(unit);
+            if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "G");
+        }
+        
+        if(upper.compareTo(BigInteger.ONE) > 0) {
+            left = upper;
+            upper = left.divide(unit);
+            left  = left.mod(unit);
+            if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "T");
+        }
+        
+        if(upper.compareTo(BigInteger.ONE) > 0) {
+            left = upper;
+            upper = left.divide(unit);
+            left  = left.mod(unit);
+            if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "F");
+        }
+        
+        if(upper.compareTo(BigInteger.ONE) > 0) {
+            left = upper;
+            upper = left.divide(unit);
+            left  = left.mod(unit);
+            if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "E");
+        }
+        
+        if(upper.compareTo(BigInteger.ONE) > 0) {
+            left = upper;
+            upper = left.divide(unit);
+            left  = left.mod(unit);
+            if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "Z");
+        }
+        
+        if(upper.compareTo(BigInteger.ONE) > 0) {
+            left = upper;
+            upper = BigInteger.ZERO;
+            if(left.compareTo(BigInteger.ZERO) > 0) list.add(FORMATTER_INT.format(left) + "Y");
+        }
+        
+        StringBuilder res = new StringBuilder("");
+        for(int idx=list.size()-1; idx>=0; idx--) {
+            res = res.append(" ").append(list.get(idx));
+            disp--;
+            if(disp == 0) break;
+        }
+        return res.toString().trim();
     }
     
     /** 실수 포맷 설정 */
     public static String formatRate(double num) {
-    	return FORMATTER_RATE.format(num);
+        return FORMATTER_RATE.format(num);
     }
     
     /** 실수 포맷 설정 */
     public static String formatRate(BigDecimal num) {
-    	return FORMATTER_RATE.format(num);
+        return FORMATTER_RATE.format(num);
     }
     
     /** 랜덤 수 (0.0 ~ 1.0) 반환 */
     public static double random() {
-    	return Math.random();
+        return Math.random();
     }
     
     /** 버전 코드 */

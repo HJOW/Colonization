@@ -14,18 +14,18 @@ import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 교육 시설 */
 public abstract class School extends DefaultFacility {
-	private static final long serialVersionUID = 7034948757213309005L;
+    private static final long serialVersionUID = 7034948757213309005L;
 
-	@Override
+    @Override
     public int getMaxHp() {
         return 1000;
     }
-	
-	@Override
+    
+    @Override
     protected int getDefaultCapacity() {
         return 100;
     }
-	
+    
     /** 행사 주기 */
     protected int getProfitCycle() {
         return 60;
@@ -38,102 +38,102 @@ public abstract class School extends DefaultFacility {
     
     /** 이 시설에서 도달할 수 있는 최대 Intelligence 값 */
     protected int defaultMaxIntelligence() {
-    	return 20;
+        return 20;
     }
     
     /** 이 시설에서 도달할 수 있는 최대 Physical 값 */
     protected int defaultMaxPhysical() {
-    	return 10;
+        return 10;
     }
     
     /** 적정 최대 Intelligence 값. 이 시설에서, 증가율 적용 없이 (100% 적용된다는 의미) 도달할 수 있는 최대 Intelligence 값 */
     protected int defaultMaxIntelligenceEasily() {
-    	return defaultMaxIntelligence() / 2;
+        return defaultMaxIntelligence() / 2;
     }
     
     /** 적정 최대 Physical 값. 이 시설에서, 증가율 적용 없이 (100% 적용된다는 의미) 도달할 수 있는 최대 Physical 값 */
     protected int defaultMaxPhysicalEasily() {
-    	return defaultMaxPhysical() / 2;
+        return defaultMaxPhysical() / 2;
     }
     
     /** 적정 최대 Intelligence 초과로 올릴 때 적용되는 증가율, 0~1 */
     protected double defaultIncreaseIntelligenceRate() {
-    	return 0.3;
+        return 0.3;
     }
     
     /** 적정 최대 Physical 초과로 올릴 때 적용되는 증가율, 0~1 */
     protected double defaultIncreasePhysicalRate() {
-    	return 0.2;
+        return 0.2;
     }
     
     @Override
     public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
-    	if(cycle % getProfitCycle() == 0) {
-    		int counts = getCapacity();
-    		double efficiency = (efficiency100 / 100.0);
-    		
-    		counts = (int) (counts * efficiency);
-    		
-    		// 청소년 먼저 처리
-    		for(Citizen c : city.getCitizens()) {
-    			if(counts <= 0) break;
-    			if(! checkProfitCondition(c, efficiency)) continue;
-    			
-    			if(c.getAgeYear().compareTo(Constants.BIGINTEGER_20) < 0) {
-    				profitCitizen(c, efficiency);
-        			counts--;
-    			}
-    		}
-    		
-    		// 성인 처리
-    		for(Citizen c : city.getCitizens()) {
-    			if(counts <= 0) break;
-    			if(! checkProfitCondition(c, efficiency)) continue;
-    			
-    			profitCitizen(c, efficiency);
-    			counts--;
-    		}
-    	}
+        if(cycle % getProfitCycle() == 0) {
+            int counts = getCapacity();
+            double efficiency = (efficiency100 / 100.0);
+            
+            counts = (int) (counts * efficiency);
+            
+            // 청소년 먼저 처리
+            for(Citizen c : city.getCitizens()) {
+                if(counts <= 0) break;
+                if(! checkProfitCondition(c, efficiency)) continue;
+                
+                if(c.getAgeYear().compareTo(Constants.BIGINTEGER_20) < 0) {
+                    profitCitizen(c, efficiency);
+                    counts--;
+                }
+            }
+            
+            // 성인 처리
+            for(Citizen c : city.getCitizens()) {
+                if(counts <= 0) break;
+                if(! checkProfitCondition(c, efficiency)) continue;
+                
+                profitCitizen(c, efficiency);
+                counts--;
+            }
+        }
     }
     
     /** 혜택을 받을 수 있는지 체크 (제한 교육수치만 체크, 인원수는 oneCycle 에서 체크해야 함) */
     protected boolean checkProfitCondition(Citizen c, double efficiency) {
-    	int intell = c.getEducatedIntelligence();
-    	int physic = c.getEducatedPhysical();
-    	
-    	int maxIntell = (int) (defaultMaxIntelligence() * efficiency);
-    	int maxPhysic = (int) (defaultMaxPhysical()     * efficiency);
-    	
-    	if(intell >= maxIntell) return false;
-    	if(physic >= maxPhysic) return false;
-    	return true;
+        int intell = c.getEducatedIntelligence();
+        int physic = c.getEducatedPhysical();
+        
+        int maxIntell = (int) (defaultMaxIntelligence() * efficiency);
+        int maxPhysic = (int) (defaultMaxPhysical()     * efficiency);
+        
+        if(intell >= maxIntell) return false;
+        if(physic >= maxPhysic) return false;
+        return true;
     }
     
     /** 시민에게 교육 혜택 제공 */
     protected void profitCitizen(Citizen c, double efficiency) {
-    	int intell = c.getEducatedIntelligence();
-    	int physic = c.getEducatedPhysical();
-    	
-    	int propIntell = defaultMaxIntelligenceEasily();
-    	int propPhysic = defaultMaxPhysicalEasily();
-    	
-    	boolean accept = false;
-    	if(intell < propIntell) accept = true;
-    	else if(ColonyManager.random() <= defaultIncreaseIntelligenceRate()) accept = true;
-    	if(accept) {
-    		int increases = 1;
-    		if(ColonyManager.random() <= getBoostRate()) increases++;
-    		c.setEducatedIntelligence(c.getEducatedIntelligence() + increases);
-    	}
-    	
-    	accept = false;
-    	if(physic < propPhysic) accept = true;
-    	else if(ColonyManager.random() <= defaultIncreasePhysicalRate()) accept = true;
-    	if(accept) {
-    		int increases = 1;
-    		if(ColonyManager.random() <= getBoostRate()) increases++;
-    		c.setEducatedPhysical(c.getEducatedPhysical() + increases);
-    	}
+        int intell = c.getEducatedIntelligence();
+        int physic = c.getEducatedPhysical();
+        
+        int propIntell = defaultMaxIntelligenceEasily();
+        int propPhysic = defaultMaxPhysicalEasily();
+        
+        boolean accept = false;
+        if(intell < propIntell) accept = true;
+        else if(ColonyManager.random() <= defaultIncreaseIntelligenceRate()) accept = true;
+        if(accept) {
+            int increases = 1;
+            if(ColonyManager.random() <= getBoostRate()) increases++;
+            c.setEducatedIntelligence(c.getEducatedIntelligence() + increases);
+        }
+        
+        accept = false;
+        if(physic < propPhysic) accept = true;
+        else if(ColonyManager.random() <= defaultIncreasePhysicalRate()) accept = true;
+        if(accept) {
+            int increases = 1;
+            if(ColonyManager.random() <= getBoostRate()) increases++;
+            c.setEducatedPhysical(c.getEducatedPhysical() + increases);
+        }
     }
     
     @Override
@@ -154,7 +154,7 @@ public abstract class School extends DefaultFacility {
     
     @Override
     public int getSpaceSize() {
-    	return 20;
+        return 20;
     }
     
     @Override
@@ -227,7 +227,7 @@ public abstract class School extends DefaultFacility {
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Long getTechNeeded() {
@@ -239,8 +239,8 @@ public abstract class School extends DefaultFacility {
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        return list;
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

@@ -43,15 +43,15 @@ public class HoldingJob implements Serializable {
     }
 
     public int getUsingSpace() {
-    	if("NewFacility".equals(getCommand())) return usingSpace;
-    	return 0;
-	}
+        if("NewFacility".equals(getCommand())) return usingSpace;
+        return 0;
+    }
 
-	public void setUsingSpace(int usingSpace) {
-		this.usingSpace = usingSpace;
-	}
+    public void setUsingSpace(int usingSpace) {
+        this.usingSpace = usingSpace;
+    }
 
-	public int getCycleMax() {
+    public int getCycleMax() {
         return cycleMax;
     }
 

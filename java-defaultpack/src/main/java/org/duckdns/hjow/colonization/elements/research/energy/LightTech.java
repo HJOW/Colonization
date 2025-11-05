@@ -26,14 +26,14 @@ public class LightTech extends Research {
     
     @Override
     public List<ResearchCondition> getResearchCoditions(Colony col, int level) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	list.add(new ResearchCondition("BasicScience", 1, 5.0));
-    	list.add(new ResearchCondition("BasicScience", 10, 0.0));
-    	list.add(new ResearchCondition("BasicEngineering", 1, 3.0));
-    	list.add(new ResearchCondition("BasicEngineering", 6, 0.0));
-    	list.add(new ResearchCondition("EnergyTech", 1, 1.0));
-    	list.add(new ResearchCondition("ElectroMagneticTech", 1, 2.0));
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        list.add(new ResearchCondition("BasicScience", 1, 5.0));
+        list.add(new ResearchCondition("BasicScience", 10, 0.0));
+        list.add(new ResearchCondition("BasicEngineering", 1, 3.0));
+        list.add(new ResearchCondition("BasicEngineering", 6, 0.0));
+        list.add(new ResearchCondition("EnergyTech", 1, 1.0));
+        list.add(new ResearchCondition("ElectroMagneticTech", 1, 2.0));
+        return list;
     }
 
     @Override

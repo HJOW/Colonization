@@ -39,98 +39,98 @@ import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.commons.util.NetUtil;
 
 public class ServletClientPanel extends JPanel implements Disposeable {
-	private static final long serialVersionUID = -1977421402739294793L;
-	
-	protected transient GUIColonyManager superInstance;
-	
-	protected transient volatile boolean fThreadLogin = false;
-	protected transient volatile Thread  threadLogin;
-	
-	protected transient volatile boolean fThreadJoin = false;
-	protected transient volatile Thread  threadJoin;
-	
-	protected transient volatile boolean fThreadDetail = false;
-	protected transient volatile Thread  threadDetail;
-	
-	protected transient volatile boolean fThreadMain = false;
-	protected transient volatile boolean fThreadMainPaused = true;
-	protected transient volatile Thread  threadMain;
-	
-	protected transient volatile boolean fCbxColony = false;
-	
-	protected transient volatile String  token, url, id;
-	
-	protected JPanel pnMain;
-	protected CardLayout cardMain;
-	
-	protected JPanel pnCardLogin, pnCardJoin, pnCardGame, pnCardLoading, pnGameMain;
-	
-	protected Vector<ColonySimpleInfo> colonyList = new Vector<ColonySimpleInfo>();
-	protected Colony colony;
-	protected ColonyPanel pnColony;
-	
-	protected JTextField     tfLoginId, tfLoginUrl, tfJoinUrl, tfJoinId, tfJoinName;
-	protected JPasswordField tfLoginPw, tfJoinPw;
-	protected JButton btnLoginJoin, btnLoginRun, btnJoinCancel, btnJoinRun, btnThrPlay, btnLogout;
-	protected JComboBox<ColonySimpleInfo> cbxColony;
-	
+    private static final long serialVersionUID = -1977421402739294793L;
+    
+    protected transient GUIColonyManager superInstance;
+    
+    protected transient volatile boolean fThreadLogin = false;
+    protected transient volatile Thread  threadLogin;
+    
+    protected transient volatile boolean fThreadJoin = false;
+    protected transient volatile Thread  threadJoin;
+    
+    protected transient volatile boolean fThreadDetail = false;
+    protected transient volatile Thread  threadDetail;
+    
+    protected transient volatile boolean fThreadMain = false;
+    protected transient volatile boolean fThreadMainPaused = true;
+    protected transient volatile Thread  threadMain;
+    
+    protected transient volatile boolean fCbxColony = false;
+    
+    protected transient volatile String  token, url, id;
+    
+    protected JPanel pnMain;
+    protected CardLayout cardMain;
+    
+    protected JPanel pnCardLogin, pnCardJoin, pnCardGame, pnCardLoading, pnGameMain;
+    
+    protected Vector<ColonySimpleInfo> colonyList = new Vector<ColonySimpleInfo>();
+    protected Colony colony;
+    protected ColonyPanel pnColony;
+    
+    protected JTextField     tfLoginId, tfLoginUrl, tfJoinUrl, tfJoinId, tfJoinName;
+    protected JPasswordField tfLoginPw, tfJoinPw;
+    protected JButton btnLoginJoin, btnLoginRun, btnJoinCancel, btnJoinRun, btnThrPlay, btnLogout;
+    protected JComboBox<ColonySimpleInfo> cbxColony;
+    
     public ServletClientPanel() { super(); init(); }
     public ServletClientPanel(GUIColonyManager superInstance) { super(); this.superInstance = superInstance; init(); }
     
-	@Override
-	public void dispose() {
-		fThreadLogin  = false;
-		fThreadJoin   = false;
-		fThreadDetail = false;
-		fThreadMain   = false;
-		fThreadMainPaused = true;
-		superInstance = null;
-	}
+    @Override
+    public void dispose() {
+        fThreadLogin  = false;
+        fThreadJoin   = false;
+        fThreadDetail = false;
+        fThreadMain   = false;
+        fThreadMainPaused = true;
+        superInstance = null;
+    }
     
-	/** UI 초기화 */
+    /** UI 초기화 */
     protected void init() {
-    	setLayout(new BorderLayout());
-    	
-    	pnMain = new JPanel();
-    	cardMain = new CardLayout();
-    	pnMain.setLayout(cardMain);
-    	add(pnMain, BorderLayout.CENTER);
-    	
-    	pnCardLogin   = new JPanel();
-    	pnCardJoin    = new JPanel();
-    	pnCardGame    = new JPanel();
-    	pnCardLoading = new JPanel();
-    	
-    	pnCardLogin.setLayout(new BorderLayout());  
-    	pnCardJoin.setLayout(new BorderLayout());
-    	pnCardGame.setLayout(new BorderLayout());
-    	pnCardLoading.setLayout(new BorderLayout());
-    	
-    	pnMain.add(pnCardLogin  , "Login");
-    	pnMain.add(pnCardJoin   , "Join");
-    	pnMain.add(pnCardGame   , "Game");
-    	pnMain.add(pnCardLoading, "Loading");
-    	
-    	cardMain.show(pnMain, "Login");
-    	
-    	JPanel pnLoginMain = new JPanel();
-    	pnLoginMain.setLayout(new FlowLayout(FlowLayout.CENTER));
-    	pnCardLogin.add(pnLoginMain, BorderLayout.CENTER);
-    	pnCardLogin.add(new JPanel(), BorderLayout.SOUTH);
-    	pnCardLogin.add(new JPanel(), BorderLayout.NORTH);
-    	pnCardLogin.add(new JPanel(), BorderLayout.EAST);
-    	pnCardLogin.add(new JPanel(), BorderLayout.WEST);
-    	
-    	JPanel pnLoginCenter = new JPanel();
-    	pnLoginCenter.setLayout(new GridBagLayout());
-    	pnLoginMain.add(pnLoginCenter);
-    	
-    	GridBagConstraints gridBagConst;
-    	JLabel lb;
-    	JPanel pn;
-    	int rowNo = 0;
-    	
-    	gridBagConst = new GridBagConstraints();
+        setLayout(new BorderLayout());
+        
+        pnMain = new JPanel();
+        cardMain = new CardLayout();
+        pnMain.setLayout(cardMain);
+        add(pnMain, BorderLayout.CENTER);
+        
+        pnCardLogin   = new JPanel();
+        pnCardJoin    = new JPanel();
+        pnCardGame    = new JPanel();
+        pnCardLoading = new JPanel();
+        
+        pnCardLogin.setLayout(new BorderLayout());  
+        pnCardJoin.setLayout(new BorderLayout());
+        pnCardGame.setLayout(new BorderLayout());
+        pnCardLoading.setLayout(new BorderLayout());
+        
+        pnMain.add(pnCardLogin  , "Login");
+        pnMain.add(pnCardJoin   , "Join");
+        pnMain.add(pnCardGame   , "Game");
+        pnMain.add(pnCardLoading, "Loading");
+        
+        cardMain.show(pnMain, "Login");
+        
+        JPanel pnLoginMain = new JPanel();
+        pnLoginMain.setLayout(new FlowLayout(FlowLayout.CENTER));
+        pnCardLogin.add(pnLoginMain, BorderLayout.CENTER);
+        pnCardLogin.add(new JPanel(), BorderLayout.SOUTH);
+        pnCardLogin.add(new JPanel(), BorderLayout.NORTH);
+        pnCardLogin.add(new JPanel(), BorderLayout.EAST);
+        pnCardLogin.add(new JPanel(), BorderLayout.WEST);
+        
+        JPanel pnLoginCenter = new JPanel();
+        pnLoginCenter.setLayout(new GridBagLayout());
+        pnLoginMain.add(pnLoginCenter);
+        
+        GridBagConstraints gridBagConst;
+        JLabel lb;
+        JPanel pn;
+        int rowNo = 0;
+        
+        gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 0;
         gridBagConst.gridy = rowNo;
         gridBagConst.gridwidth = 1;
@@ -163,9 +163,9 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pnLoginCenter.add(pn, gridBagConst);
         
         rowNo++;
-    	
-    	
-    	gridBagConst = new GridBagConstraints();
+        
+        
+        gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 0;
         gridBagConst.gridy = rowNo;
         gridBagConst.gridwidth = 1;
@@ -254,27 +254,27 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.add(btnLoginRun);
         
         btnLoginJoin.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onLoginJoinRequested();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onLoginJoinRequested();
+            }
+        });
         
         btnLoginRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onLoginRunRequested();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onLoginRunRequested();
+            }
+        });
         
         
         JPanel pnJoinMain = new JPanel();
         pnJoinMain.setLayout(new FlowLayout(FlowLayout.CENTER));
-    	pnCardJoin.add(pnJoinMain, BorderLayout.CENTER);
-    	pnCardJoin.add(new JPanel(), BorderLayout.SOUTH);
-    	pnCardJoin.add(new JPanel(), BorderLayout.NORTH);
-    	pnCardJoin.add(new JPanel(), BorderLayout.EAST);
-    	pnCardJoin.add(new JPanel(), BorderLayout.WEST);
+        pnCardJoin.add(pnJoinMain, BorderLayout.CENTER);
+        pnCardJoin.add(new JPanel(), BorderLayout.SOUTH);
+        pnCardJoin.add(new JPanel(), BorderLayout.NORTH);
+        pnCardJoin.add(new JPanel(), BorderLayout.EAST);
+        pnCardJoin.add(new JPanel(), BorderLayout.WEST);
         rowNo = 0;
         
         JPanel pnJoinCenter = new JPanel();
@@ -412,7 +412,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         
         rowNo++;
         
-    	
+        
         gridBagConst = new GridBagConstraints();
         gridBagConst.gridx = 0;
         gridBagConst.gridy = rowNo;
@@ -433,27 +433,27 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         pn.add(btnJoinRun);
         
         btnJoinCancel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onJoinCancelRequested();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onJoinCancelRequested();
+            }
+        });
         
         btnJoinRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onJoinRunRequested();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onJoinRunRequested();
+            }
+        });
         
         
         JPanel pnLoadingMain = new JPanel();
         pnLoadingMain.setLayout(new FlowLayout(FlowLayout.CENTER));
-    	pnCardLoading.add(pnLoadingMain, BorderLayout.CENTER);
-    	pnCardLoading.add(new JPanel(), BorderLayout.SOUTH);
-    	pnCardLoading.add(new JPanel(), BorderLayout.NORTH);
-    	pnCardLoading.add(new JPanel(), BorderLayout.EAST);
-    	pnCardLoading.add(new JPanel(), BorderLayout.WEST);
+        pnCardLoading.add(pnLoadingMain, BorderLayout.CENTER);
+        pnCardLoading.add(new JPanel(), BorderLayout.SOUTH);
+        pnCardLoading.add(new JPanel(), BorderLayout.NORTH);
+        pnCardLoading.add(new JPanel(), BorderLayout.EAST);
+        pnCardLoading.add(new JPanel(), BorderLayout.WEST);
         
         JProgressBar prog = new JProgressBar();
         prog.setIndeterminate(true);
@@ -466,32 +466,32 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         toolbar.add(btnLogout);
         
         btnLogout.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				onLogoutRequested();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onLogoutRequested();
+            }
+        });
         
         cbxColony = new JComboBox<ColonySimpleInfo>();
         toolbar.add(cbxColony);
         
         cbxColony.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				if(! fCbxColony) return;
-				requestLoadColony();
-			}
-		});
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(! fCbxColony) return;
+                requestLoadColony();
+            }
+        });
         
         btnThrPlay = new JButton(ColonyManager.t("시뮬레이션 실행"));
         toolbar.add(btnThrPlay);
         
         btnThrPlay.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				toggleSimulationRunning();
-			}
-		});
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toggleSimulationRunning();
+            }
+        });
         
         pnGameMain = new JPanel();
         pnGameMain.setLayout(new BorderLayout());
@@ -500,210 +500,210 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         fThreadMain = true;
         fThreadMainPaused = true;
         threadMain = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				onMainThread();
-			}
-		});
+            @Override
+            public void run() {
+                onMainThread();
+            }
+        });
         threadMain.start();
     }
     
     /** 가입 요청 시 호출 */
     protected void onLoginJoinRequested() {
-    	cardMain.show(pnMain, "Join");
+        cardMain.show(pnMain, "Join");
     }
     
     /** 로그인 접속 요청 시 호출 */
     protected void onLoginRunRequested() {
-    	cardMain.show(pnMain, "Loading");
-    	
-    	if(threadLogin != null) {
-    		fThreadLogin = false;
-    		try { threadLogin.interrupt(); } catch(SecurityException    ex) {}
-    		try { Thread.sleep(1000L);     } catch(InterruptedException ex) {}
-    	}
-    	
-    	threadLogin = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				fThreadLogin = true;
-				onLoginThread();
-			}
-		});
-    	threadLogin.start();
+        cardMain.show(pnMain, "Loading");
+        
+        if(threadLogin != null) {
+            fThreadLogin = false;
+            try { threadLogin.interrupt(); } catch(SecurityException    ex) {}
+            try { Thread.sleep(1000L);     } catch(InterruptedException ex) {}
+        }
+        
+        threadLogin = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fThreadLogin = true;
+                onLoginThread();
+            }
+        });
+        threadLogin.start();
     }
     
     /** 로그인 처리 핵심 메소드 */
     protected void onLoginThread() {
-    	try {
-    		this.url = tfLoginUrl.getText();
-    		URL urls = new URL(this.url);
-    		Map<String, Object> parameters = new HashMap<String, Object>();
-    		parameters.put("svName", "login");
-    		parameters.put("svSub" , "login");
-    		
-    		JsonObject loginPacket = new JsonObject();
-    		
-    		this.id = tfLoginId.getText();
-    		loginPacket.put("id", this.id);
-    		
-    		char[] charPw = tfLoginPw.getPassword();
-    		String strPw  = new String(charPw);
-    		loginPacket.put("pw", strPw);
-    		
-    		String loginPacketContent = loginPacket.toJSON();
-    		parameters.put("login" , HexUtil.encodeString(loginPacketContent));
-    		    	
-    		String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
-    		JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
-    		
-    		if(! fThreadLogin) return;
-    		
-    		boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
-    		if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
-    		
-    		token = responseJson.get("token").toString().trim();
-    		colonyList.clear();
-    		
-    		JsonArray arr = (JsonArray) responseJson.get("list");
-    		for(Object obj : arr) {
-    			JsonObject rowOne = (JsonObject) obj;
-    		    ColonySimpleInfo infoOne = new ColonySimpleInfo(rowOne.get("name").toString(), Long.parseLong(rowOne.get("key").toString()));
-    		    colonyList.add(infoOne);
-    		}
-    		
-    		SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					fCbxColony = false;
-					cbxColony.removeAllItems();
-					for(ColonySimpleInfo infos : colonyList) {
-						cbxColony.addItem(infos);
-					}
-					cbxColony.setSelectedIndex(0);
-					
-					onLoadColonyRequested(((ColonySimpleInfo) cbxColony.getSelectedItem()).getKey());
-					fCbxColony = true;
-				}
-			});
-    	} catch(RuntimeException ex) {
-    		JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t(ex.getMessage()));
-    		token = null;
-    		url = null;
-    		id = null;
-    		colonyList.clear();
-    		fThreadLogin  = false;
-    		fThreadJoin   = false;
-    		fThreadDetail = false;
-    		fThreadMainPaused = true;
-    		cardMain.show(pnMain, "Login");
-    	} catch(Throwable t) {
-    		JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
-    		GlobalLogs.processExceptionOccured(t, true);
-    		token = null;
-    		url = null;
-    		id = null;
-    		colonyList.clear();
-    		fThreadLogin  = false;
-    		fThreadJoin   = false;
-    		fThreadDetail = false;
-    		fThreadMainPaused = true;
-    		cardMain.show(pnMain, "Login");
-    	} finally {
-    		fThreadLogin = false;
-    	}
+        try {
+            this.url = tfLoginUrl.getText();
+            URL urls = new URL(this.url);
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("svName", "login");
+            parameters.put("svSub" , "login");
+            
+            JsonObject loginPacket = new JsonObject();
+            
+            this.id = tfLoginId.getText();
+            loginPacket.put("id", this.id);
+            
+            char[] charPw = tfLoginPw.getPassword();
+            String strPw  = new String(charPw);
+            loginPacket.put("pw", strPw);
+            
+            String loginPacketContent = loginPacket.toJSON();
+            parameters.put("login" , HexUtil.encodeString(loginPacketContent));
+                    
+            String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
+            JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
+            
+            if(! fThreadLogin) return;
+            
+            boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
+            if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
+            
+            token = responseJson.get("token").toString().trim();
+            colonyList.clear();
+            
+            JsonArray arr = (JsonArray) responseJson.get("list");
+            for(Object obj : arr) {
+                JsonObject rowOne = (JsonObject) obj;
+                ColonySimpleInfo infoOne = new ColonySimpleInfo(rowOne.get("name").toString(), Long.parseLong(rowOne.get("key").toString()));
+                colonyList.add(infoOne);
+            }
+            
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    fCbxColony = false;
+                    cbxColony.removeAllItems();
+                    for(ColonySimpleInfo infos : colonyList) {
+                        cbxColony.addItem(infos);
+                    }
+                    cbxColony.setSelectedIndex(0);
+                    
+                    onLoadColonyRequested(((ColonySimpleInfo) cbxColony.getSelectedItem()).getKey());
+                    fCbxColony = true;
+                }
+            });
+        } catch(RuntimeException ex) {
+            JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t(ex.getMessage()));
+            token = null;
+            url = null;
+            id = null;
+            colonyList.clear();
+            fThreadLogin  = false;
+            fThreadJoin   = false;
+            fThreadDetail = false;
+            fThreadMainPaused = true;
+            cardMain.show(pnMain, "Login");
+        } catch(Throwable t) {
+            JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
+            GlobalLogs.processExceptionOccured(t, true);
+            token = null;
+            url = null;
+            id = null;
+            colonyList.clear();
+            fThreadLogin  = false;
+            fThreadJoin   = false;
+            fThreadDetail = false;
+            fThreadMainPaused = true;
+            cardMain.show(pnMain, "Login");
+        } finally {
+            fThreadLogin = false;
+        }
     }
     
     /** 가입 취소 요청 시 호출 */
     protected void onJoinCancelRequested() {
-    	cardMain.show(pnMain, "Login");
+        cardMain.show(pnMain, "Login");
     }
     
     /** 가입 실행 요청 시 호출 */
     protected void onJoinRunRequested() {
-    	cardMain.show(pnMain, "Loading");
-    	
-    	if(threadJoin != null) {
-    		fThreadJoin = false;
-    		try { threadJoin.interrupt(); } catch(SecurityException    ex) {}
-    		try { Thread.sleep(1000L);    } catch(InterruptedException ex) {}
-    	}
-    	
-    	threadJoin = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				fThreadJoin = true;
-				onJoinThread();
-			}
-		});
-    	threadJoin.start();
+        cardMain.show(pnMain, "Loading");
+        
+        if(threadJoin != null) {
+            fThreadJoin = false;
+            try { threadJoin.interrupt(); } catch(SecurityException    ex) {}
+            try { Thread.sleep(1000L);    } catch(InterruptedException ex) {}
+        }
+        
+        threadJoin = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fThreadJoin = true;
+                onJoinThread();
+            }
+        });
+        threadJoin.start();
     }
     
     /** 가입 처리 핵심 메소드 */
     protected void onJoinThread() {
-    	try {
-    		this.url = tfJoinUrl.getText();
-    		URL urls = new URL(this.url);
-    		Map<String, Object> parameters = new HashMap<String, Object>();
-    		parameters.put("svName", "login");
-    		parameters.put("svSub" , "join");
-    		
-    		JsonObject loginPacket = new JsonObject();
-    		
-    		this.id = tfJoinId.getText();
-    		loginPacket.put("id", this.id);
-    		
-    		char[] charPw = tfJoinPw.getPassword();
-    		String strPw  = new String(charPw);
-    		loginPacket.put("pw", strPw);
-    		
-    		String nm = tfJoinName.getText();
-    		loginPacket.put("name", nm);
-    		
-    		String loginPacketContent = loginPacket.toJSON();
-    		parameters.put("login" , HexUtil.encodeString(loginPacketContent));
-    		    	
-    		String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
-    		JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
-    		
-    		if(! fThreadJoin) return;
-    		
-    		boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
-    		if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
-    		
-    		SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					cardMain.show(pnMain, "Login");
-					JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("가입이 완료되었습니다."));
-				}
-			});
-    	} catch(RuntimeException ex) {
-    		JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t(ex.getMessage()));
-    		token = null;
-    		url = null;
-    		id = null;
-    		colonyList.clear();
-    		fThreadLogin  = false;
-    		fThreadJoin   = false;
-    		fThreadDetail = false;
-    		fThreadMainPaused = true;
-    		cardMain.show(pnMain, "Login");
-    	} catch(Throwable t) {
-    		JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
-    		GlobalLogs.processExceptionOccured(t, true);
-    		token = null;
-    		url = null;
-    		id = null;
-    		colonyList.clear();
-    		fThreadLogin  = false;
-    		fThreadJoin   = false;
-    		fThreadDetail = false;
-    		fThreadMainPaused = true;
-    		cardMain.show(pnMain, "Login");
-    	} finally {
-    		fThreadJoin = false;
-    	}
+        try {
+            this.url = tfJoinUrl.getText();
+            URL urls = new URL(this.url);
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("svName", "login");
+            parameters.put("svSub" , "join");
+            
+            JsonObject loginPacket = new JsonObject();
+            
+            this.id = tfJoinId.getText();
+            loginPacket.put("id", this.id);
+            
+            char[] charPw = tfJoinPw.getPassword();
+            String strPw  = new String(charPw);
+            loginPacket.put("pw", strPw);
+            
+            String nm = tfJoinName.getText();
+            loginPacket.put("name", nm);
+            
+            String loginPacketContent = loginPacket.toJSON();
+            parameters.put("login" , HexUtil.encodeString(loginPacketContent));
+                    
+            String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
+            JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
+            
+            if(! fThreadJoin) return;
+            
+            boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
+            if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
+            
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    cardMain.show(pnMain, "Login");
+                    JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("가입이 완료되었습니다."));
+                }
+            });
+        } catch(RuntimeException ex) {
+            JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t(ex.getMessage()));
+            token = null;
+            url = null;
+            id = null;
+            colonyList.clear();
+            fThreadLogin  = false;
+            fThreadJoin   = false;
+            fThreadDetail = false;
+            fThreadMainPaused = true;
+            cardMain.show(pnMain, "Login");
+        } catch(Throwable t) {
+            JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
+            GlobalLogs.processExceptionOccured(t, true);
+            token = null;
+            url = null;
+            id = null;
+            colonyList.clear();
+            fThreadLogin  = false;
+            fThreadJoin   = false;
+            fThreadDetail = false;
+            fThreadMainPaused = true;
+            cardMain.show(pnMain, "Login");
+        } finally {
+            fThreadJoin = false;
+        }
     }
     
     /** 정착지 로드 요청하기 */
@@ -713,89 +713,89 @@ public class ServletClientPanel extends JPanel implements Disposeable {
     
     /** 정착지 로드 요청 */
     protected void onLoadColonyRequested(final long colonyKey) {
-    	cardMain.show(pnMain, "Loading");
-    	pnGameMain.removeAll();
-    	
-    	if(threadDetail != null) {
-    		fThreadDetail = false;
-    		try { threadDetail.interrupt(); } catch(SecurityException    ex) {}
-    		try { Thread.sleep(1000L);      } catch(InterruptedException ex) {}
-    	}
-    	
-    	threadDetail = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				fThreadDetail = true;
-				onDetailThread(colonyKey);
-			}
-		});
-    	threadDetail.start();
+        cardMain.show(pnMain, "Loading");
+        pnGameMain.removeAll();
+        
+        if(threadDetail != null) {
+            fThreadDetail = false;
+            try { threadDetail.interrupt(); } catch(SecurityException    ex) {}
+            try { Thread.sleep(1000L);      } catch(InterruptedException ex) {}
+        }
+        
+        threadDetail = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fThreadDetail = true;
+                onDetailThread(colonyKey);
+            }
+        });
+        threadDetail.start();
     }
     
     /** 정착지 로드 핵심 메소드 */
     protected void onDetailThread(final long colonyKey) {
-    	try {
-    		fCbxColony = false;
-    		
-    		URL urls = new URL(this.url);
-    		Map<String, Object> parameters = new HashMap<String, Object>();
-    		parameters.put("svName", "colony");
-    		parameters.put("svSub" , "detail");
-    		parameters.put("jwt"   , this.token);
-    		
-    		ColonySimpleInfo sels = (ColonySimpleInfo) cbxColony.getSelectedItem();
-    		parameters.put("key", String.valueOf(sels.getKey()));
-    		
-    		String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
-    		JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
-    		
-    		if(! fThreadDetail) return;
-    		
-    		boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
-    		if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
-    		
-    		colony = ColonyClassLoader.loadColony((JsonObject) responseJson.get("detail"));
-    		
-    		SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					ColonySimpleInfo infoNow = null;
-					for(ColonySimpleInfo infoOne : colonyList) {
-						if(colony.getKey() == infoOne.getKey()) {
-							infoNow = infoOne;
-							break;
-						}
-					}
-					
-					if(infoNow != null) cbxColony.setSelectedItem(infoNow);
-				    fCbxColony = true;
-				    
-				    pnColony = new ServletClientColonyPanel(colony, superInstance, url, token);
-				    pnGameMain.add((Component) pnColony.getComponent(), BorderLayout.CENTER);
-				    
-				    cardMain.show(pnMain, "Game");
-				}
-			});
-    	} catch(RuntimeException ex) {
-    		JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t(ex.getMessage()));
-    		token = null;
-    		fThreadLogin  = false;
-    		fThreadJoin   = false;
-    		fThreadDetail = false;
-    		fThreadMainPaused = true;
-    		cardMain.show(pnMain, "Login");
-    	} catch(Throwable t) {
-    		JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
-    		GlobalLogs.processExceptionOccured(t, true);
-    		token = null;
-    		fThreadLogin  = false;
-    		fThreadJoin   = false;
-    		fThreadDetail = false;
-    		fThreadMainPaused = true;
-    		cardMain.show(pnMain, "Login");
-    	} finally {
-    		fThreadDetail = false;
-    	}
+        try {
+            fCbxColony = false;
+            
+            URL urls = new URL(this.url);
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("svName", "colony");
+            parameters.put("svSub" , "detail");
+            parameters.put("jwt"   , this.token);
+            
+            ColonySimpleInfo sels = (ColonySimpleInfo) cbxColony.getSelectedItem();
+            parameters.put("key", String.valueOf(sels.getKey()));
+            
+            String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
+            JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
+            
+            if(! fThreadDetail) return;
+            
+            boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
+            if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
+            
+            colony = ColonyClassLoader.loadColony((JsonObject) responseJson.get("detail"));
+            
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    ColonySimpleInfo infoNow = null;
+                    for(ColonySimpleInfo infoOne : colonyList) {
+                        if(colony.getKey() == infoOne.getKey()) {
+                            infoNow = infoOne;
+                            break;
+                        }
+                    }
+                    
+                    if(infoNow != null) cbxColony.setSelectedItem(infoNow);
+                    fCbxColony = true;
+                    
+                    pnColony = new ServletClientColonyPanel(colony, superInstance, url, token);
+                    pnGameMain.add((Component) pnColony.getComponent(), BorderLayout.CENTER);
+                    
+                    cardMain.show(pnMain, "Game");
+                }
+            });
+        } catch(RuntimeException ex) {
+            JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t(ex.getMessage()));
+            token = null;
+            fThreadLogin  = false;
+            fThreadJoin   = false;
+            fThreadDetail = false;
+            fThreadMainPaused = true;
+            cardMain.show(pnMain, "Login");
+        } catch(Throwable t) {
+            JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
+            GlobalLogs.processExceptionOccured(t, true);
+            token = null;
+            fThreadLogin  = false;
+            fThreadJoin   = false;
+            fThreadDetail = false;
+            fThreadMainPaused = true;
+            cardMain.show(pnMain, "Login");
+        } finally {
+            fThreadDetail = false;
+        }
     }
     
     /** 시뮬레이션 시작/정지 토글 */
@@ -811,150 +811,150 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         
         // 그 사이에 콤보박스 바꾼 경우를 대비
         ColonySimpleInfo infoNow = null;
-		for(ColonySimpleInfo infoOne : colonyList) {
-			if(colony.getKey() == infoOne.getKey()) {
-				infoNow = infoOne;
-				break;
-			}
-		}
-		
-		if(infoNow != null) cbxColony.setSelectedItem(infoNow);
-		if(fThreadMainPaused) { cbxColony.setEnabled(true);  fCbxColony = true;  }
-		else                  { cbxColony.setEnabled(false); fCbxColony = false; }
+        for(ColonySimpleInfo infoOne : colonyList) {
+            if(colony.getKey() == infoOne.getKey()) {
+                infoNow = infoOne;
+                break;
+            }
+        }
+        
+        if(infoNow != null) cbxColony.setSelectedItem(infoNow);
+        if(fThreadMainPaused) { cbxColony.setEnabled(true);  fCbxColony = true;  }
+        else                  { cbxColony.setEnabled(false); fCbxColony = false; }
     }
     
     /** 시뮬레이션 정지 */
     protected void pauseSimulation() {
-    	fThreadMainPaused = true;
-    	fCbxColony = false;
-    	btnThrPlay.setEnabled(false);
-    	pnColony.setEditable(true);
-    	btnThrPlay.setText(ColonyManager.t("시뮬레이션 시작"));
-    	btnThrPlay.setEnabled(true);
+        fThreadMainPaused = true;
+        fCbxColony = false;
+        btnThrPlay.setEnabled(false);
+        pnColony.setEditable(true);
+        btnThrPlay.setText(ColonyManager.t("시뮬레이션 시작"));
+        btnThrPlay.setEnabled(true);
     }
     
     /** 시뮬레이션 재개 */
     protected void resumeSimulation() {
-    	fThreadMainPaused = false;
-    	fCbxColony = false;
-    	btnThrPlay.setEnabled(false);
-    	pnColony.setEditable(false);
-    	btnThrPlay.setText(ColonyManager.t("시뮬레이션 정지"));
-    	btnThrPlay.setEnabled(true);
+        fThreadMainPaused = false;
+        fCbxColony = false;
+        btnThrPlay.setEnabled(false);
+        pnColony.setEditable(false);
+        btnThrPlay.setText(ColonyManager.t("시뮬레이션 정지"));
+        btnThrPlay.setEnabled(true);
     }
     
     /** 로그아웃 요청 시 호출 */
     protected void onLogoutRequested() {
-    	cardMain.show(pnMain, "Loading");
-    	
-    	new Thread(new Runnable() {
-    		@Override
-    		public void run() {
-    			pauseSimulation();
-    			
-    			token = null;
-    	    	id = null;
-    	    	fThreadLogin      = false;
-    			fThreadJoin       = false;
-    			fThreadDetail     = false;
-    			fThreadMainPaused = true;
-    			
-    			SwingUtilities.invokeLater(new Runnable() {
-					@Override
-					public void run() {
-						cardMain.show(pnMain, "Login");
-					}
-				});
-    		}
-    	}).start();
+        cardMain.show(pnMain, "Loading");
+        
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pauseSimulation();
+                
+                token = null;
+                id = null;
+                fThreadLogin      = false;
+                fThreadJoin       = false;
+                fThreadDetail     = false;
+                fThreadMainPaused = true;
+                
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        cardMain.show(pnMain, "Login");
+                    }
+                });
+            }
+        }).start();
     }
     
     /** 메인 쓰레드 */
     protected void onMainThread() {
-    	while(fThreadMain) {
-    		if(! fThreadMainPaused) {
-    			try { onMainThreadOneCycle(); } catch(Throwable t) {
-    				GlobalLogs.processExceptionOccured(t, true); 
-    				token = null;
-    	    		fThreadLogin  = false;
-    	    		fThreadJoin   = false;
-    	    		fThreadDetail = false;
-    	    		fThreadMainPaused = true;
-    	    		cardMain.show(pnMain, "Login");
-    	    		JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
-    			}
-    		}
-    		
-    		try { Thread.sleep(100L); } catch(InterruptedException ex) { fThreadMain = false; break; }
-    	}
-    	fThreadMain = false;
+        while(fThreadMain) {
+            if(! fThreadMainPaused) {
+                try { onMainThreadOneCycle(); } catch(Throwable t) {
+                    GlobalLogs.processExceptionOccured(t, true); 
+                    token = null;
+                    fThreadLogin  = false;
+                    fThreadJoin   = false;
+                    fThreadDetail = false;
+                    fThreadMainPaused = true;
+                    cardMain.show(pnMain, "Login");
+                    JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("오류") + " : " + ColonyManager.t(t.getMessage()));
+                }
+            }
+            
+            try { Thread.sleep(100L); } catch(InterruptedException ex) { fThreadMain = false; break; }
+        }
+        fThreadMain = false;
     }
     
     /** 메인 쓰레드 내 핵심 동작 */
     protected void onMainThreadOneCycle() throws Throwable {
-    	URL urls = new URL(this.url);
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("svName", "colony");
-		parameters.put("svSub" , "cycle");
-		parameters.put("jwt"   , this.token);
-		
-		fCbxColony = false;
-		ColonySimpleInfo sels = (ColonySimpleInfo) cbxColony.getSelectedItem();
-		parameters.put("key", String.valueOf(sels.getKey()));
-		parameters.put("cycle", "1");
-		    	
-		String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
-		JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
-		
-		boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
-		if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
-		
-		colony = ColonyClassLoader.loadColony((JsonObject) responseJson.get("detail"));
-		
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				ColonySimpleInfo infoNow = null;
-				for(ColonySimpleInfo infoOne : colonyList) {
-					if(colony.getKey() == infoOne.getKey()) {
-						infoNow = infoOne;
-						break;
-					}
-				}
-				
-				if(infoNow != null) cbxColony.setSelectedItem(infoNow);
-			    fCbxColony = true;
-			    
-			    DefaultColonyPanel pn = new DefaultColonyPanel(colony, superInstance); // TODO 서블릿 클라이언트용 Colony Panel 구현해야 함 (도시, 시설 건설 시 서버로 요청을 보내야 하기 때문)
-			    pnGameMain.add(pn, BorderLayout.CENTER);
-			    
-			    cardMain.show(pnMain, "Game");
-			}
-		});
+        URL urls = new URL(this.url);
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("svName", "colony");
+        parameters.put("svSub" , "cycle");
+        parameters.put("jwt"   , this.token);
+        
+        fCbxColony = false;
+        ColonySimpleInfo sels = (ColonySimpleInfo) cbxColony.getSelectedItem();
+        parameters.put("key", String.valueOf(sels.getKey()));
+        parameters.put("cycle", "1");
+                
+        String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
+        JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
+        
+        boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
+        if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
+        
+        colony = ColonyClassLoader.loadColony((JsonObject) responseJson.get("detail"));
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ColonySimpleInfo infoNow = null;
+                for(ColonySimpleInfo infoOne : colonyList) {
+                    if(colony.getKey() == infoOne.getKey()) {
+                        infoNow = infoOne;
+                        break;
+                    }
+                }
+                
+                if(infoNow != null) cbxColony.setSelectedItem(infoNow);
+                fCbxColony = true;
+                
+                DefaultColonyPanel pn = new DefaultColonyPanel(colony, superInstance); // TODO 서블릿 클라이언트용 Colony Panel 구현해야 함 (도시, 시설 건설 시 서버로 요청을 보내야 하기 때문)
+                pnGameMain.add(pn, BorderLayout.CENTER);
+                
+                cardMain.show(pnMain, "Game");
+            }
+        });
     }
 }
 
 /** 정착지 정보 */
 class ColonySimpleInfo implements Serializable {
-	private static final long serialVersionUID = 5957048445693707208L;
-	protected String name;
-	protected long   key;
-	public ColonySimpleInfo() {}
-	public ColonySimpleInfo(String name, long key) {
-		this();
-		this.name = name;
-		this.key = key;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public long getKey() {
-		return key;
-	}
-	public void setKey(long key) {
-		this.key = key;
-	}
+    private static final long serialVersionUID = 5957048445693707208L;
+    protected String name;
+    protected long   key;
+    public ColonySimpleInfo() {}
+    public ColonySimpleInfo(String name, long key) {
+        this();
+        this.name = name;
+        this.key = key;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public long getKey() {
+        return key;
+    }
+    public void setKey(long key) {
+        this.key = key;
+    }
 }

@@ -10,8 +10,8 @@ public class ColonyInformation implements Serializable {
     protected int[] difficulties;
     
     public ColonyInformation() {
-    	difficulties = new int[9];
-    	for(int idx=0; idx<difficulties.length; idx++) {  difficulties[idx] = (idx + 1); }
+        difficulties = new int[9];
+        for(int idx=0; idx<difficulties.length; idx++) {  difficulties[idx] = (idx + 1); }
     }
 
     public String getName() {
@@ -47,14 +47,14 @@ public class ColonyInformation implements Serializable {
     }
     
     public int[] getDifficulties() {
-		return difficulties;
-	}
+        return difficulties;
+    }
 
-	public void setDifficulties(int[] difficulties) {
-		this.difficulties = difficulties;
-	}
+    public void setDifficulties(int[] difficulties) {
+        this.difficulties = difficulties;
+    }
 
-	@Override
+    @Override
     public String toString() {
         return getTitle();
     }

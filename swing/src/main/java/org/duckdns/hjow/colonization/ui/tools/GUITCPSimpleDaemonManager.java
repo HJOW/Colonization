@@ -146,7 +146,7 @@ public class GUITCPSimpleDaemonManager implements Tool {
     
     @Override
     public String getName() {
-    	return "TCPDAEMON";
+        return "TCPDAEMON";
     }
     
     @Override
@@ -162,11 +162,11 @@ public class GUITCPSimpleDaemonManager implements Tool {
         dialog = null;
     }
 
-	@Override
-	public String getTitle() {
-		return "TCP데몬";
-	}
-	
-	@Override
-	public boolean isAvail() { return true; }
+    @Override
+    public String getTitle() {
+        return "TCP데몬";
+    }
+    
+    @Override
+    public boolean isAvail() { return true; }
 }

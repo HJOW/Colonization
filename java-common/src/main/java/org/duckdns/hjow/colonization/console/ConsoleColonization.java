@@ -12,8 +12,8 @@ import org.duckdns.hjow.commons.util.ClassUtil;
 public class ConsoleColonization implements ColonizationMainClass {
     private static final ConsoleColonization INSTANCES = new ConsoleColonization();
     public static void main(String[] args) {
-    	GlobalLogs.tryingToInitLog4j();
-    	
+        GlobalLogs.tryingToInitLog4j();
+        
         Map<String, String> argMap = ClassUtil.convertAppParams(args);
         INSTANCES.prepare(argMap);
         INSTANCES.run();
@@ -50,6 +50,6 @@ public class ConsoleColonization implements ColonizationMainClass {
     
     /** 메인 UI 호출 전 선 작업 수행 */
     protected void preWorks(Map<String, String> args) {
-    	new PreWorks(args).work();
+        new PreWorks(args).work();
     }
 }

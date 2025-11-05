@@ -83,7 +83,7 @@ public abstract class ResearchCenter extends DefaultFacility {
     
     /** 기본 연구 진행 증가폭 */
     protected int defaultIncreaseResearchProgress() {
-    	return 10;
+        return 10;
     }
     
     @Override
@@ -95,7 +95,7 @@ public abstract class ResearchCenter extends DefaultFacility {
         
         // 테크 수치 올리기
         if(cycle % getTechPointIncreaseCycle() == 0) {
-        	colony.setTech(colony.getTech() + increases);
+            colony.setTech(colony.getTech() + increases);
         }
         
         // 진행 중인 연구 처리
@@ -166,7 +166,7 @@ public abstract class ResearchCenter extends DefaultFacility {
     }
     
     public static int getUniqueFacilityGrade() {
-    	return FACILITY_UNIQUE_GRADE_NONE;
+        return FACILITY_UNIQUE_GRADE_NONE;
     }
     
     public static Long getTechNeeded() {
@@ -178,8 +178,8 @@ public abstract class ResearchCenter extends DefaultFacility {
     }
     
     public static List<ResearchCondition> getResearchCoditions(Colony col) {
-    	List<ResearchCondition> list = new ArrayList<ResearchCondition>();
-    	return list;
+        List<ResearchCondition> list = new ArrayList<ResearchCondition>();
+        return list;
     }
     
     /** 건설 가능여부 체크. 단, 도시 내 건설가능 구역 수와 건설인력은 이 메소드에서 체크하지 않는다. 건설 불가능 사유 발생 시 그 메시지 반환, 건설 가능 시 null 반환. */

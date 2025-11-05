@@ -113,7 +113,7 @@ public class UIObject extends ScriptObject {
     }
     
     @SuppressWarnings("rawtypes")
-	public Object create(Object componentType) {
+    public Object create(Object componentType) {
         String compType = String.valueOf(componentType);
         compType = compType.toLowerCase();
         
@@ -219,7 +219,7 @@ public class UIObject extends ScriptObject {
         return new JScrollPane((Component) component);
     }
     public void println(Object msg) {
-    	ColonyManager.logGlobals(String.valueOf(msg), 2);
+        ColonyManager.logGlobals(String.valueOf(msg), 2);
     }
     public void alert(Object msg) {
         JOptionPane.showMessageDialog(frame, String.valueOf(msg));
