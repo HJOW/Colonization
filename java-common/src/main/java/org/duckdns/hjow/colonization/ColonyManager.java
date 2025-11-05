@@ -1321,6 +1321,27 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         return Math.random();
     }
     
+    /** 자바 버전 반환 */
+    public static int getJavaMajorVersion() { // TODO : 공통 lib 로 이관
+    	String ver = System.getProperty("java.version");
+    	StringTokenizer dotTokenizer = new StringTokenizer(ver, ".");
+        String strMajor;
+        if(ver.startsWith("1.")) {
+        	dotTokenizer.nextToken();
+        	strMajor = dotTokenizer.nextToken().trim();
+        } else {
+        	strMajor = dotTokenizer.nextToken().trim();
+        }
+        return Integer.parseInt(strMajor.trim());
+    }
+    
+    /** 운영체제가 Windows 인지 확인 */
+    public static boolean isWindowsOS() { // TODO : 공통 lib 로 이관
+    	String osName = System.getProperty("os.name");
+    	if(osName.toLowerCase().trim().startsWith("windows")) return true;
+    	return false;
+    }
+    
     /** 버전 코드 */
     public static final int VERSION_MAIN = 0;
     public static final int VERSION_SUB1 = 0;

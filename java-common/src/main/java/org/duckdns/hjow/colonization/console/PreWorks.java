@@ -199,10 +199,30 @@ public class PreWorks {
         
         List<String> commands = new ArrayList<String>();
         commands.add(jreBinPath.getAbsolutePath() + File.separator + "java");
-        commands.add("-jar");
-        commands.add(targetToRun.getAbsolutePath());
         commands.add("-cp");
-        commands.add(libRoot.getAbsolutePath() + File.separator + "*");
+        
+        // cp 작성
+        String separator = ":";
+        if(ColonyManager.isWindowsOS()) separator = ";";
+        int javaVer = ColonyManager.getJavaMajorVersion();
+        
+        StringBuilder cpValue = new StringBuilder("");
+        cpValue = cpValue.append(targetToRun.getAbsolutePath());
+        
+        File[] files = libRoot.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				if(pathname.isDirectory()) return false;
+				return pathname.getName().toLowerCase().endsWith(".jar");
+			}
+		});
+        for(File jarOne : files) {
+        	if(javaVer < 15 && jarOne.getName().startsWith("nashorn-core")) continue; 
+        	cpValue = cpValue.append(separator).append(jarOne.getAbsolutePath());
+        }
+        
+        commands.add(cpValue.toString().trim());
+        commands.add(getDefaultClass());
         commands.add("--updator");
         commands.add("N");
         
@@ -213,6 +233,11 @@ public class PreWorks {
         procBuilder.start();
         
         System.exit(0);
+    }
+    
+    /** 실행 시작 클래스 */
+    protected String getDefaultClass() {
+    	return "org.duckdns.hjow.colonization.Colonization";
     }
     
     /** lib 클래스로더 생성 */

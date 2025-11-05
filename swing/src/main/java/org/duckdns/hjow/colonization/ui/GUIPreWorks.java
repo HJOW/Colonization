@@ -26,6 +26,12 @@ public class GUIPreWorks extends PreWorks {
         } catch(ClassNotFoundException ex) {  }
     }
     
+    /** 실행 시작 클래스 */
+    @Override
+    protected String getDefaultClass() {
+    	return "org.duckdns.hjow.colonization.Colonization";
+    }
+    
     private static boolean syntaxPaneEnabled = false;
     public static boolean isSyntaxPaneEnabled() {
         return syntaxPaneEnabled;
