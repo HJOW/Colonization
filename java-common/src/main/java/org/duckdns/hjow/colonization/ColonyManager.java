@@ -214,6 +214,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** Colonization 기본 설정 불러오기 */
     public void loadLocalConfigs() {
+    	GlobalLogs.log("Loading local configurations...");
+    	
         File root = getColonyConfigRootDirectory();
         if(! root.exists()) root.mkdirs();
         
@@ -274,6 +276,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 스크립트 엔진에서 액세스하는 스토리지 준비 */
     protected void loadLocalStorage() {
+    	GlobalLogs.log("Loading local storages...");
         try {
             // 폴더 체크 (없으면 만들기)
             File root = getColonyScriptRootDirectory();
@@ -298,6 +301,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 스크립트 엔진에서 액세스하는 스토리지 저장 */
     protected void saveLocalStorage() {
+    	GlobalLogs.log(t("스토리지 저장 중..."));
         try {
             // 폴더 체크 (없으면 만들기)
             File root = getColonyScriptRootDirectory();
@@ -348,6 +352,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 정착지들을 기본 경로에서 불러오기 */
     public void loadColonies() {
+    	GlobalLogs.log(t("정착지 모두 불러오는 중..."));
         File root = getColonySaveRootDirectory();
         File[] lists = root.listFiles(getColonyFileFilter());
         
@@ -356,6 +361,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             if(f.getName().equals("config.json")) continue;
             if(getColonyFileFilter().accept(f)) loadColony(f, false);
         }
+        
+        GlobalLogs.log(t("정착지 모두 불러오는 완료"));
         
         if(colonies.isEmpty()) {
             newColony();
@@ -366,6 +373,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 정착지 모두 포기, 초기화 */
     protected void resetAllColony() {
+    	GlobalLogs.log(t("정착지 모두 포기하고 철수 중..."));
         colonies.clear();
         File root = getColonySaveRootDirectory();
         File[] lists = root.listFiles(getColonyFileFilter());
@@ -377,6 +385,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 정착지를 별도 파일에서 불러오기 (화면에는 반영하지 않으므로, 사용 후 refreshColonyList 호출 필요) */
     public void loadColony(File f, boolean alert) {
+    	GlobalLogs.log(t("파일로부터 정착지 불러오는 중..."));
         boolean exists = false;
         try { 
             Colony c = ColonyClassLoader.loadColony(f);
@@ -403,6 +412,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 정착지들을 기본 경로에 저장 */
     public void saveColonies() {
+    	GlobalLogs.log(t("모든 정착지 기록 중..."));
+    	
         File root = getColonySaveRootDirectory();
         
         // 백업 준비
@@ -446,20 +457,28 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             }
             if(dir.listFiles().length <= 0) dir.delete();
         }
+        
+        GlobalLogs.log(t("모든 정착지 기록 완료"));
     }
     
     /** 해당 정착지를 별도 파일로 저장 */
     public void saveColony(Colony c, File f, boolean alert) {
+    	GlobalLogs.log(t("정착지 [COLONY] 기록 중...").replace("[COLONY]", c == null ? "NULL" : c.getName()));
+    	
         try { 
             String nameLower = f.getName().toLowerCase().trim();
             if(! ( nameLower.endsWith(".colony") || nameLower.endsWith(".colgz") )) f = new File(f.getAbsolutePath() + ".colony");
             
             if(c instanceof AbstractColony) ((AbstractColony) c).save(f);
+            
+            GlobalLogs.log(t("정착지 기록 완료"));
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, true); if(alert) { alert("오류 : " + ex.getMessage()); } else { throw new RuntimeException(ex.getMessage()); } }
     }
     
     /** Colonization 기본 설정 저장 */
     public void saveLocalConfigs() {
+    	GlobalLogs.log(t("설정 저장 중..."));
+    	
         File root = getColonyConfigRootDirectory();
         if(! root.exists()) root.mkdirs();
         
@@ -471,6 +490,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             if(olds.exists()) olds.delete();
             
             conf.renameTo(olds); // 목표로 하는 이름으로 바꾸기
+            GlobalLogs.log(t("설정 저장 완료"));
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, false);
         }
@@ -478,6 +498,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 새 정착지 생성 (기본형으로 생성) */
     public Colony newColony() {
+    	GlobalLogs.log(t("새 정착지 개척 중..."));
         try {
             Colony newCol = (Colony) Class.forName("org.duckdns.hjow.colonization.elements.NormalColony").newInstance();
             newColonyAfterJobs(newCol);
@@ -891,12 +912,16 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 정착지 목록과 화면 내용 갱신 */
     public void refreshColonyList() {
+    	GlobalLogs.log(t("정착지 목록 갱신 중..."));
+    	
         if(colonies.size() >= 1 && selectedColony < 0) selectedColony = 0;
         refreshColonyContent();
     }
     
     /** 정착지 화면 내용 갱신 */
     public void refreshColonyContent() {
+    	GlobalLogs.log(t("정착지 내부 화면 갱신 중..."));
+    	
         assureMainThreadRunning();
         refreshArenaPanel(0);
     }
@@ -994,6 +1019,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     /** 프로그램 종료 */
     public void exit() {
         dispose(false);
+        
+        GlobalLogs.log("Exit");
         if(superInstance != null) superInstance.exit();
         else System.exit(0);
     }

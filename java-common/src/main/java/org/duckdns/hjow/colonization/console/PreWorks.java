@@ -14,6 +14,7 @@ import java.util.StringTokenizer;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
@@ -32,6 +33,8 @@ public class PreWorks {
     
     /** 사전 작업 수행 */
     public final void work() {
+    	GlobalLogs.log("Start to pre-work...");
+    	
         String strUsingUpdator = params.get("--updator");
         boolean runOffline = true;
         if(DataUtil.isNotEmpty(strUsingUpdator)) runOffline = (! DataUtil.parseBoolean(strUsingUpdator.trim()));
@@ -153,8 +156,10 @@ public class PreWorks {
                 String downloadUrl = versionInfo.get("url").toString();
                 if(! downloadUrl.startsWith("http")) downloadUrl = ColonyClassLoader.htmlRootUrl() + downloadUrl;
                 
+                GlobalLogs.log("Downloading newer version from " + downloadUrl + "  to  " + targetToRun.getAbsolutePath());
                 NetUtil.download(new URL(downloadUrl), targetToRun);
             } catch(Throwable tx) {
+            	GlobalLogs.log("Downloading failed - (" + tx.getClass().getSimpleName() + ") " + tx.getMessage());
                 tx.printStackTrace();
                 targetToRun = null; // 다운로드 실패 시 null 처리
             }
@@ -162,6 +167,7 @@ public class PreWorks {
         
         // 다운로드 실패 - 이미 다운로드 되어있는 파일들 중 그나마 최신버전 찾기
         if(targetToRun == null) {
+        	GlobalLogs.log("Finding already installed versions on " + buildPath.getAbsolutePath());
             File[] arr = buildPath.listFiles(new FileFilter() {    
                 @Override
                 public boolean accept(File pathname) {
@@ -173,6 +179,7 @@ public class PreWorks {
             if(arr.length <= 0) {
                 runOffline = true;
                 targetToRun = null;
+                GlobalLogs.log("There is no other version installed on default path...");
                 return;
             }
             
@@ -196,6 +203,9 @@ public class PreWorks {
         String javaHome = System.getProperty("java.home");
         File jreBinPath = new File(javaHome + File.separator + "bin");
         File libRoot = ColonyClassLoader.getHomeLibDir();
+        
+        GlobalLogs.log("Java Runtime Path : " + jreBinPath.getAbsolutePath());
+        GlobalLogs.log("Library Path : " + libRoot.getAbsolutePath());
         
         List<String> commands = new ArrayList<String>();
         commands.add(jreBinPath.getAbsolutePath() + File.separator + "java");
@@ -229,9 +239,10 @@ public class PreWorks {
         ProcessBuilder procBuilder = new ProcessBuilder(commands);
         procBuilder.directory(jreBinPath);
         
-        System.out.println("Run downloaded newer version of colonization - " + targetToRun.getAbsolutePath());
+        GlobalLogs.log("Run downloaded newer version of colonization - " + targetToRun.getAbsolutePath());
         procBuilder.start();
         
+        GlobalLogs.log("This process will be exit...");
         System.exit(0);
     }
     

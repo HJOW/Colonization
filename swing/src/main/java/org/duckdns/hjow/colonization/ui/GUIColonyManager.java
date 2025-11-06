@@ -119,6 +119,8 @@ public class GUIColonyManager extends ColonyManager {
 
     /** UI 초기화 */
     public void init(GUIColonizationMainClass superInstance) {
+    	GlobalLogs.log("Colonization - Swing build - initializing...");
+    	
         // 설정 파일 읽기
         loadLocalConfigs();
         loadLocalStorage();
@@ -182,6 +184,8 @@ public class GUIColonyManager extends ColonyManager {
     
     /** UI 파트 초기화 */
     public void initializeUI() {
+    	GlobalLogs.log(t("세부 UI 준비 중..."));
+    	
         Dimension winSize = GUIUtil.getScreenSize();
         int w, h;
         w = (int) (winSize.getWidth()  * 0.8);
@@ -745,11 +749,14 @@ public class GUIColonyManager extends ColonyManager {
             }
         });
         
+        GlobalLogs.log(t("세부 UI 준비 완료"));
+        
         refreshColonyContent();
     }
 
     /** 룩앤필 (테마) 적용 */
     protected void applyLookAndFeel() {
+    	GlobalLogs.log("Loading look and feels...");
         String lookAndFeel = configs.getString("LookAndFeel");
         if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel); }
         applyLookAndFeel(lookAndFeel);
@@ -1136,6 +1143,8 @@ public class GUIColonyManager extends ColonyManager {
     /** 이 객체 사용 중단 - 관련 리소스 모두 해제, 대화상자 닫기 여부도 지정 */
     @Override
     public void dispose(boolean closeDialog) {
+    	GlobalLogs.log("Disposing main program...");
+    	
         setEditable(false);
         disposeContents();
         
@@ -1207,6 +1216,7 @@ public class GUIColonyManager extends ColonyManager {
     /** 프로그램 종료 */
     @Override
     public void exit() {
+    	GlobalLogs.log("Exit requested");
         setEditable(false);
         
         if(! flagSaveBeforeClose) return;
@@ -1227,6 +1237,8 @@ public class GUIColonyManager extends ColonyManager {
             numInfLoopPrev++;
             if(numInfLoopPrev >= 100) break;
         }
+        
+        GlobalLogs.log("Exit");
         super.exit();
     }
     
@@ -1354,6 +1366,7 @@ public class GUIColonyManager extends ColonyManager {
                         if(prefInfLoop <= 0) break;
                     }
                 } catch(InterruptedException ex) { GlobalLogs.processExceptionOccured(ex, false); }
+                GlobalLogs.log(t("시뮬레이션 정지"));
                 
                 refreshArenaPanelIn(0);
                 
@@ -1412,11 +1425,15 @@ public class GUIColonyManager extends ColonyManager {
         menuActionThrPlay.setEnabled(true);
         
         tabMain.setSelectedComponent(pnLocalRoot);
+        
+        GlobalLogs.log(t("시뮬레이션 시작"));
     }
     
     /** 정착지 목록과 화면 내용 갱신 */
     @Override
     public void refreshColonyList() {
+    	GlobalLogs.log(t("정착지 목록 갱신 중..."));
+    	
         cbxColony.setModel(new DefaultComboBoxModel<Colony>(colonies));
         int s = cbxColony.getSelectedIndex();
         if(s != selectedColony) time = null;
@@ -1427,6 +1444,8 @@ public class GUIColonyManager extends ColonyManager {
     /** 정착지 화면 내용 갱신 */
     @Override
     public void refreshColonyContent() {
+    	GlobalLogs.log(t("정착지 내부 화면 갱신 중..."));
+    	
         int s = cbxColony.getSelectedIndex();
         if(s != selectedColony) time = null;
         selectedColony = s;

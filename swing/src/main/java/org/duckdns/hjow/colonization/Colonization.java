@@ -19,6 +19,8 @@ public class Colonization extends ConsoleColonization implements GUIColonization
         
         // Core.loadCore("col", "colonization", ColonyManager.getVersionString(), args);
         
+        GlobalLogs.log("Start to run Colonization ...");
+        
         Map<String, String> argMap = ClassUtil.convertAppParams(args);
         INSTANCES.prepare(argMap);
         INSTANCES.run();
@@ -44,8 +46,10 @@ public class Colonization extends ConsoleColonization implements GUIColonization
         
         mode = mode.trim().toLowerCase();
         if(mode.equals("console") || mode.equals("c")) {
+        	GlobalLogs.log("Console-mode program is called.");
             super.run(); return;
         } else if(mode.equals("daemon") || mode.equals("d")) {
+        	GlobalLogs.log("The TCP daemon is called.");
             String port = arguments.get("port");
             if(DataUtil.isEmpty(port)) port = arguments.get("p");
             
@@ -61,6 +65,7 @@ public class Colonization extends ConsoleColonization implements GUIColonization
             daemon.start();
         } else if(mode.equals("gui") || mode.equals("g")) {
             openLoadingDialog();
+            GlobalLogs.log("The main program based Swing is called.");
             
             if(manager != null) {
                 manager.dispose();
@@ -73,6 +78,7 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     
     @Override
     public void restart() {
+    	GlobalLogs.log("Restarting...");
         if(mode.equals("gui") || mode.equals("g")) openLoadingDialog();
         
         try { manager.dispose(((GUIColonyManager) manager).isVisible()); } catch(Exception notImportant) { notImportant.printStackTrace(); }

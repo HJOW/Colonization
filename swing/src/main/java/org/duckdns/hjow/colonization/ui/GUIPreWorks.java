@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.swing.JEditorPane;
 
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.console.PreWorks;
 
 /** 프로그램 실행 전 사전 작업 */
@@ -24,7 +25,7 @@ public class GUIPreWorks extends PreWorks {
             flatLaf.getMethod("setup");
             // setup 을 지금 호출하지는 않음
             flatLafEnabled = true;
-            System.out.println("flatlaf enabled.");
+            GlobalLogs.log("FlatLaf enabled.");
         } catch(ClassNotFoundException ex) {  }
         
         // sciss SyntaxPane 로딩 시도 (없으면 넘어감)
@@ -33,7 +34,7 @@ public class GUIPreWorks extends PreWorks {
             Method mthd = scissClass.getMethod("initKit");
             mthd.invoke(null);
             syntaxPaneEnabled = true;
-            System.out.println("sciss SyntaxPane enabled.");
+            GlobalLogs.log("sciss SyntaxPane enabled.");
         } catch(ClassNotFoundException ex) {  }
     }
     

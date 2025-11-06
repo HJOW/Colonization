@@ -52,7 +52,7 @@ public class GlobalLogs implements Serializable {
     /** 로그 출력 */
     public static void log(String msg) {
         System.out.println(msg);
-        getInstance().add(msg);
+        try { getInstance().add(msg); } catch(Throwable ignores) {}
         
         if(logger != null) {
             try { methodInfoLogger.invoke(logger, msg); } catch(Throwable ignores) { logger = null; methodInfoLogger = null; methodDebugLogger = null; }
