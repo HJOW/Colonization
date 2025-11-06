@@ -21,7 +21,7 @@ public class GUIPreWorks extends PreWorks {
         // FlatLaf 로딩 시도 (없으면 넘어감)
         try {
             Class<?> flatLaf = Class.forName("com.formdev.flatlaf.FlatDarkLaf"); // FlatLightLaf, FlatDarculaLaf, FlatIntelliJLaf
-            Method mthd = flatLaf.getMethod("setup");
+            flatLaf.getMethod("setup");
             // setup 을 지금 호출하지는 않음
             flatLafEnabled = true;
             System.out.println("flatlaf enabled.");
