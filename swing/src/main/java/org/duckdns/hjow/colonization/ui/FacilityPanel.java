@@ -41,6 +41,7 @@ import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.states.State;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
 
 public class FacilityPanel extends JPanel implements ColonyElementPanel {
@@ -257,7 +258,9 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 
                 if(currentMoney < m) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("예산이 [MONEY] 부족합니다.").replace("[MONEY]", ColonyManager.formatInt( m - currentMoney ))); return; }
                 if(f.getLevel() >= f.getMaxLevel()) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("더 이상 증축이 불가능합니다.")); return; }
-                if(! isUpgradeAvail(f, colony, city)) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t("증축이 불가능합니다.")); return; }
+                
+                String noMsg = checkUpgradeAvail(f, colony, city);
+                if(DataUtil.isNotEmpty(noMsg)) { JOptionPane.showMessageDialog(superInstance.getDialog(), ColonyManager.t(noMsg)); return; }
                 
                 String msg = ColonyManager.t("이 시설을 증축하시겠습니까?");
                 msg += "\n" + ColonyManager.t("[MONEY] 예산 필요").replace("[MONEY]", ColonyManager.formatInt(m));
@@ -461,7 +464,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         if(fac.getHp() <= 0) setEditable(false);
         else setEditable(flagEditable);
         
-        btnUpgrade.setVisible(isUpgradeAvail(fac, colony, city));
+        btnUpgrade.setVisible(DataUtil.isEmpty(checkUpgradeAvail(fac, colony, city)));
         fac.markAsRefreshChildren(false);
         
         // 이미지 불러오기
@@ -527,23 +530,25 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         refresh(fac, city, colony, superInstance);
     }
     
-    /** 업그레이드 가능 여부 확인 */
-    protected boolean isUpgradeAvail(Facility fac, Colony col, City city) {
-        if(! fac.isUpgradeAvail(col, city)) return false;
-        if(fac.getLevel() >= fac.getMaxLevel()) return false;
-        if(col.getMoney() < fac.getUpgradePrice(col, city)) return false;
+    /** 업그레이드 가능 여부 확인 (가능 시 null 반환, 불가능 시 메시지 반환) */
+    protected String checkUpgradeAvail(Facility fac, Colony col, City city) {
+    	if(fac.getLevel() >= fac.getMaxLevel()) return "더 이상 증축할 수 없는 시설입니다.";
+        if(col.getMoney() < fac.getUpgradePrice(col, city)) return "예산이 부족하여 증축할 수 없습니다.";
+        
+    	String noMsg = fac.checkUpgradeAvail(col, city);
+    	if(DataUtil.isNotEmpty(noMsg)) return noMsg;
         
         // 이미 업그레이드 중인지 확인
         for(HoldingJob j : city.getHoldings()) {
             if("UpgradeFacility".equalsIgnoreCase(j.getCommand())) {
                 long key = Long.parseLong(j.getParameter().trim());
                 if(fac.getKey() == key) {
-                    return false;
+                    return "이미 증축 중인 시설입니다.";
                 }
             }
         }
         
-        return true;
+        return null;
     }
 
     @Override

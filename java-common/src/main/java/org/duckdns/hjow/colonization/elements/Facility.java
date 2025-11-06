@@ -64,8 +64,8 @@ public interface Facility extends ColonyElements {
     /** 이 시설의 최대 레벨 반환 */
     public int getMaxLevel();
     
-    /** 업그레이드 가능 여부 반환 */
-    public boolean isUpgradeAvail(Colony col, City city);
+    /** 업그레이드 가능 여부 체크, 업그레이드 가능 시 null 반환, 그 외의 경우 불가능 사유 메시지 반환 */
+    public String checkUpgradeAvail(Colony col, City city);
     
     /** 이 시설의 업그레이드 비용 반환 */
     public long getUpgradePrice(Colony col, City city);

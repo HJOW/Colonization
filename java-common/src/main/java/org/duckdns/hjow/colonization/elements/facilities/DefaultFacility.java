@@ -307,11 +307,10 @@ public abstract class DefaultFacility implements Facility {
     public int getMaxLevel() { return Integer.MAX_VALUE - 1; }
     
     @Override
-    public boolean isUpgradeAvail(Colony col, City city) {
-        if(getLevel() >= getMaxLevel()) return false;
-        if(col.getMoney() < getUpgradePrice(col, city)) return false;
-        
-        return true;
+    public String checkUpgradeAvail(Colony col, City city) {
+    	if(getLevel() >= getMaxLevel()) return "더 이상 증축할 수 없는 시설입니다.";
+        if(col.getMoney() < getUpgradePrice(col, city)) return "예산이 부족하여 증축할 수 없습니다.";
+        return null;
     }
     
     @Override
