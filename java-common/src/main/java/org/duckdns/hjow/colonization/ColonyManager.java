@@ -30,7 +30,6 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.pack.Library;
-import org.duckdns.hjow.colonization.script.ConvertUtil;
 import org.duckdns.hjow.colonization.script.NetObject;
 import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
@@ -42,6 +41,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
 import org.duckdns.hjow.commons.script.MathObject;
 import org.duckdns.hjow.commons.script.ScriptPatternDetector;
+import org.duckdns.hjow.commons.script.ScriptUtil;
 import org.duckdns.hjow.commons.script.SecurityObject;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
@@ -655,13 +655,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     	}
     	
         // 엔진 생성
-        ScriptEngine engine = scriptEngineManager.getEngineByName(scriptLanguage);
-        
-        if(engine == null && ("JavaScript".equals(scriptLanguage) || "js".equals(scriptLanguage) || "ECMAScript".equals(scriptLanguage))) {
-        	scriptLanguage = "nashorn";
-        	engine = scriptEngineManager.getEngineByName(scriptLanguage); // TODO 
-        }
-        
+        ScriptEngine engine = ScriptUtil.newEngine(scriptEngineManager, scriptLanguage);
         if(engine == null) { logGlobals(t("[LANG] 스크립트 엔진 사용 불가").replace("[LANG]", scriptLanguage), 2); return null; }
         
         // 스크립트 실행 (기본함수들 제공)
@@ -1173,7 +1167,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     public static Object evaluate(ScriptEngine engine, String scripts, boolean needConvert) throws ScriptException {
         if(scripts == null) return null;
         checkBannedKeywords(scripts);
-        if(needConvert) scripts = ConvertUtil.convert(scripts, engine.getFactory().getLanguageName());
+        if(needConvert) scripts = ScriptUtil.convert(scripts, engine.getFactory().getLanguageName());
         return engine.eval(scripts);
     }
     
