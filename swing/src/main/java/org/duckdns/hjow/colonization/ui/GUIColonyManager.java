@@ -16,6 +16,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,10 +125,7 @@ public class GUIColonyManager extends ColonyManager {
         
         // LookAndFeel 설정
         if(! flagLookAndFeelInitialized) {
-            String lookAndFeel = configs.getString("LookAndFeel");
-            if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel); }
-            GUIUtil.setLookAndFeel(lookAndFeel.trim());
-            flagLookAndFeelInitialized = true;
+            applyLookAndFeel();
         }
         
         // JFrame 생성
@@ -748,6 +746,39 @@ public class GUIColonyManager extends ColonyManager {
         });
         
         refreshColonyContent();
+    }
+
+    /** 룩앤필 (테마) 적용 */
+    protected void applyLookAndFeel() {
+        String lookAndFeel = configs.getString("LookAndFeel");
+        if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel); }
+        applyLookAndFeel(lookAndFeel);
+    }
+
+    protected void applyLookAndFeel(String lookAndFeel) {
+        if(DataUtil.isEmpty(lookAndFeel)) { lookAndFeel = "Nimbus"; }
+        if(lookAndFeel.equals("FlatDarkLaf") || lookAndFeel.equals("FlatLightLaf") || lookAndFeel.equals("FlatDarculaLaf") || lookAndFeel.equals("FlatIntelliJLaf")) {
+            if(! GUIPreWorks.isFlatLafEnabled()) {
+                lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel);
+                applyLookAndFeel(lookAndFeel);
+                return;
+            }
+
+            // FlatLaf
+            try {
+                Class<?> classFlatLaf = Class.forName("com.formdev.flatlaf." + lookAndFeel); // FlatDarkLaf, FlatLightLaf, FlatDarculaLaf, FlatIntelliJLaf
+                Method mthd = classFlatLaf.getMethod("setup");
+                mthd.invoke(null);
+                flagLookAndFeelInitialized = true;
+                return;
+            } catch(Exception ex) {
+                GlobalLogs.processExceptionOccured(ex, false);
+                lookAndFeel = "Nimbus"; configs.set("LookAndFeel", lookAndFeel);
+            }
+        } else {
+            GUIUtil.setLookAndFeel(lookAndFeel.trim());
+        }
+        flagLookAndFeelInitialized = true;
     }
 
     /** 창이 열리기 전 수행해야 할 작업 */

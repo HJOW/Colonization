@@ -112,6 +112,12 @@ public class ConfigManager implements Disposeable {
         for(LookAndFeelInfo i : infos) {
             lookAndFeels.add(i.getName());
         }
+        if(GUIPreWorks.isFlatLafEnabled()) {
+            lookAndFeels.add("FlatDarkLaf");
+            lookAndFeels.add("FlatLightLaf");
+            lookAndFeels.add("FlatDarculaLaf");
+            lookAndFeels.add("FlatIntelliJLaf");
+        }
         
         cbxLookAndFeel = new JComboBox<String>(lookAndFeels);
         pn.add(cbxLookAndFeel);

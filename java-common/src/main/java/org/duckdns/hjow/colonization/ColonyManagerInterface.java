@@ -18,7 +18,7 @@ public interface ColonyManagerInterface extends Disposeable {
     public void alert(String msg);
     /** 시뮬레이션 정지 */
     public void pauseSimulation();
-    /** 시뮬레이션 재개 */
+    /** 시뮬레이션 재개, cycleCount 에 음수를 입력하면, 별도 정지 명령 시까지 진행, 양수를 넣으면 해당 횟수만큼만 진행 */
     public void resumeSimulation(int cycleCount);
     /** 현재 선택된 정착지의 정보를 JsonObject 으로 반환 */
     public JsonObject getSelectColonyInfo();

@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
-/** ColonyManager 대리자, 일부 필드와 메소드에만 액세스할 수 있도록 제한된 객체를 전달하기 위해 사용, Call by reference */
+/** ColonyManager 대리자, 일부 필드와 메소드에만 액세스할 수 있도록 제한된 객체를 전달하기 위해 사용, Call by reference 형태로 주로 사용 */
 public class ColonyManagerBroker implements ColonyManagerInterface {
     private transient ColonyManager originals;
     public ColonyManagerBroker(ColonyManager originals) {

@@ -126,6 +126,7 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 
 ## Swing 빌드만 해당 (모두 선택사항)
 - sciss SyntaxPane      (See https://codeberg.org/sciss/SyntaxPane/src/branch/main/LICENSE     )
+- FlatLaf               (See https://github.com/JFormDesigner/FlatLaf/blob/main/LICENSE        )
 
 ## Servlet 빌드만 해당
 - Servlet API 2.5       (See https://javaee.github.io/servlet-spec/LICENSE                     )

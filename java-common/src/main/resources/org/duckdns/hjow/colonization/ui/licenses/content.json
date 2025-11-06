@@ -43,5 +43,10 @@
         "name" : "Nashorn",
         "contentType" : "text/html",
         "file" : "nashorn.html"
+    },
+    {
+        "name" : "FlatLaf",
+        "contentType" : "text/html",
+        "file" : "flatlaf.html"
     }
 ]

@@ -12,7 +12,7 @@ import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
-/** Colonization 설정 관리 클래스 */
+/** Colonization 설정 관리 클래스, 이 클래스의 객체는 설정들을 담는 컬렉션으로서도 사용된다. */
 public class ColonyManagerConfig implements Serializable {
     private static final long serialVersionUID = -3527963151987002687L;
     protected Map<String, Object> roots = new HashMap<String, Object>();

@@ -46,7 +46,12 @@ import org.duckdns.hjow.commons.script.SecurityObject;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 
-/** Colonization 프로그램 핵심 클래스 */
+/** 
+ * 게임 매니저 클래스로, 
+ *     Colonization 프로그램 핵심 클래스 
+ * 
+ * 게임 동작에 필요한 설정, 메인 쓰레드, 플래그 변수들을 여기서 관리
+*/
 public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInterface, Serializable {
     private static final long serialVersionUID = -5740844908011980260L;
     

@@ -85,7 +85,10 @@ public class ColonyClassLoader {
         return colonyClassList;
     }
     
-    /** 타입을 받아 그에 맞는 새 정착지 객체 생성, 해당 클래스 정보가 없으면 null 반환 */
+    /** 
+     * 타입을 받아 그에 맞는 새 정착지 객체 생성, 해당 클래스 정보가 없으면 null 반환 
+     * @param typeOrClass 정착지 타입명 혹은 클래스명
+    */
     public static Colony newColonyInstance(String typeOrClass) {
         try {
             for(ColonyInformation info : colonyInfos()) {
@@ -107,7 +110,9 @@ public class ColonyClassLoader {
         return null;
     }
     
-    /** 파일로부터 정착지 객체 읽어 반환 */
+    /** 파일로부터 정착지 객체 읽어 반환
+     * @param f 파일 객체 (확장자가 colgz 인 경우 GZIP 압축 해제 후 읽음)
+    */
     public static Colony loadColony(File f) throws Exception {
         String fileName = f.getName().toLowerCase();
         String strJson;
@@ -122,7 +127,9 @@ public class ColonyClassLoader {
         return loadColony(json);
     }
     
-    /**  JSON 으로부터 정착지 객체 읽어 반환 */
+    /**  JSON 으로부터 정착지 객체 읽어 반환 
+     * @param json JSON 객체
+    */
     public static Colony loadColony(JsonObject json) throws Exception {
         String type = json.get("type").toString();
         
@@ -153,7 +160,11 @@ public class ColonyClassLoader {
     }
     
     private static final List<ScriptFacilityInformation> scriptFacilityInfo = new Vector<ScriptFacilityInformation>();
-    /** 스크립트 Facility 불러오기 */
+    /** 
+     * 스크립트 Facility 불러오기 
+     * @param cfg 프로그램 설정
+     * @param man 게임 매니저 객체
+    */
     protected static void loadScriptFacilities(ColonyManagerConfig cfg, ColonyManager man) {
         // 스크립트 Facility 사용 시 인증이 해제되므로, 설정 먼저 검사
         if(cfg.containsKey("UseCheckDisablingContent") && cfg.getBool("UseCheckDisablingContent")) {
@@ -204,7 +215,11 @@ public class ColonyClassLoader {
         return newList;
     }
     
-    /** 해당 이름의 스크립트 Facility 반환 */
+    /** 
+     * 해당 이름의 스크립트 Facility 반환 
+     * 
+     * @param name 스크립트 기반 시설정보 구분명
+    */
     public static ScriptFacilityInformation getScriptFacilityOne(String name) {
         for(ScriptFacilityInformation s : getScriptFacilityList()) {
             if(s.getName().equals(name)) return s;
@@ -239,8 +254,6 @@ public class ColonyClassLoader {
         
         enemyClassList.clear();
         for(Pack p : packs) { if(p.isEnabled()) enemyClassList.addAll(p.getEnemyClasses()); }
-        
-        // TODO
         
         enemyClassListFlag = true;
         return enemyClassList;
@@ -288,7 +301,11 @@ public class ColonyClassLoader {
         return policyClassList;
     }
     
-    /** 정책 객체 생성 */
+    /** 
+     * 정책 객체 생성
+     * 
+     * @param className 정책 클래스명 혹은 타입명
+     */
     public static Policy createPolicyInstance(String className) {
         for(Class<?> classes : policyClassList) {
             if(! (classes.getSimpleName().equals(className) || classes.getName().equals(className))) continue;
@@ -382,7 +399,10 @@ public class ColonyClassLoader {
         return new File(getHomeLibDir().getAbsolutePath() + File.separator + "packs.txt");
     }
     
-    /** 공통 설정 정보 조회 */
+    /** 
+     * 공통 설정 정보 조회
+     * @param man 게임 매니저 객체
+     */
     public static synchronized void loadWebConfigs(ColonyManager man) {
         try {
             applyWebConfigs(getWebConfigSwing(), man);
@@ -391,7 +411,7 @@ public class ColonyClassLoader {
         }
     }
     
-    /** 공통 웹 설정 정보 적용 */
+    /** 공통 웹 설정 정보 적용 (현재는 아무것도 하지 않음) */
     protected static void applyWebConfigs(JsonObject json, ColonyManager man) throws Exception {
         // TODO
     }
@@ -402,7 +422,7 @@ public class ColonyClassLoader {
       , "org.duckdns.hjow.colonization.addpack.DebugPackInfo"
     };
     
-    /** 예약된 Library 클래스명 배열 반환 */
+    /** 기본 제공되는 Library 클래스명 배열 반환 */
     public static String[] getReservedLibraryClassNames() {
         String[] newArr = new String[RESERVED_LIB_NAMES.length];
         for(int idx=0; idx<newArr.length; idx++) { newArr[idx] = RESERVED_LIB_NAMES[idx]; }
@@ -456,7 +476,12 @@ public class ColonyClassLoader {
         if(modClassName.contains(" ") || modClassName.contains("\t") || modClassName.contains("\n")) throw new KnownRuntimeException(ColonyManager.t("클래스명에는 공백 기호가 들어갈 수 없습니다."));
     }
     
-    /** 클래스 불러오기, Library 나 Pack, Mod 인식. (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) */
+    /** 
+     * 클래스 불러오기, Library 나 Pack, Mod 인식. (선택사항으로, 클래스를 찾을 수 없어도 다음 단계로 넘어감) 
+     * 
+     * @param className 불러올 클래스명, 이 클래스를 불러온 후 Library, Pack, Mode 등을 인식헤 그에 맞게 동작함
+     * @param man 게임 매니저 객체
+    */
     @SuppressWarnings("unchecked")
     protected static void processAddClass(String className, ColonyManager man) {
         Object instances = null;
@@ -517,7 +542,11 @@ public class ColonyClassLoader {
         }
     }
     
-    /** 설정 Map 으로부터 클래스 정보 추출 */
+    /** 
+     * 설정 Map 으로부터 클래스 정보 추출 
+     * 
+     * @param info 설정 정보 객체
+    */
     public static Class<?> loadClassFrom(ColonyManagerConfig info) throws Exception {
         String className = info.getString("name");
         String classUrl  = info.getString("url");
@@ -534,7 +563,7 @@ public class ColonyClassLoader {
         }
     }
     
-    /** Pack 차후 적용 */
+    /** Pack 적용 */
     public static void loadPack(Pack pack) throws Exception {
         if(pack == null) return;
         if(! pack.isEnabled()) return;
