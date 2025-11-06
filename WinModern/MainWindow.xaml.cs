@@ -606,13 +606,30 @@ namespace WinModern
             // Download each libs
             foreach (JObject libOne in libArr)
             {
-                string libUrl  = libOne["url"].ToString();
-                string libName = libOne["name"].ToString();
+                string libUrl   = libOne["url"].ToString();
+                string libName  = libOne["name"].ToString();
+                string condJava = libOne.ContainsKey("java") ? libOne["java"].ToString() : null;
                 string packClassName = null;
 
                 if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { indexes++; continue;  }
                 if (!libUrl.StartsWith("http")) libUrl = ROOTURL + libUrl;
 
+                if (!Util.IsEmpty(condJava))
+                {
+                    string[] splits = condJava.Split('~');
+
+                    string sFront = splits[0].Trim();
+                    string sBack = null;
+
+                    if (splits.Length >= 2) sBack = splits[1].Trim();
+
+                    int front = int.Parse(sFront);
+                    int back = sBack == null ? -1 : int.Parse(sBack);
+
+                    int javaVer = Util.GetJavaVersion(javaBinPath);
+                    if (front >= 1 && javaVer < front) continue;
+                    if (back >= 1 && javaVer > back) continue;
+                }
 
                 SetStatusMessage("라이브러리 " + libName + " 다운로드 중...");
 
