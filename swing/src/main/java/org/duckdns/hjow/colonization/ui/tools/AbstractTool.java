@@ -7,6 +7,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** 도구 (게임 자체와 관련은 적고, 보조를 위한 간이 프로그램) 일부 구현체 */
@@ -20,6 +21,7 @@ public abstract class AbstractTool implements Tool {
         dialog.setSize(getDialogProperWidth(), getDialogProperHeight());
         dialog.setTitle(ColonyManager.t(getTitle()));
         GUIUtil.centerWindow(dialog);
+        dialog.setIconImage(GUIColonyManager.getIcon());
         dialog.setLayout(new BorderLayout());
         
         JPanel pnMain = new JPanel();
