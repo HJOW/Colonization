@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      
+      <module fileurl="file://$PROJECT_DIR$/daemon/colonization-daemon.iml" filepath="$PROJECT_DIR$/daemon/colonization-daemon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/java-web/colonization-servlet.iml" filepath="$PROJECT_DIR$/java-web/colonization-servlet.iml" />
     </modules>
   </component>
 </project>
