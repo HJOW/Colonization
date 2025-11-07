@@ -12,15 +12,17 @@ import org.duckdns.hjow.commons.util.HexUtil;
 public class StaticMethods {
 	/** 바이너리 인코딩 */
     public static String encode(byte[] binary) {
-    	return HexUtil.encode(binary);
+    	return convertBase64AsURLSafe(Base64Util.encode(binary));
+    	// return HexUtil.encode(binary);
     }
     
     /** BASE64 또는 HEX 인코딩된 문자열을 받아, 패턴을 인식하여 BASE64가 맞으면 디코딩해 반환. 그외의 경우 HEX 인코딩으로 판단해 디코딩해 반환. */
     public static byte[] decode(String str) {
     	try {
+    		String mayBeBase64 = recoverBase64Default(str);
     	    Pattern pattern = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
-    	    Matcher matcher = pattern.matcher(str);
-    	    if(matcher.find()) return Base64Util.decode(str);
+    	    Matcher matcher = pattern.matcher(mayBeBase64);
+    	    if(matcher.find()) return Base64Util.decode(mayBeBase64);
     	} catch(Exception ex) {
     		GlobalLogs.processExceptionOccured(ex, false); // 일단 오류 출력 후 HEX 디코딩 시도
     	}
@@ -36,7 +38,17 @@ public class StaticMethods {
     }
     
     /** 인코딩된 문자열 디코딩 */
-    public static String decodeString(String hexString) {
-    	try { return new String(decode(hexString), "UTF-8"); } catch(UnsupportedEncodingException e) { throw new RuntimeException(e.getMessage(), e); }
+    public static String decodeString(String str) {
+    	try { return new String(decode(str), "UTF-8"); } catch(UnsupportedEncodingException e) { throw new RuntimeException(e.getMessage(), e); }
+    }
+    
+    /** BASE64 문자열을 URL Safe 하게 변환 */
+    public static String convertBase64AsURLSafe(String base64Str) {
+    	return base64Str.replace("+", "-").replace("/", "_").replace("=", ".");
+    }
+    
+    /** BASE64 URL Safe 처리된 문자열을 기존 BASE64 문자열로 변환 */
+    public static String recoverBase64Default(String urlSafeBase64) {
+    	return urlSafeBase64.replace("-", "+").replace("_", "/").replace(".", "=");
     }
 }
