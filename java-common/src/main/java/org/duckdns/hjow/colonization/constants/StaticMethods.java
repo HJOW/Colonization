@@ -12,7 +12,7 @@ import org.duckdns.hjow.commons.util.HexUtil;
 public class StaticMethods {
 	/** 바이너리 인코딩 */
     public static String encode(byte[] binary) {
-    	return convertBase64AsURLSafe(Base64Util.encode(binary));
+    	return Base64Util.convertBase64AsURLSafe(Base64Util.encode(binary));
     	// return HexUtil.encode(binary);
     }
     
@@ -20,7 +20,7 @@ public class StaticMethods {
     public static byte[] decode(String str) {
     	try {
     		String mayBeBase64 = str;
-    		if(str.contains("-") || str.contains("_") || str.contains(".")) mayBeBase64 = recoverBase64Default(str);
+    		if(str.contains("-") || str.contains("_") || str.contains(".")) mayBeBase64 = Base64Util.recoverBase64Default(str);
     		
     	    Pattern pattern = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
     	    Matcher matcher = pattern.matcher(mayBeBase64);
@@ -43,15 +43,5 @@ public class StaticMethods {
     /** 인코딩된 문자열 디코딩 */
     public static String decodeString(String str) {
     	try { return new String(decode(str), "UTF-8"); } catch(UnsupportedEncodingException e) { throw new RuntimeException(e.getMessage(), e); }
-    }
-    
-    /** BASE64 문자열을 URL Safe 하게 변환 */
-    public static String convertBase64AsURLSafe(String base64Str) { // TODO 공통 lib 로 이관
-    	return base64Str.replace("+", "-").replace("/", "_").replace("=", ".");
-    }
-    
-    /** BASE64 URL Safe 처리된 문자열을 기존 BASE64 문자열로 변환 */
-    public static String recoverBase64Default(String urlSafeBase64) { // TODO 공통 lib 로 이관
-    	return urlSafeBase64.replace("-", "+").replace("_", "/").replace(".", "=");
     }
 }

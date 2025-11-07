@@ -27,12 +27,12 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 
-import org.duckdns.hjow.addutils.ClassUtilx;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
@@ -421,7 +421,7 @@ public class ConfigManager implements Disposeable {
     	}
     	
     	// 현재 클래스패스 목록에 있는 Pack 모두 찾기
-    	Set<Class<?>> children = ClassUtilx.getChildClasses(Pack.class, false);
+    	Set<Class<?>> children = ClassUtil.getChildClasses(Pack.class, false);
     	for(Class<?> child : children) {
     		String name = child.getName();
     		if(alreadyIn.contains(name)) continue;
