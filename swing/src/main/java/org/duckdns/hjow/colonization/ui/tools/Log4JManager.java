@@ -81,6 +81,8 @@ public class Log4JManager extends AbstractTool {
         taSample = new JEditorPane();
         taSample.setEditable(false);
         taSample.setText(GlobalLogs.getSampleLog4jXml());
+        if(GUIPreWorks.isSyntaxPaneEnabled()) taSample.setContentType("text/xml");
+        else taSample.setContentType("text/plain");
         splitSample.setRightComponent(new JScrollPane(taSample));
         
         JPanel pnSampleCreateRoot = new JPanel();
