@@ -7,6 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -24,9 +27,11 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 
+import org.duckdns.hjow.addutils.ClassUtilx;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
@@ -45,7 +50,7 @@ public class ConfigManager implements Disposeable {
     public ConfigManager(GUIColonyManager superInstance) {
         this.superInstance = superInstance;
         dialog = new JDialog(superInstance.getDialog(), true);
-        dialog.setSize(400, 350);
+        dialog.setSize(750, 450);
         dialog.setTitle(ColonyManager.t("설정"));
         GUIUtil.centerWindow(dialog);
         dialog.setIconImage(GUIColonyManager.getIcon());
@@ -383,6 +388,7 @@ public class ConfigManager implements Disposeable {
         if(packClassFile.exists()) {
             try {
                 packClasses = FileUtil.readString(packClassFile, "UTF-8");
+                packClasses = additionalProcessPackClass(packClasses);
             } catch(Exception ex) {
                 caused = ex;
             }
@@ -395,6 +401,39 @@ public class ConfigManager implements Disposeable {
         dialog.setVisible(true);
         
         if(caused != null) JOptionPane.showMessageDialog(dialog, ColonyManager.t("Error") + " : " + caused.getMessage());
+    }
+    
+    /** packs.txt 파일 불러올 때 추가 작업 */
+    protected String additionalProcessPackClass(String packClassContent) {
+    	String res = DataUtil.remove65279(packClassContent); // 악마의 글자 65279 제거
+    	String addPart = "";
+    	
+    	// 내용에 포함된 클래스 목록 추리기
+    	Set<String> everyLine = new HashSet<String>();
+    	Set<String> alreadyIn = new HashSet<String>();
+    	StringTokenizer lineTokenizer = new StringTokenizer(res, "\n");
+    	while(lineTokenizer.hasMoreTokens()) {
+    		String classOne = lineTokenizer.nextToken().trim();
+    		everyLine.add(classOne);
+    		
+    		if(classOne.startsWith("#")) continue;
+    		alreadyIn.add(classOne);
+    	}
+    	
+    	// 현재 클래스패스 목록에 있는 Pack 모두 찾기
+    	Set<Class<?>> children = ClassUtilx.getChildClasses(Pack.class, false);
+    	for(Class<?> child : children) {
+    		String name = child.getName();
+    		if(alreadyIn.contains(name)) continue;
+    		if(name.startsWith("org.duckdns.hjow.colonization.pack.")) continue;
+    		
+    		String additionalComment = "# " + name;
+    		if(everyLine.contains(additionalComment)) continue;
+    		
+    		addPart += "\n" + additionalComment;
+    	}
+    	
+    	return (res + addPart).trim();
     }
     
     /** 설정 창 닫기 */

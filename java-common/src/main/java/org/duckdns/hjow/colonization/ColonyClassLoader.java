@@ -441,7 +441,7 @@ public class ColonyClassLoader {
         // Pack class file 탐색
         File libDir = man.getColonyLibRootDirectory();
         if(! libDir.exists()) libDir.mkdirs();
-        File packClassFile = new File(libDir.getAbsolutePath() + File.separator + "packs.txt");
+        File packClassFile = getLibPackClassFile();
         if(packClassFile.exists()) {
             try {
                 String packClassContent = FileUtil.readString(packClassFile, "UTF-8");

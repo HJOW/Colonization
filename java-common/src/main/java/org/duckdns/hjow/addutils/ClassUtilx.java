@@ -156,8 +156,12 @@ public class ClassUtilx { // TODO 공통 lib 으로 이관
         	    if(initialize) classOne = forName(className, true); // 초기화 필요 시, 다시 불러오기
                 classSet.add(classOne);
         	} catch(ClassNotFoundException ex) {
-        		System.out.println(className);
-        	} catch(Exception ex) {
+        		System.out.println(className + " not found !");
+        	} catch(NoClassDefFoundError ex) {
+        		System.out.println(className + " cannot be load ! " + ex.getMessage());
+        	} catch(UnsupportedClassVersionError ex) {
+        		System.out.println(className + " class version is unsupported !" + ex.getMessage());
+        	} catch(Throwable ex) {
         	    throw new RuntimeException(ex.getMessage(), ex);
         	}
         }
