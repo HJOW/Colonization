@@ -676,11 +676,10 @@ namespace WinModern
             File.Delete(packListFile);
             using (StreamWriter writer = new StreamWriter(packListFile, false, Encoding.UTF8))
             {
-                writer.Write(packListComments);
+                writer.WriteLine(packListComments);
                 foreach (string line in packClassList)
                 {
-                    writer.Write("\n");
-                    writer.Write(line);
+                    writer.WriteLine(line);
                 }
             }
 

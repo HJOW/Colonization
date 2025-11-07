@@ -224,6 +224,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             File conf = new File(root.getAbsolutePath() + File.separator + "config.json");
             if(conf.exists()) {
                 String strJson = FileUtil.readString(conf, "UTF-8"); // 파일 읽고
+                strJson = DataUtil.remove65279(strJson);
+                
                 JsonObject json = (JsonObject) JsonObject.parseJson(strJson); // JSON 파싱
                 configs.fromJson(json); // 설정 넣기
             } else {
@@ -290,6 +292,8 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
             
             // 읽고 파싱
             String reads = FileUtil.readString(fileStorage, "UTF-8");
+            reads = DataUtil.remove65279(reads);
+            
             JsonObject json = (JsonObject) JsonObject.parseJson(reads);
             
             storage.clear();
@@ -624,6 +628,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
                 
                 // 스크립트 불러오기
                 String scripts = FileUtil.readString(f, "UTF-8");
+                scripts = DataUtil.remove65279(scripts);
                 
                 // 리플렉션 존재여부 체크
                 checkBannedKeywords(scripts);

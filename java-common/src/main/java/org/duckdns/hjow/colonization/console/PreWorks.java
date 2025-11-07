@@ -86,15 +86,15 @@ public class PreWorks {
             
             while(lineTokenizer.hasMoreTokens()) {
                 String line = lineTokenizer.nextToken().trim();
+                line = DataUtil.remove65279(line);
                 if(line.startsWith("#")) {
                     packClassComments += "\n" + line;
-                    continue;
+                } else {
+                	packClasses.add(line);
                 }
-                
-                packClasses.add(line);
             }
-            packClassComments = packClassComments.trim();
         }
+        packClassComments = packClassComments.trim();
         
         // lib 폴더 안에 들어갈 파일 다운로드
         JsonArray libs = (JsonArray) jsonConfigSwing.get("libs");
@@ -137,7 +137,7 @@ public class PreWorks {
                 }
                 
             } catch(Exception ex) {
-                ex.printStackTrace(); // UI 초기화 전이므로 표준 출력 사용
+                GlobalLogs.processExceptionOccured(ex, true);
             }
         }
         

@@ -122,6 +122,7 @@ public class ColonyClassLoader {
         } else {
             strJson = FileUtil.readString(f, "UTF-8");
         }
+        strJson = DataUtil.remove65279(strJson);
         
         JsonObject json = (JsonObject) JsonObject.parseJson(strJson);
         return loadColony(json);
@@ -188,6 +189,7 @@ public class ColonyClassLoader {
                 try {
                     // 스크립트 읽기
                     String scripts = FileUtil.readString(f, "UTF-8");
+                    scripts = DataUtil.remove65279(scripts);
                     
                     // 엔진 준비
                     ScriptEngine engine = man.newScriptEngine();
@@ -443,6 +445,7 @@ public class ColonyClassLoader {
         if(packClassFile.exists()) {
             try {
                 String packClassContent = FileUtil.readString(packClassFile, "UTF-8");
+                packClassContent = DataUtil.remove65279(packClassContent);
                 StringTokenizer lineTokenizer = new StringTokenizer(packClassContent, "\n");
                 while(lineTokenizer.hasMoreTokens()) {
                     String line = lineTokenizer.nextToken().trim();
