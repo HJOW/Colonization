@@ -152,6 +152,7 @@ public class PreWorks {
         for(String str : packClasses) {
             packRebuild = packRebuild.append("\n").append(str);
         }
+        packClassFile.delete();
         FileUtil.writeString(packClassFile, "UTF-8", packRebuild.toString().trim());        
     }
     

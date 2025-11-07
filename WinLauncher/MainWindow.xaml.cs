@@ -202,9 +202,6 @@ namespace WinLauncher
                     {
                         installNeeded = true;
                         statusMsg = "Java Runtime 다운로드가 필요합니다.";
-                        Console.WriteLine(statusMsg);
-                        Console.WriteLine(javaPath);
-                        Console.WriteLine(javaBinPath);
 
                         SetStatusMessage("설치되어 있는 Java Runtime 은 Colonization 과 호환되지 않습니다.");
                     }
@@ -274,6 +271,24 @@ namespace WinLauncher
 
                         if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { continue; }
                         SetStatusMessage("라이브러리 " + libName + " 확인 중...");
+
+                        string condJava = libOne.ContainsKey("java") ? libOne["java"].ToString() : null;
+                        if (!Util.IsEmpty(condJava))
+                        {
+                            string[] splits = condJava.Split('~');
+
+                            string sFront = splits[0].Trim();
+                            string sBack = null;
+
+                            if (splits.Length >= 2) sBack = splits[1].Trim();
+
+                            int front = int.Parse(sFront);
+                            int back = sBack == null ? -1 : int.Parse(sBack);
+
+                            int javaVer = Util.GetJavaVersion(javaBinPath);
+                            if (front >= 1 && javaVer < front) continue;
+                            if (back >= 1 && javaVer > back) continue;
+                        }
 
                         string localFile = libDir + System.IO.Path.DirectorySeparatorChar + libName;
                         if(! File.Exists(localFile))
@@ -593,6 +608,7 @@ namespace WinLauncher
                     packClassList.Add(line);
                 }
             }
+            packListComments = packListComments.Trim();
             packClassListAll = "";
             
             SetStatusMessage("추가 라이브러리 다운로드 중...");
@@ -651,20 +667,20 @@ namespace WinLauncher
             }
 
             // Check comments on pack class list files
-            if (packListComments == null) packListComments = "";
-            else packListComments = packListComments.Trim();
             if (string.IsNullOrEmpty(packListComments))
             {
                 packListComments = "# 불러올 Pack 의 class name 을 이 파일에 기재해 주세요. 한줄에 하나씩 입력해 주세요. # 기호로 시작하는 줄은 무시됩니다.";
             }
 
             // Re-write pack class list files
+            File.Delete(packListFile);
             using (StreamWriter writer = new StreamWriter(packListFile, false, Encoding.UTF8))
             {
-                writer.WriteLine(packListComments);
+                writer.Write(packListComments);
                 foreach (string line in packClassList)
                 {
-                    writer.WriteLine(line);
+                    writer.Write("\n");
+                    writer.Write(line);
                 }
             }
 
