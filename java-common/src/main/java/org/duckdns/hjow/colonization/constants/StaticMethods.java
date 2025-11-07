@@ -19,9 +19,12 @@ public class StaticMethods {
     /** BASE64 또는 HEX 인코딩된 문자열을 받아, 패턴을 인식하여 BASE64가 맞으면 디코딩해 반환. 그외의 경우 HEX 인코딩으로 판단해 디코딩해 반환. */
     public static byte[] decode(String str) {
     	try {
-    		String mayBeBase64 = recoverBase64Default(str);
+    		String mayBeBase64 = str;
+    		if(str.contains("-") || str.contains("_") || str.contains(".")) mayBeBase64 = recoverBase64Default(str);
+    		
     	    Pattern pattern = Pattern.compile("^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?$");
     	    Matcher matcher = pattern.matcher(mayBeBase64);
+    	    
     	    if(matcher.find()) return Base64Util.decode(mayBeBase64);
     	} catch(Exception ex) {
     		GlobalLogs.processExceptionOccured(ex, false); // 일단 오류 출력 후 HEX 디코딩 시도
