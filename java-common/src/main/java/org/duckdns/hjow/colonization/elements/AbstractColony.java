@@ -14,6 +14,7 @@ import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -33,7 +34,6 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.stream.SimultaneousWork;
 import org.duckdns.hjow.commons.stream.SingleAction;
 import org.duckdns.hjow.commons.util.FileUtil;
-import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.commons.util.SecurityUtil;
 
 /** 정착지 구현 공통 클래스 */
@@ -963,16 +963,16 @@ public abstract class AbstractColony implements Colony {
         json.put("maxHp", String.valueOf(getMaxHp()));
         
         if(details) {
-            json.put("statusString", HexUtil.encodeString(getStatusString(null)));
+            json.put("statusString", StaticMethods.encodeString(getStatusString(null)));
         }
         
         if(details) {
             String str = getStatusString(null);
             if(str == null) str = "";
-            json.put("statusString", HexUtil.encodeString(str));
+            json.put("statusString", StaticMethods.encodeString(str));
             
             str = getDateString();
-            json.put("dates", HexUtil.encodeString(str));
+            json.put("dates", StaticMethods.encodeString(str));
         }
         
         return json;

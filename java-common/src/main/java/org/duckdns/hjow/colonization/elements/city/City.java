@@ -14,6 +14,7 @@ import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
@@ -39,7 +40,6 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.util.HexUtil;
 
 /** 도시 구현 클래스 */
 public abstract class City implements ColonyElements {
@@ -1124,7 +1124,7 @@ public abstract class City implements ColonyElements {
         json.put("spaceLeft", new Integer(getLeftSpaces()));
         
         if(details) {
-            json.put("statusString", HexUtil.encodeString(getStatusString(col, null)));
+            json.put("statusString", StaticMethods.encodeString(getStatusString(col, null)));
         }
         
         return json;

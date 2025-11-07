@@ -30,12 +30,12 @@ import javax.swing.SwingUtilities;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
-import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.commons.util.NetUtil;
 
 public class ServletClientPanel extends JPanel implements Disposeable {
@@ -552,7 +552,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
             loginPacket.put("pw", strPw);
             
             String loginPacketContent = loginPacket.toJSON();
-            parameters.put("login" , HexUtil.encodeString(loginPacketContent));
+            parameters.put("login" , StaticMethods.encodeString(loginPacketContent));
                     
             String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
             JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());
@@ -661,7 +661,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
             loginPacket.put("name", nm);
             
             String loginPacketContent = loginPacket.toJSON();
-            parameters.put("login" , HexUtil.encodeString(loginPacketContent));
+            parameters.put("login" , StaticMethods.encodeString(loginPacketContent));
                     
             String responseString = NetUtil.sendPost(urls, parameters, "application/json", "UTF-8");
             JsonObject responseJson = (JsonObject) JsonObject.parseJson(responseString.trim());

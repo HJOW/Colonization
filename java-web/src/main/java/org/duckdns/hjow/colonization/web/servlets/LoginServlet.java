@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.web.accounts.Account;
@@ -35,7 +36,7 @@ public class LoginServlet extends CommonServlet {
             if(svSub1 == null) throw new RuntimeException("No sub keyword !");
             if(svSub1.equalsIgnoreCase("login")) {
                 String strLoginPacket1 = getParameter(req, "login");
-                String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
+                String strLoginPacket2 = StaticMethods.decodeString(strLoginPacket1);
                 
                 JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
                 
@@ -62,7 +63,7 @@ public class LoginServlet extends CommonServlet {
                 
                 Map<String, Object> headerContent = new HashMap<String, Object>();
                 String jwt = AccountUtil.buildJWT(acc, headerContent);
-                jwt = HexUtil.encodeString(jwt);
+                jwt = StaticMethods.encodeString(jwt);
                 
                 resp.setHeader("jwt", jwt);
                 responses.put("token", jwt);
@@ -86,7 +87,7 @@ public class LoginServlet extends CommonServlet {
                     responses.put("message", "No JWT token !");
                     responses.put("result", new Boolean(false));
                 } else {
-                    jwtMaybe = HexUtil.decodeString(jwtMaybe);
+                    jwtMaybe = StaticMethods.decodeString(jwtMaybe);
                     Account acc = AccountUtil.verifyJWT(jwtMaybe);
                     if(acc == null) {
                         responses.put("success", new Boolean(true));
@@ -103,7 +104,7 @@ public class LoginServlet extends CommonServlet {
                 }
             } else if(svSub1.equals("join")) {
                 String strLoginPacket1 = getParameter(req, "login");
-                String strLoginPacket2 = HexUtil.decodeString(strLoginPacket1);
+                String strLoginPacket2 = StaticMethods.decodeString(strLoginPacket1);
                 
                 JsonObject json = (JsonObject) JsonObject.parseJson(strLoginPacket2);
                 

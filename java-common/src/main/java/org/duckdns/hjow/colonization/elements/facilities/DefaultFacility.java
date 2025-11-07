@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
@@ -19,7 +20,6 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
-import org.duckdns.hjow.commons.util.HexUtil;
 
 public abstract class DefaultFacility implements Facility {
     private static final long serialVersionUID = 8012568139388326869L;
@@ -264,7 +264,7 @@ public abstract class DefaultFacility implements Facility {
         if(details) {
             String str = getStatusDescription(city, col);
             if(str == null) str = "";
-            json.put("statusString", HexUtil.encodeString(str));
+            json.put("statusString", StaticMethods.encodeString(str));
         }
         
         return json;

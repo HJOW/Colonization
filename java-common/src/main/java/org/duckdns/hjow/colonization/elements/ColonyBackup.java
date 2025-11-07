@@ -10,11 +10,11 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.duckdns.hjow.commons.json.JsonArray;
-import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
+import org.duckdns.hjow.commons.json.JsonArray;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 정착지 백업 객체를 위한 클래스, 정착지 목록과 이름, 설명, 생성일자를 포함 */
 public class ColonyBackup implements Serializable {
@@ -76,14 +76,14 @@ public class ColonyBackup implements Serializable {
             String hexStr   = json.get("list").toString().trim();
             
             try {
-                byte[] decoded = HexUtil.decode(hexStr);
+                byte[] decoded = StaticMethods.decode(hexStr);
                 hexStr = null;
                 
                 // 비밀번호 해싱
                 String padded = getHashLeftSalt(ver) + password + getHashRightSalt(ver);
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] pwdigested = digest.digest(padded.getBytes("UTF-8"));
-                String pwencoded  = HexUtil.encode(pwdigested).substring(0, 32);
+                String pwencoded  = StaticMethods.encode(pwdigested).substring(0, 32);
                 pwdigested = null;
                 
                 // 복호화
@@ -167,7 +167,7 @@ public class ColonyBackup implements Serializable {
                 String padded = getHashLeftSalt(ver) + password + getHashRightSalt(ver);
                 MessageDigest digest = MessageDigest.getInstance("SHA-256");
                 byte[] pwdigested = digest.digest(padded.getBytes("UTF-8"));
-                String pwencoded  = HexUtil.encode(pwdigested).substring(0, 32);
+                String pwencoded  = StaticMethods.encode(pwdigested).substring(0, 32);
                 pwdigested = null;
                 
                 // 암호화
@@ -179,7 +179,7 @@ public class ColonyBackup implements Serializable {
                 list = null;
                 binaries = null;
                 
-                String hexStr = HexUtil.encode(ciphered);
+                String hexStr = StaticMethods.encode(ciphered);
                 ciphered = null;
                 cipher = null;
                 

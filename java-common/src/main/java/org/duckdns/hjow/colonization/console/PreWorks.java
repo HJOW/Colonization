@@ -234,8 +234,8 @@ public class PreWorks {
         
         // cp 작성
         String separator = ":";
-        if(ColonyManager.isWindowsOS()) separator = ";";
-        int javaVer = ColonyManager.getJavaMajorVersion();
+        if(ClassUtil.isWindowsOS()) separator = ";";
+        int javaVer = ClassUtil.getJavaMajorVersion();
         
         StringBuilder cpValue = new StringBuilder("");
         cpValue = cpValue.append(targetToRun.getAbsolutePath());

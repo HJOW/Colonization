@@ -22,6 +22,7 @@ import org.apache.logging.log4j.Logger;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManagerConfig;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
@@ -29,7 +30,6 @@ import org.duckdns.hjow.colonization.web.db.DBUtil;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
-import org.duckdns.hjow.commons.util.HexUtil;
 
 public abstract class CommonServlet extends HttpServlet {
     private static final long serialVersionUID = -9127592158446596240L;
@@ -136,7 +136,7 @@ public abstract class CommonServlet extends HttpServlet {
         String jwt = req.getHeader("jwt");
         if(jwt == null || "".equals(jwt)) {
             try { jwt = getParameter(req, "jwt"); } catch(Exception ex) { throw new RuntimeException(ex.getMessage(), ex); }
-            if(jwt != null) jwt = HexUtil.decodeString(jwt); // 매개변수의 경우 HEX로 인코딩된 값이 넘어올 테니 디코딩해 사용
+            if(jwt != null) jwt = StaticMethods.decodeString(jwt); // 매개변수의 경우 HEX로 인코딩된 값이 넘어올 테니 디코딩해 사용
         }
         if(jwt == null || "".equals(jwt)) {
             return null;
@@ -155,7 +155,7 @@ public abstract class CommonServlet extends HttpServlet {
         String jwt = req.getHeader("jwt"); // 먼저 헤더에 있는지 체크
         if(jwt == null) {
             jwt = getParameter(req, "jwt"); // 헤더에 없으면 매개변수에 있는지 체크
-            if(jwt != null) jwt = HexUtil.decodeString(jwt); // 매개변수의 경우 HEX로 인코딩된 값이 넘어올 테니 디코딩해 사용
+            if(jwt != null) jwt = StaticMethods.decodeString(jwt); // 매개변수의 경우 HEX로 인코딩된 값이 넘어올 테니 디코딩해 사용
         }
         
         if(jwt != null) {

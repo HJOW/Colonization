@@ -5,18 +5,18 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Vector;
 
-import org.duckdns.hjow.commons.exception.KnownRuntimeException;
-import org.duckdns.hjow.commons.json.JsonArray;
-import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.util.HexUtil;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
+import org.duckdns.hjow.commons.json.JsonArray;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 시민 구현 클래스 */
 public class Citizen implements ColonyElements {
@@ -436,7 +436,7 @@ public class Citizen implements ColonyElements {
         if(details) {
             String str = getStatusString(city, col, null);
             if(str == null) str = "";
-            json.put("statusString", HexUtil.encodeString(str));
+            json.put("statusString", StaticMethods.encodeString(str));
         }
         
         return json;
