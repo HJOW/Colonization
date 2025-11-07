@@ -86,6 +86,10 @@ Java 기반 Daemon 입니다.
 ## 추가 Pack 개발용 샘플 프로젝트 (java-addpacks)
 추가 Pack (새로운 문명 타입, 새 시설과 연구 등 포함) 개발을 위한 샘플 프로젝트입니다.    
 Eclipse 사용 개발 시 Kotlin 확장 플러그인이 필요합니다.    
+
+## Python Launcher (swing-py) - Deprecated
+리눅스, 맥 환경에서 Swing 빌드 실행을 위한 파이썬 스크립트 개발 프로젝트였으나    
+맥에서 파이썬 설치 난이도 때문에, 더 이상 사용하지 않습니다.    
     
 ## 기타 파일
 ### packages.zip
