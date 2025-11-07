@@ -68,12 +68,24 @@ public class ClassUtilx { // TODO 공통 lib 으로 이관
     private static Set<String> getClassNamesFromDirectory(File dir, String packageName) {
     	Set<String> list = new HashSet<String>();
     	File[] files = dir.listFiles();
+    	
     	for(File f : files) {
     		if(f.isDirectory()) {
     			list.addAll(getClassNamesFromDirectory(f, packageName + f.getName() + "."));
     		} else {
     			String name = f.getName();
     			if(! name.toLowerCase().endsWith(".class")) continue;
+    			name = packageName + name.trim(); // 클래스 풀네임이 필요하므로, 앞에 패키지명 추가
+    			
+    			// 확장자 제거
+    	    	name = name.substring(0, name.length() - 6);
+    	    	
+    	    	// $ 기호 있는 경우 뒷부분 자르기
+    	    	if(name.contains("$")) {
+    	    		int dollorIndex = name.indexOf("$");
+    	    		name = name.substring(0, dollorIndex);
+    	    	}
+    			
     			list.add(name);
     		}
     	}
@@ -117,5 +129,38 @@ public class ClassUtilx { // TODO 공통 lib 으로 이관
     		ClassUtil.closeAll(jarInst);
     	}
     	return list;
+    }
+    
+    /** 클래스 이름으로 클래스 객체 불러오기, 초기화 (static 블록 호출) 여부 지정 가능. (주의 ! 반환된 Class 객체가 나타내는 대상이 클래스가 아닌, 인터페이스나 어노테이션일 수도 있음.) */
+    public static Class<?> forName(String className, boolean initialize) throws ClassNotFoundException {
+    	ClassLoader loader = Thread.currentThread().getContextClassLoader();
+    	return Class.forName(className, initialize, loader);
+    }
+    
+    /** 해당 클래스/인터페이스의 자식 클래스들 모두 찾기 (반환되는 목록에서는 인터페이스와 어노테이션은 제외됨) */
+    public static Set<Class<?>> getChildClasses(Class<?> parent, boolean initialize) {
+    	Set<Class<?>> classSet = new HashSet<Class<?>>();
+        for(String className : getAllClassNames()) {
+        	try {
+        	    Class<?> classOne = forName(className, false); // 일단 초기화하지 않고 불러오기
+        	    if(classOne.isInterface() ) continue; // 인터페이스 건너뛰기
+        	    if(classOne.isAnnotation()) continue; // 어노테이션 건너뛰기
+        	    
+        	    // 부모관계 아니면 건너뛰기
+        	    if(parent.isInterface()) {
+        	    	if(! parent.isAssignableFrom(classOne)) continue;
+        	    } else {
+        	    	if(! parent.isInstance(classOne)) continue;
+        	    }
+        	    
+        	    if(initialize) classOne = forName(className, true); // 초기화 필요 시, 다시 불러오기
+                classSet.add(classOne);
+        	} catch(ClassNotFoundException ex) {
+        		System.out.println(className);
+        	} catch(Exception ex) {
+        	    throw new RuntimeException(ex.getMessage(), ex);
+        	}
+        }
+        return classSet;
     }
 }
