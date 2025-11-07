@@ -509,6 +509,7 @@ public class BackupManager implements Disposeable {
                 bak.fromJson(json, new String(tfPassword.getPassword()));
                 
                 colonies = bak.getColonies();
+                refreshColonyCheckboxes();
             } catch(Exception ex) {
                 throw new RuntimeException(ex.getMessage(), ex);
             }
