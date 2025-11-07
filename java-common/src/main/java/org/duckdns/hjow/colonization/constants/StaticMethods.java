@@ -43,12 +43,12 @@ public class StaticMethods {
     }
     
     /** BASE64 문자열을 URL Safe 하게 변환 */
-    public static String convertBase64AsURLSafe(String base64Str) {
+    public static String convertBase64AsURLSafe(String base64Str) { // TODO 공통 lib 로 이관
     	return base64Str.replace("+", "-").replace("/", "_").replace("=", ".");
     }
     
     /** BASE64 URL Safe 처리된 문자열을 기존 BASE64 문자열로 변환 */
-    public static String recoverBase64Default(String urlSafeBase64) {
+    public static String recoverBase64Default(String urlSafeBase64) { // TODO 공통 lib 로 이관
     	return urlSafeBase64.replace("-", "+").replace("_", "/").replace(".", "=");
     }
 }
