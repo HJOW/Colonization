@@ -646,14 +646,17 @@ namespace WinLauncher
                     if (back >= 1 && javaVer > back) continue;
                 }
 
-
-                SetStatusMessage("라이브러리 " + libName + " 다운로드 중...");
-
-                using (System.Net.WebClient client = new System.Net.WebClient())
+                string libFile = libDir + System.IO.Path.DirectorySeparatorChar + libName;
+                if (!File.Exists(libFile))
                 {
-                    client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
-                    client.DownloadFile(libUrl, libDir + System.IO.Path.DirectorySeparatorChar + libName);
-                    SetStatusMessage("다운로드 완료 : " + libDir + System.IO.Path.DirectorySeparatorChar + libName);
+                    SetStatusMessage("라이브러리 " + libName + " 다운로드 중...");
+
+                    using (System.Net.WebClient client = new System.Net.WebClient())
+                    {
+                        client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(DownloadProgressChanged);
+                        client.DownloadFile(libUrl, libFile);
+                        SetStatusMessage("다운로드 완료 : " + libFile);
+                    }
                 }
 
                 if (libOne["pack"] != null)
