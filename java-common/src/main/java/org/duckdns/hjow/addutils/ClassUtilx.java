@@ -11,6 +11,7 @@ import java.util.jar.JarFile;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.util.ClassUtil;
 
+/** 공통 lib 의 ClassUtil 에 추가할 메소드들 임시 모음집 */
 public class ClassUtilx { // TODO 공통 lib 으로 이관
 	
 	/** 현재 이 런타임의 클래스패스들을 반환 */
@@ -49,7 +50,7 @@ public class ClassUtilx { // TODO 공통 lib 으로 이관
     	return list;
     }
     
-    /** 해당 디렉토리로부터 클래스 이름들을 찾아 반환 */
+    /** 해당 디렉토리로부터 클래스 이름들을 찾아 반환. 이 디렉토리를 해당 클래스패스 경로로 생각하고 인식하므로, 안에 있는 다른 리소스 파일이나 jar 파일은 읽지 않음. */
     public static Set<String> getClassNamesFromDirectory(File dir) {
     	if(! dir.exists()) throw new KnownRuntimeException("There is no directory ! " + dir.getAbsolutePath());
     	if(! dir.isDirectory()) throw new KnownRuntimeException("This is not a directory ! " + dir.getAbsolutePath());
@@ -82,6 +83,8 @@ public class ClassUtilx { // TODO 공통 lib 으로 이관
     
     /** 해당 jar 파일로부터 클래스 이름들을 찾아 반환 */
     public static Set<String> getClassNamesFromJar(File jarFile) {
+    	if(! jarFile.exists()) throw new KnownRuntimeException("There is no jar ! " + jarFile.getAbsolutePath());
+    	if(jarFile.isDirectory()) throw new KnownRuntimeException("This is not a file ! " + jarFile.getAbsolutePath());
     	Set<String> list = new HashSet<String>();
     	
     	JarFile jarInst = null;
