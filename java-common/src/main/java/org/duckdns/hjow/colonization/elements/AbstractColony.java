@@ -196,6 +196,14 @@ public abstract class AbstractColony implements Colony {
     public long getClientBuildNo() {
         return new Long(clientBuildNo);
     }
+    
+    /** 버전 정보 리셋 */
+    @Override
+    public void resetClientVersion(ColonyManagerUI man) {
+    	if(man == null) throw new NullPointerException();
+    	clientVersion = ColonyManager.getVersionString();
+        clientBuildNo = String.valueOf(ColonyManager.BUILD_NO);
+    }
 
     /** 이 정착지 내 도시들 반환 */
     public List<City> getCities() {
@@ -1125,16 +1133,16 @@ public abstract class AbstractColony implements Colony {
     @Override
     public BigInteger getCheckerValue() {
         BigInteger res = new BigInteger(String.valueOf(getKey()));
-        for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx)))); }
-        for(int idx=0; idx<clientVersion.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientVersion.charAt(idx)))); }
-        for(int idx=0; idx<clientBuildNo.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientBuildNo.charAt(idx))).multiply(Constants.BIGINTEGER_31)); }
-        res = res.add(getMoneyTotals()).multiply(Constants.BIGINTEGER_23);
-        res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3));
-        res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17));
+        for(int idx=0; idx<getName().length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) getName().charAt(idx))).multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); }
+        for(int idx=0; idx<clientVersion.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientVersion.charAt(idx))).multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); }
+        for(int idx=0; idx<clientBuildNo.length(); idx++) { res = res.add(new BigInteger(String.valueOf((int) clientBuildNo.charAt(idx))).multiply(Constants.BIGINTEGER_31.multiply(ColonyManager.getCheckerConst(getClientBuildNo())))); }
+        res = res.add(getMoneyTotals()).multiply(Constants.BIGINTEGER_23.multiply(ColonyManager.getCheckerConst(getClientBuildNo())));
+        res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3.multiply(ColonyManager.getCheckerConst(getClientBuildNo()))));
+        res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17.multiply(ColonyManager.getCheckerConst(getClientBuildNo()))));
         
-        for(City c : getCities())    { res = res.add(c.getCheckerValue()); if(c instanceof CustomElement) res = BigInteger.ZERO; }
-        for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue()); if(l instanceof CustomElement) res = BigInteger.ZERO; }
-        for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue()); if(l instanceof CustomElement) res = BigInteger.ZERO; }
+        for(City c : getCities())    { res = res.add(c.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(c instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
         
         return res;
     }

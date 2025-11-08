@@ -409,6 +409,9 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
                 if(! getConfig().getBool("LoadOldVersion")) return;
             }
             
+            // 일단 불러온 정착지는 버전 정보 리셋
+            c.resetClientVersion(this);
+            
             // 추가
             colonies.add(c); 
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); if(alert) alert("오류 : " + ex.getMessage()); }
@@ -1352,7 +1355,11 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         return Math.random();
     }
     
-    
+    /** 빌드 번호별 인증 상수 반환 */
+    public static BigInteger getCheckerConst(long buildNo) {
+    	if(buildNo == 6L) return Constants.BIGINTEGER_3;
+    	return BigInteger.ONE;
+    }
     
     /** 버전 코드 */
     public static final int VERSION_MAIN = 0;

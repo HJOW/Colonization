@@ -81,4 +81,6 @@ public interface Colony extends ColonyElements {
     public String getClientVersion();
     /** 이 정착지를 마지막으로 저장한 ColonyManager 의 빌드 번호 반환 */
     public long getClientBuildNo();
+    /** 버전 정보 리셋 */
+    public void resetClientVersion(ColonyManagerUI man);
 }
