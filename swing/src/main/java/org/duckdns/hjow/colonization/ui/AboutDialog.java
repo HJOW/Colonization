@@ -24,6 +24,7 @@ public class AboutDialog implements Disposeable {
     protected Dialog dialog;
     protected Panel pnMain, pnCenter, pnDown;
     protected Label lbTitle, lbSub, lbVer;
+    protected transient boolean flagWinCloseEvent = true;
     public AboutDialog() {
         this(null, null, null, null);
     }
@@ -40,13 +41,17 @@ public class AboutDialog implements Disposeable {
         dialog.setTitle(title);
         dialog.setLayout(new BorderLayout());
         GUIUtil.centerWindow(dialog);
+        setIconImage(getDefaultIcon());
+        
         dialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                System.exit(0);
+            	if(!flagWinCloseEvent) return;
+            	flagWinCloseEvent = false;
+                close();
             }
         });
-        setIconImage(getDefaultIcon());
+        
         
         lbTitle = new Label(title);
         lbSub   = new Label(sub);
@@ -98,9 +103,11 @@ public class AboutDialog implements Disposeable {
     
     public void open() {
         dialog.setVisible(true);
+        flagWinCloseEvent = true;
     }
     
     public void close() {
+    	flagWinCloseEvent = false;
         dialog.setVisible(false);
     }
     
