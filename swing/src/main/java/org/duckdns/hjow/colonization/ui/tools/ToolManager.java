@@ -27,6 +27,7 @@ public class ToolManager implements Disposeable {
         tools.add(new GUITCPSimpleDaemonManager(win));
         tools.add(new CDOCViewer(win));
         tools.add(new Log4JManager(win));
+        tools.add(new ScriptModEditor(win));
     }
     
     public Tool getTool(String name) {
