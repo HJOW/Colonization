@@ -97,7 +97,6 @@ public class GUIColonyManager extends ColonyManager {
     protected transient AboutDialog aboutDialog;
     protected transient BackupManager backupManager;
     protected transient ConfigManager configManager;
-    protected transient ModManager modManager;
     protected transient HelpDialog helpDialog, licenseDialog;
     protected transient ToolManager toolManager;
     protected transient ServletClientPanel servletClient;
@@ -253,7 +252,6 @@ public class GUIColonyManager extends ColonyManager {
         licenseDialog = new LicenseDialog(this);
         aboutDialog   = new AboutDialog(frame, "Colonization", "", "v" + getVersionString() + " (No. " + BUILD_NO + ")");
         configManager = new ConfigManager(this);
-        modManager    = new ModManager(this);
         toolManager   = new ToolManager(frame);
         
         tabMain = new JTabbedPane();
@@ -597,15 +595,6 @@ public class GUIColonyManager extends ColonyManager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 configManager.open();
-            }
-        });
-        
-        menuFileMods = new JMenuItem(t("MOD 관리"));
-        menuFile.add(menuFileMods);
-        menuFileMods.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                modManager.open();
             }
         });
         
@@ -1174,9 +1163,6 @@ public class GUIColonyManager extends ColonyManager {
         if(configManager != null) configManager.dispose();
         configManager = null;
         
-        if(modManager != null) modManager.dispose();
-        modManager = null;
-        
         if(helpDialog != null) helpDialog.dispose();
         helpDialog = null;
         
@@ -1417,7 +1403,6 @@ public class GUIColonyManager extends ColonyManager {
         menuFileNew.setEnabled(false);
         menuFileConfig.setEnabled(false);
         if(configManager != null) configManager.close();
-        if(modManager    != null) modManager.close();
         
         for(DefaultColonyPanel c : pnColonies) { c.setEditable(false); }
         

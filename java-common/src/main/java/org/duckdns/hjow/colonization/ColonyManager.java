@@ -559,14 +559,6 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         modsList.clear();
         modsEnabled.clear();
         
-        // 다시 불러오기
-        String strMods = configs.getString("Mods");
-        StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
-        while(commaTokenizer.hasMoreTokens()) {
-            String classNames = commaTokenizer.nextToken().trim();
-            addMod(classNames, false, false);
-        }
-        
         // lib 에 등록된 Mods 도 불러오기
         for(Class<?> classes : ColonyClassLoader.getModClasses()) {
             try {
@@ -708,44 +700,6 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
                 configs.set("Mods", strMods);
                 saveLocalConfigs();
             }
-        } catch(Throwable tx) {
-            logGlobals(t("Error") + " : " + tx.getMessage(), 2);
-        }
-        
-        if(refresh) applyModOnUI();
-    }
-    
-    /** Mod 제거 */
-    public void removeMod(String modClassName) {
-        removeMod(modClassName, true);
-    }
-    
-    /** Mod 제거 */
-    public void removeMod(String modClassName, boolean refresh) {
-        try {
-            ColonyClassLoader.checkModClassName(modClassName);
-            modClassName = modClassName.trim();
-            
-            // 설정 리스트로 변환
-            String strMods = configs.getString("Mods");
-            List<String> list = new ArrayList<String>(); // 리스트로 먼저 변환
-            StringTokenizer commaTokenizer = new StringTokenizer(strMods, ",");
-            while(commaTokenizer.hasMoreTokens()) {
-                list.add(commaTokenizer.nextToken().trim());
-            }
-            strMods = null;
-            // 설정 제거
-            list.remove(modClassName);
-            
-            // 다시 설정 작성
-            strMods = "";
-            for(String s : list) {
-                if(DataUtil.isNotEmpty(strMods)) strMods += ",";
-                strMods += s;
-            }
-            configs.set("Mods", strMods);
-            
-            saveLocalConfigs();
         } catch(Throwable tx) {
             logGlobals(t("Error") + " : " + tx.getMessage(), 2);
         }
