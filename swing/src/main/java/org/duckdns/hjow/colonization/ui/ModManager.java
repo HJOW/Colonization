@@ -11,6 +11,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -21,6 +22,7 @@ import javax.swing.SwingUtilities;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.util.DataUtil;
@@ -33,7 +35,7 @@ public class ModManager implements Disposeable {
     
     protected DefaultListModel<ModInfo> listModel;
     protected JList<ModInfo> list;
-    
+    protected JLabel lbBelow;
     
     public ModManager(ColonyManager manager) {
         JFrame win = null;
@@ -95,6 +97,13 @@ public class ModManager implements Disposeable {
                 onDelRequested();
             }
         });
+        
+        JPanel pnDownCenter = new JPanel();
+        pnDownCenter.setLayout(new FlowLayout(FlowLayout.LEFT));
+        pnDown.add(pnDownCenter, BorderLayout.CENTER);
+        
+        lbBelow = new JLabel(ColonyManager.t("스크립트 MOD는 이 도구로 관리할 수 없습니다."));
+        pnDownCenter.add(lbBelow);
     }
     
     public void open() {
@@ -116,6 +125,7 @@ public class ModManager implements Disposeable {
         listModel.removeAllElements();
         List<Mod> mods = manager.getMods();
         for(Mod mod : mods) {
+        	if(mod instanceof ScriptMod) continue;
             ModInfo info = new ModInfo(mod);
             listModel.addElement(info);
         }
@@ -123,7 +133,7 @@ public class ModManager implements Disposeable {
     }
     
     protected void onAddRequested() {
-        String req = JOptionPane.showInputDialog(dialog, ColonyManager.t("MOD 클래스명을 입력해 주세요. (공란 입력 시 취소)"));
+        String req = JOptionPane.showInputDialog(dialog, ColonyManager.t("MOD 클래스명을 입력해 주세요.\n스크립트형 MOD는 이 창에서 관리할 수 없습니다.\n(공란 입력 시 취소)"));
         if(DataUtil.isEmpty(req)) return;
         req = req.trim();
         
