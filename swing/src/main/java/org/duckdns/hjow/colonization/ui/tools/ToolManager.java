@@ -28,6 +28,7 @@ public class ToolManager implements Disposeable {
         tools.add(new CDOCViewer(win));
         tools.add(new Log4JManager(win));
         tools.add(new ScriptModEditor(win));
+        tools.add(new ScriptFacilityEditor(win));
     }
     
     public Tool getTool(String name) {

@@ -72,7 +72,7 @@ public class ScriptModEditor extends ScriptCreatorTool {
 	}
 
 	@Override
-	protected File getDefaultDirectory() {
+	protected File getDefaultDirectory() throws Throwable {
 		File roots = ColonyManager.getHomeDir("colonization", "scripts");
 		if(! roots.exists()) roots.mkdirs();
 		

@@ -152,7 +152,7 @@ public abstract class ScriptCreatorTool extends AbstractTool {
 		};
 	}
 	
-	protected abstract File getDefaultDirectory();
+	protected abstract File getDefaultDirectory() throws Throwable;
 	
 	/** 새로 만들기 동작 시 호출됨 */
     protected void onNewRequested() {
@@ -170,7 +170,8 @@ public abstract class ScriptCreatorTool extends AbstractTool {
 	}
     /** 다른 이름으로 저장 시 호출됨 */
     protected void onSaveAsRequested() {
-        fileChooser.setCurrentDirectory(getDefaultDirectory());
+        try { fileChooser.setCurrentDirectory(getDefaultDirectory()); } catch(Throwable ignores) {}
+        
 		int sel = fileChooser.showSaveDialog(dialog);
 		if(sel != JFileChooser.APPROVE_OPTION) return;
 		
@@ -184,7 +185,8 @@ public abstract class ScriptCreatorTool extends AbstractTool {
 	}
     /** 불러오기 시 호출됨 */
     protected void onLoadRequested() {
-		fileChooser.setCurrentDirectory(getDefaultDirectory());
+    	try { fileChooser.setCurrentDirectory(getDefaultDirectory()); } catch(Throwable ignores) {}
+    	
 		int sel = fileChooser.showOpenDialog(dialog);
 		if(sel != JFileChooser.APPROVE_OPTION) return;
 		
