@@ -30,11 +30,12 @@ public class ScriptFacilityEditor extends ScriptCreatorTool {
     protected String getDefaultContent() {
         StringBuilder res = new StringBuilder("");
         
-        // res = res.append("/*                                                                                                                      \n");
-        // res = res.append("아래 함수들을 구현하여 사용자 정의 시설을 개발할 수 있습니다.                                                           \n");
-        // res = res.append("     프리 정착지 시나리오에서만 사용이 가능하며, 사용 시 인증이 되지 않습니다.                                          \n");
-        // res = res.append("도움말에 있는 스크립트 API를 사용할 수 있습니다.                                                                        \n");
-        // res = res.append("저장한 MOD는 프로그램 재시작 후 사용할 수 있습니다.                                                                     \n");
+        res = res.append("/*                                                                                                                      \n");
+        res = res.append("아래 함수들을 구현하여 사용자 정의 시설을 개발할 수 있습니다.                                                           \n");
+        res = res.append("     프리 정착지 시나리오에서만 사용이 가능하며, 사용 시 인증이 되지 않습니다.                                          \n");
+        res = res.append("도움말에 있는 스크립트 API를 사용할 수 있습니다.                                                                        \n");
+        res = res.append("저장한 MOD는 프로그램 재시작 후 사용할 수 있습니다.                                                                     \n");
+        res = res.append("*/                                                                                                                      \n");
         res = res.append("                                                                                                                        \n");
         res = res.append("function getName() {                                                                                                    \n");
         res = res.append("    return \"\";                                                                                                        \n");
