@@ -20,6 +20,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ui.GUIPreWorks;
+import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -45,9 +46,11 @@ public abstract class ScriptCreatorTool extends AbstractTool {
 		dialog.setSize(750, 650);
 		GUIUtil.centerWindow(dialog);
 		
+		String systemCharset = ClassUtil.getDefaultCharset();
+		
 		taEditor = new JEditorPane();
-		if(GUIPreWorks.isSyntaxPaneEnabled()) taEditor.setContentType("text/xml");
-        else taEditor.setContentType("text/plain");
+		if(GUIPreWorks.isSyntaxPaneEnabled()) taEditor.setContentType("text/javascript; charset=" + systemCharset);
+        else taEditor.setContentType("text/plain; charset=" + systemCharset);
 		
 		pnCenter.add(new JScrollPane(taEditor), BorderLayout.CENTER);
 		
