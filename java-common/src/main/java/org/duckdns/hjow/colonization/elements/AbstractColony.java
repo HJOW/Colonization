@@ -826,17 +826,31 @@ public abstract class AbstractColony implements Colony {
     
     /** 새 도시의 좌표 지정 */
     protected void setNewCityCoordinate(City newCity) {
+    	List<City> cities = getCities();
+    	
     	Random rd = new Random();
     	boolean positive = rd.nextBoolean();
+    	
     	long x = 0L;
     	long y = 0L;
     	long z = 0L;
+    	
+    	long stdx = (long) rd.nextInt();
+    	long stdy = (long) rd.nextInt();
+    	long stdz = (long) rd.nextInt();
+    	
+    	if(! cities.isEmpty()) {
+    		stdx = getX();
+    		stdy = getY();
+    		stdz = getZ();
+    	}
+    	
     	while(true) {
-    	    x = getX() + (rd.nextInt() + (( positive ? 1000000 : (1000000 * (-1)) ) / 100000L));
-            y = getY() + (rd.nextInt() + (( positive ? 1000000 : (1000000 * (-1)) ) / 100000L));
-            z = getZ() + (rd.nextInt() + (( positive ? 1000000 : (1000000 * (-1)) ) / 100000L));
+    	    x = stdx + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 500000L);
+            y = stdy + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 500000L);
+            z = stdz + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 500000L);
             
-            // 기 존재하는 도시들 중 이 좌표와 너무 가까운 도시가 있는지 체크
+            // 기 존재하는 도시들 중 이 좌표와 너무 가깝거나 먼 도시가 있는지 체크
             boolean failed = false;
             for(City c : getCities()) {
             	if(c.getKey() == newCity.getKey()) continue;
@@ -844,6 +858,10 @@ public abstract class AbstractColony implements Colony {
             	if(    Math.abs(x - c.getX()) <= 100L 
             	    && Math.abs(y - c.getY()) <= 100L 
             	    && Math.abs(z - c.getZ()) <= 100L
+                  ) { failed = true; break; }
+            	if(    Math.abs(x - c.getX()) > 10000L 
+                    || Math.abs(y - c.getY()) > 10000L 
+                    || Math.abs(z - c.getZ()) > 10000L
                   ) { failed = true; break; }
             }
             if(! failed) break;
