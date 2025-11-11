@@ -2,11 +2,14 @@ package org.duckdns.hjow.colonization.elements;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
@@ -764,6 +767,84 @@ public abstract class AbstractColony implements Colony {
         }
     }
     
+    /** 소속 도시들의 평균 X 좌표 반환 */
+    public long getX() {
+    	BigDecimal sums = BigDecimal.ZERO;
+    	
+    	for(City c : getCities()) { sums = sums.add(new BigDecimal(String.valueOf(c.getX()))); }
+    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(getCities().size())), 0, RoundingMode.HALF_UP);
+    	return av.longValue();
+    }
+    
+    /** 소속 도시들의 평균 Y 좌표 반환 */
+    public long getY() {
+    	BigDecimal sums = BigDecimal.ZERO;
+    	
+    	for(City c : getCities()) { sums = sums.add(new BigDecimal(String.valueOf(c.getY()))); }
+    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(getCities().size())), 0, RoundingMode.HALF_UP);
+    	return av.longValue();
+    }
+    
+    /** 소속 도시들의 평균 Z 좌표 반환 */
+    public long getZ() {
+    	BigDecimal sums = BigDecimal.ZERO;
+    	
+    	for(City c : getCities()) { sums = sums.add(new BigDecimal(String.valueOf(c.getZ()))); }
+    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(getCities().size())), 0, RoundingMode.HALF_UP);
+    	return av.longValue();
+    }
+    
+    @Override
+	public void setX(long x) { 
+    	// 도시들의 중심위치가 정착지의 위치이므로, 위치를 변경한다는 건 도시의 위치들을 모두 변경한다는 뜻.
+    	// 변화량을 계산한 후, 소속 도시들 모두 해당 변화량만큼 이동
+    	
+    	long changes = getX() - x;
+    	for(City c : getCities()) { c.setX(changes); }
+    }
+
+	@Override
+	public void setY(long y) { 
+		long changes = getY() - y;
+    	for(City c : getCities()) { c.setY(changes); }
+	}
+
+	@Override
+	public void setZ(long z) { 
+		long changes = getZ() - z;
+    	for(City c : getCities()) { c.setZ(changes); }
+	}
+    
+    /** 새 도시의 좌표 지정 */
+    protected void setNewCityCoordinate(City newCity) {
+    	Random rd = new Random();
+    	boolean positive = rd.nextBoolean();
+    	long x = 0L;
+    	long y = 0L;
+    	long z = 0L;
+    	while(true) {
+    	    x = getX() + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 100000L);
+            y = getY() + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 100000L);
+            z = getZ() + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 100000L);
+            
+            // 기 존재하는 도시들 중 이 좌표와 너무 가까운 도시가 있는지 체크
+            boolean failed = false;
+            for(City c : getCities()) {
+            	if(c.getKey() == newCity.getKey()) continue;
+            	
+            	if(    Math.abs(x - c.getX()) <= 100L 
+            	    && Math.abs(y - c.getY()) <= 100L 
+            	    && Math.abs(z - c.getZ()) <= 100L
+                  ) { failed = true; break; }
+            }
+            if(! failed) break;
+    	}
+    	
+    	newCity.setX(x);
+    	newCity.setY(y);
+    	newCity.setZ(z);
+    }
+    
     /** 새 도시를 생성 */
     @Override
     public City newCity() {
@@ -772,6 +853,7 @@ public abstract class AbstractColony implements Colony {
         City city = null;
         try { city = (City) Class.forName("org.duckdns.hjow.colonization.elements.city.NormalCity").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
         
+        setNewCityCoordinate(city);
         addDefaultStarts(city);
         getCities().add(city);
         return city;
@@ -936,6 +1018,10 @@ public abstract class AbstractColony implements Colony {
         json.put("version", getClientVersion());
         json.put("buildNo", clientBuildNo);
         if(getMoneyOvers() != null) json.put("money2", getMoneyOvers().toString());
+        
+        json.put("x", String.valueOf(getX()));
+        json.put("y", String.valueOf(getY()));
+        json.put("z", String.valueOf(getZ()));
         
         JsonArray list = new JsonArray();
         for(City c : getCities()) { list.add(c.toJson(details, col, c)); }

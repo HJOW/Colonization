@@ -19,6 +19,7 @@ public class DefaultPack implements Pack {
     protected List<Class<?>> facilityClasses = new ArrayList<Class<?>>();
     protected List<Class<?>> researchClasses = new ArrayList<Class<?>>();
     protected List<Class<?>> enemyClasses    = new ArrayList<Class<?>>();
+    protected List<Class<?>> shipClasses     = new ArrayList<Class<?>>();
     protected List<Class<?>> stateClasses    = new ArrayList<Class<?>>();
     protected List<Class<?>> productClasses  = new ArrayList<Class<?>>();
     protected List<Class<?>> policyClasses   = new ArrayList<Class<?>>();
@@ -52,7 +53,14 @@ public class DefaultPack implements Pack {
     public List<Class<?>> getStateClasses() {
         return stateClasses;
     }
-    public void setColonyClasses(List<Class<?>> colonyClasses) {
+    @Override
+    public List<Class<?>> getShipClasses() {
+		return shipClasses;
+	}
+	public void setShipClasses(List<Class<?>> shipClasses) {
+		this.shipClasses = shipClasses;
+	}
+	public void setColonyClasses(List<Class<?>> colonyClasses) {
         this.colonyClasses = colonyClasses;
     }
     public void setFacilityClasses(List<Class<?>> facilityClasses) {

@@ -17,8 +17,8 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.HasLocation;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -28,12 +28,14 @@ import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
 import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.facilities.NetworkFacility;
+import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.facilities.PowerPlant;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.TransportStation;
 import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -42,7 +44,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 도시 구현 클래스 */
-public abstract class City implements ColonyElements {
+public abstract class City implements HasLocation {
     private static final long serialVersionUID = -8442328554683565064L;
     protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;
@@ -56,6 +58,10 @@ public abstract class City implements ColonyElements {
     protected int hp = getMaxHp();
     protected int spaces = 500 + ((int) ( 700 * ColonyManager.random() ));
     protected int tax = 10;
+    
+    protected long x = 0L;
+    protected long y = 0L;
+    protected long z = 0L;
     
     protected transient long calculatedTransPoint     = 0L;
     protected transient long calculatedTransPointLeft = 0L;
@@ -934,7 +940,31 @@ public abstract class City implements ColonyElements {
     }
     
     
-    /** 출산률 계산 */
+    public long getX() {
+		return x;
+	}
+
+	public void setX(long x) {
+		this.x = x;
+	}
+
+	public long getY() {
+		return y;
+	}
+
+	public void setY(long y) {
+		this.y = y;
+	}
+
+	public long getZ() {
+		return z;
+	}
+
+	public void setZ(long z) {
+		this.z = z;
+	}
+
+	/** 출산률 계산 */
     public double getBornChanceRate(Colony col, int efficiency100, double birthBoostRate) {
         double res = efficiency100 / 100.0;
         if(res > 50.0) res = 50.0;
@@ -1098,6 +1128,10 @@ public abstract class City implements ColonyElements {
         json.put("spaces", new Integer(getSpaces()));
         json.put("className", getClassName());
         
+        json.put("x", String.valueOf(getX()));
+        json.put("y", String.valueOf(getY()));
+        json.put("z", String.valueOf(getZ()));
+        
         JsonArray list = new JsonArray();
         for(Facility f : getFacility()) { list.add(f.toJson(details, col, city)); }
         json.put("facilities", list);
@@ -1138,6 +1172,10 @@ public abstract class City implements ColonyElements {
         try { setHp(Integer.parseInt(json.get("hp").toString()));         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setHp(0);     }
         try { setTax(Integer.parseInt(json.get("tax").toString()));       } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setTax(0);    }
         try { setSpaces(Integer.parseInt(json.get("spaces").toString())); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setSpaces(0); }
+        
+        try { x = Long.parseLong(json.get("x").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setX(0L); }
+        try { y = Long.parseLong(json.get("y").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setY(0L); }
+        try { z = Long.parseLong(json.get("z").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setZ(0L); }
         
         JsonArray list = null;
         try { list = (JsonArray) json.get("facilities"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
@@ -1243,7 +1281,7 @@ public abstract class City implements ColonyElements {
         }
         
         if(col == null && superInstance != null) col = getColony(superInstance);
-        
+        desc = desc.append("\n").append("위치 : ").append(ColonyManager.formatCoordinate(this));
         desc = desc.append("\n").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
         desc = desc.append("\n").append(ColonyManager.t("전력") + " : ").append(formatterInt.format(powerConsume)).append(" / ").append(formatterInt.format(getPowerGenerate(col)));
         desc = desc.append("\n").append(ColonyManager.t("공간") + " : ").append(formatterInt.format(getUsingSpaces())).append(" / ").append(formatterInt.format(getSpaces()));
@@ -1299,6 +1337,38 @@ public abstract class City implements ColonyElements {
     /** 정책 목록 갱신 */
     public void resetPolicies() {
         policies.clear();
+    }
+    
+    /** 함선 격납 공간 크기 반환 */
+    public int getShipSpaces() {
+    	int res = 0;
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			res += ((Port) f).getCapacity();
+    		}
+    	}
+    	return res;
+    }
+    
+    /** 도시 내 격납 중인 함선들 반환 */
+    public Vector<Ship> getShips() {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			list.addAll(((Port) f).getShips());
+    		}
+    	}
+    	return list;
+    }
+    
+    /** 함선 하나를 도시에서 제거 (외부로 이동했다거나 등의 이유 발생 시 호출) */
+    public void removeShip(Ship s) {
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			Port p = (Port) f;
+    			p.getShips().remove(s);
+    		}
+    	}
     }
     
     @Override

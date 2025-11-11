@@ -1,15 +1,13 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
-import org.duckdns.hjow.commons.exception.KnownRuntimeException;
-import org.duckdns.hjow.commons.json.JsonArray;
-import org.duckdns.hjow.commons.json.JsonObject;
-
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -17,6 +15,9 @@ import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
+import org.duckdns.hjow.commons.exception.KnownRuntimeException;
+import org.duckdns.hjow.commons.json.JsonArray;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 public abstract class Factory extends DefaultFacility implements Storage {
     private static final long serialVersionUID = 8465140770981665970L;
@@ -296,6 +297,13 @@ public abstract class Factory extends DefaultFacility implements Storage {
         json.put("stored", list);
         
         return json;
+    }
+    
+    @Override
+    public BigInteger getCheckerValue() {
+        BigInteger res = super.getCheckerValue();
+        for(Product p : getStored()) { res = res.add(p.getCheckerValue().multiply(Constants.BIGINTEGER_17)); }
+        return res;
     }
     
     public static String getFacilityName() {

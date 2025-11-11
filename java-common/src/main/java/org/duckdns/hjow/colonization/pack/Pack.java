@@ -9,6 +9,7 @@ public interface Pack extends Serializable {
     public List<Class<?>> getFacilityClasses();
     public List<Class<?>> getResearchClasses();
     public List<Class<?>> getEnemyClasses();
+    public List<Class<?>> getShipClasses();
     public List<Class<?>> getStateClasses();
     public List<Class<?>> getProductClasses();
     public List<Class<?>> getPolicyClasses();

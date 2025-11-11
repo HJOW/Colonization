@@ -26,6 +26,7 @@ import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.HasLocation;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
@@ -1304,6 +1305,11 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         return FORMATTER_RATE.format(num);
     }
     
+    /** 좌표 포맷 설정 */
+    public static String formatCoordinate(HasLocation loc) {
+    	return "";
+    }
+    
     /** 랜덤 수 (0.0 ~ 1.0) 반환 */
     public static double random() {
         return Math.random();
@@ -1319,7 +1325,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     public static final int VERSION_MAIN = 0;
     public static final int VERSION_SUB1 = 0;
     public static final int VERSION_SUB2 = 1;
-    public static final long BUILD_NO = 6L;
+    public static final long BUILD_NO = 7L;
     
     /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
     public static final short ATTACKTYPE_NORMAL = 0;

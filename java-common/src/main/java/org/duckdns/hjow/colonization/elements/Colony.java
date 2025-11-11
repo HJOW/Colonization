@@ -13,7 +13,7 @@ import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 
 /** 정착지 인터페이스 */
-public interface Colony extends ColonyElements {
+public interface Colony extends HasLocation {
     /** 객체 타입 반환, JSON 변환 시 type 으로 들어갈 내용 */
     public String getType();
     public void setName(String name);

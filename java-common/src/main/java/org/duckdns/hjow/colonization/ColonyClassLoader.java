@@ -261,6 +261,31 @@ public class ColonyClassLoader {
         return enemyClassList;
     }
     
+    private static final List<Class<?>> shipClassList     = new Vector<Class<?>>();
+    private static       boolean        shipClassListFlag = false;
+    
+    /** 함선 클래스 목록 반환 */
+    public static synchronized List<Class<?>> shipClasses() {
+        if(shipClassListFlag) return shipClassList;
+        
+        shipClassList.clear();
+        for(Pack p : packs) { if(p.isEnabled()) shipClassList.addAll(p.getShipClasses()); }
+        
+        shipClassListFlag = true;
+        return shipClassList;
+    }
+    
+    /** 해당 이름의 함선 클래스 반환 */
+    public static synchronized Class<?> getShipClass(String className) {
+    	for(Class<?> shipClass : shipClassList) {
+    		if(className.equals(shipClass.getName())) return shipClass;
+    	}
+    	for(Class<?> shipClass : shipClassList) {
+    		if(className.equals(shipClass.getSimpleName())) return shipClass;
+    	}
+    	return null;
+    }
+    
     private static final List<Class<?>> stateClassList     = new Vector<Class<?>>();
     private static       boolean        stateClassListFlag = false;
     
@@ -627,6 +652,7 @@ public class ColonyClassLoader {
         facilityClassListFlag = false;
         researchClassListFlag = false;
         enemyClassListFlag    = false;
+        shipClassListFlag     = false;
         stateClassListFlag    = false;
         productClassListFlag  = false;
         policyClassListFlag   = false;
@@ -638,7 +664,8 @@ public class ColonyClassLoader {
         colonyClassListFlag   = false; colonyClassList.clear();
         facilityClassListFlag = false; facilityClassList.clear();
         researchClassListFlag = false; researchClassList.clear();
-        enemyClassListFlag    = false; enemyClassList.clear();   
+        enemyClassListFlag    = false; enemyClassList.clear();
+        shipClassListFlag     = false; shipClassList.clear();   
         stateClassListFlag    = false; stateClassList.clear();
         productClassListFlag  = false; productClassList.clear();
         policyClassListFlag   = false; policyClassList.clear();

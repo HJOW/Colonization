@@ -18,6 +18,7 @@ import org.duckdns.hjow.colonization.elements.facilities.Restaurant;
 import org.duckdns.hjow.colonization.elements.facilities.SmallAntenna;
 import org.duckdns.hjow.colonization.elements.facilities.SmallApartment;
 import org.duckdns.hjow.colonization.elements.facilities.SmallFactory;
+import org.duckdns.hjow.colonization.elements.facilities.SmallPort;
 import org.duckdns.hjow.colonization.elements.facilities.SmallResearchCenter;
 import org.duckdns.hjow.colonization.elements.facilities.SolarStation;
 import org.duckdns.hjow.colonization.elements.facilities.TownHouse;
@@ -93,6 +94,7 @@ public final class BundledPack extends DefaultPack {
         facilityClasses.add(FissionReactorStation.class);
         facilityClasses.add(CargoRailSystem.class);
         facilityClasses.add(Academy.class);
+        facilityClasses.add(SmallPort.class);
         
         researchClasses.add(Mathematics.class);
         researchClasses.add(BasicScience.class);
