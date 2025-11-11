@@ -8,13 +8,13 @@ import java.util.Map;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
-import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 천체, 여기서는 탐험지 */
 public class Celestials implements HasLocation {
@@ -231,7 +231,7 @@ public class Celestials implements HasLocation {
 	
 	public static Celestials createRandom(long stdx, long stdy, long stdz, int dist) {
 		Celestials c = new Celestials();
-		Map<String, Number> coordinate = StaticMethods.createCoordinateIntScale(stdx, stdy, stdz, dist / 2, dist);
+		Map<String, Number> coordinate = DataUtil.createCoordinateIntScale(stdx, stdy, stdz, dist / 2, dist);
 		c.setX(coordinate.get("x").longValue());
 		c.setY(coordinate.get("y").longValue());
 		c.setZ(coordinate.get("z").longValue());
