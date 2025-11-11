@@ -1307,7 +1307,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 좌표 포맷 설정 */
     public static String formatCoordinate(HasLocation loc) {
-    	return "";
+    	return "(" + loc.getX() + ", " + loc.getY() + ", " + loc.getZ() + ")";
     }
     
     /** 랜덤 수 (0.0 ~ 1.0) 반환 */

@@ -69,6 +69,7 @@ public final class NormalColony extends AbstractColony {
         if(getCityCount() >= getMaxCityCount()) throw new KnownRuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
         
         City city = new NormalCity();
+        setNewCityCoordinate(city);
         addDefaultStarts(city);
         getCities().add(city);
         return city;

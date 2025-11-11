@@ -3,7 +3,6 @@ package org.duckdns.hjow.colonization.elements.city;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -1272,9 +1271,6 @@ public abstract class City implements HasLocation {
     public String getStatusString(Colony col, ColonyManagerUI superInstance) {
         StringBuilder desc = new StringBuilder("");
         
-        DecimalFormat formatterInt  = new DecimalFormat("#,###,###,###,###,##0");
-        DecimalFormat formatterRate = new DecimalFormat("##0.00");
-        
         long powerConsume = 0L;
         for(Facility f : getFacility()) {
             powerConsume += f.getPowerConsume();
@@ -1282,17 +1278,17 @@ public abstract class City implements HasLocation {
         
         if(col == null && superInstance != null) col = getColony(superInstance);
         desc = desc.append("\n").append("위치 : ").append(ColonyManager.formatCoordinate(this));
-        desc = desc.append("\n").append("HP : ").append(formatterInt.format(getHp())).append(" / ").append(formatterInt.format(getMaxHp()));
-        desc = desc.append("\n").append(ColonyManager.t("전력") + " : ").append(formatterInt.format(powerConsume)).append(" / ").append(formatterInt.format(getPowerGenerate(col)));
-        desc = desc.append("\n").append(ColonyManager.t("공간") + " : ").append(formatterInt.format(getUsingSpaces())).append(" / ").append(formatterInt.format(getSpaces()));
-        if(getCalculatedTransPoint() > 0L) desc = desc.append("\n").append(ColonyManager.t("교통 용량") + " : ").append(formatterInt.format(getCalculatedTransPoint() - getCalculatedTransLeftPoint())).append(" / ").append(formatterInt.format(getCalculatedTransPoint()));
-        desc = desc.append("\n").append(ColonyManager.t("인구") + " : ").append(formatterInt.format(getCitizenCount()));
-        desc = desc.append("\n").append(ColonyManager.t("시설 수") + " : ").append(formatterInt.format(getFacility().size()));
-        desc = desc.append("\n").append(ColonyManager.t("평균 행복도") + " : ").append(formatterRate.format(getAverageHappiness()));
-        desc = desc.append("\n").append(ColonyManager.t("거주 수용량") + " : ").append(formatterInt.format(getHomeCapacity()));
-        desc = desc.append("\n").append(ColonyManager.t("직장 수") + " : ").append(formatterInt.format(getJobsCount()));
-        desc = desc.append("\n").append(ColonyManager.t("노숙자") + " : ").append(formatterInt.format(getHomelesses()));
-        desc = desc.append("\n").append(ColonyManager.t("백수") + " : ").append(formatterInt.format(getJobSeekers()));
+        desc = desc.append("\n").append("HP : ").append(ColonyManager.formatInt(getHp())).append(" / ").append(ColonyManager.formatInt(getMaxHp()));
+        desc = desc.append("\n").append(ColonyManager.t("전력") + " : ").append(ColonyManager.formatInt(powerConsume)).append(" / ").append(ColonyManager.formatInt(getPowerGenerate(col)));
+        desc = desc.append("\n").append(ColonyManager.t("공간") + " : ").append(ColonyManager.formatInt(getUsingSpaces())).append(" / ").append(ColonyManager.formatInt(getSpaces()));
+        if(getCalculatedTransPoint() > 0L) desc = desc.append("\n").append(ColonyManager.t("교통 용량") + " : ").append(ColonyManager.formatInt(getCalculatedTransPoint() - getCalculatedTransLeftPoint())).append(" / ").append(ColonyManager.formatInt(getCalculatedTransPoint()));
+        desc = desc.append("\n").append(ColonyManager.t("인구") + " : ").append(ColonyManager.formatInt(getCitizenCount()));
+        desc = desc.append("\n").append(ColonyManager.t("시설 수") + " : ").append(ColonyManager.formatInt(getFacility().size()));
+        desc = desc.append("\n").append(ColonyManager.t("평균 행복도") + " : ").append(ColonyManager.formatRate(getAverageHappiness()));
+        desc = desc.append("\n").append(ColonyManager.t("거주 수용량") + " : ").append(ColonyManager.formatInt(getHomeCapacity()));
+        desc = desc.append("\n").append(ColonyManager.t("직장 수") + " : ").append(ColonyManager.formatInt(getJobsCount()));
+        desc = desc.append("\n").append(ColonyManager.t("노숙자") + " : ").append(ColonyManager.formatInt(getHomelesses()));
+        desc = desc.append("\n").append(ColonyManager.t("백수") + " : ").append(ColonyManager.formatInt(getJobSeekers()));
         desc = desc.append("\n");
         for(Facility f : getFacility()) {
             if(f instanceof Factory) {

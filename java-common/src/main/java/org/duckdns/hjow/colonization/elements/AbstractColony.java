@@ -771,8 +771,11 @@ public abstract class AbstractColony implements Colony {
     public long getX() {
     	BigDecimal sums = BigDecimal.ZERO;
     	
-    	for(City c : getCities()) { sums = sums.add(new BigDecimal(String.valueOf(c.getX()))); }
-    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(getCities().size())), 0, RoundingMode.HALF_UP);
+    	List<City> cities = getCities();
+    	if(cities.isEmpty()) return sums.longValue();
+    	
+    	for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getX()))); }
+    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
     	return av.longValue();
     }
     
@@ -780,8 +783,11 @@ public abstract class AbstractColony implements Colony {
     public long getY() {
     	BigDecimal sums = BigDecimal.ZERO;
     	
-    	for(City c : getCities()) { sums = sums.add(new BigDecimal(String.valueOf(c.getY()))); }
-    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(getCities().size())), 0, RoundingMode.HALF_UP);
+    	List<City> cities = getCities();
+    	if(cities.isEmpty()) return sums.longValue();
+    	
+    	for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getY()))); }
+    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
     	return av.longValue();
     }
     
@@ -789,8 +795,11 @@ public abstract class AbstractColony implements Colony {
     public long getZ() {
     	BigDecimal sums = BigDecimal.ZERO;
     	
-    	for(City c : getCities()) { sums = sums.add(new BigDecimal(String.valueOf(c.getZ()))); }
-    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(getCities().size())), 0, RoundingMode.HALF_UP);
+    	List<City> cities = getCities();
+    	if(cities.isEmpty()) return sums.longValue();
+    	
+    	for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getZ()))); }
+    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
     	return av.longValue();
     }
     
@@ -823,9 +832,9 @@ public abstract class AbstractColony implements Colony {
     	long y = 0L;
     	long z = 0L;
     	while(true) {
-    	    x = getX() + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 100000L);
-            y = getY() + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 100000L);
-            z = getZ() + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 100000L);
+    	    x = getX() + (rd.nextInt() + (( positive ? 1000000 : (1000000 * (-1)) ) / 100000L));
+            y = getY() + (rd.nextInt() + (( positive ? 1000000 : (1000000 * (-1)) ) / 100000L));
+            z = getZ() + (rd.nextInt() + (( positive ? 1000000 : (1000000 * (-1)) ) / 100000L));
             
             // 기 존재하는 도시들 중 이 좌표와 너무 가까운 도시가 있는지 체크
             boolean failed = false;
