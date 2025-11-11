@@ -695,6 +695,11 @@ public abstract class AbstractColony implements Colony {
             income = BigInteger.ZERO;
         }
         
+        // 탐험 진행
+        for(Celestials c : getCelestials()) {
+        	c.oneCycle(cycle, null, colony, efficiency100, colPanel);
+        }
+        
         // 시간 지남
         time = time.add(BigInteger.ONE);
     }
