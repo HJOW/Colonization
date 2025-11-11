@@ -1,6 +1,8 @@
 package org.duckdns.hjow.colonization.constants;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,5 +45,38 @@ public class StaticMethods {
     /** 인코딩된 문자열 디코딩 */
     public static String decodeString(String str) {
     	try { return new String(decode(str), "UTF-8"); } catch(UnsupportedEncodingException e) { throw new RuntimeException(e.getMessage(), e); }
+    }
+    
+    /** 제곱근 구하기 (출처 : https://stackoverflow.com/questions/13649703/square-root-of-bigdecimal-in-java) */ // TODO 공통 lib 로 이관
+    public static BigDecimal sqrt(BigDecimal originals) {
+    	return sqrtNewtonRaphson(originals, BigDecimal.ONE, BigDecimal.ONE.divide(Constants.BIGDECIMAL_SQRT_PRE));
+    }
+    
+    private static BigDecimal sqrtNewtonRaphson(BigDecimal c, BigDecimal xn, BigDecimal precision) {
+    	BigDecimal fx  = xn.pow(2).add(c.negate());
+        BigDecimal fpx = xn.multiply(new BigDecimal(2));
+        BigDecimal xn1 = fx.divide(fpx, 2 * Constants.BIGDECIMAL_SQRT_DIG.intValue(), RoundingMode.HALF_DOWN);
+        xn1 = xn.add(xn1.negate());
+        BigDecimal currentSquare = xn1.pow(2);
+        BigDecimal currentPrecision = currentSquare.subtract(c);
+        currentPrecision = currentPrecision.abs();
+        if (currentPrecision.compareTo(precision) <= -1){
+            return xn1;
+        }
+        return sqrtNewtonRaphson(c, xn1, precision);
+    }
+    
+    /** 두 좌표 간 거리 구하기 */ // TODO 공통 lib 로 이관
+    public static long getDistance(long x1, long y1, long z1, long x2, long y2, long z2) {
+    	BigDecimal xd = new BigDecimal(String.valueOf(x2)).subtract(new BigDecimal(String.valueOf(x1)));
+    	BigDecimal yd = new BigDecimal(String.valueOf(y2)).subtract(new BigDecimal(String.valueOf(y1)));
+    	BigDecimal zd = new BigDecimal(String.valueOf(z2)).subtract(new BigDecimal(String.valueOf(z1)));
+    	
+    	xd = xd.pow(2);
+    	yd = yd.pow(2);
+    	zd = zd.pow(2);
+    	
+    	BigDecimal sum = xd.add(yd).add(zd);
+    	return sqrt(sum).longValue();
     }
 }

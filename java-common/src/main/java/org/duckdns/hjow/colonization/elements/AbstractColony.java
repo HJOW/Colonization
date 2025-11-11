@@ -846,22 +846,19 @@ public abstract class AbstractColony implements Colony {
     	}
     	
     	while(true) {
-    	    x = stdx + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 500000L);
-            y = stdy + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 500000L);
-            z = stdz + ((rd.nextInt() + ( positive ? 1000000 : (1000000 * (-1)) )) / 500000L);
+    		// 적당한 범위 내로 랜덤 위치 설정
+    	    x = stdx + (((rd.nextInt() + Integer.MAX_VALUE) / (Integer.MAX_VALUE / 4000)) * (positive ? 1 : (-1)));
+            y = stdy + (((rd.nextInt() + Integer.MAX_VALUE) / (Integer.MAX_VALUE / 4000)) * (positive ? 1 : (-1)));
+            z = stdz + (((rd.nextInt() + Integer.MAX_VALUE) / (Integer.MAX_VALUE / 4000)) * (positive ? 1 : (-1)));
             
-            // 기 존재하는 도시들 중 이 좌표와 너무 가깝거나 먼 도시가 있는지 체크
+            // 기 존재하는 도시들 중 이 좌표와 너무 가까운 도시가 있는지 체크
             boolean failed = false;
-            for(City c : getCities()) {
+            for(City c : cities) {
             	if(c.getKey() == newCity.getKey()) continue;
             	
             	if(    Math.abs(x - c.getX()) <= 100L 
             	    && Math.abs(y - c.getY()) <= 100L 
             	    && Math.abs(z - c.getZ()) <= 100L
-                  ) { failed = true; break; }
-            	if(    Math.abs(x - c.getX()) > 10000L 
-                    || Math.abs(y - c.getY()) > 10000L 
-                    || Math.abs(z - c.getZ()) > 10000L
                   ) { failed = true; break; }
             }
             if(! failed) break;
