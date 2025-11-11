@@ -16,6 +16,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HasLocation;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
@@ -273,7 +274,7 @@ public abstract class City implements HasLocation {
     }
 
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { // city should be a self
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) { // city should be a self
         int idx;
         boolean warnNetworkNeeded = false;
         
@@ -285,7 +286,7 @@ public abstract class City implements HasLocation {
         
         for(Policy p : policies) {
             if(! p.isEnabled()) continue;
-            if(! p.isAvail(colony, city)) {
+            if(! p.isAvail(colony, this)) {
                 p.setEnabled(false);
                 continue;
             }
@@ -321,7 +322,7 @@ public abstract class City implements HasLocation {
             // 정책 스캔해서 부스트 보너스 계산
             for(Policy p : policies) {
                 if(! p.isEnabled()) continue;
-                if(! p.isAvail(colony, city)) {
+                if(! p.isAvail(colony, this)) {
                     p.setEnabled(false);
                     continue;
                 }
@@ -350,7 +351,7 @@ public abstract class City implements HasLocation {
             // 직원 부족 시 효율 저하 (절반으로)
             int efficiencyWorker = efficiency100;
             if(f.getWorkerNeeded() >= 1) {
-                int working = f.getWorkingCitizensCount(city, colony);
+                int working = f.getWorkingCitizensCount(this, colony);
                 if(f.getWorkerNeeded() > working) {
                     efficiencyWorker = (int) Math.round(efficiencyWorker * 0.5);
                 }
@@ -403,7 +404,7 @@ public abstract class City implements HasLocation {
         
         // 시민 처리
         for(Citizen ct : getCitizens()) {
-            if(cycle % ct.cycleGap(colony) == 0) ct.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % ct.cycleGap(colony) == 0) ct.oneCycle(cycle, this, colony, efficiency100, colPanel);
             
             if(networks <= 0L) {
                 if(ct.getHappy() > 70) ct.setHappy(70); // 네트워크 사용 불가 시 행복도 상한 적용
@@ -420,25 +421,25 @@ public abstract class City implements HasLocation {
         // 정책 처리
         for(Policy p : getPolicies()) {
             if(! p.isEnabled()) continue;
-            if(! p.isAvail(colony, city)) {
+            if(! p.isAvail(colony, this)) {
                 p.setEnabled(false);
                 continue;
             }
             
             // 비용 처리
             if(cycle % (60 * 24 * 30) == 0) {
-                colony.modifyingMoney((-1) * p.getMonthlyFee(colony, city), city, p, "Policy", ColonyManager.t("월간 정책 집행 예산"));
+                colony.modifyingMoney((-1) * p.getMonthlyFee(colony, this), this, p, "Policy", ColonyManager.t("월간 정책 집행 예산"));
             }
             
             // 효과 처리
             if(cycle % p.cycleGap(colony) == 0) {
-                p.oneCycle(cycle, city, colony, efficiency100, colPanel);
+                p.oneCycle(cycle, this, colony, efficiency100, colPanel);
             }
         }
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
-            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, colony, efficiency100, colPanel);
         }
         
         // 사망 개체 제거

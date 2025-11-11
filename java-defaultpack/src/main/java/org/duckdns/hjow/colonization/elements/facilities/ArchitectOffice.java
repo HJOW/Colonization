@@ -8,6 +8,7 @@ import java.util.List;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
@@ -62,8 +63,9 @@ public class ArchitectOffice extends DefaultFacility {
     }
 
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, city, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+        City city = (City) stage;
         
         // 업무 처리
         double healRate = 0.5;

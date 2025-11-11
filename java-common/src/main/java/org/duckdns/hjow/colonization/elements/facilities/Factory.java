@@ -10,6 +10,7 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
@@ -81,8 +82,9 @@ public abstract class Factory extends DefaultFacility implements Storage {
     }
     
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, city, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+        City city = (City) stage;
         
         // 공장 업무 처리
         if(cycle % getProfitCycle() == 0) {

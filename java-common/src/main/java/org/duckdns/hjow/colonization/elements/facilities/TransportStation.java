@@ -1,16 +1,15 @@
 package org.duckdns.hjow.colonization.elements.facilities;
 
-import org.duckdns.hjow.commons.json.JsonObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 public abstract class TransportStation extends DefaultFacility {
     private static final long serialVersionUID = 7222508474329385493L;
@@ -70,8 +69,8 @@ public abstract class TransportStation extends DefaultFacility {
     }
     
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, city, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
     }
     
     public static String getFacilityName() {

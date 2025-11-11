@@ -36,8 +36,9 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
     protected void processAfterAttack(int cycle, ColonyElements element, int finalDamage) { }
     
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, city, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+        City city = (City) stage;
         
         int castLeft    = getAttackCount();
         int damages     = getDamage();

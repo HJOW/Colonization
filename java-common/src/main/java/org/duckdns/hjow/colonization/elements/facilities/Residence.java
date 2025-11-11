@@ -9,6 +9,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
@@ -76,8 +77,9 @@ public abstract class Residence extends DefaultFacility implements Home {
     }
 
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, city, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+        City city = (City) stage;
         
         int cycleComport = 20;
         int compGrade = getComportGrade();

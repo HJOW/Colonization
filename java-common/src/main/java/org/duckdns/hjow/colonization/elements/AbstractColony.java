@@ -621,9 +621,10 @@ public abstract class AbstractColony implements Colony {
     
 
     @Override
-    public void oneCycle(final int cycle, City city, Colony colony, int efficiency100, final ColonyPanel colPanel) { // city may be null
+    public void oneCycle(final int cycle, ColonyElements stage, Colony colony, int efficiency100, final ColonyPanel colPanel) {
         int idx;
         colony = this;
+        stage = this;
         
         /** 체력이 없는 객체 삭제 */
         removeDeadObjects();
@@ -649,7 +650,7 @@ public abstract class AbstractColony implements Colony {
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
-            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, stage, colony, efficiency100, colPanel);
         }
         
         // 예약 작업 처리
@@ -676,8 +677,8 @@ public abstract class AbstractColony implements Colony {
             if(time.compareTo(new BigInteger("" + ev.getOccurMinimumTime(this))) < 0) continue;
             
             if(ev.getEventSize() == TimeEvent.EVENTSIZE_COLONY) {
-                if(cycle % ev.getOccurCycle(this, city) == 0) {
-                    if(ColonyManager.random() <= ev.getOccurRate(this, this, city)) ev.onEventOccured(this, this, city, colPanel);
+                if(cycle % ev.getOccurCycle(this, null) == 0) {
+                    if(ColonyManager.random() <= ev.getOccurRate(this, this, null)) ev.onEventOccured(this, this, null, colPanel);
                 }
             }
         }
@@ -686,7 +687,7 @@ public abstract class AbstractColony implements Colony {
         if(getMoney() < 0L) {
             if(cycle % 60 == 0) {
                 long interests = ((long) Math.floor(Math.abs(getMoney()) * 0.009)) * (-1);
-                modifyingMoney(interests, city, colony, "Interest", colony.getName());
+                modifyingMoney(interests, null, colony, "Interest", colony.getName());
             }
         }
         

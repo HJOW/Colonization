@@ -78,7 +78,7 @@ public abstract class State implements ColonyElements {
     public int cycleGap(Colony colony) { return 1; }
 
     @Override
-    public final void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
+    public final void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
         // 이 메소드는 수정하거나 오버라이드하지 말 것 !
         
         if(lefts < Long.MAX_VALUE) lefts--;

@@ -222,7 +222,7 @@ public class Celestials implements HasLocation {
 	public int getDefencePoint() { return 0; }
 
 	@Override
-	public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
+	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
 		// TODO : 탐험 요소 시뮬 구현
 	}
 

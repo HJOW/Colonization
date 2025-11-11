@@ -83,7 +83,7 @@ public abstract class Product implements ColonyElements {
     public int cycleGap(Colony colony) { return 1; }
 
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) { }
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) { }
 
     @Override
     public void fromJson(JsonObject json) {

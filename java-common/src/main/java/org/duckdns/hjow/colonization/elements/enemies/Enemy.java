@@ -11,6 +11,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
+import org.duckdns.hjow.colonization.elements.Celestials;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
@@ -101,7 +102,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     public int cycleGap(Colony colony) { return 1; }
 
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
         
         // 공격 처리
         int castLeft    = getAttackCount();
@@ -109,56 +110,61 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         int naturalized = damages;
         
         if(cycle % getAttackCycle() == 0) {
-            // 시설 먼저 처리
-            
-            //     시설 목록 불러오기
-            List<Facility> facs = new ArrayList<Facility>();
-            facs.addAll(city.getFacility());
-            
-            //     순서 랜덤화 시키기
-            Collections.sort(facs, new Comparator<Facility>() {
-                @Override
-                public int compare(Facility o1, Facility o2) {
-                    if(ColonyManager.random() >= 0.5) return -1;
-                    return 1;
-                }
-            });
-            
-            //     순서대로 공격 처리
-            for(Facility fac : facs) {
-                if(fac.getHp() >= 1) {
-                    naturalized = ColonyManager.naturalizeDamage(this, fac, damages);
-                    fac.addHp(naturalized * (-1));
-                    processAfterAttack(cycle, fac, naturalized);
-                    castLeft--;
-                    if(castLeft <= 0) break;
-                }
+        	if(stage instanceof City) {
+        		City city = (City) stage;
+        		// 시설 먼저 처리
                 
-            }
-            
-            // 시설이 없으면 시민 공격
-            if(castLeft >= 1) {
-                List<Citizen> citizens = city.getCitizens();
-                for(Citizen ct : citizens) {
-                    if(ct.getHp() >= 1) {
-                        naturalized = ColonyManager.naturalizeDamage(this, ct, damages);
-                        ct.addHp(naturalized * (-1));
-                        processAfterAttack(cycle, ct, naturalized);
+                //     시설 목록 불러오기
+                List<Facility> facs = new ArrayList<Facility>();
+                facs.addAll(city.getFacility());
+                
+                //     순서 랜덤화 시키기
+                Collections.sort(facs, new Comparator<Facility>() {
+                    @Override
+                    public int compare(Facility o1, Facility o2) {
+                        if(ColonyManager.random() >= 0.5) return -1;
+                        return 1;
+                    }
+                });
+                
+                //     순서대로 공격 처리
+                for(Facility fac : facs) {
+                    if(fac.getHp() >= 1) {
+                        naturalized = ColonyManager.naturalizeDamage(this, fac, damages);
+                        fac.addHp(naturalized * (-1));
+                        processAfterAttack(cycle, fac, naturalized);
                         castLeft--;
                         if(castLeft <= 0) break;
                     }
+                    
                 }
-            }
-            
-            // 시설, 시민 모두 없으면 도시 자체
-            if(castLeft >= 1) {
-                if(city.getHp() >= 1) {
-                    naturalized = ColonyManager.naturalizeDamage(this, city, damages);
-                    processAfterAttack(cycle, city, naturalized);
-                    city.addHp(naturalized * (-1));
-                    castLeft--;
+                
+                // 시설이 없으면 시민 공격
+                if(castLeft >= 1) {
+                    List<Citizen> citizens = city.getCitizens();
+                    for(Citizen ct : citizens) {
+                        if(ct.getHp() >= 1) {
+                            naturalized = ColonyManager.naturalizeDamage(this, ct, damages);
+                            ct.addHp(naturalized * (-1));
+                            processAfterAttack(cycle, ct, naturalized);
+                            castLeft--;
+                            if(castLeft <= 0) break;
+                        }
+                    }
                 }
-            }
+                
+                // 시설, 시민 모두 없으면 도시 자체
+                if(castLeft >= 1) {
+                    if(city.getHp() >= 1) {
+                        naturalized = ColonyManager.naturalizeDamage(this, city, damages);
+                        processAfterAttack(cycle, city, naturalized);
+                        city.addHp(naturalized * (-1));
+                        castLeft--;
+                    }
+                }
+        	} else if(stage instanceof Celestials) {
+        		// TODO
+        	}
         }
     }
     

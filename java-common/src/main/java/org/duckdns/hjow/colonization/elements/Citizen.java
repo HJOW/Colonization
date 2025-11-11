@@ -89,7 +89,9 @@ public class Citizen implements ColonyElements {
     public int cycleGap(Colony colony) { return 1; }
 
     @Override
-    public void oneCycle(int cycle, City city, Colony colony, int efficiency100, ColonyPanel colPanel) {
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+    	City city = (City) stage;
+    	
         // HP 처리
         if(hp < 0) hp = 0;
         if(hp <= 0) return;
