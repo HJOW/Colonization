@@ -122,6 +122,7 @@ public final class FreeColony extends AbstractColony {
         fac = new CargoRailSystem();
         city.getFacility().add(fac);
         
+        setNewCityCoordinate(city);
         getCities().add(city);
         return city;
     }
