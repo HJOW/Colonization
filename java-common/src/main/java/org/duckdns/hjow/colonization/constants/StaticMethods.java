@@ -3,6 +3,9 @@ package org.duckdns.hjow.colonization.constants;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,6 +80,102 @@ public class StaticMethods {
     	zd = zd.pow(2);
     	
     	BigDecimal sum = xd.add(yd).add(zd);
-    	return sqrt(sum).longValue();
+    	return sqrt(sum).abs().longValue();
+    }
+    
+    /** 적정 거리 내에 랜덤 좌표 생성 */
+    public static Map<String, Number> createCoordinateIntScale(long stdx, long stdy, long stdz, int minDistance, int maxDistance) {
+    	if(minDistance >= 0 && maxDistance >= 0 && maxDistance < minDistance) throw new IllegalArgumentException("Max distance cannot smaller than MIN distance !");
+    	
+        Random rd = new Random();
+    	boolean positive = rd.nextBoolean();
+    	
+    	long x = 0L;
+    	long y = 0L;
+    	long z = 0L;
+    	long dist = 0L;
+    	long divides = maxDistance;
+    	if(maxDistance < 0) divides = Integer.MAX_VALUE / 10L;
+    	
+    	boolean minCorrect = true;
+    	boolean maxCorrect = true;
+    	
+    	while(true) {
+    		minCorrect = false;
+    		maxCorrect = false;
+    		
+    		// 적당한 범위 내로 랜덤 위치 설정
+    	    x = stdx + ((rd.nextInt() / (Integer.MAX_VALUE / divides)) * (positive ? 1 : (-1))); positive = rd.nextBoolean();
+            y = stdy + ((rd.nextInt() / (Integer.MAX_VALUE / divides)) * (positive ? 1 : (-1))); positive = rd.nextBoolean();
+            z = stdz + ((rd.nextInt() / (Integer.MAX_VALUE / divides)) * (positive ? 1 : (-1)));
+            dist = getDistance(x, y, z, stdx, stdy, stdz);
+            
+            if(maxDistance >= 0) {
+                if(dist <= maxDistance) maxCorrect = true;
+            } else {
+            	maxCorrect = true;
+            }
+            
+            if(minDistance >= 0) {
+            	if(dist >= minDistance) minCorrect = true;
+            } else {
+            	minCorrect = true;
+            }
+            if(minCorrect && maxCorrect) break;
+    	}
+    	
+    	Map<String, Number> coordinate = new HashMap<String, Number>();
+    	coordinate.put("x", new Long(x));
+    	coordinate.put("y", new Long(y));
+    	coordinate.put("z", new Long(z));
+    	return coordinate;
+    }
+    
+    /** 적정 거리 내에 랜덤 좌표 생성 */
+    public static Map<String, Number> createCoordinateLongScale(long stdx, long stdy, long stdz, long minDistance, long maxDistance) {
+    	if(minDistance >= 0 && maxDistance >= 0 && maxDistance < minDistance) throw new IllegalArgumentException("Max distance cannot smaller than MIN distance !");
+    	
+        Random rd = new Random();
+    	boolean positive = rd.nextBoolean();
+    	
+    	long x = 0L;
+    	long y = 0L;
+    	long z = 0L;
+    	long dist = 0L;
+    	long divides = maxDistance;
+    	if(maxDistance < 0) divides = Long.MAX_VALUE / 10L;
+    	
+    	boolean minCorrect = true;
+    	boolean maxCorrect = true;
+    	
+    	while(true) {
+    		minCorrect = false;
+    		maxCorrect = false;
+    		
+    		// 적당한 범위 내로 랜덤 위치 설정
+    	    x = stdx + (((rd.nextLong() / 10L) / ((Long.MAX_VALUE / 10L) / divides)) * (positive ? 1 : (-1))); positive = rd.nextBoolean();
+            y = stdy + (((rd.nextLong() / 10L) / ((Long.MAX_VALUE / 10L) / divides)) * (positive ? 1 : (-1))); positive = rd.nextBoolean();
+            z = stdz + (((rd.nextLong() / 10L) / ((Long.MAX_VALUE / 10L) / divides)) * (positive ? 1 : (-1)));
+            dist = getDistance(x, y, z, stdx, stdy, stdz);
+            
+            if(maxDistance >= 0) {
+                if(dist <= maxDistance) maxCorrect = true;
+            } else {
+            	maxCorrect = true;
+            }
+            
+            if(minDistance >= 0) {
+            	if(dist >= minDistance) minCorrect = true;
+            } else {
+            	minCorrect = true;
+            }
+            if(minCorrect && maxCorrect) break;
+    	}
+    	
+    	Map<String, Number> coordinate = new HashMap<String, Number>();
+    	coordinate.put("x", new Long(x));
+    	coordinate.put("y", new Long(y));
+    	coordinate.put("z", new Long(z));
+    	return coordinate;
     }
 }

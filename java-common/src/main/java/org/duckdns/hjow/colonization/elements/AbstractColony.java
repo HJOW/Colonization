@@ -51,6 +51,7 @@ public abstract class AbstractColony implements Colony {
     protected List<Research>   researches = new Vector<Research>();
     protected List<Loan>       loanAvail  = new Vector<Loan>();
     protected List<Loan>       loanHave   = new Vector<Loan>();
+    protected List<Celestials> celestials = new Vector<Celestials>();
     
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected int  difficulty = 0;
@@ -265,7 +266,15 @@ public abstract class AbstractColony implements Colony {
         this.holdings = holdings;
     }
 
-    @Override
+    public List<Celestials> getCelestials() {
+		return celestials;
+	}
+
+	public void setCelestials(List<Celestials> celestials) {
+		this.celestials = celestials;
+	}
+
+	@Override
     public List<Research> getResearches() {
         return researches;
     }
@@ -1060,6 +1069,10 @@ public abstract class AbstractColony implements Colony {
         json.put("accountinghis", list);
         
         list = new JsonArray();
+        for(Celestials c : getCelestials()) { list.add(c.toJson(details, col, city)); }
+        json.put("celestials", list);
+        
+        list = new JsonArray();
         for(Research d : getResearches()) { list.add(d.toJson(details, col, city)); }
         json.put("researches", list);
         
@@ -1169,6 +1182,24 @@ public abstract class AbstractColony implements Colony {
         }
         
         list = null;
+        try { list = (JsonArray) json.get("celestials"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        celestials.clear();
+        if(list != null) {
+            for(Object o : list) {
+                if(o instanceof String) o = JsonObject.parseJson(o.toString());
+                if(o instanceof JsonObject) {
+                    try {
+                        Celestials cele = new Celestials();
+                        cele.fromJson((JsonObject) o);
+                        celestials.add(cele);
+                    } catch(Exception ex) {
+                        GlobalLogs.processExceptionOccured(ex, false);
+                    }
+                }
+            }
+        }
+        
+        list = null;
         try { list = (JsonArray) json.get("researches"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         researches.clear();
         if(list != null) {
@@ -1250,9 +1281,10 @@ public abstract class AbstractColony implements Colony {
         res = res.add(new BigInteger(String.valueOf(getHp())).multiply(Constants.BIGINTEGER_3.multiply(ColonyManager.getCheckerConst(getClientBuildNo()))));
         res = res.add(new BigInteger(String.valueOf(getDifficulty())).multiply(Constants.BIGINTEGER_17.multiply(ColonyManager.getCheckerConst(getClientBuildNo()))));
         
-        for(City c : getCities())    { res = res.add(c.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(c instanceof CustomElement) res = BigInteger.ZERO; }
-        for(Loan l : getLoanAvail()) { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
-        for(Loan l : getLoanHave())  { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
+        for(City       c : getCities())     { res = res.add(c.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(c instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Loan       l : getLoanAvail())  { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Loan       l : getLoanHave())   { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Celestials c : getCelestials()) { res = res.add(c.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(c instanceof CustomElement) res = BigInteger.ZERO; }
         
         return res;
     }
