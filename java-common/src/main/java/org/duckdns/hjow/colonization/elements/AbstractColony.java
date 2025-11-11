@@ -28,6 +28,7 @@ import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -1029,6 +1030,33 @@ public abstract class AbstractColony implements Colony {
     @Override
     public String toString() {
         return getName();
+    }
+    
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
+    public Vector<Ship> getShips() {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(City c : getCities()) {
+    		list.addAll(c.getShips());
+    	}
+    	return list;
+    }
+    
+    /** 해당 위치의 모든 함선들 반환 */
+    public Vector<Ship> getShips(int x, int y, int z) {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(City c : getCities()) {
+    		list.addAll(c.getShips(x, y, z));
+    	}
+    	return list;
+    }
+    
+    /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
+    public Vector<Ship> getShips(int x, int y, int z, int dist) {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(City c : getCities()) {
+    		list.addAll(c.getShips(x, y, z, dist));
+    	}
+    	return list;
     }
     
     /** Json 데이터를 읽어 City 불러오기 */

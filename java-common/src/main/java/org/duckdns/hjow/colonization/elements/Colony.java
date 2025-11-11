@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Vector;
 
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -9,6 +10,7 @@ import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 
@@ -85,4 +87,10 @@ public interface Colony extends HasLocation {
     public void resetClientVersion(ColonyManagerUI man);
     /** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */
     public void randomizeCelestials();
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
+    public Vector<Ship> getShips();
+    /** 해당 위치의 모든 함선들 반환 */
+    public Vector<Ship> getShips(int x, int y, int z);
+    /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
+    public Vector<Ship> getShips(int x, int y, int z, int dist);
 }

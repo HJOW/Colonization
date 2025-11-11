@@ -11,6 +11,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.products.Product;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -224,6 +225,17 @@ public class Celestials implements HasLocation {
 	@Override
 	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
 		// TODO : 탐험 요소 시뮬 구현
+		
+		for(Ship s : colony.getShips()) {
+        	if(s.getHp() <= 0) continue;
+        	if(! (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ())) continue;
+        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, this, colony, efficiency100, colPanel);
+        }
+		
+		for(Enemy e : getEnemies()) {
+			if(e.getHp() <= 0) continue;
+			if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, colony, efficiency100, colPanel);
+		}
 	}
 
 	@Override

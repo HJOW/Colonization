@@ -9,8 +9,10 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
+import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -90,12 +92,31 @@ public abstract class Port extends DefaultFacility {
         return res;
     }
 
-    /** 격납 중인 함선들 반환 */
+    /** 소속 함선들 반환 (격납 중인 함선이 아님 ! 파견되어 있더라도 소속이 이 곳이면 여전히 조회됨) */
 	public Vector<Ship> getShips() {
 		return ships;
 	}
 
 	public void setShips(Vector<Ship> ships) {
 		this.ships = ships;
+	}
+	
+	@Override
+    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+		super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+		
+		// 수명 다된 함선 제거
+        int std = 0;
+        while(std < getShips().size()) {
+            Ship st = getShips().get(std);
+            if(st.getHp() <= 0) {
+                st.dispose();
+                getShips().remove(std);
+                continue;
+            }
+            std++;
+        }
+        
+        // 적 공격 등은 도시 oneCycle 에서 따로 처리
 	}
 }

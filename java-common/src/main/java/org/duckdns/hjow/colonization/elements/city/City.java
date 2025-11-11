@@ -42,6 +42,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 도시 구현 클래스 */
 public abstract class City implements HasLocation {
@@ -437,8 +438,15 @@ public abstract class City implements HasLocation {
             }
         }
         
+        // 함선 사이클 처리 (파괴된 함선 제거는 시설 oneCycle 에서 처리)
+        for(Ship s : getShips()) {
+        	if(s.getHp() <= 0) continue;
+        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, this, colony, efficiency100, colPanel);
+        }
+        
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
+        	if(e.getHp() <= 0) continue;
             if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, colony, efficiency100, colPanel);
         }
         
@@ -1347,7 +1355,7 @@ public abstract class City implements HasLocation {
     	return res;
     }
     
-    /** 도시 내 격납 중인 함선들 반환 */
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
     public Vector<Ship> getShips() {
     	Vector<Ship> list = new Vector<Ship>();
     	for(Facility f : getFacility()) {
@@ -1358,7 +1366,25 @@ public abstract class City implements HasLocation {
     	return list;
     }
     
-    /** 함선 하나를 도시에서 제거 (외부로 이동했다거나 등의 이유 발생 시 호출) */
+    /** 해당 위치의 모든 함선들 반환 */
+    public Vector<Ship> getShips(int x, int y, int z) {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(Ship s : getShips()) {
+    		if(s.getX() == x && s.getY() == y && s.getZ() == z) { list.add(s); }
+    	}
+    	return list;
+    }
+    
+    /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
+    public Vector<Ship> getShips(int x, int y, int z, int dist) {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(Ship s : getShips()) {
+    		if(DataUtil.getDistance(x, y, z, s.getX(), s.getY(), s.getZ()) <= dist) { list.add(s); }
+    	}
+    	return list;
+    }
+    
+    /** 함선 하나를 도시에서 제거 (파괴 혹은 다른 도시로 이동했다거나 등의 이유 발생 시 호출, 단순 파견으로는 이 메소드를 호출하면 안 됨) */
     public void removeShip(Ship s) {
     	for(Facility f : getFacility()) {
     		if(f instanceof Port) {
@@ -1366,6 +1392,17 @@ public abstract class City implements HasLocation {
     			p.getShips().remove(s);
     		}
     	}
+    }
+    
+    /** 우주 공항 리스트 반환 */
+    public List<Port> getPorts() {
+    	List<Port> ports = new ArrayList<Port>();
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			ports.add((Port) f);
+    		}
+    	}
+    	return ports;
     }
     
     @Override

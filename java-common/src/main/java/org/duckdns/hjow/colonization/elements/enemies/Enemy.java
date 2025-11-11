@@ -17,6 +17,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
@@ -112,9 +113,10 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         if(cycle % getAttackCycle() == 0) {
         	if(stage instanceof City) {
         		City city = (City) stage;
-        		// 시설 먼저 처리
+        		// 함선 목록 불러오기
+        		List<Ship> ships = city.getShips();
                 
-                //     시설 목록 불러오기
+                // 시설 목록 불러오기
                 List<Facility> facs = new ArrayList<Facility>();
                 facs.addAll(city.getFacility());
                 
@@ -128,13 +130,26 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                 });
                 
                 //     순서대로 공격 처리
-                for(Facility fac : facs) {
+                // 함선
+                for(Ship fac : ships) {
+                	if(castLeft <= 0) break;
                     if(fac.getHp() >= 1) {
                         naturalized = ColonyManager.naturalizeDamage(this, fac, damages);
                         fac.addHp(naturalized * (-1));
                         processAfterAttack(cycle, fac, naturalized);
                         castLeft--;
-                        if(castLeft <= 0) break;
+                    }
+                    
+                }
+                
+                // 시설
+                for(Facility fac : facs) {
+                	if(castLeft <= 0) break;
+                    if(fac.getHp() >= 1) {
+                        naturalized = ColonyManager.naturalizeDamage(this, fac, damages);
+                        fac.addHp(naturalized * (-1));
+                        processAfterAttack(cycle, fac, naturalized);
+                        castLeft--;
                     }
                     
                 }
@@ -143,12 +158,12 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                 if(castLeft >= 1) {
                     List<Citizen> citizens = city.getCitizens();
                     for(Citizen ct : citizens) {
+                    	if(castLeft <= 0) break;
                         if(ct.getHp() >= 1) {
                             naturalized = ColonyManager.naturalizeDamage(this, ct, damages);
                             ct.addHp(naturalized * (-1));
                             processAfterAttack(cycle, ct, naturalized);
                             castLeft--;
-                            if(castLeft <= 0) break;
                         }
                     }
                 }
