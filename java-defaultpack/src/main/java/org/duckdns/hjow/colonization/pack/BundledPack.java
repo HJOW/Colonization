@@ -26,6 +26,8 @@ import org.duckdns.hjow.colonization.elements.facilities.Turret;
 import org.duckdns.hjow.colonization.elements.policies.FertilityPromotionPolicy;
 import org.duckdns.hjow.colonization.elements.policies.PowerEfficiencyProtocol;
 import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
+import org.duckdns.hjow.colonization.elements.products.metal.Iron1;
+import org.duckdns.hjow.colonization.elements.products.metal.Iron2;
 import org.duckdns.hjow.colonization.elements.research.BasicScience;
 import org.duckdns.hjow.colonization.elements.research.biology.BasicBiology;
 import org.duckdns.hjow.colonization.elements.research.biology.BasicMedicalScience;
@@ -126,6 +128,8 @@ public final class BundledPack extends DefaultPack {
         stateClasses.add(SuperAngry.class);
         
         productClasses.add(NutritionBlock.class);
+        productClasses.add(Iron1.class);
+        productClasses.add(Iron2.class);
         
         policyClasses.add(PowerEfficiencyProtocol.class);
         policyClasses.add(FertilityPromotionPolicy.class);

@@ -229,9 +229,10 @@ public class Celestials implements HasLocation {
 	@Override
 	public int cycleGap(Colony colony) { return 99999; }
 	
-	public static Celestials createRandom(long stdx, long stdy, long stdz, int dist) {
+	/** 랜덤 천체 생성 */
+	public static Celestials createRandom(long stdx, long stdy, long stdz, int minDist, int maxDist, int grade) {
 		Celestials c = new Celestials();
-		Map<String, Number> coordinate = DataUtil.createCoordinateIntScale(stdx, stdy, stdz, dist / 2, dist);
+		Map<String, Number> coordinate = DataUtil.createCoordinateIntScale(stdx, stdy, stdz, minDist, maxDist);
 		c.setX(coordinate.get("x").longValue());
 		c.setY(coordinate.get("y").longValue());
 		c.setZ(coordinate.get("z").longValue());

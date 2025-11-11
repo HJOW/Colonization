@@ -83,4 +83,6 @@ public interface Colony extends HasLocation {
     public long getClientBuildNo();
     /** 버전 정보 리셋 */
     public void resetClientVersion(ColonyManagerUI man);
+    /** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */
+    public void randomizeCelestials();
 }

@@ -1366,6 +1366,23 @@ public abstract class AbstractColony implements Colony {
         return this;
     }
     
+    /** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */
+    @Override
+    public void randomizeCelestials() {
+    	if(! celestials.isEmpty()) return;
+    	Celestials newOne;
+    	
+    	Random rand = new Random();
+		int intRand = ((int) (Math.abs(rand.nextInt())) / (Integer.MAX_VALUE / 1000)) + 1000;
+		int grade = 1;
+		
+	    for(int idx=0; idx<intRand; idx++) {
+	    	newOne = Celestials.createRandom(getX(), getY(), getZ(), 1000, (int) (1000 + (Math.random() * idx)), grade + (Math.random() >= 0.5 ? 1 : 0) + (Math.random() >= 0.8 ? 1 : 0) );
+	    	if(idx % 100 == 0) grade++;
+	    	celestials.add(newOne);
+	    }
+    }
+    
     public static String getColonyClassName() {
         return "Colony";
     }

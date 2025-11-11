@@ -535,6 +535,7 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     protected void newColonyAfterJobs(Colony col) {
         col.newCity();
         col.resetAvailLoans();
+        col.randomizeCelestials();
         colonies.add(col);
         refreshColonyList();
     }
