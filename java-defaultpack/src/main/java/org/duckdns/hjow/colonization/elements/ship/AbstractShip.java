@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization.elements.ship;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -14,6 +15,7 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -27,9 +29,9 @@ public class AbstractShip implements Ship {
 	protected volatile long key = ColonyManager.generateKey();
 	protected String name = getDefaultName() + "_" + ColonyManager.getNaturalNumberFrom(key);
 	protected int hp = getMaxHp();
-	protected int level = 1;
+	protected int level = 0;
 	
-	protected long leftProgress = 0; // 이 함선 생산까지 남은 시간, 이 값이 0 초과 시 사용 불가, 매 사이클마다 감소
+	protected long leftProgress = getMaxProgress(); // 이 함선 생산까지 남은 시간, 이 값이 0 초과 시 사용 불가, 매 사이클마다 감소
 	
 	protected List<State> states = new Vector<State>();
 	protected List<Product> stored = new Vector<Product>();
@@ -42,10 +44,6 @@ public class AbstractShip implements Ship {
     protected long destinationY = 0L;
     protected long destinationZ = 0L;
     
-    protected String getDefaultName() {
-    	return ColonyManager.t("함선");
-    }
-
 	@Override
 	public int getAttackCycle() {
 		return 120;
@@ -120,6 +118,13 @@ public class AbstractShip implements Ship {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+	
+	@Override
+	public void increaseLevel() {
+		if(getLeftProgress() >= 1) return;
+		setLeftProgress(0L);
+		setLevel(getLevel() + 1);
 	}
 
 	@Override
@@ -519,7 +524,12 @@ public class AbstractShip implements Ship {
 
 	@Override
 	public long getRealSpeed(Colony col) {
-		return getSpeed();
+		return getSpeed() + (int) Math.floor(getSpeedIncreases(col));
+	}
+	
+	/** 레벨 당 속도 증가치 등 계산 */
+	protected double getSpeedIncreases(Colony colony) {
+		return level * (getSpeed() * 0.1);
 	}
 	
 	@Override
@@ -527,8 +537,61 @@ public class AbstractShip implements Ship {
     	return getDamage() + (int) Math.floor(getDamageIncreases(target, colony));
     }
 	
-	/** 레벨 당 증가치 등 계산 */
+	/** 레벨 당 대미지 증가치 등 계산 */
     protected double getDamageIncreases(ColonyElements target, Colony colony) {
     	return level * (getDamage() * 0.1);
+    }
+    
+    @Override
+    public String getDefaultName() {
+    	try {
+    	    Class<? extends Ship> classes = getClass();
+    	    Method mthd = classes.getMethod("getMetaName");
+    	    return (String) mthd.invoke(null);
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
+    @Override
+    public String getDescription() {
+    	try {
+    	    Class<? extends Ship> classes = getClass();
+    	    Method mthd = classes.getMethod("getMetaDescription");
+    	    return (String) mthd.invoke(null);
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
+    @Override
+    public long getMaxProgress() {
+    	try {
+    	    Class<? extends Ship> classes = getClass();
+    	    Method mthd = classes.getMethod("getMetaBuildCycle");
+    	    return ((Number) mthd.invoke(null)).longValue();
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
+    /** 함선 명칭 */
+    public static String getMetaName() {
+		return ColonyManager.t("함선");
+	}
+    
+    /** 함선 설명 */
+    public static String getMetaDescription() {
+    	return "";
+    }
+    
+    /** 함선 건조 시간 (사이클) */
+    public static long getMetaBuildCycle() {
+    	return 200;
+    }
+    
+    /** 함선 건조 가능여부, null 리턴 시 가능한 것. 그외의 경우 건조 불가능 사유 리턴 */
+    public static String getMetaBuildAvail(Port port, Colony colony) {
+    	return null;
     }
 }

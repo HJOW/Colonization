@@ -11,6 +11,14 @@ import org.duckdns.hjow.colonization.elements.states.State;
 
 /** 함선 */
 public interface Ship extends AttackableObject, HasLocation {
+	/** 기본 명칭 반환 */
+	public String getDefaultName();
+	/** 함선 종류의 설명 반환 */
+	public String getDescription();
+	/** 함선 건조에 필요한 최대 시간 (사이클) 반환 */
+	public long getMaxProgress();
+	/** 함선의 레벨 반환 */
+	public int getLevel();
 	/** 속도 - 1 사이클 당 이동 거리 반환 */
     public int getSpeed();
     /** 실제 속도 반환 (연구 등 적용) */
@@ -45,4 +53,19 @@ public interface Ship extends AttackableObject, HasLocation {
     public long getLeftProgress();
     /** 함선 제조/수리 진행 */
     public void decreaseProgress(City city, Colony colony);
+    /** 레벨 증가, 단, 잔여 제조/수리 시간이 있는 경우 아무 일도 하지 않음. */
+    public void increaseLevel();
+    
+    
+    /* 다음 static 메소드 의무 탑재 !
+     * 
+     *  // 함선 명칭
+        public static String getMetaName()
+        // 함선 설명
+        public static String getMetaDescription()
+        // 함선 건조 시간 (사이클)
+        public static long getMetaBuildCycle()
+        // 함선 건조 가능여부, null 리턴 시 가능한 것. 그외의 경우 건조 불가능 사유 리턴
+        public static String getMetaBuildAvail(Port port, Colony colony);
+     */
 }
