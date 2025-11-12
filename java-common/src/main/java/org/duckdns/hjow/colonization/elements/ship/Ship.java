@@ -5,6 +5,7 @@ import java.util.List;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.HasLocation;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
 
@@ -40,4 +41,8 @@ public interface Ship extends AttackableObject, HasLocation {
     public long getEstimatedArrivalTime(Colony colony);
     /** 도착 여부 반환 */
     public boolean isArrived();
+    /** 함선 제조/수리까지 남은 시간(사이클) 반환 - 이 값이 1 이상이면 조작 불가, 매 사이클마다 감소 */
+    public long getLeftProgress();
+    /** 함선 제조/수리 진행 */
+    public void decreaseProgress(City city, Colony colony);
 }

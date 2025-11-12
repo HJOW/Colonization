@@ -29,6 +29,8 @@ public class AbstractShip implements Ship {
 	protected int hp = getMaxHp();
 	protected int level = 1;
 	
+	protected long leftProgress = 0; // 이 함선 생산까지 남은 시간, 이 값이 0 초과 시 사용 불가, 매 사이클마다 감소
+	
 	protected List<State> states = new Vector<State>();
 	protected List<Product> stored = new Vector<Product>();
 	
@@ -192,19 +194,20 @@ public class AbstractShip implements Ship {
 
 	@Override
 	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+		if(getLeftProgress() >= 1) return; // 제조/수리 진행 처리는 City 의 oneCycle 에서 진행
+		
 		// 이동 수행
 		if(! isArrived()) {
 			processMove(colony);
 		}
 		
-		
 		// 공격 수행
-		int castLeft    = getAttackCount();
-        int damages     = getDamage();
-        int naturalized = damages;
-        
         List<Enemy> enemies = null;
         if(cycle % getAttackCycle() == 0) {
+        	int castLeft    = getAttackCount();
+            int damages     = getDamage();
+            int naturalized = damages;
+            
         	if(stage instanceof City) {
         		City city = (City) stage;
         		enemies = city.getEnemies();
@@ -265,6 +268,7 @@ public class AbstractShip implements Ship {
 		key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
         setLevel(Integer.parseInt(json.get("level").toString()));
+        setLeftProgress(Long.parseLong(json.get("leftProgress").toString()));
         
         try { x = Long.parseLong(json.get("x").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setX(0L); }
         try { y = Long.parseLong(json.get("y").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setY(0L); }
@@ -328,6 +332,7 @@ public class AbstractShip implements Ship {
         json.put("key", String.valueOf(getKey()));
         json.put("hp", new Integer(getHp()));
         json.put("level", new Integer(getLevel()));
+        json.put("leftProgress", String.valueOf(getLeftProgress()));
         
         json.put("x", String.valueOf(getX()));
         json.put("y", String.valueOf(getY()));
@@ -476,6 +481,21 @@ public class AbstractShip implements Ship {
 
 	public void setDestinationZ(long destinationZ) {
 		this.destinationZ = destinationZ;
+	}
+
+	@Override
+	public long getLeftProgress() {
+		return leftProgress;
+	}
+	
+	@Override
+	public void decreaseProgress(City city, Colony colony) {
+		leftProgress = leftProgress - 1L;
+		if(leftProgress < 0) leftProgress = 0L;
+	}
+
+	public void setLeftProgress(long leftProgress) {
+		this.leftProgress = leftProgress;
 	}
 
 	@Override

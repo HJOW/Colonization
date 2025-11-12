@@ -441,8 +441,14 @@ public abstract class City implements HasLocation {
         // 함선 사이클 처리 (파괴된 함선 제거는 시설 oneCycle 에서 처리)
         for(Ship s : getShips()) {
         	if(s.getHp() <= 0) continue;
-        	if(! (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ())) continue;
-        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, this, colony, efficiency100, colPanel);
+        	if(s.getLeftProgress() >= 1) { s.decreaseProgress(this, colony); continue; }
+        	
+        	boolean isHere = (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ());
+        	
+        	ColonyElements target = null;
+        	if(isHere) target = this;
+        	
+        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, target, colony, efficiency100, colPanel);
         }
         
         // 적 사이클 처리
