@@ -1,6 +1,8 @@
 package org.duckdns.hjow.colonization.elements.ship;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Vector;
 
@@ -17,6 +19,7 @@ import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 함선 - 공통 구현 파트 */
 public class AbstractShip implements Ship {
@@ -31,6 +34,10 @@ public class AbstractShip implements Ship {
 	protected long x = 0L;
     protected long y = 0L;
     protected long z = 0L;
+    
+    protected long destinationX = 0L;
+    protected long destinationY = 0L;
+    protected long destinationZ = 0L;
 
 	@Override
 	public int getAttackCycle() {
@@ -49,7 +56,7 @@ public class AbstractShip implements Ship {
 	
 	@Override
 	public int getSpeed() {
-		return 1;
+		return 10;
 	}
 
 	@Override
@@ -109,9 +116,76 @@ public class AbstractShip implements Ship {
 	public int getDefencePoint() {
 		return 1;
 	}
+	
+	/** 이동 수행 */
+	protected void processMove() {
+		if(isArrived()) return; // 목적지에 이미 있으면 그냥 리턴
+		
+		long distance = DataUtil.getDistance(getX(), getY(), getZ(), getDestinationX(), getDestinationY(), getDestinationZ());
+		
+		// 거리가 1 이하이면 그냥 도착한 것으로 간주하고 넘기기
+		if(distance <= 1) {
+			setX(getDestinationX());
+			setY(getDestinationY());
+			setZ(getDestinationZ());
+			return;
+		}
+		
+		int speed = getSpeed();
+		long leftX = getDestinationX() - getX();
+		long leftY = getDestinationY() - getY();
+		long leftZ = getDestinationZ() - getZ();
+		
+		// 속도보다 거리가 더 가까운 경우, 1 사이클 지나면 목적지에 도착하므로, 마찬가지로 도착한 것으로 간주
+		if(speed <= distance) {
+			setX(getDestinationX());
+			setY(getDestinationY());
+			setZ(getDestinationZ());
+			return;
+		}
+		
+		BigDecimal ratio  = new BigDecimal(String.valueOf(speed)).divide(new BigDecimal(String.valueOf(distance)), 50, RoundingMode.HALF_UP);
+		BigDecimal deltaX = new BigDecimal(String.valueOf(leftX)).multiply(ratio);
+		BigDecimal deltaY = new BigDecimal(String.valueOf(leftY)).multiply(ratio);
+		BigDecimal deltaZ = new BigDecimal(String.valueOf(leftZ)).multiply(ratio);
+		
+		// 이동 수행
+		setX(getX() + deltaX.longValue());
+		setY(getY() + deltaY.longValue());
+		setZ(getZ() + deltaZ.longValue());
+	}
+	
+	@Override
+	public long getEstimatedArrivalTime() {
+		if(isArrived()) return 0L; // 목적지에 이미 있으면 0 반환
+		
+        long distance = DataUtil.getDistance(getX(), getY(), getZ(), getDestinationX(), getDestinationY(), getDestinationZ());
+		
+		// 거리가 1 이하이면 1 사이클 내에 도착하므로 1 반환
+		if(distance <= 1) {
+			return 1L;
+		}
+		
+		int speed = getSpeed();
+		
+		// 속도보다 거리가 더 가까운 경우, 1 사이클 지나면 목적지에 도착하므로 1 반환
+        if(speed <= distance) {
+        	return 1L;
+        }
+        
+        if(speed <= 0) return Long.MAX_VALUE; // 속도가 없으면 (뭔가의 이유로 저하) 무한대의 의미로 Long 최대값 반환
+		return Math.abs(distance / speed) + 1;
+	}
 
 	@Override
 	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+		// 이동 수행
+		if(! isArrived()) {
+			processMove();
+		}
+		
+		
+		// 공격 수행
 		int castLeft    = getAttackCount();
         int damages     = getDamage();
         int naturalized = damages;
@@ -175,6 +249,14 @@ public class AbstractShip implements Ship {
 		key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
         
+        try { x = Long.parseLong(json.get("x").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setX(0L); }
+        try { y = Long.parseLong(json.get("y").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setY(0L); }
+        try { z = Long.parseLong(json.get("z").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setZ(0L); }
+        
+        try { destinationX = Long.parseLong(json.get("dx").toString());   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setDestinationX(0L); }
+        try { destinationY = Long.parseLong(json.get("dy").toString());   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setDestinationY(0L); }
+        try { destinationZ = Long.parseLong(json.get("dz").toString());   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setDestinationZ(0L); }
+        
         JsonArray list = (JsonArray) json.get("states");
         states.clear();
         if(list != null) {
@@ -227,8 +309,15 @@ public class AbstractShip implements Ship {
         json.put("type", getClassName());
         json.put("name", getName());
         json.put("key", String.valueOf(getKey()));
-        
         json.put("hp", new Integer(getHp()));
+        
+        json.put("x", String.valueOf(getX()));
+        json.put("y", String.valueOf(getY()));
+        json.put("z", String.valueOf(getZ()));
+        
+        json.put("dx", String.valueOf(getDestinationX()));
+        json.put("dy", String.valueOf(getDestinationY()));
+        json.put("dz", String.valueOf(getDestinationZ()));
         
         JsonArray list = new JsonArray();
         for(State s : getStates()) { list.add(s.toJson(details, col, city)); }
@@ -347,4 +436,46 @@ public class AbstractShip implements Ship {
 		return 10;
 	}
 
+	public long getDestinationX() {
+		return destinationX;
+	}
+
+	public void setDestinationX(long destinationX) {
+		this.destinationX = destinationX;
+	}
+
+	public long getDestinationY() {
+		return destinationY;
+	}
+
+	public void setDestinationY(long destinationY) {
+		this.destinationY = destinationY;
+	}
+
+	public long getDestinationZ() {
+		return destinationZ;
+	}
+
+	public void setDestinationZ(long destinationZ) {
+		this.destinationZ = destinationZ;
+	}
+
+	@Override
+	public void stop() {
+		destinationX = x;
+		destinationY = y;
+		destinationZ = z;
+	}
+
+	@Override
+	public void moveStartTo(int x, int y, int z) {
+		destinationX = x;
+		destinationY = y;
+		destinationZ = z;
+	}
+	
+	@Override
+	public boolean isArrived() {
+		return ( getX() == getDestinationX() && getY() == getDestinationY() && getZ() == getDestinationZ() );
+	}
 }

@@ -748,6 +748,19 @@ public abstract class AbstractColony implements Colony {
             }
             idx++;
         }
+        
+        // 적과 보상이 남아있지 않은 천체 삭제
+        idx = 0;
+        while(idx < getCelestials().size()) {
+        	Celestials cele = getCelestials().get(idx);
+        	if(cele.isEmpty()) {
+        		cele.dispose();
+        		getCelestials().remove(idx);
+        		ColonyManager.logGlobals(ColonyManager.t("천체 [CELE] 에는 더 이상 갈 필요가 없음.").replace("[CELE]", cele.getName()), 1);
+                continue;
+        	}
+        	idx++;
+        }
     }
     
     /** 대출 사이클 처리 */

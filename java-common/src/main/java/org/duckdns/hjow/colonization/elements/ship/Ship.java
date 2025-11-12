@@ -15,8 +15,26 @@ public interface Ship extends AttackableObject, HasLocation {
     public List<State> getStates();
     /** 화물칸 내에 있는 Product 들 반환 */
     public List<Product> getStored();
+    /** 해당 화물 적재 */
     public void store(Product p);
+    /** 현재 화물 적재량 (특정 화물만 카운트) */
     public int getStoredCount(String productType);
+    /** 현재 화물 적재량 */
     public int getStoredCount();
+    /** 최대 화물 수용량 */
     public int getMaxStoredCapacity();
+    /** 목적지 X 좌표 */
+    public long getDestinationX();
+    /** 목적지 Y 좌표 */
+    public long getDestinationY();
+    /** 목적지 Z 좌표 */
+    public long getDestinationZ();
+    /** 정지 명령 */
+    public void stop();
+    /** 해당 좌표로 이동 명령 */
+    public void moveStartTo(int x, int y, int z);
+    /** 도착 예정시간 (사이클 수) 반환 */
+    public long getEstimatedArrivalTime();
+    /** 도착 여부 반환 */
+    public boolean isArrived();
 }

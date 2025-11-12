@@ -134,7 +134,13 @@ public class Celestials implements HasLocation {
 
 	@Override
 	public void dispose() {
-		
+		enemies.clear();
+		debries.clear();
+	}
+	
+	/** 적과 보상이 모두 남아있지 않으면 true 반환 */
+	public boolean isEmpty() {
+		return ( getDebries().isEmpty() && getEnemies().isEmpty() );
 	}
 
 	@Override
