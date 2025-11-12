@@ -417,6 +417,14 @@ public abstract class DefaultFacility implements Facility {
     }
     
     @Override
+    public City findCityBelongsTo(Colony colony) {
+    	for(City ct : colony.getCities()) {
+    		if(ct.getFacility(this.key) == this) return ct;
+    	}
+    	return null;
+    }
+    
+    @Override
     public final boolean isScriptBased() {
         try {
             Class<? extends Facility> classThis = getClass();

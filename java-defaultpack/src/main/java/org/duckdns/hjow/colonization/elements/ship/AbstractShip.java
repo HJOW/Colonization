@@ -48,6 +48,18 @@ public class AbstractShip implements Ship {
     public void init(Port port, Colony colony) {
     	level        = 0;
     	leftProgress = getMaxProgress(port, colony);
+    	
+    	City city = port.findCityBelongsTo(colony);
+    	if(city != null) {
+    		x = city.getX();
+    		y = city.getY();
+    		z = city.getZ();
+    	} else {
+    		x = colony.getX();
+    		y = colony.getY();
+    		z = colony.getZ();
+    	}
+    	
     	states.clear();
     	stored.clear();
     }

@@ -277,6 +277,8 @@ public class ColonyClassLoader {
     
     /** 해당 이름의 함선 클래스 반환 */
     public static synchronized Class<?> getShipClass(String className) {
+    	if(! shipClassListFlag) shipClasses();
+    	
     	for(Class<?> shipClass : shipClassList) {
     		if(className.equals(shipClass.getName())) return shipClass;
     	}
@@ -334,6 +336,8 @@ public class ColonyClassLoader {
      * @param className 정책 클래스명 혹은 타입명
      */
     public static Policy createPolicyInstance(String className) {
+    	if(! policyClassListFlag) policyClasses();
+    	
         for(Class<?> classes : policyClassList) {
             if(! (classes.getSimpleName().equals(className) || classes.getName().equals(className))) continue;
             try {

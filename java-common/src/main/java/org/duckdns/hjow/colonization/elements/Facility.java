@@ -76,6 +76,9 @@ public interface Facility extends ColonyElements {
     /** 추가 활성화 수치 설정 (City 의 oneCycle 에서 호출됨, 직접 호출해봤자 소용없음.) */
     public void setBoostRate(double boostRate);
     
+    /** 이 시설이 속한 도시 객체 찾아 반환 */
+    public City findCityBelongsTo(Colony colony);
+    
     /** 스크립트 기반 시설 여부 반환 ( isScriptBasedFacility 메소드와 반환값이 동일해야 함 ) - 되도록이면 DefaultFacility 클래스에 구현된 메소드 그대로 사용할 것 */
     public boolean isScriptBased();
     

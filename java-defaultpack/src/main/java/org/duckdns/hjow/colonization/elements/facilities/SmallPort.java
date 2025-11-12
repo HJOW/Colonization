@@ -41,6 +41,11 @@ public class SmallPort extends Port {
         return 20;
     }
     
+    @Override
+	public int getBuildingLineCount() {
+		return 1;
+	}
+    
     public static String getFacilityName() {
         return ColonyManager.t("소형 우주 공항");
     }

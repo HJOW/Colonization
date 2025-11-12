@@ -12,6 +12,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.List;
 import java.util.Vector;
@@ -29,6 +31,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
@@ -41,6 +44,7 @@ import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.HexUtil;
@@ -456,6 +460,28 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                     }
                 }
             }
+        } else if(fac instanceof Port) {
+        	Port p = (Port) fac;
+        	res = res.append("\n").append(ColonyManager.t("함선") + "...");
+        	for(Ship ship : p.getShips()) {
+        		res = res.append("\n    ").append(ship.getName());
+        		if(ship.getLevel() <= 0) {
+        		    // 레벨이 0 - 아직 건조 중
+        			long left = ship.getLeftProgress();
+        			long max  = ship.getMaxProgress(p, colony);
+        			if(max <= 0) max = 1L;
+        			
+        			BigDecimal percents = new BigDecimal(String.valueOf(max - left)).multiply(Constants.BIGDECIMAL_100).divide(new BigDecimal(String.valueOf(max)), 50, RoundingMode.HALF_UP);
+        			
+        			res = res.append(" (").append(ColonyManager.t("건조 중")).append(" : ").append(ColonyManager.formatRate(percents)).append("%)");
+        		} else {
+        			if(ship.getX() == city.getX() && ship.getY() == city.getY() && ship.getZ() == city.getZ()) {
+        				res = res.append(" (").append(ColonyManager.t("대기 중")).append(")");
+        			} else {
+        				res = res.append(" (").append(ship.getX() + ", " + ship.getY() + ", " + ship.getZ()).append(" --> ").append(ship.getDestinationX() + ", " + ship.getDestinationY() + ", " + ship.getDestinationZ()).append(")");
+        			}
+        		}
+        	}
         }
         
         List<Citizen> workers = fac.getWorkingCitizens(city, colony);

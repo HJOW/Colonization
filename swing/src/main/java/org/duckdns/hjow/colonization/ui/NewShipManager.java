@@ -177,6 +177,7 @@ public class NewShipManager extends JDialog implements Disposeable {
     	if(! info.isBuildAvail(port, col)) return false;
     	if(col.getMoney() < info.getPrice(port, col)) return false;
     	if(port.leftShipSpaces() < info.getSize()) return false;
+    	if(port.getBuildingShipCount() >= port.getBuildingLineCount()) return false;
     	
         return true;
     }

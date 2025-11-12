@@ -101,6 +101,20 @@ public abstract class Port extends DefaultFacility {
 		this.ships = ships;
 	}
 	
+	/** 건조 / 업그레이드 중인 함선 수 반환 */
+	public int getBuildingShipCount() {
+		int now = 0;
+		for(Ship s : getShips()) {
+			if(s.getLeftProgress() >= 1) now++;
+		}
+		return now;
+	}
+	
+	/** 함선 건조 / 업그레이드 라인 수 반환 */
+	public int getBuildingLineCount() {
+		return 1;
+	}
+	
 	/** 함선 격납공간 사용량 */
 	public int usingShipSpaces() {
 		int now = 0;

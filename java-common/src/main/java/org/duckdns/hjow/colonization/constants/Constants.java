@@ -37,6 +37,7 @@ public class Constants {
     public static final BigInteger BIGINTEGER_10000000000 = new BigInteger("10000000000");
     public static final BigInteger BIGINTEGER_INTMAX      = new BigInteger(String.valueOf(Integer.MAX_VALUE));
     public static final BigInteger BIGINTEGER_LONGMAX     = new BigInteger(String.valueOf(Long.MAX_VALUE));
+    public static final BigDecimal BIGDECIMAL_100         = new BigDecimal(String.valueOf(100));
     public static final BigDecimal BIGDECIMAL_SQRT_DIG    = new BigDecimal(String.valueOf(150));
     public static final BigDecimal BIGDECIMAL_SQRT_PRE    = new BigDecimal(String.valueOf(10)).pow(BIGDECIMAL_SQRT_DIG.intValue());
     
