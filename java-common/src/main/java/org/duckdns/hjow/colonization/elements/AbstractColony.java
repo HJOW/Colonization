@@ -1406,7 +1406,7 @@ public abstract class AbstractColony implements Colony {
 		int grade = 1;
 		
 	    for(int idx=0; idx<intRand; idx++) {
-	    	newOne = Celestials.createRandom(getX(), getY(), getZ(), 1000, (int) (1000 + (Math.random() * idx)), grade + (Math.random() >= 0.5 ? 1 : 0) + (Math.random() >= 0.8 ? 1 : 0) );
+	    	newOne = Celestials.createRandom(getX(), getY(), getZ(), 10000, (int) (100000 + (Math.random() * idx)), grade + (Math.random() >= 0.5 ? 1 : 0) + (Math.random() >= 0.8 ? 1 : 0) );
 	    	if(idx % 100 == 0) grade++;
 	    	celestials.add(newOne);
 	    }

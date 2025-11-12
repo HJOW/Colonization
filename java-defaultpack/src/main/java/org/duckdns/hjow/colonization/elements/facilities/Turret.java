@@ -74,7 +74,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     
     @Override
     public short getAttackType() {
-        return 0;
+        return ColonyManager.ATTACKTYPE_NORMAL;
     }
     
     @Override
