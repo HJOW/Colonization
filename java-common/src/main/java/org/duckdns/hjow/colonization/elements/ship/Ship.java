@@ -6,17 +6,20 @@ import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.HasLocation;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
 
 /** 함선 */
 public interface Ship extends AttackableObject, HasLocation {
+	/** 초기 함선 상태로 리셋 (단, 기존 함선 불러오는 경우는 이 메소드 호출할 필요 없음) */
+	public void init(Port port, Colony colony);
 	/** 기본 명칭 반환 */
 	public String getDefaultName();
 	/** 함선 종류의 설명 반환 */
 	public String getDescription();
 	/** 함선 건조에 필요한 최대 시간 (사이클) 반환 */
-	public long getMaxProgress();
+	public long getMaxProgress(Port port, Colony colony);
 	/** 함선의 레벨 반환 */
 	public int getLevel();
 	/** 속도 - 1 사이클 당 이동 거리 반환 */
@@ -55,6 +58,10 @@ public interface Ship extends AttackableObject, HasLocation {
     public void decreaseProgress(City city, Colony colony);
     /** 레벨 증가, 단, 잔여 제조/수리 시간이 있는 경우 아무 일도 하지 않음. */
     public void increaseLevel();
+    /** 함선의 크기 (격납공간 차지하는 양) */
+    public int getSize();
+    /** 함선 건조 비용 */
+    public long getPrice(Port port, Colony colony);
     
     
     /* 다음 static 메소드 의무 탑재 !
@@ -64,8 +71,12 @@ public interface Ship extends AttackableObject, HasLocation {
         // 함선 설명
         public static String getMetaDescription()
         // 함선 건조 시간 (사이클)
-        public static long getMetaBuildCycle()
+        public static long getMetaBuildCycle(Port port, Colony colony)
         // 함선 건조 가능여부, null 리턴 시 가능한 것. 그외의 경우 건조 불가능 사유 리턴
         public static String getMetaBuildAvail(Port port, Colony colony);
+        // 함선 건조 가격
+        public static long getMetaPrice(Port port, Colony colony);
+        // 함선의 크기
+        public static int getMetaSize()
      */
 }

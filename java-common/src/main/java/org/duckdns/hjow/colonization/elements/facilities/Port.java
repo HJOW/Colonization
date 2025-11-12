@@ -101,6 +101,20 @@ public abstract class Port extends DefaultFacility {
 		this.ships = ships;
 	}
 	
+	/** 함선 격납공간 사용량 */
+	public int usingShipSpaces() {
+		int now = 0;
+		for(Ship s : getShips()) {
+			now += s.getSize();
+		}
+		return now;
+	}
+	
+	/** 함선 격납공간 남은 공간 */
+	public int leftShipSpaces() {
+		return getCapacity() - usingShipSpaces();
+	}
+	
 	@Override
     public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
 		super.oneCycle(cycle, stage, colony, efficiency100, colPanel);

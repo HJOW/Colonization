@@ -31,7 +31,7 @@ public class AbstractShip implements Ship {
 	protected int hp = getMaxHp();
 	protected int level = 0;
 	
-	protected long leftProgress = getMaxProgress(); // 이 함선 생산까지 남은 시간, 이 값이 0 초과 시 사용 불가, 매 사이클마다 감소
+	protected long leftProgress = Long.MAX_VALUE; // 이 함선 생산까지 남은 시간, 이 값이 0 초과 시 사용 불가, 매 사이클마다 감소
 	
 	protected List<State> states = new Vector<State>();
 	protected List<Product> stored = new Vector<Product>();
@@ -43,6 +43,14 @@ public class AbstractShip implements Ship {
     protected long destinationX = 0L;
     protected long destinationY = 0L;
     protected long destinationZ = 0L;
+    
+    @Override
+    public void init(Port port, Colony colony) {
+    	level        = 0;
+    	leftProgress = getMaxProgress(port, colony);
+    	states.clear();
+    	stored.clear();
+    }
     
 	@Override
 	public int getAttackCycle() {
@@ -134,7 +142,17 @@ public class AbstractShip implements Ship {
 
 	@Override
 	public int getDefencePoint() {
+		return getDefaultDefencePoint() + (int) getDefaultDefencePoint();
+	}
+	
+	/** 함선 모델 자체의 기본 방어력 */
+	public int getDefaultDefencePoint() {
 		return 1;
+	}
+	
+	/** 함선의 레벨 당 방어력 증가량 */
+	protected double getDefencePointIncreases() {
+		return (getLevel() * 0.1);
 	}
 	
 	/** 이동 수행 */
@@ -565,15 +583,37 @@ public class AbstractShip implements Ship {
     }
     
     @Override
-    public long getMaxProgress() {
+    public long getMaxProgress(Port port, Colony colony) {
     	try {
     	    Class<? extends Ship> classes = getClass();
-    	    Method mthd = classes.getMethod("getMetaBuildCycle");
-    	    return ((Number) mthd.invoke(null)).longValue();
+    	    Method mthd = classes.getMethod("getMetaBuildCycle", Port.class, Colony.class);
+    	    return ((Number) mthd.invoke(null, port, colony)).longValue();
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
     }
+    
+    @Override
+    public long getPrice(Port port, Colony colony) {
+    	try {
+    	    Class<? extends Ship> classes = getClass();
+    	    Method mthd = classes.getMethod("getMetaPrice", Port.class, Colony.class);
+    	    return ((Number) mthd.invoke(null, port, colony)).longValue();
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
+    @Override
+	public int getSize() {
+    	try {
+    	    Class<? extends Ship> classes = getClass();
+    	    Method mthd = classes.getMethod("getMetaSize");
+    	    return ((Number) mthd.invoke(null)).intValue();
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+	}
     
     /** 함선 명칭 */
     public static String getMetaName() {
@@ -586,7 +626,7 @@ public class AbstractShip implements Ship {
     }
     
     /** 함선 건조 시간 (사이클) */
-    public static long getMetaBuildCycle() {
+    public static long getMetaBuildCycle(Port port, Colony colony) {
     	return 200;
     }
     
@@ -594,4 +634,14 @@ public class AbstractShip implements Ship {
     public static String getMetaBuildAvail(Port port, Colony colony) {
     	return null;
     }
+    
+    /** 함선 건조 비용 */
+    public static long getMetaPrice(Port port, Colony colony) {
+    	return 10000L;
+    }
+
+    /** 함선의 크기 */
+	public static int getMetaSize() {
+		return 1;
+	}
 }

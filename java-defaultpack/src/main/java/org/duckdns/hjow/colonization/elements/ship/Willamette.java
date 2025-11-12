@@ -6,6 +6,7 @@ import org.duckdns.hjow.colonization.elements.facilities.Port;
 
 public class Willamette extends AbstractShip {
 	private static final long serialVersionUID = -7640108254157310544L;
+	public Willamette() {}
 
 	@Override
 	public int getAttackCycle() {
@@ -43,10 +44,19 @@ public class Willamette extends AbstractShip {
 	}
 
 	@Override
-	public int getDefencePoint() {
+	public int getDefaultDefencePoint() {
 		return 1;
 	}
 	
+	@Override
+	protected double getDefencePointIncreases() {
+		return (getLevel() * 0.1);
+	}
+	
+	@Override
+	public int getSize() {
+		return 1;
+	}
 	
 	/** 함선 명칭 */
 	public static String getMetaName() {
@@ -67,4 +77,14 @@ public class Willamette extends AbstractShip {
     public static String getMetaBuildAvail(Port port, Colony colony) {
     	return null;
     }
+    
+    /** 함선 건조 비용 */
+    public static long getMetaPrice(Port port, Colony colony) {
+    	return 10000L;
+    }
+    
+    /** 함선의 크기 */
+    public static int getMetaSize() {
+		return 1;
+	}
 }

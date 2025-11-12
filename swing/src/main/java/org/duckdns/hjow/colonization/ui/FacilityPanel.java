@@ -36,6 +36,7 @@ import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
+import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
@@ -48,7 +49,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     private static final long serialVersionUID = -6078767714905474678L;
     
     protected transient JProgressBar progHp;
-    protected transient JPanel pnUp, pnCenter, pnDown, pnCbxResearch, pnCbxProducts;
+    protected transient JPanel pnUp, pnCenter, pnDown, pnCbxResearch, pnCbxProducts, pnBtnNewShip;
     protected transient ImagePanel pnImage;
     protected transient CardLayout cardResProd;
     protected transient JButton btnToggle, btnDestroy, btnUpgrade;
@@ -56,6 +57,8 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     protected transient JTextArea ta;
     protected transient JComboBox<Research> cbxResearch;
     protected transient JComboBox<Product>  cbxProducts;
+    protected transient JButton btnNewShip;
+    protected transient NewShipManager shipManager;
     
     protected transient boolean flagEditable = true;
     
@@ -141,10 +144,13 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         
         pnCbxResearch = new JPanel();
         pnCbxProducts = new JPanel();
+        pnBtnNewShip  = new JPanel();
         pnCbxResearch.setLayout(new BorderLayout());
         pnCbxProducts.setLayout(new BorderLayout());
+        pnBtnNewShip.setLayout(new BorderLayout());
         pnCenterDown.add(pnCbxResearch, "Research");
         pnCenterDown.add(pnCbxProducts, "Product");
+        pnCenterDown.add(pnBtnNewShip , "Ship");
         
         cbxResearch = new JComboBox<Research>();
         pnCbxResearch.add(cbxResearch);
@@ -152,7 +158,10 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         cbxProducts = new JComboBox<Product>();
         pnCbxProducts.add(cbxProducts);
         
-        if(! ((f instanceof ResearchCenter) || (f instanceof Factory))) {
+        btnNewShip = new JButton(ColonyManager.t("새 함선"));
+        pnBtnNewShip.add(btnNewShip);
+        
+        if(! ((f instanceof ResearchCenter) || (f instanceof Factory) || (f instanceof Port))) {
             pnCenterDown.setVisible(false);
         } else {
             pnCenterDown.setVisible(true);
@@ -208,6 +217,15 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 }
                 
                 cardResProd.show(pnCenterDown, "Product");
+            } else if(f instanceof Port) {
+            	final Port p = (Port) f;
+            	btnNewShip.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						onNewShipRequested(superInstance, city, p);
+					}
+				});
+            	cardResProd.show(pnCenterDown, "Ship");
             }
         }
         
@@ -472,6 +490,13 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         pnImage.setImage(img);
     }
     
+    /** 새 함선 버튼 클릭 시 호출 */
+    protected void onNewShipRequested(GUIColonyManager colonyManager, City city, Port p) {
+    	if(shipManager != null) shipManager.dispose();
+    	shipManager = new NewShipManager(colonyManager, city, p);
+    	shipManager.setVisible(true);
+    }
+    
     /** 
      * <pre>
      * 시설의 이미지 불러오기
@@ -563,6 +588,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     @Override
     public void dispose() {
         facilityKey = 0L;
+        if(shipManager != null) { shipManager.dispose(); shipManager = null; }
         removeAll();
     }
 
