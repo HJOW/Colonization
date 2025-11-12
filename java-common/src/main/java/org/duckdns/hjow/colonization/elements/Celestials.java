@@ -224,17 +224,39 @@ public class Celestials implements HasLocation {
 
 	@Override
 	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
-		// TODO : 탐험 요소 시뮬 구현
-		
+		// 함선의 공격
 		for(Ship s : colony.getShips()) {
         	if(s.getHp() <= 0) continue;
         	if(! (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ())) continue;
         	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, this, colony, efficiency100, colPanel);
         }
 		
-		for(Enemy e : getEnemies()) {
+		// 적의 공격
+		List<Enemy> enemies = getEnemies();
+		for(Enemy e : enemies) {
 			if(e.getHp() <= 0) continue;
 			if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, colony, efficiency100, colPanel);
+		}
+		
+		int enemiesLeft = 0;
+		for(Enemy e : enemies) { if(e.getHp() >= 1) enemiesLeft++; }
+		
+		// 적이 없으면...
+		if(enemiesLeft <= 0) {
+			enemies.clear();
+			
+			// 보상 수거
+			for(Ship s : colony.getShips()) {
+				if(s.getHp() <= 0) continue;
+	        	if(! (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ())) continue;
+	        	
+	        	int lefts = s.getMaxStoredCapacity() - s.getStoredCount();
+	        	while(lefts >= 1 && debries.size() >= 1) {
+	        		Product debrieOne = debries.get(0);
+	        		debries.remove(0);
+	        		s.store(debrieOne);
+	        	}
+			}
 		}
 	}
 

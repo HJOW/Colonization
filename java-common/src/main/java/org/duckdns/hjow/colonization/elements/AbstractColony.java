@@ -891,7 +891,7 @@ public abstract class AbstractColony implements Colony {
         if(getCityCount() >= getMaxCityCount()) throw new KnownRuntimeException(ColonyManager.t("이 정착지에는 더 이상 도시를 건설할 수 없습니다."));
         
         City city = null;
-        try { city = (City) Class.forName("org.duckdns.hjow.colonization.elements.city.NormalCity").newInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
+        try { city = createCityInstance(); } catch(Exception ex) { throw new RuntimeException("java-default-pack not detected."); }
         
         setNewCityCoordinate(city);
         addDefaultStarts(city);
@@ -1059,7 +1059,10 @@ public abstract class AbstractColony implements Colony {
     	return list;
     }
     
-    /** Json 데이터를 읽어 City 불러오기 */
+    /** 빈 새 도시를 생성해 반환, 도시를 이 정착지에 등록시키지는 않음 */
+    protected abstract City createCityInstance();
+    
+    /** Json 데이터를 읽어 도시 불러오기 */
     protected abstract City createCityInstance(JsonObject json) throws IOException;
 
     @Override

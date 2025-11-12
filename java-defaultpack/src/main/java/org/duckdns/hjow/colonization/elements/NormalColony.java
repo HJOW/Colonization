@@ -43,6 +43,11 @@ public final class NormalColony extends AbstractColony {
     }
     
     @Override
+    protected City createCityInstance() {
+    	return new NormalCity();
+    }
+    
+    @Override
     protected City createCityInstance(JsonObject json) throws IOException {
         return new NormalCity(json);
     }
