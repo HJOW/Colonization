@@ -40,7 +40,6 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     protected GUIColonyManager superInstance;
     protected Colony colony;
     
-    protected transient List<CityPanel> pnCities = new Vector<CityPanel>();
     protected transient JPanel pnColonyBasics, pnColonyCardCity, pnAccountingMain, pnHoldings, pnResearches, pnLoanHaves;
     protected transient CardLayout cardCity;
     protected transient DefaultTableModel tableAccounting;
@@ -51,7 +50,9 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     protected transient JPanel toolbar;
     protected transient JButton btnNewCity, btnNewLoan;
     
+    protected transient List<CityPanel>     pnCities = new Vector<CityPanel>();
     protected transient List<ResearchPanel> rsPanels = new ArrayList<ResearchPanel>();
+    protected transient ShipsPanel shipPanel;
     
     protected transient boolean flagEditable = true;
     
@@ -93,6 +94,9 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         
         pnLoanHaves = new JPanel();
         tabMain.add(ColonyManager.t("남은 대출"), pnLoanHaves);
+        
+        shipPanel = new ShipsPanel();
+        tabMain.add(ColonyManager.t("함선"), shipPanel);
         
         cardCity = new CardLayout();
         pnColonyCardCity.setLayout(cardCity);
@@ -237,6 +241,10 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         rsPanels.clear();
         
         removeAll();
+        
+        if(shipPanel != null) shipPanel.dispose();
+        shipPanel = null;
+        
         superInstance = null;
     }
 
@@ -363,6 +371,8 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
                 pnRes.refresh(cycle, city, colony);
             }
         }
+        
+        if(shipPanel != null) shipPanel.refresh(cycle, colony, superInstance);
         
         refreshAccoutingTable();
         refreshLoanHaveList();
