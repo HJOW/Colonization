@@ -90,7 +90,7 @@ public interface Colony extends HasLocation {
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
     public Vector<Ship> getShips();
     /** 해당 위치의 모든 함선들 반환 */
-    public Vector<Ship> getShips(int x, int y, int z);
+    public Vector<Ship> getShips(long x, long y, long z);
     /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
-    public Vector<Ship> getShips(int x, int y, int z, int dist);
+    public Vector<Ship> getShips(long x, long y, long z, long dist);
 }

@@ -143,4 +143,9 @@ public final class FreeColony extends AbstractColony {
     protected City createCityInstance(JsonObject json) throws IOException {
         return new NormalCity(json);
     }
+
+	@Override
+	protected City createCityInstance() {
+		return new NormalCity();
+	}
 }

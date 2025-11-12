@@ -52,6 +52,7 @@ import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanitie
 import org.duckdns.hjow.colonization.elements.research.military.MilitaryTech;
 import org.duckdns.hjow.colonization.elements.research.physics.Mathematics;
 import org.duckdns.hjow.colonization.elements.research.physics.Physics;
+import org.duckdns.hjow.colonization.elements.ship.Willamette;
 import org.duckdns.hjow.colonization.elements.states.ImmuneInfluenza;
 import org.duckdns.hjow.colonization.elements.states.Influenza;
 import org.duckdns.hjow.colonization.elements.states.SuperAngry;
@@ -133,5 +134,7 @@ public final class BundledPack extends DefaultPack {
         
         policyClasses.add(PowerEfficiencyProtocol.class);
         policyClasses.add(FertilityPromotionPolicy.class);
+        
+        shipClasses.add(Willamette.class);
     }
 }

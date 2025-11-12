@@ -25,8 +25,9 @@ import org.duckdns.hjow.commons.util.DataUtil;
 public class AbstractShip implements Ship {
 	private static final long serialVersionUID = 1415044038948566331L;
 	protected volatile long key = ColonyManager.generateKey();
-	protected String name = ColonyManager.t("함선") + "_" + ColonyManager.getNaturalNumberFrom(key);
+	protected String name = getDefaultName() + "_" + ColonyManager.getNaturalNumberFrom(key);
 	protected int hp = getMaxHp();
+	protected int level = 1;
 	
 	protected List<State> states = new Vector<State>();
 	protected List<Product> stored = new Vector<Product>();
@@ -38,6 +39,10 @@ public class AbstractShip implements Ship {
     protected long destinationX = 0L;
     protected long destinationY = 0L;
     protected long destinationZ = 0L;
+    
+    protected String getDefaultName() {
+    	return ColonyManager.t("함선");
+    }
 
 	@Override
 	public int getAttackCycle() {
@@ -107,6 +112,14 @@ public class AbstractShip implements Ship {
         if(hp <   0) hp = 0;
 	}
 
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
 	@Override
 	public short getDefenceType() {
 		return ColonyManager.DEFENCETYPE_SMALL;
@@ -118,7 +131,7 @@ public class AbstractShip implements Ship {
 	}
 	
 	/** 이동 수행 */
-	protected void processMove() {
+	protected void processMove(Colony colony) {
 		if(isArrived()) return; // 목적지에 이미 있으면 그냥 리턴
 		
 		long distance = DataUtil.getDistance(getX(), getY(), getZ(), getDestinationX(), getDestinationY(), getDestinationZ());
@@ -131,7 +144,7 @@ public class AbstractShip implements Ship {
 			return;
 		}
 		
-		int speed = getSpeed();
+		long speed = getRealSpeed(colony);
 		long leftX = getDestinationX() - getX();
 		long leftY = getDestinationY() - getY();
 		long leftZ = getDestinationZ() - getZ();
@@ -156,7 +169,7 @@ public class AbstractShip implements Ship {
 	}
 	
 	@Override
-	public long getEstimatedArrivalTime() {
+	public long getEstimatedArrivalTime(Colony colony) {
 		if(isArrived()) return 0L; // 목적지에 이미 있으면 0 반환
 		
         long distance = DataUtil.getDistance(getX(), getY(), getZ(), getDestinationX(), getDestinationY(), getDestinationZ());
@@ -166,7 +179,7 @@ public class AbstractShip implements Ship {
 			return 1L;
 		}
 		
-		int speed = getSpeed();
+		long speed = getRealSpeed(colony);
 		
 		// 속도보다 거리가 더 가까운 경우, 1 사이클 지나면 목적지에 도착하므로 1 반환
         if(speed <= distance) {
@@ -181,7 +194,7 @@ public class AbstractShip implements Ship {
 	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
 		// 이동 수행
 		if(! isArrived()) {
-			processMove();
+			processMove(colony);
 		}
 		
 		
@@ -198,11 +211,12 @@ public class AbstractShip implements Ship {
         		
                 for(Enemy e : enemies) {
                     if(e.getHp() >= 1) {
+                    	if(castLeft <= 0) break;
+                    	damages = getRealDamage(e, colony);
                         naturalized = ColonyManager.naturalizeDamage(this, e, damages);
                         e.addHp(naturalized * (-1));
                         processAfterAttack(cycle, e, naturalized);
                         castLeft--;
-                        if(castLeft <= 0) break;
                     }
                 }
                 
@@ -210,11 +224,12 @@ public class AbstractShip implements Ship {
                     enemies = colony.getEnemies();
                     for(Enemy e : enemies) {
                         if(e.getHp() >= 1) {
+                        	if(castLeft <= 0) break;
+                        	damages = getRealDamage(e, colony);
                             naturalized = ColonyManager.naturalizeDamage(this, e, damages);
                             e.addHp(naturalized * (-1));
                             processAfterAttack(cycle, e, naturalized);
                             castLeft--;
-                            if(castLeft <= 0) break;
                         }
                     }
                 }
@@ -224,11 +239,12 @@ public class AbstractShip implements Ship {
                 
                 for(Enemy e : enemies) {
                     if(e.getHp() >= 1) {
+                    	if(castLeft <= 0) break;
+                    	damages = getRealDamage(e, colony);
                         naturalized = ColonyManager.naturalizeDamage(this, e, damages);
                         e.addHp(naturalized * (-1));
                         processAfterAttack(cycle, e, naturalized);
                         castLeft--;
-                        if(castLeft <= 0) break;
                     }
                 }
         	}
@@ -248,6 +264,7 @@ public class AbstractShip implements Ship {
 		setName(json.get("name").toString());
 		key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
         
         try { x = Long.parseLong(json.get("x").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setX(0L); }
         try { y = Long.parseLong(json.get("y").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setY(0L); }
@@ -310,6 +327,7 @@ public class AbstractShip implements Ship {
         json.put("name", getName());
         json.put("key", String.valueOf(getKey()));
         json.put("hp", new Integer(getHp()));
+        json.put("level", new Integer(getLevel()));
         
         json.put("x", String.valueOf(getX()));
         json.put("y", String.valueOf(getY()));
@@ -478,4 +496,19 @@ public class AbstractShip implements Ship {
 	public boolean isArrived() {
 		return ( getX() == getDestinationX() && getY() == getDestinationY() && getZ() == getDestinationZ() );
 	}
+
+	@Override
+	public long getRealSpeed(Colony col) {
+		return getSpeed();
+	}
+	
+	@Override
+    public int getRealDamage(ColonyElements target, Colony colony) {
+    	return getDamage() + (int) Math.floor(getDamageIncreases(target, colony));
+    }
+	
+	/** 레벨 당 증가치 등 계산 */
+    protected double getDamageIncreases(ColonyElements target, Colony colony) {
+    	return level * (getDamage() * 0.1);
+    }
 }

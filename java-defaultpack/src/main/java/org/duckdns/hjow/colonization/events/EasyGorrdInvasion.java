@@ -4,6 +4,7 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.enemies.Goord;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
@@ -37,7 +38,11 @@ public class EasyGorrdInvasion extends TimeEvent {
         
         if(floatCounts >= 1) {
             for(int idx=0; idx<floatCounts; idx++) {
-                city.getEnemies().add(new Goord());
+            	Enemy en = new Goord();
+            	en.setX(city.getX());
+            	en.setY(city.getY());
+            	en.setZ(city.getZ());
+                city.getEnemies().add(en);
             }
             ColonyManager.logGlobals(ColonyManager.t("고드 무리가 침략해 오고 있습니다."));
         }

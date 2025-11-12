@@ -219,7 +219,7 @@ public abstract class DefaultFacility implements Facility {
         setName(json.get("name").toString());
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
-        json.put("level", new Integer(getLevel()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
         
         JsonArray list = (JsonArray) json.get("states");
         states.clear();

@@ -10,6 +10,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Celestials;
 import org.duckdns.hjow.colonization.elements.Citizen;
@@ -24,9 +25,14 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 /** 적 개체 */
 public abstract class Enemy implements ColonyElements, AttackableObject {
     private static final long serialVersionUID = 8827673273232204593L;
-    protected volatile long key = ColonyManager.generateKey();
-    protected volatile int  hp  = getMaxHp();
+    protected volatile long key   = ColonyManager.generateKey();
+    protected volatile int  hp    = getMaxHp();
+    protected volatile int  level = 1;
     protected List<State> states = new Vector<State>();
+    
+    protected long x = 0L;
+    protected long y = 0L;
+    protected long z = 0L;
     
     protected transient boolean fNeedRefresh = true;
     
@@ -53,7 +59,15 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         this.key = key;
     }
 
-    public void setHp(int hp) {
+    public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public void setHp(int hp) {
         this.hp = hp;
         int mx = getMaxHp();
         if(hp >  mx) hp = mx;
@@ -107,8 +121,8 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         
         // 공격 처리
         int castLeft    = getAttackCount();
-        int damages     = getDamage();
-        int naturalized = damages;
+        int damages     = 0;
+        int naturalized = 0;
         
         if(cycle % getAttackCycle() == 0) {
         	if(stage instanceof City) {
@@ -134,6 +148,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                 for(Ship fac : ships) {
                 	if(castLeft <= 0) break;
                     if(fac.getHp() >= 1) {
+                    	damages     = getRealDamage(fac, colony);
                         naturalized = ColonyManager.naturalizeDamage(this, fac, damages);
                         fac.addHp(naturalized * (-1));
                         processAfterAttack(cycle, fac, naturalized);
@@ -146,6 +161,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                 for(Facility fac : facs) {
                 	if(castLeft <= 0) break;
                     if(fac.getHp() >= 1) {
+                    	damages     = getRealDamage(fac, colony);
                         naturalized = ColonyManager.naturalizeDamage(this, fac, damages);
                         fac.addHp(naturalized * (-1));
                         processAfterAttack(cycle, fac, naturalized);
@@ -160,6 +176,7 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                     for(Citizen ct : citizens) {
                     	if(castLeft <= 0) break;
                         if(ct.getHp() >= 1) {
+                        	damages     = getRealDamage(ct, colony);
                             naturalized = ColonyManager.naturalizeDamage(this, ct, damages);
                             ct.addHp(naturalized * (-1));
                             processAfterAttack(cycle, ct, naturalized);
@@ -171,6 +188,8 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                 // 시설, 시민 모두 없으면 도시 자체
                 if(castLeft >= 1) {
                     if(city.getHp() >= 1) {
+                    	if(castLeft <= 0) return;
+                    	damages     = getRealDamage(city, colony);
                         naturalized = ColonyManager.naturalizeDamage(this, city, damages);
                         processAfterAttack(cycle, city, naturalized);
                         city.addHp(naturalized * (-1));
@@ -178,7 +197,17 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
                     }
                 }
         	} else if(stage instanceof Celestials) {
-        		// TODO
+        		List<Ship> ships = colony.getShips(getX(), getY(), getZ());
+        		for(Ship ship : ships) {
+        			if(castLeft <= 0) break;
+        			if(ship.getHp() >= 1) {
+        				damages     = getRealDamage(ship, colony);
+                        naturalized = ColonyManager.naturalizeDamage(this, ship, damages);
+                        processAfterAttack(cycle, ship, naturalized);
+                        ship.addHp(naturalized * (-1));
+                        castLeft--;
+        			}
+        		}
         	}
         }
     }
@@ -187,6 +216,11 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
     public void fromJson(JsonObject json) {
         key = Long.parseLong(json.get("key").toString());
         setHp(Integer.parseInt(json.get("hp").toString()));
+        setLevel(Integer.parseInt(json.get("level").toString()));
+        
+        try { x = Long.parseLong(json.get("x").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setX(0L); }
+        try { y = Long.parseLong(json.get("y").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setY(0L); }
+        try { z = Long.parseLong(json.get("z").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setZ(0L); }
         
         JsonArray list = (JsonArray) json.get("states");
         states.clear();
@@ -220,6 +254,11 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         json.put("type", getClass().getSimpleName());
         json.put("key", String.valueOf(getKey()));
         json.put("hp", String.valueOf(getHp()));
+        json.put("level", new Integer(getLevel()));
+        
+        json.put("x", String.valueOf(getX()));
+        json.put("y", String.valueOf(getY()));
+        json.put("z", String.valueOf(getZ()));
         
         JsonArray list = new JsonArray();
         for(State s : getStates()) { list.add(s.toJson(details, col, city)); }
@@ -273,4 +312,28 @@ public abstract class Enemy implements ColonyElements, AttackableObject {
         markAsRefresh(f);
         for(State s : getStates()) { s.markAsRefreshChildren(f); }
     }
+
+	public long getX() {
+		return x;
+	}
+
+	public void setX(long x) {
+		this.x = x;
+	}
+
+	public long getY() {
+		return y;
+	}
+
+	public void setY(long y) {
+		this.y = y;
+	}
+
+	public long getZ() {
+		return z;
+	}
+
+	public void setZ(long z) {
+		this.z = z;
+	}
 }

@@ -1055,7 +1055,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 해당 위치의 모든 함선들 반환 */
-    public Vector<Ship> getShips(int x, int y, int z) {
+    public Vector<Ship> getShips(long x, long y, long z) {
     	Vector<Ship> list = new Vector<Ship>();
     	for(City c : getCities()) {
     		list.addAll(c.getShips(x, y, z));
@@ -1064,7 +1064,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
-    public Vector<Ship> getShips(int x, int y, int z, int dist) {
+    public Vector<Ship> getShips(long x, long y, long z, long dist) {
     	Vector<Ship> list = new Vector<Ship>();
     	for(City c : getCities()) {
     		list.addAll(c.getShips(x, y, z, dist));

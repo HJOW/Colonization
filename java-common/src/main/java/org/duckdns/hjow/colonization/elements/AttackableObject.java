@@ -8,6 +8,8 @@ public interface AttackableObject extends ColonyElements {
     public int getAttackCount();
     /** 기본 공격력 */
     public int getDamage();
+    /** 실제 공격력 (레벨과 업그레이드 적용, 단, 속성과 방어력은 여기서 계산하지 않음.) */
+    public int getRealDamage(ColonyElements target, Colony colony);
     /** 공격의 속성 */
     public short getAttackType();
 }

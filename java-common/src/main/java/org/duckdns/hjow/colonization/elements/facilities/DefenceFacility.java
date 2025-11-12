@@ -28,6 +28,16 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
     }
     
     @Override
+    public int getRealDamage(ColonyElements target, Colony colony) {
+    	return getDamage() + (int) Math.floor(getDamageIncreases(target, colony));
+    }
+    
+    /** 레벨 당 증가치 등 계산 */
+    protected double getDamageIncreases(ColonyElements target, Colony colony) {
+    	return level * (getDamage() * 0.1);
+    }
+    
+    @Override
     public int getAttackCycle() {
         return 120;
     }
@@ -41,30 +51,32 @@ public abstract class DefenceFacility extends DefaultFacility implements Attacka
         City city = (City) stage;
         
         int castLeft    = getAttackCount();
-        int damages     = getDamage();
-        int naturalized = damages;
+        int naturalized = 0;
+        int damages     = 0;
         
         if(cycle % getAttackCycle() == 0) {
             List<Enemy> enemies = city.getEnemies();
             for(Enemy e : enemies) {
+            	if(castLeft <= 0) break;
                 if(e.getHp() >= 1) {
+                	damages     = getRealDamage(e, colony);
                     naturalized = ColonyManager.naturalizeDamage(this, e, damages);
                     e.addHp(naturalized * (-1));
                     processAfterAttack(cycle, e, naturalized);
                     castLeft--;
-                    if(castLeft <= 0) break;
                 }
             }
             
             if(castLeft >= 1) {
                 enemies = colony.getEnemies();
                 for(Enemy e : enemies) {
+                	if(castLeft <= 0) break;
                     if(e.getHp() >= 1) {
+                    	damages     = getRealDamage(e, colony);
                         naturalized = ColonyManager.naturalizeDamage(this, e, damages);
                         e.addHp(naturalized * (-1));
                         processAfterAttack(cycle, e, naturalized);
                         castLeft--;
-                        if(castLeft <= 0) break;
                     }
                 }
             }

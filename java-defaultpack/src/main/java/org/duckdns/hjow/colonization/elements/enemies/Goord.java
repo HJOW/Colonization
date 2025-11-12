@@ -3,6 +3,8 @@ package org.duckdns.hjow.colonization.elements.enemies;
 import java.math.BigInteger;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 
 public class Goord extends Enemy {
     private static final long serialVersionUID = 2685545395823241723L;
@@ -42,4 +44,13 @@ public class Goord extends Enemy {
         return 10;
     }
 
+	@Override
+	public int getRealDamage(ColonyElements target, Colony colony) {
+		return getDamage() + (int) Math.floor(getDamageIncreases(target, colony));
+	}
+	
+	/** 레벨 당 증가치 등 계산 */
+    protected double getDamageIncreases(ColonyElements target, Colony colony) {
+    	return level * (getDamage() * 0.1);
+    }
 }

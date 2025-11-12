@@ -3,14 +3,17 @@ package org.duckdns.hjow.colonization.elements.ship;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.AttackableObject;
+import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.HasLocation;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
 
 /** 함선 */
 public interface Ship extends AttackableObject, HasLocation {
-	/** 1 사이클 당 이동 거리 반환 */
+	/** 속도 - 1 사이클 당 이동 거리 반환 */
     public int getSpeed();
+    /** 실제 속도 반환 (연구 등 적용) */
+    public long getRealSpeed(Colony col);
     /** 상태 객체들 반환 */
     public List<State> getStates();
     /** 화물칸 내에 있는 Product 들 반환 */
@@ -34,7 +37,7 @@ public interface Ship extends AttackableObject, HasLocation {
     /** 해당 좌표로 이동 명령 */
     public void moveStartTo(int x, int y, int z);
     /** 도착 예정시간 (사이클 수) 반환 */
-    public long getEstimatedArrivalTime();
+    public long getEstimatedArrivalTime(Colony colony);
     /** 도착 여부 반환 */
     public boolean isArrived();
 }
