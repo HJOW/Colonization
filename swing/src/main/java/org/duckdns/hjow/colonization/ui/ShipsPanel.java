@@ -6,9 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Point;
 import java.awt.RenderingHints;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -18,8 +16,13 @@ import javax.swing.JTabbedPane;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.graphics.Coordinate2D;
+import org.duckdns.hjow.graphics.Coordinate3D;
+import org.duckdns.hjow.graphics.LineObject2D;
+import org.duckdns.hjow.graphics.OvalObjects2D;
 
 /** 함선들 현황 출력 및 컨트롤 화면 */
 public class ShipsPanel extends JPanel implements Disposeable {
@@ -127,7 +130,8 @@ class SpacePanel extends JPanel implements Disposeable {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		List<OvalObjects> ovals = new ArrayList<OvalObjects>();
+		List<LineObject2D>  lines = new ArrayList<LineObject2D>();
+		List<OvalObjects2D> ovals = new ArrayList<OvalObjects2D>();
 		
 		int rootWidth  = getWidth();
 		int rootHeight = getHeight();
@@ -135,101 +139,73 @@ class SpacePanel extends JPanel implements Disposeable {
 		int centerY = rootHeight / 2;
 		long divides = 10L;
 		
-		// 점들 그리기 (함선)
-		for(Ship ship : colony.getShips()) {
-			Coordinate coordinate = new Coordinate(ship.getX(), ship.getY(), ship.getZ());
-			coordinate = coordinate.project(new Coordinate(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
+		// 점들 그리기 (도시)
+		for(City city : colony.getCities()) {
+			Coordinate3D coordinate = new Coordinate3D(city.getX(), city.getY(), city.getZ());
 			
-			OvalObjects ov = new OvalObjects();
-			ov.setCenter(coordinate);
-			ov.setR(5);
+			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
+			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
+			
+			OvalObjects2D ov = new OvalObjects2D();
+			ov.setCenter(proj); // 2D 정보만 입력됨
+			ov.setR(10);
+			ov.setColor(Color.BLUE);
 			ovals.add(ov);
 		}
 		
+		// 점들 그리기 (함선)
+		for(Ship ship : colony.getShips()) {
+			Coordinate3D coordinate = new Coordinate3D(ship.getX(), ship.getY(), ship.getZ());
+			
+			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
+			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
+			
+			OvalObjects2D ov = new OvalObjects2D();
+			ov.setCenter(proj); // 2D 정보만 입력됨
+			ov.setR(5);
+			ov.setColor(Color.GREEN);
+			ovals.add(ov);
+		}
+		
+		// 적절한 스케일 구하기
+		long max = 0L;
+		long abs = 0L;
+		
+		for(OvalObjects2D ov : ovals) {
+			abs = Math.abs(ov.getX());
+			if(max < abs) max = abs;
+			
+			abs = Math.abs(ov.getY());
+			if(max < abs) max = abs;
+		}
+		
+		for(LineObject2D ln : lines) {
+			abs = Math.abs(ln.getFrom().getX());
+			if(max < abs) max = abs;
+			
+			abs = Math.abs(ln.getFrom().getY());
+			if(max < abs) max = abs;
+			
+			abs = Math.abs(ln.getTo().getX());
+			if(max < abs) max = abs;
+			
+			abs = Math.abs(ln.getTo().getY());
+			if(max < abs) max = abs;
+		}
+		
+		while(((max / divides) / 10L) > (long) Integer.MAX_VALUE) {
+			if(divides < 1L) divides = 1L;
+			divides = divides * 10L;
+		}
+		
 		// 출력
-		for(OvalObjects ov : ovals) {
+		for(OvalObjects2D ov : ovals) {
 			g2d.setColor(ov.getColor());
 			g2d.fillOval((int) (ov.getCenter().getX() / divides), (int) (ov.getCenter().getY() / divides), ov.getR(), ov.getR());
 		}
-	}
-}
-
-/** 원형 도형 */
-class OvalObjects implements Serializable {
-	private static final long serialVersionUID = -3566815526299588912L;
-	protected Coordinate center;
-	protected int r;
-	protected Color color = Color.BLUE;
-	public OvalObjects() {}
-	public Coordinate getCenter() {
-		return center;
-	}
-	public void setCenter(Coordinate center) {
-		this.center = center;
-	}
-	public int getR() {
-		return r;
-	}
-	public void setR(int r) {
-		this.r = r;
-	}
-	public Color getColor() {
-		return color;
-	}
-	public void setColor(Color color) {
-		this.color = color;
-	}
-}
-
-/** 2D / 3D 좌표 */
-class Coordinate implements Serializable {
-	private static final long serialVersionUID = -3845428403760941094L;
-	protected long x, y, z;
-	public Coordinate() {}
-	public Coordinate(long x, long y) {this.x = x; this.y = y;}
-	public Coordinate(long x, long y, long z) {this.x = x; this.y = y; this.z = z;}
-
-	public long getX() {
-		return x;
-	}
-
-	public void setX(long x) {
-		this.x = x;
-	}
-
-	public long getY() {
-		return y;
-	}
-
-	public void setY(long y) {
-		this.y = y;
-	}
-
-	public long getZ() {
-		return z;
-	}
-
-	public void setZ(long z) {
-		this.z = z;
-	}
-	
-	/** 2D 영역에 투사, 새 2D 좌표 반환 (Z값이 초기화되지 않음) */
-	public Coordinate project(Coordinate camera, double screenCenterX, double screenCenterY) {
-		return project(camera, 500, screenCenterX, screenCenterY);
-	}
-	
-	/** 2D 영역에 투사, 새 2D 좌표 반환 (Z값이 초기화되지 않음) */
-	public Coordinate project(Coordinate camera, double focalLength, double screenCenterX, double screenCenterY) {
-		// Translate point relative to camera
-        double x_prime = getX() - camera.getX();
-        double y_prime = getY() - camera.getY();
-        double z_prime = getZ() - camera.getZ();
-
-        // Apply perspective projection formula
-        double scale = focalLength / z_prime;
-        double x2d = (x_prime * scale) + screenCenterX;
-        double y2d = (y_prime * scale) + screenCenterY;
-
-        return new Coordinate((long) x2d, (long) y2d);
+		for(LineObject2D ln : lines) {
+			g2d.setColor(ln.getColor());
+			g2d.drawLine((int) (ln.getFrom().getX() / divides), (int) (ln.getFrom().getY() / divides), (int) (ln.getTo().getX() / divides), (int) (ln.getTo().getY() / divides));
+		}
 	}
 }
