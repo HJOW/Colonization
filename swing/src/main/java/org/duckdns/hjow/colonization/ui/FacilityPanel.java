@@ -355,12 +355,12 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     }
     
     /** 화면 새로고침 */
-    public void refresh(Facility fac, City city, Colony colony, ColonyManager superInstance) {
+    public void refresh(Facility fac, City city, Colony colony, ColonyManagerUI superInstance) {
         refresh(fac, city, colony, superInstance, false);
     }
 
     /** 화면 새로고침 */
-    public void refresh(Facility fac, City city, Colony colony, ColonyManager superInstance, boolean force) {
+    public void refresh(Facility fac, City city, Colony colony, ColonyManagerUI superInstance, boolean force) {
         if(fac == null) {
             tfName.setText("");
             ta.setText("");
@@ -575,7 +575,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     }
     
     @Override
-    public void refresh(int cycle, City city, Colony colony, ColonyManager superInstance) {
+    public void refresh(int cycle, City city, Colony colony, ColonyManagerUI superInstance) {
         Facility fac = getFacility(city);
         if(fac == null) { setEditable(false); return; }
         refresh(fac, city, colony, superInstance);

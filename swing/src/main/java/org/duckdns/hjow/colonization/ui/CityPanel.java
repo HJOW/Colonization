@@ -292,7 +292,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     }
     
     @Override
-    public void refresh(final int cycle, City city, final Colony colony, final ColonyManager superInstance) {
+    public void refresh(final int cycle, City city, final Colony colony, final ColonyManagerUI superInstance) {
         tab.setSelectedComponent(pnFrontRoot);
         if(city == null) { city = getCity(); }
         if(city == null) {

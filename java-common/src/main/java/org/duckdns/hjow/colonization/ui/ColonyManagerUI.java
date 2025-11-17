@@ -13,4 +13,7 @@ public interface ColonyManagerUI {
     
     /** Colonization 실행 */
     public void open(ColonizationMainClass superInstance);
+    
+    /** 화면 새로고침 예약 */
+    public void reserveRefresh();
 }

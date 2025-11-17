@@ -865,7 +865,11 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
     
     /** 화면 새로고침 예약 */
     public void reserveRefresh() {
-        reserveRefresh = true;
+        if(threadPaused) { // 일시정지되어 있으면, 그냥 바로 새로고침 해버림
+        	refreshColonyContent();
+        } else {
+        	reserveRefresh = true;
+        }
     }
     
     /** 정착지 목록과 화면 내용 갱신 */

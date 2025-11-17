@@ -268,7 +268,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     
     /** 정착지 기본정보만 새로고침 */
     @Override
-    public void refreshColonyBasicMeta(Colony colony, ColonyManager superInstance) {
+    public void refreshColonyBasicMeta(Colony colony, ColonyManagerUI superInstance) {
         progHp.setMaximum(colony.getMaxHp());
         progHp.setValue(colony.getHp());
         tfColonyName.setText(colony.getName());
@@ -277,7 +277,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     }
     
     @Override
-    public void refresh(int cycle, City city, Colony colony, ColonyManager superInstance) { // city is null
+    public void refresh(int cycle, City city, Colony colony, ColonyManagerUI superInstance) { // city is null
         if(colony == null) {
             tfColonyName.setText("");
             tfColonyTime.setText("");
