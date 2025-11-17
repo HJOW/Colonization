@@ -91,6 +91,11 @@ public abstract class Port extends DefaultFacility {
         for(Ship p : getShips()) { res = res.add(p.getCheckerValue().multiply(Constants.BIGINTEGER_19)); }
         return res;
     }
+    
+    /** 소속 함선 수 반환 */
+    public int getShipCount() {
+    	return ships.size();
+    }
 
     /** 소속 함선들 반환 (격납 중인 함선이 아님 ! 파견되어 있더라도 소속이 이 곳이면 여전히 조회됨) */
 	public Vector<Ship> getShips() {

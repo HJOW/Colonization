@@ -1396,6 +1396,25 @@ public abstract class City implements HasLocation {
     	return list;
     }
     
+    /** 소속 함선 수 반환 */
+    public int getShipCount() {
+    	int res = 0;
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			res += ((Port) f).getShipCount();
+    		}
+    	}
+    	return res;
+    }
+    
+    /** 해당 key 의 함선 찾아 반환 */
+    public Ship getShip(long key) {
+    	for(Ship s : getShips()) {
+    		if(s.getKey() == key) return s;
+    	}
+    	return null;
+    }
+    
     /** 함선 하나를 도시에서 제거 (파괴 혹은 다른 도시로 이동했다거나 등의 이유 발생 시 호출, 단순 파견으로는 이 메소드를 호출하면 안 됨) */
     public void removeShip(Ship s) {
     	for(Facility f : getFacility()) {

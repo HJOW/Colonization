@@ -1046,6 +1046,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
+    @Override
     public Vector<Ship> getShips() {
     	Vector<Ship> list = new Vector<Ship>();
     	for(City c : getCities()) {
@@ -1055,6 +1056,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 해당 위치의 모든 함선들 반환 */
+    @Override
     public Vector<Ship> getShips(long x, long y, long z) {
     	Vector<Ship> list = new Vector<Ship>();
     	for(City c : getCities()) {
@@ -1064,6 +1066,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
+    @Override
     public Vector<Ship> getShips(long x, long y, long z, long dist) {
     	Vector<Ship> list = new Vector<Ship>();
     	for(City c : getCities()) {
@@ -1071,6 +1074,26 @@ public abstract class AbstractColony implements Colony {
     	}
     	return list;
     }
+    
+    /** 소속 함선 수 반환 */
+    @Override
+    public int getShipCount() {
+    	int res = 0;
+    	for(City c : getCities()) {
+    		res += c.getShipCount();
+    	}
+    	return res;
+    }
+    
+    @Override
+    public Ship getShip(long key) {
+    	Ship sh;
+    	for(City city : getCities()) {
+    		sh = city.getShip(key);
+    		if(sh != null) return sh;
+    	}
+    	return null;
+    } 
     
     /** 빈 새 도시를 생성해 반환, 도시를 이 정착지에 등록시키지는 않음 */
     protected abstract City createCityInstance();

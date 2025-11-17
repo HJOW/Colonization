@@ -93,4 +93,8 @@ public interface Colony extends HasLocation {
     public Vector<Ship> getShips(long x, long y, long z);
     /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
     public Vector<Ship> getShips(long x, long y, long z, long dist);
+    /** 소속 함선 수 반환 */
+    public int getShipCount();
+    /** 해당 key 의 함선 찾아 반환 */
+    public Ship getShip(long key);
 }
