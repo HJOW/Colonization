@@ -18,6 +18,7 @@ import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
+import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -449,6 +450,7 @@ public class AbstractShip implements Ship {
 		this.key = key;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -498,6 +500,7 @@ public class AbstractShip implements Ship {
 		return destinationX;
 	}
 
+	@Override
 	public void setDestinationX(long destinationX) {
 		this.destinationX = destinationX;
 	}
@@ -506,6 +509,7 @@ public class AbstractShip implements Ship {
 		return destinationY;
 	}
 
+	@Override
 	public void setDestinationY(long destinationY) {
 		this.destinationY = destinationY;
 	}
@@ -514,6 +518,7 @@ public class AbstractShip implements Ship {
 		return destinationZ;
 	}
 
+	@Override
 	public void setDestinationZ(long destinationZ) {
 		this.destinationZ = destinationZ;
 	}
@@ -625,6 +630,11 @@ public class AbstractShip implements Ship {
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
+	}
+    
+    @Override
+	public String getStatusString(Colony col, ColonyManagerUI superInstance) {
+		return ""; // TODO
 	}
     
     /** 함선 명칭 */

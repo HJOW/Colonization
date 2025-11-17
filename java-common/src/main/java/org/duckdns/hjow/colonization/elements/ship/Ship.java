@@ -9,11 +9,14 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
+import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 
 /** 함선 */
 public interface Ship extends AttackableObject, HasLocation {
 	/** 초기 함선 상태로 리셋 (단, 기존 함선 불러오는 경우는 이 메소드 호출할 필요 없음) */
 	public void init(Port port, Colony colony);
+	/** 이름 지정 */
+	public void setName(String name);
 	/** 기본 명칭 반환 */
 	public String getDefaultName();
 	/** 함선 종류의 설명 반환 */
@@ -44,6 +47,9 @@ public interface Ship extends AttackableObject, HasLocation {
     public long getDestinationY();
     /** 목적지 Z 좌표 */
     public long getDestinationZ();
+    public void setDestinationX(long destinationX);
+    public void setDestinationY(long destinationY);
+    public void setDestinationZ(long destinationZ);
     /** 정지 명령 */
     public void stop();
     /** 해당 좌표로 이동 명령 */
@@ -62,7 +68,8 @@ public interface Ship extends AttackableObject, HasLocation {
     public int getSize();
     /** 함선 건조 비용 */
     public long getPrice(Port port, Colony colony);
-    
+    /** 상태 메시지 생성 (UI 내 JTextArea 에 출력됨) */
+    public String getStatusString(Colony col, ColonyManagerUI superInstance);
     
     /* 다음 static 메소드 의무 탑재 !
      * 

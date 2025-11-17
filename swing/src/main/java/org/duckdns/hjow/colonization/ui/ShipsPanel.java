@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.Celestials;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
@@ -47,8 +48,6 @@ public class ShipsPanel extends JPanel implements Disposeable {
     	
     	tabs.add(ColonyManager.t("스크린"), pnSpace);
     	tabs.add(ColonyManager.t("현황"), pnShipRoot);
-    	
-    	
     }
     
 	@Override
@@ -61,7 +60,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 	}
 	
 	/** 화면 새로고침 시 호출 */
-	public void refresh(int cycle, Colony colony, ColonyManager superInstance) {
+	public void refresh(int cycle, Colony colony, ColonyManagerUI superInstance) {
 		pnSpace.setColony(colony);
 		if(pnShips.size() != colony.getShipCount()) {
 			for(ShipPanel p : pnShips) {
@@ -74,7 +73,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 	        GridBagConstraints gridBagConst;
 			
 			for(Ship s : colony.getShips()) {
-				ShipPanel pnOne = new ShipPanel(s);
+				ShipPanel pnOne = new ShipPanel(s, superInstance);
 				
 				gridBagConst = new GridBagConstraints();
 	            gridBagConst.gridx = 0;
@@ -125,16 +124,19 @@ class SpacePanel extends JPanel implements Disposeable {
 		super.paintComponent(g);
 		if(colony == null) return;
 		
-		// 3차원 그리기 (Graphics 로)
-		
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
+		// 배경 그리기
+		int rootWidth  = getWidth();
+		int rootHeight = getHeight();
+		g2d.setColor(Color.BLACK);
+		g2d.fillRect(0, 0, rootWidth, rootHeight);
+		
+		// 3차원 그리기 (Graphics 로)
 		List<LineObject2D>  lines = new ArrayList<LineObject2D>();
 		List<OvalObjects2D> ovals = new ArrayList<OvalObjects2D>();
 		
-		int rootWidth  = getWidth();
-		int rootHeight = getHeight();
 		int centerX = rootWidth  / 2;
 		int centerY = rootHeight / 2;
 		long divides = 10L;
@@ -150,6 +152,20 @@ class SpacePanel extends JPanel implements Disposeable {
 			ov.setCenter(proj); // 2D 정보만 입력됨
 			ov.setR(10);
 			ov.setColor(Color.BLUE);
+			ovals.add(ov);
+		}
+		
+		// 점들 그리기 (천체)
+		for(Celestials cele : colony.getCelestials()) {
+            Coordinate3D coordinate = new Coordinate3D(cele.getX(), cele.getY(), cele.getZ());
+			
+			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
+			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
+			
+			OvalObjects2D ov = new OvalObjects2D();
+			ov.setCenter(proj); // 2D 정보만 입력됨
+			ov.setR(7);
+			ov.setColor(Color.MAGENTA);
 			ovals.add(ov);
 		}
 		
