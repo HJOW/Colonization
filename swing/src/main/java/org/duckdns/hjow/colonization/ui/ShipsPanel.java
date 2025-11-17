@@ -20,10 +20,10 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.commons.core.Disposeable;
-import org.duckdns.hjow.graphics.Coordinate2D;
-import org.duckdns.hjow.graphics.Coordinate3D;
-import org.duckdns.hjow.graphics.LineObject2D;
-import org.duckdns.hjow.graphics.OvalObjects2D;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate2D;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
+import org.duckdns.hjow.commons.ui.graphics.LineObject2D;
+import org.duckdns.hjow.commons.ui.graphics.OvalObject2D;
 
 /** 함선들 현황 출력 및 컨트롤 화면 */
 public class ShipsPanel extends JPanel implements Disposeable {
@@ -134,8 +134,8 @@ class SpacePanel extends JPanel implements Disposeable {
 		g2d.fillRect(0, 0, rootWidth, rootHeight);
 		
 		// 3차원 그리기 (Graphics 로)
-		List<LineObject2D>  lines = new ArrayList<LineObject2D>();
-		List<OvalObjects2D> ovals = new ArrayList<OvalObjects2D>();
+		List<LineObject2D> lines = new ArrayList<LineObject2D>();
+		List<OvalObject2D> ovals = new ArrayList<OvalObject2D>();
 		
 		int centerX = rootWidth  / 2;
 		int centerY = rootHeight / 2;
@@ -148,7 +148,7 @@ class SpacePanel extends JPanel implements Disposeable {
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
 			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
 			
-			OvalObjects2D ov = new OvalObjects2D();
+			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
 			ov.setR(10);
 			ov.setColor(Color.BLUE);
@@ -162,7 +162,7 @@ class SpacePanel extends JPanel implements Disposeable {
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
 			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
 			
-			OvalObjects2D ov = new OvalObjects2D();
+			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
 			ov.setR(7);
 			ov.setColor(Color.MAGENTA);
@@ -176,7 +176,7 @@ class SpacePanel extends JPanel implements Disposeable {
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
 			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
 			
-			OvalObjects2D ov = new OvalObjects2D();
+			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
 			ov.setR(5);
 			ov.setColor(Color.GREEN);
@@ -187,7 +187,7 @@ class SpacePanel extends JPanel implements Disposeable {
 		long max = 0L;
 		long abs = 0L;
 		
-		for(OvalObjects2D ov : ovals) {
+		for(OvalObject2D ov : ovals) {
 			abs = Math.abs(ov.getX());
 			if(max < abs) max = abs;
 			
@@ -215,7 +215,7 @@ class SpacePanel extends JPanel implements Disposeable {
 		}
 		
 		// 출력
-		for(OvalObjects2D ov : ovals) {
+		for(OvalObject2D ov : ovals) {
 			g2d.setColor(ov.getColor());
 			g2d.fillOval((int) (ov.getCenter().getX() / divides), (int) (ov.getCenter().getY() / divides), ov.getR(), ov.getR());
 		}
