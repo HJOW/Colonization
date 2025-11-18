@@ -113,8 +113,13 @@ public abstract class Policy implements ColonyElements {
     }
 
     @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
+    public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
         return toJson();
+    }
+    
+    @Override
+    public JsonObject toJson(boolean excludeSecrets) {
+    	return toJson(false, null, null, excludeSecrets);
     }
 
     @Override

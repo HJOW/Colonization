@@ -168,21 +168,21 @@ public class ColonyServlet extends CommonServlet {
                         responses.put("success", new Boolean(true));
                         responses.put("message", "");
                         responses.put("type", "City");
-                        responses.put("detail", city.toJson(true, col, city));
+                        responses.put("detail", city.toJson(true, col, city, false));
                     }
                     
                 } else {
                     responses.put("success", new Boolean(true));
                     responses.put("message", "");
                     responses.put("type", "Colony");
-                    responses.put("detail", col.toJson(true, col, null));
+                    responses.put("detail", col.toJson(true, col, null, false));
                 }
             } else {
                 // 정착지 자체 조회
                 responses.put("success", new Boolean(true));
                 responses.put("message", "");
                 responses.put("type", "Colony");
-                responses.put("detail", col.toJson(true, col, null));
+                responses.put("detail", col.toJson(true, col, null, false));
             }
         }
     }
@@ -217,7 +217,7 @@ public class ColonyServlet extends CommonServlet {
         responses.put("message", "");
         
         String strRefresh = getParameter(req, "refresh");
-        if(DataUtil.isNotEmpty(strRefresh) && DataUtil.parseBoolean(strRefresh)) responses.put("detail", col.toJson(true, col, null));
+        if(DataUtil.isNotEmpty(strRefresh) && DataUtil.parseBoolean(strRefresh)) responses.put("detail", col.toJson(true, col, null, false));
     }
     
     protected void serviceRename(HttpServletRequest req, Account acc, JsonObject responses) throws Throwable {
@@ -331,7 +331,7 @@ public class ColonyServlet extends CommonServlet {
             
             responses.put("success", new Boolean(true));
             responses.put("message", "");
-            responses.put("detail", col.toJson(true, col, null));
+            responses.put("detail", col.toJson(true, col, null, false));
         } else if("City".equalsIgnoreCase(type)) {
             Colony col = null;
             for(Colony c : acc.getColonies()) {
@@ -359,7 +359,7 @@ public class ColonyServlet extends CommonServlet {
             
             responses.put("success", new Boolean(true));
             responses.put("message", "");
-            responses.put("detail", col.toJson(true, col, null));
+            responses.put("detail", col.toJson(true, col, null, false));
         } else if("Loan".equalsIgnoreCase(type)) {
             Colony col = null;
             for(Colony c : acc.getColonies()) {
@@ -384,7 +384,7 @@ public class ColonyServlet extends CommonServlet {
             
             responses.put("success", new Boolean(true));
             responses.put("message", "");
-            responses.put("detail", col.toJson(true, col, null));
+            responses.put("detail", col.toJson(true, col, null, false));
         } else {
             throw new RuntimeException("Don't know what type do you want to create.");
         }
@@ -443,7 +443,7 @@ public class ColonyServlet extends CommonServlet {
             
             responses.put("success", new Boolean(true));
             responses.put("message", "");
-            responses.put("detail", col.toJson(true, col, null));
+            responses.put("detail", col.toJson(true, col, null, false));
         } else if(fac instanceof Factory) {
             Factory factory = (Factory) fac;
             
@@ -470,7 +470,7 @@ public class ColonyServlet extends CommonServlet {
             
             responses.put("success", new Boolean(true));
             responses.put("message", "");
-            responses.put("detail", col.toJson(true, col, null));
+            responses.put("detail", col.toJson(true, col, null, false));
         }
     }
 }

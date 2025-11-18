@@ -99,4 +99,6 @@ public interface Colony extends HasLocation {
     public int getShipCount();
     /** 해당 key 의 함선 찾아 반환 */
     public Ship getShip(long key);
+    /** 객체 복제, 일부 비공개 항목은 제외 */
+    public Object cloneThis(boolean excludeSecrets);
 }

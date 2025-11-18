@@ -36,7 +36,7 @@ public class TCPSimpleClient {
         
         try {
             // 전송할 문자열 준비
-            String strJson = col.toJson(true, col, null).toJSON();
+            String strJson = col.toJson(true, col, null, false).toJSON();
             StringTokenizer lineTokenizer = new StringTokenizer(strJson.trim(), "\n");
             strJson = null;
             

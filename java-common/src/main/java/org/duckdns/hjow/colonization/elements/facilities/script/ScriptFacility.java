@@ -107,8 +107,8 @@ public class ScriptFacility extends DefaultFacility {
     }
     
     @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
-        JsonObject json = super.toJson(details, col, city);
+    public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
+        JsonObject json = super.toJson(details, col, city, excludeSecrets);
         json.put("storage", storage);
         return json;
     }

@@ -1516,7 +1516,7 @@ public class GUIColonyManager extends ColonyManager {
         
         for(Mod mod : modsEnabled) {
             if(mod.isReadOnly()) {
-                if(cycle % 4 == 0) mod.refresh(cycle, col.toJson(), broker); // 읽기 전용인 경우 JSON으로 변환해 반환
+                if(cycle % 4 == 0) mod.refresh(cycle, col.toJson(true), broker); // 읽기 전용인 경우 JSON으로 변환해 반환
             } else {
                 col.disableChecked(); // 쓰기 허용 MOD 사용 시 인증 비활성화
                 mod.refresh(cycle, col, broker);

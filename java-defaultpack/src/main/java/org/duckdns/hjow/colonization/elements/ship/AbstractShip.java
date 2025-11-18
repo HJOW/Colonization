@@ -357,11 +357,16 @@ public class AbstractShip implements Ship {
 
 	@Override
 	public JsonObject toJson() {
-		return toJson(false, null, null);
+		return toJson(false, null, null, false);
 	}
+	
+	@Override
+    public JsonObject toJson(boolean excludeSecrets) {
+    	return toJson(false, null, null, excludeSecrets);
+    }
 
 	@Override
-	public JsonObject toJson(boolean details, Colony col, City city) {
+	public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
 		JsonObject json = new JsonObject();
         json.put("type", getClassName());
         json.put("name", getName());
@@ -379,7 +384,7 @@ public class AbstractShip implements Ship {
         json.put("dz", String.valueOf(getDestinationZ()));
         
         JsonArray list = new JsonArray();
-        for(State s : getStates()) { list.add(s.toJson(details, col, city)); }
+        for(State s : getStates()) { list.add(s.toJson(details, col, city, excludeSecrets)); }
         json.put("states", list);
         
         list = new JsonArray();

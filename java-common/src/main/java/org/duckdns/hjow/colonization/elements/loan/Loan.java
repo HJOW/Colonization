@@ -163,11 +163,16 @@ public class Loan implements ColonyElements {
 
     @Override
     public JsonObject toJson() {
-        return toJson(true, null, null);
+        return toJson(true, null, null, false);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean excludeSecrets) {
+    	return toJson(true, null, null, excludeSecrets);
     }
 
     @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
+    public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
         JsonObject json = new JsonObject();
         
         json.put("type", "Loan");

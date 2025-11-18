@@ -86,7 +86,7 @@ public class Celestials implements HasLocation {
 	}
 	
 	@Override
-	public JsonObject toJson(boolean details, Colony col, City city) {
+	public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
 		JsonObject json = new JsonObject();
 		json.put("type", getClassName());
         json.put("name", getName());
@@ -99,7 +99,7 @@ public class Celestials implements HasLocation {
         JsonArray list = null;
         
         list = new JsonArray();
-        for(Enemy h : enemies) { list.add(h.toJson(details, col, city)); }
+        for(Enemy h : enemies) { list.add(h.toJson(details, col, city, excludeSecrets)); }
         json.put("enemies", list);
         
         list = new JsonArray();
@@ -111,8 +111,13 @@ public class Celestials implements HasLocation {
 	
 	@Override
 	public JsonObject toJson() {
-		return toJson(false, null, null);
+		return toJson(false, null, null, false);
 	}
+	
+	@Override
+    public JsonObject toJson(boolean excludeSecrets) {
+    	return toJson(false, null, null, excludeSecrets);
+    }
 
 	@Override
 	public BigInteger getCheckerValue() {

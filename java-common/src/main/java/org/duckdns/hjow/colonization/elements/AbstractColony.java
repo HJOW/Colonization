@@ -1103,11 +1103,16 @@ public abstract class AbstractColony implements Colony {
 
     @Override
     public JsonObject toJson() {
-        return toJson(false, this, null);
+        return toJson(false, this, null, false);
     }
     
     @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
+    public JsonObject toJson(boolean excludeSecrets) {
+    	return toJson(false, this, null, excludeSecrets);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
         col  = this;
         city = null;
         
@@ -1130,7 +1135,7 @@ public abstract class AbstractColony implements Colony {
         json.put("z", String.valueOf(getZ()));
         
         JsonArray list = new JsonArray();
-        for(City c : getCities()) { list.add(c.toJson(details, col, c)); }
+        for(City c : getCities()) { list.add(c.toJson(details, col, c, excludeSecrets)); }
         json.put("cities", list);
         
         list = new JsonArray();
@@ -1142,19 +1147,19 @@ public abstract class AbstractColony implements Colony {
         json.put("accountinghis", list);
         
         list = new JsonArray();
-        for(Celestials c : getCelestials()) { list.add(c.toJson(details, col, city)); }
+        if(! excludeSecrets) { for(Celestials c : getCelestials()) { list.add(c.toJson(details, col, city, excludeSecrets)); } }
         json.put("celestials", list);
         
         list = new JsonArray();
-        for(Research d : getResearches()) { list.add(d.toJson(details, col, city)); }
+        for(Research d : getResearches()) { list.add(d.toJson(details, col, city, excludeSecrets)); }
         json.put("researches", list);
         
         list = new JsonArray();
-        for(Loan l : getLoanAvail()) { list.add(l.toJson(details, col, city)); }
+        for(Loan l : getLoanAvail()) { list.add(l.toJson(details, col, city, excludeSecrets)); }
         json.put("loanAvail", list);
         
         list = new JsonArray();
-        for(Loan l : getLoanHave()) { list.add(l.toJson(details, col, city)); }
+        for(Loan l : getLoanHave()) { list.add(l.toJson(details, col, city, excludeSecrets)); }
         json.put("loanHave", list);
         
         if(checked) json.put("checker", getCheckerValue().toString());
@@ -1453,10 +1458,20 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public Object cloneThis() {
+    	return cloneThis(false);
+    }
+    
+    /** 객체 복제, 일부 비공개 항목은 제외 */
+    public Object cloneThis(boolean excludeSecrets) {
     	try {
+    	    JsonObject json = toJson();
+    	    if(excludeSecrets) {
+    	    	json.put("celestials", new JsonArray()); // 기밀 항목 제거
+    	    }
+    	    
     	    Class<?> classThis = getClass();
     	    ColonyElements col = (ColonyElements) classThis.newInstance();
-    	    col.fromJson(toJson());
+    	    col.fromJson(json);
     	    return col;
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);

@@ -75,9 +75,9 @@ public abstract class BusinessCenter extends DefaultFacility {
     }
 
     @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
+    public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
         JsonObject json = new JsonObject();
-        json.putAll(super.toJson(details, col, city));
+        json.putAll(super.toJson(details, col, city, excludeSecrets));
         json.put("type", getType());
         json.put("name", getName());
         json.put("key", String.valueOf(getKey()));

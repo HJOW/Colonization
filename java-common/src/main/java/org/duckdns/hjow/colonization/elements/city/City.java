@@ -1132,11 +1132,16 @@ public abstract class City implements HasLocation {
     
     @Override
     public JsonObject toJson() {
-        return toJson(false, null, this);
+        return toJson(false, null, this, false);
     }
     
     @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
+    public JsonObject toJson(boolean excludeSecrets) {
+    	return toJson(false, null, this, excludeSecrets);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
         city = this;
         
         JsonObject json = new JsonObject();
@@ -1153,11 +1158,11 @@ public abstract class City implements HasLocation {
         json.put("z", String.valueOf(getZ()));
         
         JsonArray list = new JsonArray();
-        for(Facility f : getFacility()) { list.add(f.toJson(details, col, city)); }
+        for(Facility f : getFacility()) { list.add(f.toJson(details, col, city, excludeSecrets)); }
         json.put("facilities", list);
         
         list = new JsonArray();
-        for(Citizen c : getCitizens()) { list.add(c.toJson(details, col, city)); }
+        for(Citizen c : getCitizens()) { list.add(c.toJson(details, col, city, excludeSecrets)); }
         json.put("citizens", list);
         
         list = new JsonArray();
@@ -1165,11 +1170,11 @@ public abstract class City implements HasLocation {
         json.put("holdings", list);
         
         list = new JsonArray();
-        for(Enemy h : enemies) { list.add(h.toJson(details, col, city)); }
+        for(Enemy h : enemies) { list.add(h.toJson(details, col, city, excludeSecrets)); }
         json.put("enemies", list);
         
         list = new JsonArray();
-        for(Policy p : policies) { list.add(p.toJson(details, col, city)); }
+        for(Policy p : policies) { list.add(p.toJson(details, col, city, excludeSecrets)); }
         json.put("policies", list);
         
         // 추가 정보 (불러올 때는 필요가 없는) 첨가

@@ -400,11 +400,16 @@ public class Citizen implements ColonyElements {
 
     @Override
     public JsonObject toJson() {
-        return toJson(false, null, null);
+        return toJson(false, null, null, false);
     }
     
     @Override
-    public JsonObject toJson(boolean details, Colony col, City city) {
+    public JsonObject toJson(boolean excludeSecrets) {
+    	return toJson(false, null, null, excludeSecrets);
+    }
+    
+    @Override
+    public JsonObject toJson(boolean details, Colony col, City city, boolean excludeSecrets) {
         JsonObject json = new JsonObject();
         json.put("type", "Citizen");
         json.put("name", getName());
@@ -429,7 +434,7 @@ public class Citizen implements ColonyElements {
         json.put("livingHome"        , String.valueOf(getLivingHome()));
         
         JsonArray list = new JsonArray();
-        for(State s : getStates()) { list.add(s.toJson(details, col, city)); }
+        for(State s : getStates()) { list.add(s.toJson(details, col, city, excludeSecrets)); }
         json.put("states", list);
         
         // 추가 정보 (불러올 때는 필요가 없는) 첨가
