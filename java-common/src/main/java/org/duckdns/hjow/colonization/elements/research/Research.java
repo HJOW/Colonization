@@ -279,4 +279,16 @@ public abstract class Research implements ColonyElements {
     public void markAsRefreshChildren(boolean f) {
         markAsRefresh(f);
     }
+    
+    @Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
 }

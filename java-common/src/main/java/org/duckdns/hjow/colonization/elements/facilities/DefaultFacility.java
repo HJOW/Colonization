@@ -450,6 +450,18 @@ public abstract class DefaultFacility implements Facility {
         }
     }
     
+    @Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
     public static String getFacilityName() {
         return "";
     }

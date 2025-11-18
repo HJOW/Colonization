@@ -139,6 +139,18 @@ public abstract class Product implements ColonyElements {
         markAsRefresh(f);
     }
     
+    @Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
     private static final List<Product> productTypeList = new Vector<Product>();
     private static synchronized void prepareProductTypeList() {
         productTypeList.clear();

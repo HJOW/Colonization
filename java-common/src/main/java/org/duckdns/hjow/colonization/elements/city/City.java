@@ -1483,6 +1483,18 @@ public abstract class City implements HasLocation {
         for(Enemy    en : getEnemies() ) { en.markAsRefreshChildren(f); }
     }
     
+    @Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
     /** 도시 건설 비용 */
     public static long getBuildingNewCityFee(Colony col) { return 1000000L; };
 }

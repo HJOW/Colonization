@@ -269,6 +269,18 @@ public class Celestials implements HasLocation {
 	@Override
 	public int cycleGap(Colony colony) { return 99999; }
 	
+	@Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+	
 	/** 랜덤 천체 생성 */
 	public static Celestials createRandom(long stdx, long stdy, long stdz, int minDist, int maxDist, int grade) {
 		Celestials c = new Celestials();

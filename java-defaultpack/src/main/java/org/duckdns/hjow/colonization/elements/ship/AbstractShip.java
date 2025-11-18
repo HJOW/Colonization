@@ -637,6 +637,18 @@ public class AbstractShip implements Ship {
 		return ""; // TODO
 	}
     
+    @Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
     /** 함선 명칭 */
     public static String getMetaName() {
 		return ColonyManager.t("함선");

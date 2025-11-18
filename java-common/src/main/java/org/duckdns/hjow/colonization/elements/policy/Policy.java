@@ -132,4 +132,16 @@ public abstract class Policy implements ColonyElements {
 
     @Override
     public void markAsRefreshChildren(boolean f) { }
+    
+    @Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
 }

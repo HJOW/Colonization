@@ -5,11 +5,12 @@ import java.math.BigInteger;
 
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.interfaces.JsonCompatible;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 /** Colonization 내 소속 클래스임을 나타내는 인터페이스 */
-public interface ColonyElements extends Serializable, Disposeable {
+public interface ColonyElements extends Serializable, Disposeable, JsonCompatible {
     /** 이 객체의 고유 ID 값 반환. 0이 될 수 없음. */
     public long getKey();
     
@@ -45,12 +46,6 @@ public interface ColonyElements extends Serializable, Disposeable {
     
     /** 쓰레드 N 사이클 당 위 oneCycle 메소드를 1회 호출, 이 N값을 반환하는 메소드 */
     public int cycleGap(Colony colony);
-    
-    /** JSON 데이터로부터 객체 데이터를 불러옮 */
-    public void fromJson(JsonObject json);
-    
-    /** 이 객체를 JSON 형태로 출력 */
-    public JsonObject toJson();
     
     /** 이 객체를 JSON 형태로 출력, 추가 정보 포함 여부 지정, details 를 true 로 지정하는 경우 Colony 객체와 City 객체가 필요함. details 가 false 인 경우 다른 매개변수는 null 을 넣으면 됨. */
     public JsonObject toJson(boolean details, Colony col, City city);

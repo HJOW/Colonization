@@ -244,6 +244,18 @@ public class Loan implements ColonyElements {
         markAsRefresh(f);
     }
     
+    @Override
+    public Object cloneThis() {
+    	try {
+    	    Class<?> classThis = getClass();
+    	    ColonyElements col = (ColonyElements) classThis.newInstance();
+    	    col.fromJson(toJson());
+    	    return col;
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
     /** 사용 가능한 대출 목록 만들기 */
     public static List<Loan> makeAvailableLoanListRandom(Colony col) {
         List<Loan> loans = new ArrayList<Loan>();

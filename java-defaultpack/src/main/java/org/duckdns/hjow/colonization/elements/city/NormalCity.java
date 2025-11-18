@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.elements.city;
 
 import java.io.IOException;
 
+import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.policies.PowerEfficiencyProtocol;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -22,4 +23,7 @@ public final class NormalCity extends City {
         policies.clear();
         policies.add(new PowerEfficiencyProtocol());
     }
+    
+    /** 도시 건설 비용 */
+    public static long getBuildingNewCityFee(Colony col) { return 1000000L; };
 }
