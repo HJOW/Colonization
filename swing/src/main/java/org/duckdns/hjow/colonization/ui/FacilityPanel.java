@@ -31,6 +31,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -355,12 +356,12 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     }
     
     /** 화면 새로고침 */
-    public void refresh(Facility fac, City city, Colony colony, ColonyManagerUI superInstance) {
+    public void refresh(Facility fac, City city, Colony colony, ColonyManagerInterface superInstance) {
         refresh(fac, city, colony, superInstance, false);
     }
 
     /** 화면 새로고침 */
-    public void refresh(Facility fac, City city, Colony colony, ColonyManagerUI superInstance, boolean force) {
+    public void refresh(Facility fac, City city, Colony colony, ColonyManagerInterface superInstance, boolean force) {
         if(fac == null) {
             tfName.setText("");
             ta.setText("");
@@ -575,7 +576,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     }
     
     @Override
-    public void refresh(int cycle, City city, Colony colony, ColonyManagerUI superInstance) {
+    public void refresh(int cycle, City city, Colony colony, ColonyManagerInterface superInstance) {
         Facility fac = getFacility(city);
         if(fac == null) { setEditable(false); return; }
         refresh(fac, city, colony, superInstance);

@@ -37,7 +37,7 @@ import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -1289,7 +1289,7 @@ public abstract class City implements HasLocation {
     }
     
     /** 상태 메시지 생성 (UI 내 JTextArea 에 출력됨) */
-    public String getStatusString(Colony col, ColonyManagerUI superInstance) {
+    public String getStatusString(Colony col, ColonyManagerInterface superInstance) {
         StringBuilder desc = new StringBuilder("");
         
         long powerConsume = 0L;
@@ -1337,7 +1337,7 @@ public abstract class City implements HasLocation {
     }
     
     /** 소속 정착지 찾기 */
-    public Colony getColony(ColonyManagerUI man) {
+    public Colony getColony(ColonyManagerInterface man) {
         return man.getColonyFrom(this);
     }
     

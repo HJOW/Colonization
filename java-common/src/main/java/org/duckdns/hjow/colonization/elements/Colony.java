@@ -12,7 +12,7 @@ import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 
 /** 정착지 인터페이스 */
 public interface Colony extends HasLocation {
@@ -60,7 +60,7 @@ public interface Colony extends HasLocation {
     /** 해당 연구 이 정착지에서 사용 가능 여부 결정 */
     public boolean supportedResearch(String researchTypeName);
     /** 상세 내역 */
-    public String getStatusString(ColonyManagerUI superInstance);
+    public String getStatusString(ColonyManagerInterface superInstance);
     /** 발생할 수 있는 이벤트 유형들 반환 */
     public List<TimeEvent> getEvents();
     /** 특정 타입의 시설 목록 반환 (모든 소속 도시들 다 스캔) */
@@ -84,7 +84,7 @@ public interface Colony extends HasLocation {
     /** 이 정착지를 마지막으로 저장한 ColonyManager 의 빌드 번호 반환 */
     public long getClientBuildNo();
     /** 버전 정보 리셋 */
-    public void resetClientVersion(ColonyManagerUI man);
+    public void resetClientVersion(ColonyManagerInterface man);
     /** 천체 목록 반환 */
     public List<Celestials> getCelestials();
     /** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */

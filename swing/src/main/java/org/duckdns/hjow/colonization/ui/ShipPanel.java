@@ -17,6 +17,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -30,10 +31,10 @@ public class ShipPanel extends JPanel implements Disposeable {
 	protected transient JSpinner     tfDestX, tfDestY, tfDestZ;
 	protected transient JTextArea    ta;
 	protected transient JProgressBar progHp;
-	protected transient ColonyManagerUI superInstance;
+	protected transient ColonyManagerInterface superInstance;
 	
 	public ShipPanel() { init(); }
-	public ShipPanel(Ship ship, ColonyManagerUI superInstance) { this(); this.ship = ship; this.superInstance = superInstance; }
+	public ShipPanel(Ship ship, ColonyManagerInterface superInstance) { this(); this.ship = ship; this.superInstance = superInstance; }
 	
 	/** UI 초기화 */
 	protected void init() {
@@ -141,7 +142,7 @@ public class ShipPanel extends JPanel implements Disposeable {
 	}
 	
 	/** 화면 새로고침 시 호출 */
-	public void refresh(int cycle, Colony colony, ColonyManagerUI superInstance) {
+	public void refresh(int cycle, Colony colony, ColonyManagerInterface superInstance) {
 		ship = getShip(colony);
 		if(ship == null) {
 			tfName.setText("");

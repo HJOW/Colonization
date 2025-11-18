@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -34,12 +35,12 @@ public class CitizenPanel extends JPanel implements ColonyElementPanel {
         super();
     }
     
-    public CitizenPanel(Citizen c, City city, Colony colony, ColonyManagerUI superInstance) {
+    public CitizenPanel(Citizen c, City city, Colony colony, ColonyManagerInterface superInstance) {
         this();
         init(c, city, colony, superInstance);
     }
     
-    public void init(final Citizen c, final City city, final Colony colony, final ColonyManagerUI superInstance) {
+    public void init(final Citizen c, final City city, final Colony colony, final ColonyManagerInterface superInstance) {
         dispose();
         setCitizenKey(c.getKey());
         setTargetName(c.getName());
@@ -121,11 +122,11 @@ public class CitizenPanel extends JPanel implements ColonyElementPanel {
     }
     
     @Override    
-    public void refresh(int cycle, City city, Colony colony, ColonyManagerUI superInstance) {
+    public void refresh(int cycle, City city, Colony colony, ColonyManagerInterface superInstance) {
         refresh(cycle, city, colony, superInstance, false);
     }
 
-    public void refresh(int cycle, City city, Colony colony, ColonyManagerUI superInstance, boolean force) {
+    public void refresh(int cycle, City city, Colony colony, ColonyManagerInterface superInstance, boolean force) {
         Citizen c = getCitizen(city);
         if(c == null) { tfName.setName(""); ta.setText(""); return; }
         setTargetName(c.getName());

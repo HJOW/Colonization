@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Celestials;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -60,7 +61,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 	}
 	
 	/** 화면 새로고침 시 호출 */
-	public void refresh(int cycle, Colony colony, ColonyManagerUI superInstance) {
+	public void refresh(int cycle, Colony colony, ColonyManagerInterface superInstance) {
 		pnSpace.setColony(colony);
 		if(pnShips.size() != colony.getShipCount()) {
 			for(ShipPanel p : pnShips) {

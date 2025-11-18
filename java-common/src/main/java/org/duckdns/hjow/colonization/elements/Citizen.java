@@ -12,7 +12,7 @@ import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.states.State;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -491,7 +491,7 @@ public class Citizen implements ColonyElements {
     }
     
     /** 상태 메시지 생성 (UI 내 JTextArea 에 출력됨) */
-    public String getStatusString(City city, Colony colony, ColonyManagerUI superInstance) {
+    public String getStatusString(City city, Colony colony, ColonyManagerInterface superInstance) {
         DecimalFormat formatterInt  = new DecimalFormat("#,###,###,###,###,##0");
         
         StringBuilder desc = new StringBuilder("");

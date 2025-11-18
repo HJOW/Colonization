@@ -18,7 +18,7 @@ import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -633,7 +633,7 @@ public class AbstractShip implements Ship {
 	}
     
     @Override
-	public String getStatusString(Colony col, ColonyManagerUI superInstance) {
+	public String getStatusString(Colony col, ColonyManagerInterface superInstance) {
 		return ""; // TODO
 	}
     

@@ -34,7 +34,6 @@ import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.script.NetObject;
 import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -53,7 +52,7 @@ import org.duckdns.hjow.commons.util.FileUtil;
  * 
  * 게임 동작에 필요한 설정, 메인 쓰레드, 플래그 변수들을 여기서 관리
 */
-public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInterface, Serializable {
+public abstract class ColonyManager implements ColonyManagerInterface, Serializable {
     private static final long serialVersionUID = -5740844908011980260L;
     
     protected transient ColonizationMainClass superInstance;
@@ -974,9 +973,11 @@ public abstract class ColonyManager implements ColonyManagerUI, ColonyManagerInt
         return getConfig();
     }
     
-    public long getCycleGapEachCity()     { return cycleGapEachCity;     }
-    public long getCycleGapEachFacility() { return cycleGapEachFacility; }
+    public long    getCycleGapEachCity()          { return cycleGapEachCity;     }
+    public long    getCycleGapEachFacility()      { return cycleGapEachFacility; }
     public boolean isUsingCheckDisablingContent() { return flagUseCheckDisablingContent; }
+    @Override
+    public Object getDialogObject() { return null; }
     
     /** 프로그램 종료 */
     public void exit() {

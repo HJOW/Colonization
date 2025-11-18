@@ -3,10 +3,10 @@ package org.duckdns.hjow.colonization.elements.facilities;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.FacilityPanel;
 
 public interface SupportGUIFacility extends Facility {
-    public FacilityPanel createPanel(City city, Colony colony, ColonyManagerUI superInstance);
+    public FacilityPanel createPanel(City city, Colony colony, ColonyManagerInterface superInstance);
     public boolean checkPanelAccept(FacilityPanel pn);
 }

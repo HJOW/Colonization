@@ -33,6 +33,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -292,7 +293,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     }
     
     @Override
-    public void refresh(final int cycle, City city, final Colony colony, final ColonyManagerUI superInstance) {
+    public void refresh(final int cycle, City city, final Colony colony, final ColonyManagerInterface superInstance) {
         tab.setSelectedComponent(pnFrontRoot);
         if(city == null) { city = getCity(); }
         if(city == null) {

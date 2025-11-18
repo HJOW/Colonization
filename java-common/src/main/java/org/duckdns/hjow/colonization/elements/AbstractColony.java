@@ -30,7 +30,7 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -204,7 +204,7 @@ public abstract class AbstractColony implements Colony {
     
     /** 버전 정보 리셋 */
     @Override
-    public void resetClientVersion(ColonyManagerUI man) {
+    public void resetClientVersion(ColonyManagerInterface man) {
     	if(man == null) throw new NullPointerException();
     	clientVersion = ColonyManager.getVersionString();
         clientBuildNo = String.valueOf(ColonyManager.BUILD_NO);
@@ -1027,7 +1027,7 @@ public abstract class AbstractColony implements Colony {
     
     /** 상세 내역 */
     @Override
-    public String getStatusString(ColonyManagerUI superInstance) {
+    public String getStatusString(ColonyManagerInterface superInstance) {
         StringBuilder desc = new StringBuilder("");
         desc = desc.append("\t").append("HP : ").append(ColonyManager.formatInt(getHp())).append(" / ").append(ColonyManager.formatInt(getMaxHp()));
         desc = desc.append("\t").append(ColonyManager.t("예산") + " : ").append(ColonyManager.formatInt(getMoneyTotals(), false, 2));

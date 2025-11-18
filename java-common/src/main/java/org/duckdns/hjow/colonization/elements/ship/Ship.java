@@ -9,7 +9,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
-import org.duckdns.hjow.colonization.ui.ColonyManagerUI;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 
 /** 함선 */
 public interface Ship extends AttackableObject, HasLocation {
@@ -69,7 +69,7 @@ public interface Ship extends AttackableObject, HasLocation {
     /** 함선 건조 비용 */
     public long getPrice(Port port, Colony colony);
     /** 상태 메시지 생성 (UI 내 JTextArea 에 출력됨) */
-    public String getStatusString(Colony col, ColonyManagerUI superInstance);
+    public String getStatusString(Colony col, ColonyManagerInterface superInstance);
     
     /* 다음 static 메소드 의무 탑재 !
      * 

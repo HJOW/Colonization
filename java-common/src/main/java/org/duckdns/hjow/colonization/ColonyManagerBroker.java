@@ -2,6 +2,8 @@ package org.duckdns.hjow.colonization;
 
 import java.lang.reflect.Method;
 
+import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -127,4 +129,37 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
         
         return null;
     }
+
+	@Override
+	public Colony getColony(long colonyKey) {
+		return null; // TODO 읽기 전용이어야 하므로 복제해 반환해야 함
+	}
+
+	@Override
+	public Colony getColonyFrom(City city) {
+		return null; // TODO 읽기 전용이어야 하므로 복제해 반환해야 함
+	}
+
+	@Override
+	public void open(ColonizationMainClass superInstance) { } // 의미없음 (이미 창이 열린 상태일 테므로)
+
+	@Override
+	public Object getDialogObject() {
+		return null; // 읽기 전용이어야 하므로 액세스 금지
+	}
+
+	@Override
+	public long getCycleGapEachCity() {
+		return originals.getCycleGapEachCity();
+	}
+
+	@Override
+	public long getCycleGapEachFacility() {
+		return originals.getCycleGapEachFacility();
+	}
+
+	@Override
+	public boolean isUsingCheckDisablingContent() {
+		return originals.isUsingCheckDisablingContent();
+	}
 }

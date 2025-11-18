@@ -1,5 +1,7 @@
 package org.duckdns.hjow.colonization;
 
+import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -24,4 +26,16 @@ public interface ColonyManagerInterface extends Disposeable {
     public JsonObject getSelectColonyInfo();
     /** 현재 불러온 모든 정착지 정보를 JsonArray 로 반환 */
     public JsonArray getAllColonies();
+    /** 해당 키를 갖는 정착지 찾아 반환 (목록에 없으면 null 반환) */
+    public Colony getColony(long colonyKey);
+    /** 도시가 속한 정착지 찾기 */
+    public Colony getColonyFrom(City city);
+    /** Colonization 실행 */
+    public void open(ColonizationMainClass superInstance);
+    /** GUI 지원 인스턴스인 경우, 메인 창에 해당하는 Window 타입의 객체 반환, 그 외의 경우 null 반환 */
+    public Object getDialogObject();
+    
+    public long    getCycleGapEachCity();         
+    public long    getCycleGapEachFacility();     
+    public boolean isUsingCheckDisablingContent(); 
 }
