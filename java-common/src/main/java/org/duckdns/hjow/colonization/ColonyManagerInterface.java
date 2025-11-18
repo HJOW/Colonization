@@ -26,6 +26,8 @@ public interface ColonyManagerInterface extends Disposeable {
     public JsonObject getSelectColonyInfo();
     /** 현재 불러온 모든 정착지 정보를 JsonArray 로 반환 */
     public JsonArray getAllColonies();
+    /** 현재 선택된 정착지 반환 */
+    public Colony getColony();
     /** 해당 키를 갖는 정착지 찾아 반환 (목록에 없으면 null 반환) */
     public Colony getColony(long colonyKey);
     /** 도시가 속한 정착지 찾기 */

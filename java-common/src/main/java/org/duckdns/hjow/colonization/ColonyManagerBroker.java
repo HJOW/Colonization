@@ -129,6 +129,11 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
         
         return null;
     }
+    
+    @Override
+	public Colony getColony() {
+		return null; // TODO 읽기 전용이어야 하므로 복제해 반환해야 함
+	}
 
 	@Override
 	public Colony getColony(long colonyKey) {

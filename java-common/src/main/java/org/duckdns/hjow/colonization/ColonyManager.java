@@ -778,6 +778,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 현재 선택된 정착지 반환 */
+    @Override
     public Colony getColony() {
         return getSelectedColony();
     }
