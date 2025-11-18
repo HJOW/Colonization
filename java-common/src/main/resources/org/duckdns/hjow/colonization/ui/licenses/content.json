@@ -20,6 +20,11 @@
         "file" : "maven.html"
     },
     {
+        "name" : "Java3D",
+        "contentType" : "text/html",
+        "file" : "java3d.html"
+    },
+    {
         "name" : "SyntaxPane",
         "contentType" : "text/html",
         "file" : "syntaxpane.html"

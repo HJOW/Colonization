@@ -128,7 +128,10 @@ WinLauncher 를 Visual Studio 로 불러올 때 필요할 수 있는 파일로, 
 - Apache Commons Lang   (See https://commons.apache.org/proper/commons-lang/                   )
 - Nashorn               (See https://github.com/openjdk/nashorn/blob/main/LICENSE              )
 
-## Swing 빌드만 해당 (모두 선택사항)
+## Swing 빌드만 해당
+- Java3D                (See https://download.java.net/media/java3d/builds/release/1.4.0_01/LICENSE-Java3D-v1_4_0.txt )
+
+## Swing 빌드만 해당 (선택사항)
 - sciss SyntaxPane      (See https://codeberg.org/sciss/SyntaxPane/src/branch/main/LICENSE     )
 - FlatLaf               (See https://github.com/JFormDesigner/FlatLaf/blob/main/LICENSE        )
 
