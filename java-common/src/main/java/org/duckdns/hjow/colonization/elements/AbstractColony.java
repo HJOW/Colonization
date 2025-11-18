@@ -15,6 +15,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
@@ -30,7 +31,6 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchManager;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
-import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -700,6 +700,16 @@ public abstract class AbstractColony implements Colony {
         // 탐험 진행
         for(Celestials c : getCelestials()) {
         	c.oneCycle(cycle, null, colony, efficiency100, colPanel);
+        	
+        	// 함선들이 이 천체 근처에 하나라도 있으면 오픈
+        	if(! c.isOpened()) {
+        		for(Ship s : colony.getShips()) {
+    			    if(Math.abs(s.getX() - c.getX()) <= 10 && Math.abs(s.getY() - c.getY()) <= 10 && Math.abs(s.getZ() - c.getZ()) <= 10) {
+    			    	c.setOpened(true);
+    			    	break;
+    			    }
+    			}
+        	}
         }
         
         // 시간 지남
@@ -1147,7 +1157,7 @@ public abstract class AbstractColony implements Colony {
         json.put("accountinghis", list);
         
         list = new JsonArray();
-        if(! excludeSecrets) { for(Celestials c : getCelestials()) { list.add(c.toJson(details, col, city, excludeSecrets)); } }
+        for(Celestials c : getCelestials()) { if((! excludeSecrets) || c.isOpened())  list.add(c.toJson(details, col, city, excludeSecrets)); }
         json.put("celestials", list);
         
         list = new JsonArray();

@@ -25,6 +25,7 @@ public class Celestials implements HasLocation {
     protected long y = 0L;
     protected long z = 0L;
     protected String name = "소행성_" + key;
+    protected boolean opened = false;
 
 	protected List<Enemy>   enemies = new ArrayList<Enemy>();
 	protected List<Product> debries = new ArrayList<Product>();
@@ -38,8 +39,9 @@ public class Celestials implements HasLocation {
 	
 	@Override
 	public void fromJson(JsonObject json) {
-		try { setName(json.get("name").toString());                       } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setName("");  }
-		try { key = Long.parseLong(json.get("key").toString());           } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setKey(ColonyManager.generateKey()); }
+		try { setName(json.get("name").toString());                                  } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setName("");  }
+		try { key = Long.parseLong(json.get("key").toString());                      } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setKey(ColonyManager.generateKey()); }
+		try { setOpened(DataUtil.parseBoolean(String.valueOf(json.get("opened"))));  } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setOpened(false); }
 		
 		try { x = Long.parseLong(json.get("x").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setX(0L); }
         try { y = Long.parseLong(json.get("y").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setY(0L); }
@@ -91,6 +93,7 @@ public class Celestials implements HasLocation {
 		json.put("type", getClassName());
         json.put("name", getName());
         json.put("key", String.valueOf(getKey()));
+        json.put("opened", isOpened() ? "Y" : "N");
         
         json.put("x", String.valueOf(getX()));
         json.put("y", String.valueOf(getY()));
@@ -210,6 +213,14 @@ public class Celestials implements HasLocation {
 
 	public void setDebries(List<Product> debries) {
 		this.debries = debries;
+	}
+
+	public boolean isOpened() {
+		return opened;
+	}
+
+	public void setOpened(boolean opened) {
+		this.opened = opened;
 	}
 
 	@Override

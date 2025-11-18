@@ -158,7 +158,8 @@ class SpacePanel extends JPanel implements Disposeable {
 		
 		// 점들 그리기 (천체)
 		for(Celestials cele : colony.getCelestials()) {
-            Coordinate3D coordinate = new Coordinate3D(cele.getX(), cele.getY(), cele.getZ());
+			Coordinate3D coordinate = new Coordinate3D(cele.getX(), cele.getY(), cele.getZ());
+			if(! cele.isOpened()) continue;
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
 			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
