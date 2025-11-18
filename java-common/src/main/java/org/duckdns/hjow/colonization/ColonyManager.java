@@ -973,8 +973,11 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         return getConfig();
     }
     
+    @Override
     public long    getCycleGapEachCity()          { return cycleGapEachCity;     }
+    @Override
     public long    getCycleGapEachFacility()      { return cycleGapEachFacility; }
+    @Override
     public boolean isUsingCheckDisablingContent() { return flagUseCheckDisablingContent; }
     @Override
     public Object getDialogObject() { return null; }

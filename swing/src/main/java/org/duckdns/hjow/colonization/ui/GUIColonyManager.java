@@ -1260,6 +1260,9 @@ public class GUIColonyManager extends ColonyManager {
         return frame;
     }
     
+    @Override
+    public Object getDialogObject() { return getDialog(); }
+    
     /** 대화상자 가로 길이 반환 */
     public int getDialogWidth() {
         return getDialog().getWidth();
