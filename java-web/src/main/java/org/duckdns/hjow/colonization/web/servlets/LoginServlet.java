@@ -14,7 +14,6 @@ import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
-import org.duckdns.hjow.commons.util.HexUtil;
 
 public class LoginServlet extends CommonServlet {
     private static final long serialVersionUID = 2644868350197546589L;
