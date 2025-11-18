@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.commons.core.JsonCompatible;
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.interfaces.JsonCompatible;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
