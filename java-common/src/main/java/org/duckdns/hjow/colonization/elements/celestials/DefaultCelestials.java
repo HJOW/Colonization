@@ -1,4 +1,4 @@
-package org.duckdns.hjow.colonization.elements;
+package org.duckdns.hjow.colonization.elements.celestials;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -8,6 +8,8 @@ import java.util.Map;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
+import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
@@ -19,7 +21,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 천체, 여기서는 탐험지 */
-public class Celestials implements HasLocation {
+public class DefaultCelestials implements Celestials {
 	private static final long serialVersionUID = 912340193572680618L;
 	protected volatile long key = ColonyManager.generateKey();
 	protected long x = 0L;
@@ -31,7 +33,7 @@ public class Celestials implements HasLocation {
 	protected List<Enemy>   enemies = new ArrayList<Enemy>();
 	protected List<Product> debries = new ArrayList<Product>();
 	
-	public Celestials() {}
+	public DefaultCelestials() {}
 
 	@Override
 	public String getClassName() {
@@ -200,6 +202,7 @@ public class Celestials implements HasLocation {
 		this.name = name;
 	}
 
+	@Override
 	public List<Enemy> getEnemies() {
 		return enemies;
 	}
@@ -208,6 +211,7 @@ public class Celestials implements HasLocation {
 		this.enemies = enemies;
 	}
 
+	@Override
 	public List<Product> getDebries() {
 		return debries;
 	}
@@ -216,6 +220,7 @@ public class Celestials implements HasLocation {
 		this.debries = debries;
 	}
 
+	@Override
 	public boolean isOpened() {
 		return opened;
 	}
@@ -300,7 +305,7 @@ public class Celestials implements HasLocation {
 	
 	/** 랜덤 천체 생성 */
 	public static Celestials createRandom(long stdx, long stdy, long stdz, int minDist, int maxDist, int grade) {
-		Celestials c = new Celestials();
+		Celestials c = new DefaultCelestials();
 		Map<String, Number> coordinate = DataUtil.createCoordinateIntScale(stdx, stdy, stdz, minDist, maxDist);
 		c.setX(coordinate.get("x").longValue());
 		c.setY(coordinate.get("y").longValue());

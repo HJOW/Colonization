@@ -19,6 +19,8 @@ import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
+import org.duckdns.hjow.colonization.elements.celestials.Celestials;
+import org.duckdns.hjow.colonization.elements.celestials.DefaultCelestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -1298,7 +1300,7 @@ public abstract class AbstractColony implements Colony {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Celestials cele = new Celestials();
+                        Celestials cele = new DefaultCelestials();
                         cele.fromJson((JsonObject) o);
                         celestials.add(cele);
                     } catch(Exception ex) {
@@ -1481,7 +1483,7 @@ public abstract class AbstractColony implements Colony {
 		int grade = 1;
 		
 	    for(int idx=0; idx<intRand; idx++) {
-	    	newOne = Celestials.createRandom(getX(), getY(), getZ(), 10000, (int) (100000 + (Math.random() * idx)), grade + (Math.random() >= 0.5 ? 1 : 0) + (Math.random() >= 0.8 ? 1 : 0) );
+	    	newOne = DefaultCelestials.createRandom(getX(), getY(), getZ(), 10000, (int) (100000 + (Math.random() * idx)), grade + (Math.random() >= 0.5 ? 1 : 0) + (Math.random() >= 0.8 ? 1 : 0) );
 	    	if(idx % 100 == 0) grade++;
 	    	celestials.add(newOne);
 	    }

@@ -7,7 +7,7 @@ import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.duckdns.hjow.colonization.elements.Celestials;
+import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.commons.ui.graphics.Coordinate2D;
