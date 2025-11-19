@@ -48,6 +48,10 @@ Daemon, Servlet 빌드의 경우, 계정 개념이 있어
 이 프로젝트 내 pom.xml 에서 버전 등의 공통정보만을 정의할 뿐 그외 소스코드는 없습니다.    
 이용 시 Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
 
+## colonization-java-api (java-api)
+Java 기반 빌드의 인터페이스 파트입니다.   
+Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
+
 ## colonization-java-common (java-common)
 Java 기반 빌드의 공통 파트입니다.   
 Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니다.
@@ -61,7 +65,7 @@ Java 8 (OpenJDK 1.8 사용 가능) 및 Maven 3.8 이상 버전이 필요합니�
 Java 의 Swing API 를 활용한 GUI 환경 빌드입니다.   
 Java 8 (OpenJDK 1.8 사용 가능) 이상 버전에서 구동되며, GUI 환경이 필요합니다.   
 Maven 구동 시 실행 가능한 jar 환경으로 빌드됩니다.   
-(colonization-java-common, colonization-java-default, daemon 를 먼저 Maven 구동 후 Swing 빌드 구동이 가능합니다.)   
+(colonization-java-api, colonization-java-common, colonization-java-default, daemon 를 먼저 Maven 구동 후 Swing 빌드 구동이 가능합니다.)   
 
 ## WinLauncher
 Windows 상에서 Swing 빌드 실행을 쉽게 하기 위한 .Net WPF 기반 프로젝트입니다.    
