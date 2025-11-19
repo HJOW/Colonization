@@ -11,6 +11,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
+import org.duckdns.hjow.colonization.elements.states.AbstractState;
 import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -512,7 +513,7 @@ public class DefaultCitizen implements Citizen {
                 if(o instanceof JsonObject) {
                     try {
                         JsonObject jsonObj = (JsonObject) o;
-                        State stateOne = State.createStateInstance(jsonObj.get("type").toString());
+                        State stateOne = AbstractState.createStateInstance(jsonObj.get("type").toString());
                         if(stateOne == null) throw new NullPointerException("Cannot found these state type " + jsonObj);
                         
                         stateOne.fromJson(jsonObj);

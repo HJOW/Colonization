@@ -10,7 +10,7 @@ import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class SuperAngry extends State {
+public class SuperAngry extends AbstractState {
     private static final long serialVersionUID = -1359679198711687635L;
 
     @Override

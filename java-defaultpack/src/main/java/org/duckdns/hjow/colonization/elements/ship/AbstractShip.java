@@ -17,6 +17,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
+import org.duckdns.hjow.colonization.elements.states.AbstractState;
 import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -327,7 +328,7 @@ public class AbstractShip implements Ship {
                 if(o instanceof JsonObject) {
                     try {
                         JsonObject jsonObj = (JsonObject) o;
-                        State stateOne = State.createStateInstance(jsonObj.get("type").toString());
+                        State stateOne = AbstractState.createStateInstance(jsonObj.get("type").toString());
                         if(stateOne == null) throw new NullPointerException("Cannot found these state type " + jsonObj);
                         
                         stateOne.fromJson(jsonObj);

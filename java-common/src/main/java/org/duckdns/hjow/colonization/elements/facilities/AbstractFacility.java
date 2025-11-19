@@ -16,6 +16,7 @@ import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
+import org.duckdns.hjow.colonization.elements.states.AbstractState;
 import org.duckdns.hjow.colonization.elements.states.State;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -229,7 +230,7 @@ public abstract class AbstractFacility implements Facility {
                 if(o instanceof JsonObject) {
                     try {
                         JsonObject jsonObj = (JsonObject) o;
-                        State stateOne = State.createStateInstance(jsonObj.get("type").toString());
+                        State stateOne = AbstractState.createStateInstance(jsonObj.get("type").toString());
                         if(stateOne == null) throw new NullPointerException("Cannot found these state type " + jsonObj);
                         
                         stateOne.fromJson(jsonObj);

@@ -9,7 +9,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class Influenza extends State {
+public class Influenza extends AbstractState {
     private static final long serialVersionUID = -4399295592737336716L;
 
     @Override
