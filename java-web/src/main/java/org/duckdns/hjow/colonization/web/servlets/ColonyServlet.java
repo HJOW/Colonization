@@ -19,6 +19,7 @@ import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
 import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
+import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.web.accounts.Account;
@@ -453,16 +454,16 @@ public class ColonyServlet extends CommonServlet {
                 factory.setProductType(null);
             } else {
                 Product prod = null;
-                for(Product p : Product.getProductTypeList()) {
+                for(Product p : AbstractProduct.getProductTypeList()) {
                     if(name.equals(p.getKey())) { prod = p; break; }
                 }
                 if(prod == null) {
-                    for(Product p : Product.getProductTypeList()) {
+                    for(Product p : AbstractProduct.getProductTypeList()) {
                         if(name.equals(p.getType())) { prod = p; break; }
                     }
                 }
                 if(prod == null) {
-                    for(Product p : Product.getProductTypeList()) {
+                    for(Product p : AbstractProduct.getProductTypeList()) {
                         if(name.equals(p.getName())) { prod = p; break; }
                     }
                 }

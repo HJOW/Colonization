@@ -42,6 +42,7 @@ import org.duckdns.hjow.colonization.elements.facilities.Factory;
 import org.duckdns.hjow.colonization.elements.facilities.Home;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
+import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
 import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -198,7 +199,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 cardResProd.show(pnCenterDown, "Research");
             } else if(f instanceof Factory) {
                 Factory factory = (Factory) f;
-                List<Product> products = Product.getProductTypeList();
+                List<Product> products = AbstractProduct.getProductTypeList();
                 Vector<Product> avails = new Vector<Product>();
                 avails.add(new Money());
                 for(Product p : products) {
@@ -439,7 +440,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         } else if(fac instanceof Factory) {
             Factory factory = (Factory) fac;
             
-            List<Product> products = Product.getProductTypeList();
+            List<Product> products = AbstractProduct.getProductTypeList();
             Vector<Product> avails = new Vector<Product>();
             avails.add(new Money());
             for(Product p : products) {

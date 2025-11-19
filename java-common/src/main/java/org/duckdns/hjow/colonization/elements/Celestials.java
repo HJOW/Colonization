@@ -10,6 +10,7 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -74,7 +75,7 @@ public class Celestials implements HasLocation {
                 if(o instanceof JsonObject) {
                     try {
                         JsonObject jsonObj = (JsonObject) o;
-                        Product productOne = Product.createProductInstance(jsonObj.get("type").toString());
+                        Product productOne = AbstractProduct.createProductInstance(jsonObj.get("type").toString());
                         if(productOne == null) throw new NullPointerException("Cannot found these product type " + jsonObj);
                         
                         productOne.fromJson(jsonObj);

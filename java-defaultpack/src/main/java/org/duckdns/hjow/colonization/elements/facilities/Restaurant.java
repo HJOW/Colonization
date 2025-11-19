@@ -14,6 +14,7 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
@@ -258,7 +259,7 @@ public class Restaurant extends AbstractFacility implements ServiceFacility, Sto
                 if(o instanceof JsonObject) {
                     try {
                         JsonObject jsonObj = (JsonObject) o;
-                        Product productOne = Product.createProductInstance(jsonObj.get("type").toString());
+                        Product productOne = AbstractProduct.createProductInstance(jsonObj.get("type").toString());
                         if(productOne == null) throw new NullPointerException("Cannot found these product type " + jsonObj);
                         
                         productOne.fromJson(jsonObj);

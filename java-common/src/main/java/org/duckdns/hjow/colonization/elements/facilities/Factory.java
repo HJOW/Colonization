@@ -12,6 +12,7 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
 import org.duckdns.hjow.colonization.elements.products.Money;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
@@ -95,7 +96,7 @@ public abstract class Factory extends AbstractFacility implements Storage {
             if(getProductType() == null) createSuccess = false;
             else if(getProductType().equals("Money")) createSuccess = false;
             else {
-                Product p = Product.createProductInstance(getProductType());
+                Product p = AbstractProduct.createProductInstance(getProductType());
                 if(p != null) {
                     // 재료 확인
                     List<Product> sources = p.getSourceProducts();
@@ -139,7 +140,7 @@ public abstract class Factory extends AbstractFacility implements Storage {
                         if(createSuccess) {
                             // 생산품 추가
                             for(int idx=0; idx<getProduceResultCount(p); idx++) {
-                                if(getStoredCount() < getMaxStoredCapacity()) store(Product.createProductInstance(p.getType()));
+                                if(getStoredCount() < getMaxStoredCapacity()) store(AbstractProduct.createProductInstance(p.getType()));
                             }
                         }
                     }
@@ -228,13 +229,13 @@ public abstract class Factory extends AbstractFacility implements Storage {
     /** 생산 중인 Product 의 샘플 객체 만들어 반환 */
     public Product getProducingSample() {
         if(getProductType() == null) return null;
-        return Product.createProductInstance(getProductType());
+        return AbstractProduct.createProductInstance(getProductType());
     }
     
     /** 생산 중인 Product 의 원재료 리스트 반환 */
     public List<Product> getProducingProductSources() {
         if(getProductType() == null) return null;
-        Product p = Product.createProductInstance(getProductType());
+        Product p = AbstractProduct.createProductInstance(getProductType());
         return p.getSourceProducts();
     }
     
@@ -270,7 +271,7 @@ public abstract class Factory extends AbstractFacility implements Storage {
                 if(o instanceof JsonObject) {
                     try {
                         JsonObject jsonObj = (JsonObject) o;
-                        Product productOne = Product.createProductInstance(jsonObj.get("type").toString());
+                        Product productOne = AbstractProduct.createProductInstance(jsonObj.get("type").toString());
                         if(productOne == null) throw new NullPointerException("Cannot found these product type " + jsonObj);
                         
                         productOne.fromJson(jsonObj);
