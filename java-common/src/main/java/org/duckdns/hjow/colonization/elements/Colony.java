@@ -89,14 +89,18 @@ public interface Colony extends HasLocation {
     public List<Celestials> getCelestials();
     /** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */
     public void randomizeCelestials();
-    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     public Vector<Ship> getShips();
-    /** 해당 위치의 모든 함선들 반환 */
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
+    public Vector<Ship> getShipsLive();
+    /** 해당 위치의 모든 함선들 반환 - 건조 중인 함선 제외 */
     public Vector<Ship> getShips(long x, long y, long z);
-    /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
+    /** 해당 위치의 해당 범위 내 모든 함선들 반환 - 건조 중인 함선 제외 */
     public Vector<Ship> getShips(long x, long y, long z, long dist);
-    /** 소속 함선 수 반환 */
+    /** 소속 함선 수 반환 - 건조 중인 함선 포함 */
     public int getShipCount();
+    /** 소속 함선 수 반환 - 건조 중인 함선 제외 */
+    public int getLiveShipCount();
     /** 해당 key 의 함선 찾아 반환 */
     public Ship getShip(long key);
     /** 객체 복제, 일부 비공개 항목은 제외 */

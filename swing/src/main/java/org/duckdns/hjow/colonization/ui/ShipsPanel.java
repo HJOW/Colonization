@@ -52,7 +52,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 	/** 화면 새로고침 시 호출 */
 	public void refresh(int cycle, Colony colony, ColonyManagerInterface superInstance) {
 		pnSpace.setColony(colony);
-		if(pnShips.size() != colony.getShipCount()) {
+		if(pnShips.size() != colony.getLiveShipCount()) {
 			for(ShipPanel p : pnShips) {
 				p.dispose();
 			}
@@ -62,7 +62,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 	        int rowNo = 0;
 	        GridBagConstraints gridBagConst;
 			
-			for(Ship s : colony.getShips()) {
+			for(Ship s : colony.getShipsLive()) {
 				ShipPanel pnOne = new ShipPanel(s, superInstance);
 				
 				gridBagConst = new GridBagConstraints();

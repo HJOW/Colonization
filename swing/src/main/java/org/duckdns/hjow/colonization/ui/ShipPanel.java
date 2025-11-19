@@ -27,7 +27,7 @@ public class ShipPanel extends JPanel implements Disposeable {
 	private static final long serialVersionUID = -3246934564467455324L;
 	protected Ship ship;
 	
-	protected transient JTextField   tfName, tfNow;
+	protected transient JTextField   tfName, tfX, tfY, tfZ;
 	protected transient JSpinner     tfDestX, tfDestY, tfDestZ;
 	protected transient JTextArea    ta;
 	protected transient JProgressBar progHp;
@@ -72,13 +72,13 @@ public class ShipPanel extends JPanel implements Disposeable {
 		pnLeft  = new JPanel();
 		pnRight = new JPanel();
 		pnLeft.setLayout(new BorderLayout());
-		pnRight.setLayout(new GridLayout(1, 4));
+		pnRight.setLayout(new GridLayout(1, 7));
 		pnStatus.add(pnLeft , BorderLayout.CENTER);
 		pnStatus.add(pnRight, BorderLayout.EAST);
 		
-		tfNow = new JTextField(20);
-		tfNow.setEditable(false);
-		pnLeft.add(tfNow);
+		tfX = new JTextField(); tfX.setEditable(false); pnRight.add(tfX);
+		tfY = new JTextField(); tfY.setEditable(false); pnRight.add(tfY);
+		tfZ = new JTextField(); tfZ.setEditable(false); pnRight.add(tfZ);
 		
 		pnLb = new JPanel();
 		pnLb.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -146,7 +146,9 @@ public class ShipPanel extends JPanel implements Disposeable {
 		ship = getShip(colony);
 		if(ship == null) {
 			tfName.setText("");
-			tfNow.setText("0, 0, 0");
+			tfX.setText(String.valueOf(0));
+			tfY.setText(String.valueOf(0));
+			tfZ.setText(String.valueOf(0));
 			tfDestX.setValue(new Long(0L));
 			tfDestY.setValue(new Long(0L));
 			tfDestZ.setValue(new Long(0L));
@@ -155,7 +157,9 @@ public class ShipPanel extends JPanel implements Disposeable {
 		}
 		
 		tfName.setText(colony.getName());
-		tfNow.setText(String.valueOf(ship.getX()) + ", " + String.valueOf(ship.getY()) + ", " + String.valueOf(ship.getZ()));
+		tfX.setText(String.valueOf(ship.getX()));
+		tfY.setText(String.valueOf(ship.getY()));
+		tfZ.setText(String.valueOf(ship.getZ()));
 		tfDestX.setValue(new Long(ship.getDestinationX()));
 		tfDestY.setValue(new Long(ship.getDestinationY()));
 		tfDestZ.setValue(new Long(ship.getDestinationZ()));

@@ -92,12 +92,34 @@ public abstract class Port extends DefaultFacility {
         return res;
     }
     
-    /** 소속 함선 수 반환 */
+    /** 소속 함선 수 반환 (건조 수 포함) */
     public int getShipCount() {
     	return ships.size();
     }
+    
+    /** 소속 함선 수 반환 (건조 수 제외) */
+    public int getLiveShipCount() {
+    	int res = 0;
+        for(Ship s : getShips()) {
+        	if(s.getLevel() <= 0) continue;
+        	if(s.getHp()    <= 0) continue;
+        	res++;
+        }
+        return res;
+    }
+    
+    /** 소속 함선들 반환 (격납 중인 함선이 아님 ! 파견되어 있더라도 소속이 이 곳이면 여전히 조회됨) - 건조 중인 함선 제외 */
+	public Vector<Ship> getShipsLive() {
+		Vector<Ship> ships = new Vector<Ship>();
+		for(Ship s : getShips()) {
+			if(s.getLevel() <= 0) continue;
+			if(s.getHp()    <= 0) continue;
+			ships.add(s);
+		}
+		return ships;
+	}
 
-    /** 소속 함선들 반환 (격납 중인 함선이 아님 ! 파견되어 있더라도 소속이 이 곳이면 여전히 조회됨) */
+    /** 소속 함선들 반환 (격납 중인 함선이 아님 ! 파견되어 있더라도 소속이 이 곳이면 여전히 조회됨) - 건조 중인 함선 포함 */
 	public Vector<Ship> getShips() {
 		return ships;
 	}

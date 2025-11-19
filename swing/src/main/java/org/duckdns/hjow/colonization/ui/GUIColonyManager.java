@@ -404,6 +404,7 @@ public class GUIColonyManager extends ColonyManager {
         vCounts.add(t("10분 후 자동 정지"));
         cbxSimuCount = new JComboBox<String>(vCounts);
         toolbarNorth.add(cbxSimuCount);
+        cbxSimuCount.setVisible(false);
 
         Vector<SimulationSpeed> strSpeeds = getSpeedList();
         JComboBox<SimulationSpeed> cbxSpeed = new JComboBox<SimulationSpeed>(strSpeeds);
@@ -657,6 +658,9 @@ public class GUIColonyManager extends ColonyManager {
                         else              ((GlobalLogDialog) dialogGlobalLog).hideCommands();
                     }
                 }
+                
+                if(flagDebugMode) cbxSimuCount.setVisible(true);
+                else              cbxSimuCount.setVisible(false);
             }
         });
         ((JCheckBoxMenuItem) menuItem).setSelected(isDebugModeEnabled());

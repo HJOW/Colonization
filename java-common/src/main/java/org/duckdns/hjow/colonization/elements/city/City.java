@@ -1324,6 +1324,7 @@ public abstract class City implements HasLocation {
         }
         desc = desc.append("\n");
         for(Facility f : getFacility()) {
+        	String percents = "";
             if(f instanceof ResearchCenter) {
                 ResearchCenter rc = (ResearchCenter) f;
                 
@@ -1331,10 +1332,23 @@ public abstract class City implements HasLocation {
                 String rsName = " - ";
                 if(rNow != null) rsName = rNow.getTitle();
                 
-                String percents = "";
+                percents = "";
                 if(rNow != null) percents = ColonyManager.formatRate(rNow.getProgressPercents()) + "%";
                 
                 desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 연구 진행 중 : [RESEARCH] ([PROGRESS])").replace("[FACILITYNAME]", f.getName()).replace("[RESEARCH]", rsName).replace("[PROGRESS]", percents));
+            } else if(f instanceof Port) {
+            	Port p = (Port) f;
+            	
+            	int cnt = p.getLiveShipCount();
+            	if(cnt > 0) desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 함선 대기 중 : [SHIPCOUNT]").replace("[FACILITYNAME]", p.getName()).replace("[SHIPCOUNT]", ColonyManager.formatInt(cnt)));
+            	for(Ship s : p.getShips()) {
+            	    if(s.getLevel() <= 0) {
+            	    	long max = s.getMaxProgress(p, col);
+            	    	if(max <= 0) max = 1L;
+            	    	percents = ColonyManager.formatRate(((max - s.getLeftProgress()) * 100.0) / max) + "%";
+            	    	desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 함선 건조 진행 중 : [SHIP] ([PROGRESS])").replace("[FACILITYNAME]", p.getName()).replace("[SHIP]", s.getDefaultName()).replace("[PROGRESS]", percents));
+            	    }
+            	}
             }
         }
         
@@ -1372,7 +1386,7 @@ public abstract class City implements HasLocation {
     	return res;
     }
     
-    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     public Vector<Ship> getShips() {
     	Vector<Ship> list = new Vector<Ship>();
     	for(Facility f : getFacility()) {
@@ -1383,30 +1397,52 @@ public abstract class City implements HasLocation {
     	return list;
     }
     
-    /** 해당 위치의 모든 함선들 반환 */
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
+    public Vector<Ship> getShipsLive() {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			list.addAll(((Port) f).getShipsLive());
+    		}
+    	}
+    	return list;
+    }
+    
+    /** 해당 위치의 모든 함선들 반환 - 건조 중인 함선 제외 */
     public Vector<Ship> getShips(long x, long y, long z) {
     	Vector<Ship> list = new Vector<Ship>();
-    	for(Ship s : getShips()) {
+    	for(Ship s : getShipsLive()) {
     		if(s.getX() == x && s.getY() == y && s.getZ() == z) { list.add(s); }
     	}
     	return list;
     }
     
-    /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
+    /** 해당 위치의 해당 범위 내 모든 함선들 반환 - 건조 중인 함선 제외 */
     public Vector<Ship> getShips(long x, long y, long z, long dist) {
     	Vector<Ship> list = new Vector<Ship>();
-    	for(Ship s : getShips()) {
+    	for(Ship s : getShipsLive()) {
     		if(DataUtil.getDistance(x, y, z, s.getX(), s.getY(), s.getZ()) <= dist) { list.add(s); }
     	}
     	return list;
     }
     
-    /** 소속 함선 수 반환 */
+    /** 소속 함선 수 반환 - 건조 수 포함 */
     public int getShipCount() {
     	int res = 0;
     	for(Facility f : getFacility()) {
     		if(f instanceof Port) {
     			res += ((Port) f).getShipCount();
+    		}
+    	}
+    	return res;
+    }
+    
+    /** 소속 함선 수 반환 - 건조 수 제외 */
+    public int getLiveShipCount() {
+    	int res = 0;
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			res += ((Port) f).getLiveShipCount();
     		}
     	}
     	return res;

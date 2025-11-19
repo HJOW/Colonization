@@ -40,17 +40,18 @@ public class SwingSpacePanel extends SpacePanel {
 		int centerX = rootWidth  / 2;
 		int centerY = rootHeight / 2;
 		long divides = 10L;
+		double focals = 50000.0;
 		
 		// 점들 그리기 (도시)
 		for(City city : colony.getCities()) {
 			Coordinate3D coordinate = new Coordinate3D(city.getX(), city.getY(), city.getZ());
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
-			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
+			Coordinate2D proj = coordinate.project(getCameraLocation(), focals, (double) centerX, (double) centerY);
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
-			ov.setR(10);
+			ov.setR(30);
 			ov.setColor(Color.BLUE);
 			ovals.add(ov);
 		}
@@ -61,11 +62,11 @@ public class SwingSpacePanel extends SpacePanel {
 			if(! cele.isOpened()) continue;
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
-			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
+			Coordinate2D proj = coordinate.project(getCameraLocation(), focals, (double) centerX, (double) centerY);
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
-			ov.setR(7);
+			ov.setR(21);
 			ov.setColor(Color.MAGENTA);
 			ovals.add(ov);
 		}
@@ -75,11 +76,11 @@ public class SwingSpacePanel extends SpacePanel {
 			Coordinate3D coordinate = new Coordinate3D(ship.getX(), ship.getY(), ship.getZ());
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
-			Coordinate2D proj = coordinate.project(new Coordinate3D(colony.getX(),  colony.getY(),  colony.getZ()), (double) centerX, (double) centerY);
+			Coordinate2D proj = coordinate.project(getCameraLocation(), focals, (double) centerX, (double) centerY);
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
-			ov.setR(5);
+			ov.setR(15);
 			ov.setColor(Color.GREEN);
 			ovals.add(ov);
 		}

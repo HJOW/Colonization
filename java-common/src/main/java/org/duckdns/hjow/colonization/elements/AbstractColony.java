@@ -1055,12 +1055,22 @@ public abstract class AbstractColony implements Colony {
         return getName();
     }
     
-    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) */
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     @Override
     public Vector<Ship> getShips() {
     	Vector<Ship> list = new Vector<Ship>();
     	for(City c : getCities()) {
     		list.addAll(c.getShips());
+    	}
+    	return list;
+    }
+    
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
+    @Override
+    public Vector<Ship> getShipsLive() {
+    	Vector<Ship> list = new Vector<Ship>();
+    	for(City c : getCities()) {
+    		list.addAll(c.getShipsLive());
     	}
     	return list;
     }
@@ -1085,12 +1095,22 @@ public abstract class AbstractColony implements Colony {
     	return list;
     }
     
-    /** 소속 함선 수 반환 */
+    /** 소속 함선 수 반환 - 건조 중인 함선 포함 */
     @Override
     public int getShipCount() {
     	int res = 0;
     	for(City c : getCities()) {
     		res += c.getShipCount();
+    	}
+    	return res;
+    }
+    
+    /** 소속 함선 수 반환 - 건조 중인 함선 제외 */
+    @Override
+    public int getLiveShipCount() {
+    	int res = 0;
+    	for(City c : getCities()) {
+    		res += c.getLiveShipCount();
     	}
     	return res;
     }

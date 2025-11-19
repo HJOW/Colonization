@@ -234,7 +234,8 @@ public class AbstractShip implements Ship {
 
 	@Override
 	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
-		if(getLeftProgress() >= 1) return; // 제조/수리 진행 처리는 City 의 oneCycle 에서 진행
+		if(getLevel() <= 0) return; // 아직 건조 중인 경우 스킵 
+		// 제조/수리 진행 처리는 City 의 oneCycle 에서 진행
 		
 		// 이동 수행
 		if(! isArrived()) {
