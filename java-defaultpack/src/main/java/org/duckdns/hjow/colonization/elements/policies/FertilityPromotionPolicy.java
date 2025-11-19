@@ -5,13 +5,13 @@ import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.policy.Policy;
+import org.duckdns.hjow.colonization.elements.policy.AbstractPolicy;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.humanities.BasicHumanities;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 /** 출산 장려 정책 */
-public class FertilityPromotionPolicy extends Policy {
+public class FertilityPromotionPolicy extends AbstractPolicy {
     private static final long serialVersionUID = -7883592808138695130L;
 
     @Override

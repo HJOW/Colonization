@@ -6,13 +6,13 @@ import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.PowerPlant;
-import org.duckdns.hjow.colonization.elements.policy.Policy;
+import org.duckdns.hjow.colonization.elements.policy.AbstractPolicy;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.energy.EnergyTech;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 /** 발전 고효율 촉매 사용 */
-public class PowerEfficiencyProtocol extends Policy {
+public class PowerEfficiencyProtocol extends AbstractPolicy {
     private static final long serialVersionUID = 1357547542463465636L;
 
     @Override
