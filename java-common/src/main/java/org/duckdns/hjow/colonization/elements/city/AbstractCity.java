@@ -22,6 +22,7 @@ import org.duckdns.hjow.colonization.elements.DefaultCitizen;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
+import org.duckdns.hjow.colonization.elements.enemies.AbstractEnemy;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.BusinessCenter;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
@@ -1297,7 +1298,7 @@ public abstract class AbstractCity implements City {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Enemy en = Enemy.createEnemyFromJson((JsonObject) o);
+                        Enemy en = AbstractEnemy.createEnemyFromJson((JsonObject) o);
                         enemies.add(en);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);

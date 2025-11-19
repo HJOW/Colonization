@@ -11,6 +11,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.elements.enemies.AbstractEnemy;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
 import org.duckdns.hjow.colonization.elements.products.Product;
@@ -59,7 +60,7 @@ public class DefaultCelestials implements Celestials {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Enemy en = Enemy.createEnemyFromJson((JsonObject) o);
+                        Enemy en = AbstractEnemy.createEnemyFromJson((JsonObject) o);
                         enemies.add(en);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);

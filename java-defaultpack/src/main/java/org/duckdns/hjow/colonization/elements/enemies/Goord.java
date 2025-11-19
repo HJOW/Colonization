@@ -6,7 +6,7 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 
-public class Goord extends Enemy {
+public class Goord extends AbstractEnemy {
     private static final long serialVersionUID = 2685545395823241723L;
 
     @Override
