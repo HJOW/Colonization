@@ -15,7 +15,7 @@ import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public abstract class Residence extends DefaultFacility implements Home {
+public abstract class Residence extends AbstractFacility implements Home {
     private static final long serialVersionUID = -2930901725309688206L;
     protected int comportGrade = 0;
 

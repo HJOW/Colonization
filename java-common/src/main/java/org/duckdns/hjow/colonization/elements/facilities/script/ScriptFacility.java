@@ -6,12 +6,12 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.facilities.DefaultFacility;
+import org.duckdns.hjow.colonization.elements.facilities.AbstractFacility;
 import org.duckdns.hjow.colonization.elements.facilities.ScriptFacilityInformation;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 스크립트 기반 잃반 시설 */
-public class ScriptFacility extends DefaultFacility {
+public class ScriptFacility extends AbstractFacility {
     private static final long serialVersionUID = 6565598463462210082L;
     protected transient ScriptFacilityInformation info;
     protected transient ScriptEngine engine;

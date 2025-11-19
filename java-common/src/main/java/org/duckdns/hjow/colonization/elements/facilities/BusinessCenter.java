@@ -13,7 +13,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 일종의 지식산업 센터, 오피스 빌딩 개념으로, Product 생산 없이 예산 수익 발생 */
-public abstract class BusinessCenter extends DefaultFacility {
+public abstract class BusinessCenter extends AbstractFacility {
     private static final long serialVersionUID = 8250769518410521415L;
     @Override
     protected String getDefaultNamePrefix() {

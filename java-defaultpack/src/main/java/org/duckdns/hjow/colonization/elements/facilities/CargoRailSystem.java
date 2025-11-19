@@ -14,7 +14,7 @@ import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonObject;
 
-public class CargoRailSystem extends DefaultFacility {
+public class CargoRailSystem extends AbstractFacility {
     private static final long serialVersionUID = 5918363930987437500L;
 
     @Override

@@ -13,7 +13,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public abstract class PowerPlant extends DefaultFacility {
+public abstract class PowerPlant extends AbstractFacility {
     private static final long serialVersionUID = -7738915080952447743L;
 
     @Override

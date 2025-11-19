@@ -14,7 +14,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class ArchitectOffice extends DefaultFacility {
+public class ArchitectOffice extends AbstractFacility {
     private static final long serialVersionUID = 2620574171874446922L;
     
     @Override

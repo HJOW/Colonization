@@ -17,7 +17,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 우주공항 상위 클래스 */
-public abstract class Port extends DefaultFacility {
+public abstract class Port extends AbstractFacility {
 	private static final long serialVersionUID = -1456423038829036816L;
 	protected Vector<Ship> ships = new Vector<Ship>();
 

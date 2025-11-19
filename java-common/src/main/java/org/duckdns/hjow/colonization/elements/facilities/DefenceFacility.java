@@ -14,7 +14,7 @@ import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonObject;
 
-public abstract class DefenceFacility extends DefaultFacility implements AttackableObject {
+public abstract class DefenceFacility extends AbstractFacility implements AttackableObject {
     private static final long serialVersionUID = -8553101924279880106L;
     
     @Override

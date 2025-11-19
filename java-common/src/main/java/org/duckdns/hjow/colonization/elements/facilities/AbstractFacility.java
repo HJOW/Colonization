@@ -22,7 +22,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.DataUtil;
 
-public abstract class DefaultFacility implements Facility {
+public abstract class AbstractFacility implements Facility {
     private static final long serialVersionUID = 8012568139388326869L;
     protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;

@@ -20,7 +20,7 @@ import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
-public abstract class Factory extends DefaultFacility implements Storage {
+public abstract class Factory extends AbstractFacility implements Storage {
     private static final long serialVersionUID = 8465140770981665970L;
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected List<Product> stored = new Vector<Product>();

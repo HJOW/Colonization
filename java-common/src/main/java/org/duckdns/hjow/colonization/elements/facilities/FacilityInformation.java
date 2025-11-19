@@ -23,7 +23,7 @@ public class FacilityInformation implements Serializable {
     protected Long price = new Long(0L);
     protected Long tech  = new Long(0L);
     protected int buildingCycle = 1200;
-    protected int uniqueGrade = DefaultFacility.FACILITY_UNIQUE_GRADE_NONE;
+    protected int uniqueGrade = AbstractFacility.FACILITY_UNIQUE_GRADE_NONE;
     protected boolean scriptBasedFacility = false;
     protected Class<?> facilityClass;
     public FacilityInformation() {}
@@ -201,11 +201,11 @@ public class FacilityInformation implements Serializable {
             
             // 고유성 설정 검사
             int uniqGrade = getUniqueGrade();
-            if(uniqGrade == DefaultFacility.FACILITY_UNIQUE_GRADE_NONE) return null;
+            if(uniqGrade == AbstractFacility.FACILITY_UNIQUE_GRADE_NONE) return null;
             
-            if(uniqGrade == DefaultFacility.FACILITY_UNIQUE_GRADE_CITY) {
+            if(uniqGrade == AbstractFacility.FACILITY_UNIQUE_GRADE_CITY) {
                 if(! city.getFacilities(getFacilityClass()).isEmpty()) return ColonyManager.t("도시 당 하나만 건설할 수 있는 시설입니다.");
-            } else if(uniqGrade == DefaultFacility.FACILITY_UNIQUE_GRADE_COLONY) {
+            } else if(uniqGrade == AbstractFacility.FACILITY_UNIQUE_GRADE_COLONY) {
                 if(! col.getFacilities(getFacilityClass()).isEmpty()) return ColonyManager.t("정착지 당 하나만 건설할 수 있는 시설입니다.");
             }
             

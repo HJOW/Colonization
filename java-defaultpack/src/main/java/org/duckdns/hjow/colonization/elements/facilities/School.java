@@ -14,7 +14,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 교육 시설 */
-public abstract class School extends DefaultFacility {
+public abstract class School extends AbstractFacility {
     private static final long serialVersionUID = 7034948757213309005L;
 
     @Override

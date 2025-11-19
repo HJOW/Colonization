@@ -13,7 +13,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 네트워크 시설 */
-public abstract class NetworkFacility extends DefaultFacility {
+public abstract class NetworkFacility extends AbstractFacility {
     private static final long serialVersionUID = -5053914503406867467L;
 
     @Override

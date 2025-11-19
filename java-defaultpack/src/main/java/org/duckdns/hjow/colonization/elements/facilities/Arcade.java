@@ -15,7 +15,7 @@ import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class Arcade extends DefaultFacility implements ServiceFacility {
+public class Arcade extends AbstractFacility implements ServiceFacility {
     private static final long serialVersionUID = 6472512678804457223L;
     protected int comportGrade = 0;
 

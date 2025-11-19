@@ -11,7 +11,7 @@ import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonObject;
 
-public abstract class TransportStation extends DefaultFacility {
+public abstract class TransportStation extends AbstractFacility {
     private static final long serialVersionUID = 7222508474329385493L;
     protected int comportGrade = 0;
     

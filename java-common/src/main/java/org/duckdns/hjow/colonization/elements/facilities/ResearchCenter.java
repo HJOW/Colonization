@@ -14,7 +14,7 @@ import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public abstract class ResearchCenter extends DefaultFacility {
+public abstract class ResearchCenter extends AbstractFacility {
     private static final long serialVersionUID = 9084689175126703785L;
     protected long researchKey = 0L;
     

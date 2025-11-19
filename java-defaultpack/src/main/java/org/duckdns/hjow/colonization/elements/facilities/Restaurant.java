@@ -19,7 +19,7 @@ import org.duckdns.hjow.colonization.elements.products.food.NutritionBlock;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
-public class Restaurant extends DefaultFacility implements ServiceFacility, Storage {
+public class Restaurant extends AbstractFacility implements ServiceFacility, Storage {
     private static final long serialVersionUID = -7371044845340026748L;
     protected List<Product> stored = new Vector<Product>();
     protected int comportGrade = 0;
