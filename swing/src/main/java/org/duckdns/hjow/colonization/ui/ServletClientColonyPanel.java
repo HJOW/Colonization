@@ -90,7 +90,7 @@ public class ServletClientColonyPanel extends DefaultColonyPanel {
         if(cityCnt >= col.getMaxCityCount()) throw new RuntimeException(ColonyManager.t("더 이상 새 도시를 건설할 수 없습니다."));
         
         // 예산 체크
-        long howMuch = City.getBuildingNewCityFee(col);
+        long howMuch = col.getBuildingNewCityFee();
         long nowHave = col.getMoney();
         if(nowHave < howMuch) throw new RuntimeException(ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(howMuch - nowHave)));
         

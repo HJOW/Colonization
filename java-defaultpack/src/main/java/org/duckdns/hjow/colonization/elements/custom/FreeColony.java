@@ -72,6 +72,16 @@ public final class FreeColony extends AbstractColony {
     public static String getColonyClassDescription() {
         return ColonyManager.t("모든 시설과 연구를 지원하는 커스텀 시나리오로,\n정착지가 공식 인증되지 않습니다.");
     }
+    
+    @Override
+    public Class<? extends City> getDefaultCityClass() {
+    	return NormalCity.class;
+    }
+    
+    @Override
+    public long getBuildingNewCityFee() {
+    	return NormalCity.getBuildingNewCityFee(getSelf());
+    }
 
     /** 새 도시를 생성 */
     @Override

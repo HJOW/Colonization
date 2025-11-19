@@ -43,6 +43,16 @@ public final class NormalColony extends AbstractColony {
     }
     
     @Override
+    public Class<? extends City> getDefaultCityClass() {
+    	return NormalCity.class;
+    }
+    
+    @Override
+    public long getBuildingNewCityFee() {
+    	return NormalCity.getBuildingNewCityFee(getSelf());
+    }
+    
+    @Override
     protected City createCityInstance() {
     	return new NormalCity();
     }

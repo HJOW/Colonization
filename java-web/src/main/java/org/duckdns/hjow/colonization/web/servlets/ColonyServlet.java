@@ -343,8 +343,10 @@ public class ColonyServlet extends CommonServlet {
             int cityCnt = col.getCityCount();
             if(cityCnt >= col.getMaxCityCount()) throw new RuntimeException(ColonyManager.t("더 이상 새 도시를 건설할 수 없습니다."));
             
+            
+            
             // 예산 체크
-            long howMuch = City.getBuildingNewCityFee(col);
+            long howMuch = col.getBuildingNewCityFee();
             long nowHave = col.getMoney();
             if(nowHave < howMuch) throw new RuntimeException(ColonyManager.t("새 도시 건설에는 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(howMuch - nowHave)));
             
@@ -355,7 +357,7 @@ public class ColonyServlet extends CommonServlet {
             }
             
             City c = col.newCity();
-            col.modifyingMoney( City.getBuildingNewCityFee(col) * (-1) , c, col, "NewCity", "");
+            col.modifyingMoney( col.getBuildingNewCityFee() * (-1) , c, col, "NewCity", "");
             
             responses.put("success", new Boolean(true));
             responses.put("message", "");

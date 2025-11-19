@@ -23,6 +23,10 @@ public interface Colony extends HasLocation {
     public City getCity(long key);
     /** 새 도시를 생성 */
     public City newCity();
+    /** 기본 도시 클래스 반환 */
+    public Class<? extends City> getDefaultCityClass();
+    /** 새 도시 건설 비용 반환 (기본 도시 클래스에 해당) */
+    public long getBuildingNewCityFee();
     public List<Enemy> getEnemies();
     public List<HoldingJob> getHoldings();
     public List<Research> getResearches();

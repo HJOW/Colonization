@@ -7,7 +7,7 @@ import org.duckdns.hjow.colonization.elements.policies.PowerEfficiencyProtocol;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 일반 도시 구현 클래스 */
-public final class NormalCity extends City {
+public final class NormalCity extends AbstractCity {
     private static final long serialVersionUID = -393966678915786643L;
 
     public NormalCity() {
@@ -18,7 +18,7 @@ public final class NormalCity extends City {
         super(json);
     }
     
-    /** 정책 목록 갱신 */
+    /** 정책 목록 초기화 */
     public void resetPolicies() {
         policies.clear();
         policies.add(new PowerEfficiencyProtocol());
