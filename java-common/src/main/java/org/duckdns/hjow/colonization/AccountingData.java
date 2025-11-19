@@ -4,13 +4,14 @@ import java.io.Serializable;
 import java.math.BigInteger;
 
 import org.duckdns.hjow.commons.core.Disposeable;
+import org.duckdns.hjow.commons.core.JsonCompatible;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
 
 /** 돈의 수입, 지출 이력 하나를 담는 VO */
-public class AccountingData implements Serializable, Disposeable {
+public class AccountingData implements Serializable, Disposeable, JsonCompatible {
     private static final long serialVersionUID = 6059734786112483575L;
     protected BigInteger time = BigInteger.ZERO;
     protected long amount = 0L;
@@ -141,4 +142,9 @@ public class AccountingData implements Serializable, Disposeable {
         setSourceKey(Long.parseLong(json.get("source").toString()));
         if(json.containsKey("more")) setMoreString(json.get("more").toString());
     }
+
+	@Override
+	public Object cloneThis() {
+		return new AccountingData(toJson());
+	}
 }
