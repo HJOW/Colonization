@@ -1335,7 +1335,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     public static final int VERSION_MAIN = 0;
     public static final int VERSION_SUB1 = 0;
     public static final int VERSION_SUB2 = 1;
-    public static final long BUILD_NO = 7L;
+    public static final long BUILD_NO = 8L;
     
     /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
     public static final short ATTACKTYPE_NORMAL = 0;
