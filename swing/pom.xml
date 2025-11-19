@@ -9,6 +9,8 @@
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
+    <!-- Java3D 1.5.2 사용 시 Repository 정보가 필요함 -->
+    <!--
 	<repositories>
      <repository>
         <id>mvn2s</id>
@@ -23,6 +25,7 @@
         <url>https://maven.imagej.net/content/repositories/public/</url>
      </repository>
     </repositories>
+    -->
     <parent>
         <groupId>org.duckdns.hjow</groupId>
         <artifactId>colonization-java-group</artifactId>
@@ -50,6 +53,14 @@
             <artifactId>colonization-daemon</artifactId>
             <version>0.0.1</version>        
         </dependency>
+        <!--
+        <dependency>
+            <groupId>org.duckdns.hjow</groupId>
+            <artifactId>colonization-java-packs</artifactId>
+            <version>0.0.1-SNAPSHOT</version>        
+        </dependency>
+        -->
+        <!--
         <dependency>
             <groupId>java3d</groupId>
             <artifactId>j3d-core</artifactId>
@@ -65,20 +76,13 @@
             <artifactId>vecmath</artifactId>
             <version>1.5.2</version>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>org.duckdns.hjow</groupId>
-            <artifactId>colonization-java-packs</artifactId>
-            <version>0.0.1-SNAPSHOT</version>        
-        </dependency>
         -->
-        <!--
         <dependency>
             <groupId>de.sciss</groupId>
             <artifactId>syntaxpane</artifactId>
             <version>1.3.0</version>
+            <scope>provided</scope>
         </dependency>
-        -->
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>

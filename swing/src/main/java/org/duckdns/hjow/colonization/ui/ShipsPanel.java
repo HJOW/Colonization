@@ -30,7 +30,8 @@ public class ShipsPanel extends JPanel implements Disposeable {
     	JTabbedPane tabs = new JTabbedPane();
     	add(tabs, BorderLayout.CENTER);
     	
-    	pnSpace    = new SpacePanel();
+    	pnSpace    = new SwingSpacePanel();
+        // pnSpace    = new Java3DSpacePanel();
     	pnShipRoot = new JPanel();
     	pnSpace.setLayout(null);
     	pnShipRoot.setLayout(new GridBagLayout());

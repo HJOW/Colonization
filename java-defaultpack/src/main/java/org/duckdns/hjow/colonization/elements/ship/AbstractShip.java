@@ -41,9 +41,9 @@ public class AbstractShip implements Ship {
     protected long y = 0L;
     protected long z = 0L;
     
-    protected long destinationX = 0L;
-    protected long destinationY = 0L;
-    protected long destinationZ = 0L;
+    protected long destinationX = x;
+    protected long destinationY = y;
+    protected long destinationZ = z;
     
     @Override
     public void init(Port port, Colony colony) {
@@ -60,6 +60,10 @@ public class AbstractShip implements Ship {
     		y = colony.getY();
     		z = colony.getZ();
     	}
+    	
+    	destinationX = x;
+		destinationY = y;
+		destinationZ = z;
     	
     	states.clear();
     	stored.clear();
