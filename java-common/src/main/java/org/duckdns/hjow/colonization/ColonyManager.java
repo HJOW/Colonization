@@ -59,7 +59,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     protected transient Thread thread;
     protected transient volatile boolean threadSwitch, threadPaused, threadShutdown, reserveSaving, reserveRefresh;
     protected transient volatile boolean bCheckerPauseCompleted = false;
-    protected transient ColonyManagerConfig configs = new ColonyManagerConfig();
+    protected transient ColonyManagerConfig configs = new DefaultColonyManagerConfig();
     
     protected transient volatile Vector<Colony> colonies = new Vector<Colony>();
     protected transient volatile int  selectedColony = -1;
@@ -232,7 +232,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
                 JsonObject json = new JsonObject();
                 FileUtil.writeString(conf, "UTF-8", json.toJSON());
             }
-            configs.setConfigSaveOnNotExistingKeys(true);
+            if(configs instanceof DefaultColonyManagerConfig) ((DefaultColonyManagerConfig) configs).setConfigSaveOnNotExistingKeys(true);
             
             // 스트링 테이블 불러오기
             String stringTablePath = configs.getString("StringTableFile");

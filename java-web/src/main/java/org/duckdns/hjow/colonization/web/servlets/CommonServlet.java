@@ -21,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManagerConfig;
+import org.duckdns.hjow.colonization.DefaultColonyManagerConfig;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.pack.Pack;
@@ -33,7 +34,7 @@ import org.duckdns.hjow.commons.util.FileUtil;
 
 public abstract class CommonServlet extends HttpServlet {
     private static final long serialVersionUID = -9127592158446596240L;
-    protected static final ColonyManagerConfig configs = new ColonyManagerConfig();
+    protected static final ColonyManagerConfig configs = new DefaultColonyManagerConfig();
     
     protected Logger logger = LogManager.getLogger(this.getClass());
     
