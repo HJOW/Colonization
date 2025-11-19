@@ -10,6 +10,7 @@ import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
+import org.duckdns.hjow.colonization.elements.research.AbstractResearch;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.util.DataUtil;
@@ -102,7 +103,7 @@ public abstract class Cheat {
                             ResearchCenter rc = (ResearchCenter) f;
                             Research r = rc.getResearch(col);
                             if(r.getLevel() < r.getMaxLevel()) {
-                                r.setProgress(r.getMaxProgress() - 1);
+                            	if(r instanceof AbstractResearch) ((AbstractResearch) r).setProgress(r.getMaxProgress() - 1);
                             }
                         }
                     }
@@ -127,7 +128,7 @@ public abstract class Cheat {
                 for(int idx=0; idx<counts; idx++) {
                     for(Research r : col.getResearches()) {
                         if(! r.isResearchAvail(col)) continue;
-                        r.setLevel(r.getLevel() + 1);
+                        if(r instanceof AbstractResearch) ((Facility) r).setLevel(r.getLevel() + 1);
                     }
                 }
                 

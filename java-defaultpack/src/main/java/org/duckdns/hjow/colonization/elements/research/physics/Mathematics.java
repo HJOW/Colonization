@@ -1,9 +1,9 @@
 package org.duckdns.hjow.colonization.elements.research.physics;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.AbstractResearch;
 
-public class Mathematics extends Research {
+public class Mathematics extends AbstractResearch {
     private static final long serialVersionUID = -6112245443498463187L;
 
     public Mathematics() { super(); }

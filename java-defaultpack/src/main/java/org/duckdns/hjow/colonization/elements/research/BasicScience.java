@@ -6,7 +6,7 @@ import java.util.List;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 
-public class BasicScience extends Research {
+public class BasicScience extends AbstractResearch {
     private static final long serialVersionUID = -6067100861366848018L;
     public BasicScience() { super(); }
 

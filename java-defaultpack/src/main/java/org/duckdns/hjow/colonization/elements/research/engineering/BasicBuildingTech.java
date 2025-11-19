@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.AbstractResearch;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
-public class BasicBuildingTech extends Research {
+public class BasicBuildingTech extends AbstractResearch {
     private static final long serialVersionUID = 1818201774541715641L;
 
     @Override

@@ -1,9 +1,9 @@
 package org.duckdns.hjow.colonization.elements.research.humanities;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.research.AbstractResearch;
 
-public class BasicHumanities extends Research {
+public class BasicHumanities extends AbstractResearch {
     private static final long serialVersionUID = 7591943260162203350L;
 
     public BasicHumanities() { super(); }
