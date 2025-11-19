@@ -1,3 +1,4 @@
+java-api/target/**
 java-common/target/**
 swing/target/**
 WinModern/bin/**

@@ -6,6 +6,7 @@
   <packaging>pom</packaging>
   <name>Parent maven project</name>
   <modules>
+      <module>../java-api</module>
       <module>../java-common</module>
       <module>../java-defaultpack</module>
       <module>../daemon</module>
