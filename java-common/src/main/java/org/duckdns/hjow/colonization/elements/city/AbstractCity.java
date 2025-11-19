@@ -18,6 +18,7 @@ import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.DefaultCitizen;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
@@ -920,7 +921,7 @@ public abstract class AbstractCity implements City {
     /** 새 시민 생성 (20세로 생성됨) */
     @Override
     public Citizen createNewCitizen() {
-        Citizen c = new Citizen();
+        Citizen c = new DefaultCitizen();
         c.setAgeYear(Constants.BIGINTEGER_20);
         getCitizens().add(c);
         return c;
@@ -929,7 +930,7 @@ public abstract class AbstractCity implements City {
     /** 새 시민 생성 (나이 지정) */
     @Override
     public Citizen createNewCitizen(int ageYear) {
-        Citizen c = new Citizen();
+        Citizen c = new DefaultCitizen();
         c.setAgeYear(String.valueOf(ageYear));
         getCitizens().add(c);
         return c;
@@ -1261,7 +1262,7 @@ public abstract class AbstractCity implements City {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Citizen cit = new Citizen((JsonObject) o);
+                        Citizen cit = new DefaultCitizen((JsonObject) o);
                         citizens.add(cit);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);
