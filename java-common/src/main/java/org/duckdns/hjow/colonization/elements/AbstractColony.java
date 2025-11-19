@@ -25,6 +25,7 @@ import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.Storage;
+import org.duckdns.hjow.colonization.elements.loan.DefaultLoan;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.research.Research;
@@ -139,17 +140,17 @@ public abstract class AbstractColony implements Colony {
         if(difficulty >= 4) {
             switch(difficulty) {
             case 4:
-                startLoan = new Loan(money / 2L, 36, 6);
+                startLoan = new DefaultLoan(money / 2L, 36, 6);
             case 5:
-                startLoan = new Loan(money, 36, 7);
+                startLoan = new DefaultLoan(money, 36, 7);
             case 6:
-                startLoan = new Loan(money + Math.round(money * 1.5), 36, 7);
+                startLoan = new DefaultLoan(money + Math.round(money * 1.5), 36, 7);
             case 7:
-                startLoan = new Loan(money + Math.round(money * 1.75), 36, 9);
+                startLoan = new DefaultLoan(money + Math.round(money * 1.75), 36, 9);
             case 8:
-                startLoan = new Loan(money * 2L, 36, 9);
+                startLoan = new DefaultLoan(money * 2L, 36, 9);
             default:
-                startLoan = new Loan(money * 4L, 36, 9);
+                startLoan = new DefaultLoan(money * 4L, 36, 9);
             }
         }
         
@@ -613,7 +614,7 @@ public abstract class AbstractColony implements Colony {
     @Override
     public void resetAvailLoans() {
         loanAvail.clear();
-        loanAvail.addAll(Loan.makeAvailableLoanListRandom(this));
+        loanAvail.addAll(DefaultLoan.makeAvailableLoanListRandom(this));
     }
     
     @Override
@@ -1332,7 +1333,7 @@ public abstract class AbstractColony implements Colony {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Loan loan = new Loan();
+                        Loan loan = new DefaultLoan();
                         loan.fromJson((JsonObject) o);
                         loanAvail.add(loan);
                     } catch(Exception ex) {
@@ -1350,7 +1351,7 @@ public abstract class AbstractColony implements Colony {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Loan loan = new Loan();
+                        Loan loan = new DefaultLoan();
                         loan.fromJson((JsonObject) o);
                         loanHave.add(loan);
                     } catch(Exception ex) {
