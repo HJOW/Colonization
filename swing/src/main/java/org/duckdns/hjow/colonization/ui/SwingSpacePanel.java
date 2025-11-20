@@ -7,15 +7,16 @@ import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
+import org.duckdns.hjow.commons.ui.graphics.AdvancedCoordinate3D;
 import org.duckdns.hjow.commons.ui.graphics.Coordinate2D;
-import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.ui.graphics.LineObject2D;
 import org.duckdns.hjow.commons.ui.graphics.OvalObject2D;
 
-/** 함선 위치 현황 출력을 위한 패널 - 기본 Swing 의 Graphics 2D 사용 */
+/** 함선 위치 현황 출력을 위한 패널 - 기본 Swing 의 Graphics 2D 사용 */ // TODO SampleJavaCodes 에 있는 Space3D 예제 참고하여 yaw, pitch (카메라의 방향) 개념 적용
 public class SwingSpacePanel extends SpacePanel {
 	private static final long serialVersionUID = 7794697275657421978L;
     public SwingSpacePanel() { super(); }
@@ -40,14 +41,14 @@ public class SwingSpacePanel extends SpacePanel {
 		int centerX = rootWidth  / 2;
 		int centerY = rootHeight / 2;
 		long divides = 10L;
-		double focals = 50000.0;
+		double focals = 500.0;
 		
 		// 점들 그리기 (도시)
 		for(City city : colony.getCities()) {
-			Coordinate3D coordinate = new Coordinate3D(city.getX(), city.getY(), city.getZ());
+			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(city.getX(), city.getY(), city.getZ());
 			
-			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
-			Coordinate2D proj = coordinate.project(getCameraLocation(), focals, (double) centerX, (double) centerY);
+			// 2D에 투영
+			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -58,11 +59,11 @@ public class SwingSpacePanel extends SpacePanel {
 		
 		// 점들 그리기 (천체)
 		for(Celestials cele : colony.getCelestials()) {
-			Coordinate3D coordinate = new Coordinate3D(cele.getX(), cele.getY(), cele.getZ());
+			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(cele.getX(), cele.getY(), cele.getZ());
 			if(! cele.isOpened()) continue;
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
-			Coordinate2D proj = coordinate.project(getCameraLocation(), focals, (double) centerX, (double) centerY);
+			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -73,10 +74,10 @@ public class SwingSpacePanel extends SpacePanel {
 		
 		// 점들 그리기 (함선)
 		for(Ship ship : colony.getShips()) {
-			Coordinate3D coordinate = new Coordinate3D(ship.getX(), ship.getY(), ship.getZ());
+			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(ship.getX(), ship.getY(), ship.getZ());
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
-			Coordinate2D proj = coordinate.project(getCameraLocation(), focals, (double) centerX, (double) centerY);
+			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -125,5 +126,11 @@ public class SwingSpacePanel extends SpacePanel {
 			g2d.setColor(ln.getColor());
 			g2d.drawLine((int) (ln.getFrom().getX() / divides), (int) (ln.getFrom().getY() / divides), (int) (ln.getTo().getX() / divides), (int) (ln.getTo().getY() / divides));
 		}
+		
+		// 정보 출력
+		int sy = 20;
+		g2d.drawString(ColonyManager.t("카메라 위치 : [X], [Y], [Z]").replace("[X]", ColonyManager.formatInt(cameraLocation.getX())).replace("[Y]", ColonyManager.formatInt(cameraLocation.getY())).replace("[Z]", ColonyManager.formatInt(cameraLocation.getZ())), 10, sy); sy += 10;
+		g2d.drawString(ColonyManager.t("카메라 방향 : [YAW], [PITCH]").replace("[YAW]", ColonyManager.formatRate(getCameraYaw())).replace("[PITCH]", ColonyManager.formatRate(getCameraPitch())), 10, sy); sy += 10;
+		
 	}
 }

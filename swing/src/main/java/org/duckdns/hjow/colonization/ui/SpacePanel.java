@@ -13,6 +13,8 @@ public abstract class SpacePanel extends JPanel implements Disposeable {
 	private static final long serialVersionUID = 3120354750879319010L;
 	protected Colony       colony;
 	protected Coordinate3D cameraLocation = new Coordinate3D(0L, 0L, 0L);
+	protected double       cameraYaw      = 0.0;
+	protected double       cameraPitch    = 0.0;
 	public SpacePanel() { setLayout(null); }
 	
 	/** 정착지 객체 받기 */
@@ -46,5 +48,25 @@ public abstract class SpacePanel extends JPanel implements Disposeable {
 
 	public void setCameraLocation(Coordinate3D cameraLocation) {
 		this.cameraLocation = cameraLocation;
+	}
+
+	public double getCameraYaw() {
+		return cameraYaw;
+	}
+
+	public void setCameraYaw(double cameraYaw) {
+		this.cameraYaw = cameraYaw;
+	}
+
+	public double getCameraPitch() {
+		return cameraPitch;
+	}
+
+	public void setCameraPitch(double cameraPitch) {
+		this.cameraPitch = cameraPitch;
+	}
+
+	public Colony getColony() {
+		return colony;
 	}
 }
