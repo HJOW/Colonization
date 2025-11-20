@@ -194,7 +194,7 @@ public class AbstractShip implements Ship {
 		long leftZ = getDestinationZ() - getZ();
 		
 		// 속도보다 거리가 더 가까운 경우, 1 사이클 지나면 목적지에 도착하므로, 마찬가지로 도착한 것으로 간주
-		if(speed <= distance) {
+		if(speed >= distance) {
 			setX(getDestinationX());
 			setY(getDestinationY());
 			setZ(getDestinationZ());
@@ -302,7 +302,7 @@ public class AbstractShip implements Ship {
 
 	@Override
 	public int cycleGap(Colony colony) {
-		return 60;
+		return 3;
 	}
 
 	@Override

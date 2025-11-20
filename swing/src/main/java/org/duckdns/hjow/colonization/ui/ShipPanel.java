@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
@@ -31,6 +30,7 @@ public class ShipPanel extends JPanel implements Disposeable {
 	protected transient JSpinner     tfDestX, tfDestY, tfDestZ;
 	protected transient JTextArea    ta;
 	protected transient JProgressBar progHp;
+	protected transient ShipMovementIndicator indicator;
 	protected transient ColonyManagerInterface superInstance;
 	
 	public ShipPanel() { init(); }
@@ -57,8 +57,12 @@ public class ShipPanel extends JPanel implements Disposeable {
 		pnStatus.setLayout(new BorderLayout());
 		pnUp.add(pnStatus, BorderLayout.EAST);
 		
+		JPanel pnHp = new JPanel();
+		pnHp.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		pnStatus.add(pnHp, BorderLayout.CENTER);
+		
 		progHp = new JProgressBar(JProgressBar.HORIZONTAL);
-		pnStatus.add(progHp, BorderLayout.CENTER);
+		pnHp.add(progHp);
 		
 		ta = new JTextArea();
 		ta.setEditable(false);
@@ -82,7 +86,8 @@ public class ShipPanel extends JPanel implements Disposeable {
 		
 		pnLb = new JPanel();
 		pnLb.setLayout(new FlowLayout(FlowLayout.CENTER));
-		pnLb.add(new JLabel("→"));
+		indicator = new ShipMovementIndicator();
+		pnLb.add(indicator);
 		pnRight.add(pnLb);
 		
 		SpinnerNumberModel spNum;
@@ -153,17 +158,23 @@ public class ShipPanel extends JPanel implements Disposeable {
 			tfDestY.setValue(new Long(0L));
 			tfDestZ.setValue(new Long(0L));
 			ta.setText("");
+			progHp.setValue(0);
 			return;
 		}
 		
-		tfName.setText(colony.getName());
+		tfName.setText(ship.getName());
 		tfX.setText(String.valueOf(ship.getX()));
 		tfY.setText(String.valueOf(ship.getY()));
 		tfZ.setText(String.valueOf(ship.getZ()));
 		tfDestX.setValue(new Long(ship.getDestinationX()));
 		tfDestY.setValue(new Long(ship.getDestinationY()));
 		tfDestZ.setValue(new Long(ship.getDestinationZ()));
+		
+		progHp.setMaximum(ship.getMaxHp());
+		progHp.setValue(ship.getHp());
+		
 		ta.setText(ship.getStatusString(colony, superInstance));
+		indicator.refresh(cycle, ship, colony, superInstance);
 	}
 	
 	/** Ship 객체 반환 */

@@ -69,7 +69,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     protected transient volatile long cycleGapEachFacility = 0L;
     protected transient volatile long cycleRunningTime = 0L;
     protected transient volatile int  cycleRunCount = -1;
-    protected transient volatile int  cycleSkipRefr = 5; // 컨텐츠 새로고침 주기 (값이 크면 성능 개선 but 화면 내 값 변화 속도가 느리다고 느껴지게 됨)
+    protected transient volatile int  cycleSkipRefr = 3; // 컨텐츠 새로고침 주기 (값이 크면 성능 개선 but 화면 내 값 변화 속도가 느리다고 느껴지게 됨)
     
     protected transient volatile boolean flagSaveBeforeClose = true; // 종료 시 저장 플래그
     protected transient volatile boolean flagAlreadyDisposed = false;
