@@ -16,6 +16,7 @@
           , { "url" : "lib/j3d-core-1.5.2.jar"            , "name" : "j3d-core-1.5.2.jar"             }
           , { "url" : "lib/j3d-core-utils-1.5.2.jar"      , "name" : "j3d-core-utils-1.5.2.jar"       }
           , { "url" : "lib/vecmath-1.5.2.jar"             , "name" : "vecmath-1.5.2.jar"              }
+          , { "url" : "lib/j3dcore-ogl.dll"               , "name" : "j3dcore-ogl.dll"                , "system" : "win_x86,win_x64"}
           , { "url" : "lib/kotlin-stdlib-1.6.0.jar"       , "name" : "kotlin-stdlib-1.6.0.jar"        }
           , { "url" : "lib/kotlin-stdlib-common-1.6.0.jar", "name" : "kotlin-stdlib-common-1.6.0.jar" }
           , { "url" : "lib/kotlin-stdlib-jdk8-1.6.0.jar"  , "name" : "kotlin-stdlib-jdk8-1.6.0.jar"   }
