@@ -12,8 +12,8 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
-import org.duckdns.hjow.commons.ui.graphics.AdvancedCoordinate3D;
 import org.duckdns.hjow.commons.ui.graphics.Coordinate2D;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.ui.graphics.LineObject2D;
 import org.duckdns.hjow.commons.ui.graphics.OvalObject2D;
 import org.duckdns.hjow.commons.ui.graphics.TextObject2D;
@@ -53,19 +53,25 @@ public class SwingSpacePanel extends SpacePanel {
 		int centerX = rootWidth  / 2;
 		int centerY = rootHeight / 2;
 		long divides = 10L;
+		double sizes = 10.0;
 		double focals = 500.0;
+		
+		double radius;
 		
 		// 도시 그리기
 		for(City city : colony.getCities()) {
-			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(city.getX(), city.getY(), city.getZ());
+			Coordinate3D coordinate = new Coordinate3D(city.getX(), city.getY(), city.getZ());
 			
 			// 2D에 투영
 			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재
 			
+			radius = Math.ceil(sizes * 3 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
+			if(radius >= Integer.MAX_VALUE) radius = (double) Integer.MAX_VALUE;
+			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
-			ov.setR(30);
+			ov.setR((int) radius);
 			ov.setColor(Color.BLUE);
 			ovals.add(ov);
 			
@@ -78,31 +84,37 @@ public class SwingSpacePanel extends SpacePanel {
 		
 		// 천체 그리기
 		for(Celestials cele : colony.getCelestials()) {
-			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(cele.getX(), cele.getY(), cele.getZ());
+			Coordinate3D coordinate = new Coordinate3D(cele.getX(), cele.getY(), cele.getZ());
 			if(! cele.isOpened()) continue;
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
 			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재
 			
+			radius = Math.ceil(sizes * 2 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
+			if(radius >= Integer.MAX_VALUE) radius = (double) Integer.MAX_VALUE;
+			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
-			ov.setR(21);
+			ov.setR((int) radius);
 			ov.setColor(Color.MAGENTA);
 			ovals.add(ov);
 		}
 		
 		// 함선 그리기
 		for(Ship ship : colony.getShips()) {
-			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(ship.getX(), ship.getY(), ship.getZ());
+			Coordinate3D coordinate = new Coordinate3D(ship.getX(), ship.getY(), ship.getZ());
 			
 			// 2D에 투영
 			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재 
 			
+			radius = Math.ceil(sizes * 1.5 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
+			if(radius >= Integer.MAX_VALUE) radius = (double) Integer.MAX_VALUE;
+			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
-			ov.setR(15);
+			ov.setR((int) radius);
 			ov.setColor(Color.GREEN);
 			ovals.add(ov);
 		}
