@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.ui;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -35,6 +36,8 @@ public class SwingSpacePanel extends SpacePanel {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		
+		FontMetrics metric = g2d.getFontMetrics();
+		
 		// 배경 그리기
 		int rootWidth  = getWidth();
 		int rootHeight = getHeight();
@@ -44,13 +47,14 @@ public class SwingSpacePanel extends SpacePanel {
 		// 3차원 그리기 (Graphics 로)
 		List<LineObject2D> lines = new ArrayList<LineObject2D>();
 		List<OvalObject2D> ovals = new ArrayList<OvalObject2D>();
+		List<TextObject2D> texts = new ArrayList<TextObject2D>();
 		
 		int centerX = rootWidth  / 2;
 		int centerY = rootHeight / 2;
 		long divides = 10L;
 		double focals = 500.0;
 		
-		// 점들 그리기 (도시)
+		// 도시 그리기
 		for(City city : colony.getCities()) {
 			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(city.getX(), city.getY(), city.getZ());
 			
@@ -63,9 +67,15 @@ public class SwingSpacePanel extends SpacePanel {
 			ov.setR(30);
 			ov.setColor(Color.BLUE);
 			ovals.add(ov);
+			
+			TextObject2D tx = new TextObject2D();
+			tx.setLeft(proj);
+			tx.setColor(Color.WHITE);
+			tx.setContent(city.getName());
+			texts.add(tx);
 		}
 		
-		// 점들 그리기 (천체)
+		// 천체 그리기
 		for(Celestials cele : colony.getCelestials()) {
 			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(cele.getX(), cele.getY(), cele.getZ());
 			if(! cele.isOpened()) continue;
@@ -81,7 +91,7 @@ public class SwingSpacePanel extends SpacePanel {
 			ovals.add(ov);
 		}
 		
-		// 점들 그리기 (함선)
+		// 함선 그리기
 		for(Ship ship : colony.getShips()) {
 			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(ship.getX(), ship.getY(), ship.getZ());
 			
@@ -99,6 +109,7 @@ public class SwingSpacePanel extends SpacePanel {
 		// 적절한 스케일 구하기
 		long max = 0L;
 		long abs = 0L;
+		int x, y, tox, toy;
 		
 		for(OvalObject2D ov : ovals) {
 			abs = Math.abs(ov.getX());
@@ -130,11 +141,25 @@ public class SwingSpacePanel extends SpacePanel {
 		// 출력
 		for(OvalObject2D ov : ovals) {
 			g2d.setColor(ov.getColor());
-			g2d.fillOval((int) (ov.getCenter().getX() / divides), (int) (ov.getCenter().getY() / divides), ov.getR(), ov.getR());
+			x = (int) (ov.getCenter().getX() / divides);
+			y = (int) (ov.getCenter().getY() / divides);
+			g2d.fillOval(x, y, ov.getR(), ov.getR());
 		}
+		
 		for(LineObject2D ln : lines) {
 			g2d.setColor(ln.getColor());
-			g2d.drawLine((int) (ln.getFrom().getX() / divides), (int) (ln.getFrom().getY() / divides), (int) (ln.getTo().getX() / divides), (int) (ln.getTo().getY() / divides));
+			x = (int) (ln.getFrom().getX() / divides);
+			y = (int) (ln.getFrom().getY() / divides);
+			tox = (int) (ln.getTo().getX() / divides);
+			toy = (int) (ln.getTo().getY() / divides);
+			g2d.drawLine(x, y, tox, toy);
+		}
+		
+		for(TextObject2D tx : texts) {
+			g2d.setColor(tx.getColor());
+			x = (int) (tx.getLeft().getX() - (metric.stringWidth(tx.getContent()) / 2));
+			y = (int) tx.getLeft().getY();
+			g2d.drawString(tx.getContent(), x, y);
 		}
 		
 		// 정보 출력
