@@ -20,6 +20,9 @@ public abstract class SpacePanel extends JPanel implements Disposeable {
 	/** 정착지 객체 받기 */
 	public void setColony(Colony colony) {
 		this.colony = colony;
+		cameraLocation.setX(colony.getX());
+		cameraLocation.setY(colony.getY());
+		cameraLocation.setZ(colony.getZ());
 		refresh();
 	}
 	
@@ -29,9 +32,7 @@ public abstract class SpacePanel extends JPanel implements Disposeable {
 	}
 	
 	/** 새로고침 */
-	public void refresh() {
-		repaint();
-	}
+	public void refresh() { }
 	
 	/** 그리기 작업 수행 */
 	protected abstract void draw(Graphics g);

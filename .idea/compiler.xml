@@ -6,9 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="colonization-java-packs" />
         <module name="colonization-daemon" />
         <module name="colonization-java-common" />
+        <module name="colonization-java-packs" />
+        <module name="colonization-java-api" />
         <module name="colonization-java-default" />
         <module name="colonization-servlet" />
         <module name="colonization-swing" />

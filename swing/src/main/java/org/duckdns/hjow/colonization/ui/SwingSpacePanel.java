@@ -21,7 +21,14 @@ public class SwingSpacePanel extends SpacePanel {
 	private static final long serialVersionUID = 7794697275657421978L;
     public SwingSpacePanel() { super(); }
     
+    /** 새로고침 */
+    @Override
+	public void refresh() {
+		repaint();
+	}
+    
     /** 그리기 작업 수행 */
+    @Override
 	protected void draw(Graphics g) {
 		if(colony == null) return;
 		
@@ -49,6 +56,7 @@ public class SwingSpacePanel extends SpacePanel {
 			
 			// 2D에 투영
 			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -64,6 +72,7 @@ public class SwingSpacePanel extends SpacePanel {
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
 			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -76,8 +85,9 @@ public class SwingSpacePanel extends SpacePanel {
 		for(Ship ship : colony.getShips()) {
 			AdvancedCoordinate3D coordinate = new AdvancedCoordinate3D(ship.getX(), ship.getY(), ship.getZ());
 			
-			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
+			// 2D에 투영
 			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재 
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -129,7 +139,8 @@ public class SwingSpacePanel extends SpacePanel {
 		
 		// 정보 출력
 		int sy = 20;
-		g2d.drawString(ColonyManager.t("카메라 위치 : [X], [Y], [Z]").replace("[X]", ColonyManager.formatInt(cameraLocation.getX())).replace("[Y]", ColonyManager.formatInt(cameraLocation.getY())).replace("[Z]", ColonyManager.formatInt(cameraLocation.getZ())), 10, sy); sy += 10;
+		g2d.setColor(Color.DARK_GRAY);
+		g2d.drawString(ColonyManager.t("카메라 위치 : [X], [Y], [Z]").replace("[X]", String.valueOf(cameraLocation.getX())).replace("[Y]", String.valueOf(cameraLocation.getY())).replace("[Z]", String.valueOf(cameraLocation.getZ())), 10, sy); sy += 10;
 		g2d.drawString(ColonyManager.t("카메라 방향 : [YAW], [PITCH]").replace("[YAW]", ColonyManager.formatRate(getCameraYaw())).replace("[PITCH]", ColonyManager.formatRate(getCameraPitch())), 10, sy); sy += 10;
 		
 	}
