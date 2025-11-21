@@ -9,7 +9,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 
 /** 소형 공항 */
-public class SmallPort extends Port {
+public class SmallPort extends DefaultPort {
 	private static final long serialVersionUID = -4737575519915871521L;
 
 	@Override

@@ -44,7 +44,7 @@ public class FacilityManager {
     public static void register(Class<?> facilityClass) {
         FacilityInformation info = null;
         try {
-            info = new FacilityInformation(facilityClass);
+            info = new DefaultFacilityInformation(facilityClass);
             if(! facilities.contains(info)) facilities.add(info);
         } catch (Exception e) {
             e.printStackTrace();

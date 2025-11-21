@@ -231,7 +231,7 @@ public class GlobalLogDialog implements GlobalLogUI {
     }
 
     @Override
-    public void open(ColonyManager superInstance) {
+    public void open(ColonyManagerInterface superInstance) {
         if(dialog == null) {
             init(superInstance);
         }

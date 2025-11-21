@@ -16,7 +16,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 시설 정보 (스크립트 기반) */
-public class ScriptFacilityInformation extends FacilityInformation implements Disposeable {
+public class ScriptFacilityInformation extends DefaultFacilityInformation implements Disposeable {
     private static final long serialVersionUID = -8200689983132535331L;
     protected String scripts = "";
     protected transient ScriptEngine engine = null;
