@@ -8,9 +8,8 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
 /** 랜덤 발생 이벤트 공통 부분을 정의하는 상위 클래스 */
 public abstract class AbstractTimeEvent extends TimeEvent {
-    private static final long serialVersionUID = 3397834730618049049L;
-    
-    /** 이벤트 처리 */
+	private static final long serialVersionUID = -755790781368884839L;
+	/** 이벤트 처리 */
     public void onEventOccured(ColonyElements target, Colony col, City city, ColonyPanel colPanel) {
         ColonyManager.logGlobals(getTitle() + " " + ColonyManager.t("발생") + " !");
     }
