@@ -25,5 +25,5 @@ public final class NormalCity extends AbstractCity {
     }
     
     /** 도시 건설 비용 */
-    public static long getBuildingNewCityFee(Colony col) { return 1000000L; };
+    public static long getBuildingNewCityFee(Colony col) { return 1000000L; }
 }

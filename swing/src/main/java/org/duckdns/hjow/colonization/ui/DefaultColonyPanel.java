@@ -256,6 +256,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         tfColonyName.setEditable(editable);
         btnNewCity.setEnabled(editable);
         btnNewLoan.setEnabled(editable);
+        shipPanel.setEnabled(editable);
         for(CityPanel c : pnCities) {
             if(c.getCity().getHp() <= 0) c.setEditable(false);
             else c.setEditable(editable);

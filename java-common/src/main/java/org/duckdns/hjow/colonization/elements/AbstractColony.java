@@ -25,6 +25,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
+import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.Storage;
 import org.duckdns.hjow.colonization.elements.loan.DefaultLoan;
@@ -40,6 +41,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.stream.SimultaneousWork;
 import org.duckdns.hjow.commons.stream.SingleAction;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.SecurityUtil;
 
@@ -851,19 +853,31 @@ public abstract class AbstractColony implements Colony {
     	// 변화량을 계산한 후, 소속 도시들 모두 해당 변화량만큼 이동
     	
     	long changes = getX() - x;
-    	for(City c : getCities()) { c.setX(changes); }
+    	for(City c : getCities()) { c.setX(c.getX() + changes); }
     }
 
 	@Override
 	public void setY(long y) { 
 		long changes = getY() - y;
-    	for(City c : getCities()) { c.setY(changes); }
+    	for(City c : getCities()) { c.setY(c.getY() + changes); }
 	}
 
 	@Override
 	public void setZ(long z) { 
 		long changes = getZ() - z;
-    	for(City c : getCities()) { c.setZ(changes); }
+    	for(City c : getCities()) { c.setZ(c.getZ() + changes); }
+	}
+	
+	@Override
+	public Coordinate3D getCoordinate() {
+		return new Coordinate3D(getX(), getY(), getZ());
+	}
+
+	@Override
+	public void setCoordinate(Coordinate3D coordinate) {
+		setX(coordinate.getX());
+		setY(coordinate.getY());
+		setZ(coordinate.getZ());
 	}
     
     /** 새 도시의 좌표 지정 */
@@ -1056,6 +1070,21 @@ public abstract class AbstractColony implements Colony {
     @Override
     public String toString() {
         return getName();
+    }
+    
+    /** 해당 함선의 소속 항구 찾기 */
+    public Port findPort(Ship ship) {
+    	for(City ct : getCities()) {
+    		for(Facility f : ct.getFacility()) {
+    			if(f instanceof Port) {
+    				Port p = (Port) f;
+    				for(Ship s : p.getShips()) {
+    					if(s.getKey() == ship.getKey()) return p;
+    				}
+    			}
+    		}
+    	}
+    	return null;
     }
     
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */

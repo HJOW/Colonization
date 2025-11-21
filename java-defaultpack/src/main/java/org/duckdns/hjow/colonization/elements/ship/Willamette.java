@@ -65,7 +65,15 @@ public class Willamette extends AbstractShip {
 	
 	/** 함선 설명 */
     public static String getMetaDescription() {
-    	return "";
+    	StringBuilder res = new StringBuilder("");
+    	res = res.append("\n").append("소형급 기본형 함선입니다.");
+    	res = res.append("\n").append("속도     : 10");
+    	res = res.append("\n").append("기본 HP  : 100");
+    	res = res.append("\n").append("공격유형 : 일반");
+    	res = res.append("\n").append("방어유형 : 소형");
+    	res = res.append("\n").append("가격     : 10000");
+    	res = res.append("\n").append("");
+    	return res.toString().trim();
     }
     
     /** 함선 건조 시간 (사이클) */

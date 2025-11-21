@@ -44,6 +44,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 도시 공통 구현 클래스 */
@@ -1016,6 +1017,18 @@ public abstract class AbstractCity implements City {
 	public void setZ(long z) {
 		this.z = z;
 	}
+	
+	@Override
+	public Coordinate3D getCoordinate() {
+		return new Coordinate3D(getX(), getY(), getZ());
+	}
+
+	@Override
+	public void setCoordinate(Coordinate3D coordinate) {
+		setX(coordinate.getX());
+		setY(coordinate.getY());
+		setZ(coordinate.getZ());
+	};
 
 	/** 출산률 계산 */
 	@Override

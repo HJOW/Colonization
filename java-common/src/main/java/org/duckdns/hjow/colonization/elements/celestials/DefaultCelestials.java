@@ -19,6 +19,7 @@ import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 천체, 여기서는 탐험지 */
@@ -183,6 +184,18 @@ public class DefaultCelestials implements Celestials {
 	@Override
 	public void setZ(long z) {
 		this.z = z;
+	}
+	
+	@Override
+	public Coordinate3D getCoordinate() {
+		return new Coordinate3D(getX(), getY(), getZ());
+	}
+
+	@Override
+	public void setCoordinate(Coordinate3D coordinate) {
+		setX(coordinate.getX());
+		setY(coordinate.getY());
+		setZ(coordinate.getZ());
 	}
 	
 	@Override

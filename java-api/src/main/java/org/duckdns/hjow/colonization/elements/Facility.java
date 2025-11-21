@@ -85,6 +85,8 @@ public interface Facility extends ColonyElements {
     /** 이미지 존재 시 반환 ( 미존재 시 null 반환, getImage 메소드와 반환값이 동일해야 함 ) - 되도록이면 DefaultFacility 클래스에 구현된 메소드 그대로 사용할 것 */
     public Object getImageContent();
     
+    /** 소속 도시 객체 반환 (소속 정착지 객체를 넣어야 함) */
+    public City getCity(Colony col);
     /*
      * 이 Facility 구현 클래스는 다음 static 메소드들을 반드시 구현해야 함.
      * 

@@ -524,7 +524,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     protected void onNewShipRequested(GUIColonyManagerInterface colonyManager, City city, Port p) {
     	if(shipManager == null)           shipManager = new NewShipManager(colonyManager, city, p);
     	else if(shipManager.isDisposed()) shipManager = new NewShipManager(colonyManager, city, p);
-    	else                              shipManager.init(colonyManager, city, p);
+    	else                              shipManager.init(colonyManager, city.getColony(colonyManager), p);
     	
     	if(shipManager.getAvailList().isEmpty()) {
     		colonyManager.alert(ColonyManager.t("현재 이 시설에서 건조 가능한 함선이 없습니다."));

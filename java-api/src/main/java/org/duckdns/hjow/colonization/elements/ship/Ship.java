@@ -9,6 +9,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 
 /** 함선 */
@@ -45,11 +46,14 @@ public interface Ship extends AttackableObject, HasLocation {
     public long getDestinationX();
     /** 목적지 Y 좌표 */
     public long getDestinationY();
+    /** 목적지 반환 */
+    public Coordinate3D getDestination();
     /** 목적지 Z 좌표 */
     public long getDestinationZ();
     public void setDestinationX(long destinationX);
     public void setDestinationY(long destinationY);
     public void setDestinationZ(long destinationZ);
+    public void setDestination(Coordinate3D dest);
     /** 정지 명령 */
     public void stop();
     /** 해당 좌표로 이동 명령 */

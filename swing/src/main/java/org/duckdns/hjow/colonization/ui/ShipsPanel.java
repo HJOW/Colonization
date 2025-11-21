@@ -148,7 +148,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 	        GridBagConstraints gridBagConst;
 			
 			for(Ship s : colony.getShipsLive()) {
-				ShipPanel pnOne = new ShipPanel(s, superInstance);
+				ShipPanel pnOne = new ShipPanel(s, colony.findPort(s), colony, superInstance);
 				
 				gridBagConst = new GridBagConstraints();
 	            gridBagConst.gridx = 0;
@@ -179,5 +179,12 @@ public class ShipsPanel extends JPanel implements Disposeable {
 		}
 		
 		pnSpace.refresh();
+	}
+	
+	/** 컴포넌트 활성화 여부 일괄 지정 */
+	public void setEditable(boolean editable) {
+		for(ShipPanel p : pnShips) {
+			p.setEditable(editable);
+		}
 	}
 }

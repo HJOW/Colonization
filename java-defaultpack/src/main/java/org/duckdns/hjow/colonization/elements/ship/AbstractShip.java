@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -20,14 +21,14 @@ import org.duckdns.hjow.colonization.elements.products.AbstractProduct;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.AbstractState;
 import org.duckdns.hjow.colonization.elements.states.State;
-import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.util.DataUtil;
 
 /** 함선 - 공통 구현 파트 */
-public class AbstractShip implements Ship {
+public abstract class AbstractShip implements Ship {
 	private static final long serialVersionUID = 1415044038948566331L;
 	protected volatile long key = ColonyManager.generateKey();
 	protected String name = getDefaultName() + "_" + ColonyManager.getNaturalNumberFrom(key);
@@ -660,6 +661,30 @@ public class AbstractShip implements Ship {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
     }
+    
+    @Override
+	public Coordinate3D getDestination() {
+		return new Coordinate3D(getDestinationX(), getDestinationY(), getDestinationZ());
+	}
+
+	@Override
+	public void setDestination(Coordinate3D dest) {
+		setDestinationX(dest.getX());
+		setDestinationY(dest.getY());
+		setDestinationZ(dest.getZ());
+	}
+
+	@Override
+	public Coordinate3D getCoordinate() {
+		return new Coordinate3D(getX(), getY(), getZ());
+	}
+
+	@Override
+	public void setCoordinate(Coordinate3D coordinate) {
+		setX(coordinate.getX());
+		setY(coordinate.getY());
+		setZ(coordinate.getZ());
+	}
     
     /** 함선 명칭 */
     public static String getMetaName() {

@@ -468,6 +468,16 @@ public abstract class AbstractFacility implements Facility {
     	}
     }
     
+    @Override
+    public City getCity(Colony col) {
+    	for(City city : col.getCities()) {
+    		for(Facility f : city.getFacility()) {
+    		    if(getKey() == f.getKey()) return city;
+    		}
+    	}
+    	return null;
+    }
+    
     public static String getFacilityName() {
         return "";
     }

@@ -35,8 +35,8 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 public class NewShipManager extends JDialog implements Disposeable {
 	private static final long serialVersionUID = -947684457643473489L;
 	protected ColonyManagerInterface colonyManager;
-    protected City city;
-    protected Port port;
+    protected Colony colony;
+    protected Port   port;
     
     protected JComboBox<ShipInformation> cbxFacInfos;
     protected JTextArea ta;
@@ -47,7 +47,7 @@ public class NewShipManager extends JDialog implements Disposeable {
     }
     public NewShipManager(GUIColonyManagerInterface colonyManager, City city, Port port) {
         super(colonyManager.getDialog());
-        init(colonyManager, city, port);
+        init(colonyManager, city.getColony(colonyManager), port);
         refresh();
     }
     
@@ -65,17 +65,17 @@ public class NewShipManager extends JDialog implements Disposeable {
     /** 순환 참조 우려가 있는 필드만 null 처리 */
     public void disposeFields() {
         this.colonyManager = null;
-        this.city          = null;
+        this.colony        = null;
         this.port          = null;
     }
     
     /** UI 초기화 */
-    public void init(ColonyManagerInterface colonyManager, City city, Port port) {
-        if(this.city != null) disposeFields();
+    public void init(ColonyManagerInterface colonyManager, Colony colony, Port port) {
+        if(this.colony != null) disposeFields();
         
         this.colonyManager = colonyManager;
-        this.city = city;
-        this.port = port;
+        this.colony = colony;
+        this.port   = port;
         
         setSize(400, 300);
         setLayout(new BorderLayout());
@@ -170,15 +170,12 @@ public class NewShipManager extends JDialog implements Disposeable {
     
     /** 생산 가능한 함선 정보들 반환 */
     public List<ShipInformation> getAvailList() {
-    	Colony col = null; 
-        if(city != null && colonyManager != null) col = city.getColony(colonyManager);
-        
     	List<ShipInformation> lists = new ArrayList<ShipInformation>();
-    	if(col != null) {
+    	if(colony != null) {
     		List<Class<?>> classes = ColonyClassLoader.shipClasses();
         	for(Class<?> classOne : classes) {
         		ShipInformation info = new ShipInformation(classOne);
-        		if(! detectBuildAvail(col, info)) continue;
+        		if(! detectBuildAvail(colony, info)) continue;
         		lists.add(info);
         	}
     	}
@@ -198,16 +195,14 @@ public class NewShipManager extends JDialog implements Disposeable {
     /** 설치 요청 시 호출 */
     protected void onOkRequested() {
         ShipInformation info;
-        Colony col;
         
         try {
             info = (ShipInformation) cbxFacInfos.getSelectedItem();
-            col = city.getColony(colonyManager);
             
-            long price = info.getPrice(port, col);
+            long price = info.getPrice(port, colony);
             
-            if(col.getMoney() < price) {
-                JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("예산이 부족합니다.\n[MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(price - col.getMoney())));
+            if(colony.getMoney() < price) {
+                JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("예산이 부족합니다.\n[MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(price - colony.getMoney())));
                 return;
             };
             
@@ -219,17 +214,17 @@ public class NewShipManager extends JDialog implements Disposeable {
             }
             
             Method mthdChecker = info.getShipClass().getMethod("getMetaBuildAvail", Port.class, Colony.class);
-            String chkRes = (String) mthdChecker.invoke(null, port, col);
+            String chkRes = (String) mthdChecker.invoke(null, port, colony);
             if(chkRes != null) {
                 JOptionPane.showMessageDialog(getDialog(), chkRes);
                 return;
             }
             
             Ship ship = (Ship) info.getShipClass().newInstance();
-            ship.init(port, col);
+            ship.init(port, colony);
             port.getShips().add(ship);
             
-            col.modifyingMoney(price * (-1) , city, city, "Building", info.toString());
+            colony.modifyingMoney(price * (-1), port.getCity(colony), port, "Building", info.toString());
             
             colonyManager.refreshColonyContent();
             dispose();
@@ -248,20 +243,19 @@ public class NewShipManager extends JDialog implements Disposeable {
             return;
         }
         
-        Colony col = city.getColony(colonyManager);
         boolean avail = true;
         String prepends = "";
         String appends  = "";
         
-        long price = info.getPrice(port, col);
+        long price = info.getPrice(port, colony);
         
-        if(col.getMoney() < price) {
-            prepends = "\n" + ColonyManager.t("건조에 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(price - col.getMoney()));
+        if(colony.getMoney() < price) {
+            prepends = "\n" + ColonyManager.t("건조에 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(price - colony.getMoney()));
             avail = false;
         }
         
         appends = appends + "\n" + ColonyManager.t("비용") + " : " + price;
-        appends = appends + "\n" + ColonyManager.t("소요") + " : " + info.getCycle(port, col);
+        appends = appends + "\n" + ColonyManager.t("소요") + " : " + info.getCycle(port, colony);
         
         ta.setText(new String(prepends + "\n\n" + info.getDesc() + "\n\n" + appends).trim());
         btnOk.setEnabled(avail);
