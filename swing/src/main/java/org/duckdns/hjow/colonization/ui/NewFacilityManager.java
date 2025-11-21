@@ -152,19 +152,9 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         FacilityInformation beforeSelected = (FacilityInformation) cbxFacInfos.getSelectedItem();
         cbxFacInfos.removeAllItems();
         
-        boolean useCheckDisables = colonyManager.isUsingCheckDisablingContent();
-        
-        Colony col = null; 
-        if(city != null && colonyManager != null) col = city.getColony(colonyManager);
-
-        List<FacilityInformation> lists = new ArrayList<FacilityInformation>();
-        if(col != null) {
-            lists.addAll(FacilityManager.getFacilityInformations());
-            for(FacilityInformation info : lists) {
-                if(! detectBuildAvail(col, info)) continue;
-                if((! useCheckDisables) && info.isScriptBasedFacility()) continue;
-                cbxFacInfos.addItem(info);
-            }
+        List<FacilityInformation> lists = getAvailList();
+        for(FacilityInformation info : lists) {
+            cbxFacInfos.addItem(info);
         }
 
         if(beforeSelected != null) {
@@ -175,6 +165,28 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         
         
         refresh();
+    }
+    
+    /** 생산 가능 시설정보 목록 반환  */
+    public List<FacilityInformation> getAvailList() {
+    	Colony col = null; 
+        if(city != null && colonyManager != null) col = city.getColony(colonyManager);
+        
+        boolean useCheckDisables = false;
+        if(colonyManager != null) useCheckDisables = colonyManager.isUsingCheckDisablingContent();
+        
+        List<FacilityInformation> lists = new ArrayList<FacilityInformation>();
+        if(col != null) {
+        	List<FacilityInformation> infos = FacilityManager.getFacilityInformations();
+        	for(FacilityInformation info : infos) {
+        		if(! detectBuildAvail(col, info)) continue;
+                if((! useCheckDisables) && info.isScriptBasedFacility()) continue;
+                
+                lists.add(info);
+        	}
+        }
+        
+        return lists;
     }
     
     /** 해당 시설이 현재 설치 가능한지 판별 */
