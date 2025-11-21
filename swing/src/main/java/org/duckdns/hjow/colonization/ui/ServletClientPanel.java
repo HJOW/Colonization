@@ -29,6 +29,7 @@ import javax.swing.SwingUtilities;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -41,7 +42,7 @@ import org.duckdns.hjow.commons.util.NetUtil;
 public class ServletClientPanel extends JPanel implements Disposeable {
     private static final long serialVersionUID = -1977421402739294793L;
     
-    protected transient GUIColonyManager superInstance;
+    protected transient GUIColonyManagerInterface superInstance;
     
     protected transient volatile boolean fThreadLogin = false;
     protected transient volatile Thread  threadLogin;

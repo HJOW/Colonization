@@ -32,6 +32,7 @@ import javax.swing.JTextField;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -75,12 +76,12 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
         super();
     }
     
-    public FacilityPanel(Facility f, City city, Colony colony, GUIColonyManager superInstance) {
+    public FacilityPanel(Facility f, City city, Colony colony, GUIColonyManagerInterface superInstance) {
         this();
         init(f, city, colony, superInstance);   
     }
     
-    public void init(final Facility f, final City city, final Colony colony, final GUIColonyManager superInstance) {
+    public void init(final Facility f, final City city, final Colony colony, final GUIColonyManagerInterface superInstance) {
         dispose();
         setFacilityKey(f.getKey());
         setTargetName(f.getName());
@@ -519,9 +520,15 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
     }
     
     /** 새 함선 버튼 클릭 시 호출 */
-    protected void onNewShipRequested(GUIColonyManager colonyManager, City city, Port p) {
-    	if(shipManager != null) shipManager.dispose();
-    	shipManager = new NewShipManager(colonyManager, city, p);
+    protected void onNewShipRequested(GUIColonyManagerInterface colonyManager, City city, Port p) {
+    	if(shipManager == null)           shipManager = new NewShipManager(colonyManager, city, p);
+    	else if(shipManager.isDisposed()) shipManager = new NewShipManager(colonyManager, city, p);
+    	else                              shipManager.init(colonyManager, city, p);
+    	
+    	if(shipManager.getAvailList().isEmpty()) {
+    		colonyManager.alert(ColonyManager.t("현재 이 시설에서 건조 가능한 함선이 없습니다."));
+    		return;
+    	}
     	shipManager.setVisible(true);
     }
     

@@ -23,17 +23,18 @@ import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
 
 public class NewColonyManager implements Disposeable {
-    protected GUIColonyManager man;
+    protected GUIColonyManagerInterface man;
     protected JDialog dialog;
     protected JComboBox<ColonyInformation> cbxColTypes;
     protected JComboBox<String> cbxDifficulty;
     protected JTextField tfName;
     protected JTextArea ta;
     
-    public NewColonyManager(GUIColonyManager man) {
+    public NewColonyManager(GUIColonyManagerInterface man) {
         this.man = man;
         dialog = new JDialog(man.getDialog(), true);
         dialog.setSize(400, 300);

@@ -27,6 +27,7 @@ import javax.swing.table.DefaultTableModel;
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Facility;
@@ -38,7 +39,7 @@ import org.duckdns.hjow.commons.util.DataUtil;
 /** 정착지 정보 출력 및 컨트롤을 담당하는 UI 컴포넌트 */
 public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, ColonyPanel {
     private static final long serialVersionUID = 3851432705333464777L;
-    protected GUIColonyManager superInstance;
+    protected GUIColonyManagerInterface superInstance;
     protected Colony colony;
     
     protected transient JPanel pnColonyBasics, pnColonyCardCity, pnAccountingMain, pnHoldings, pnResearches, pnLoanHaves;
@@ -61,12 +62,12 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         super();
     }
     
-    public DefaultColonyPanel(Colony colony, GUIColonyManager superInstance) {
+    public DefaultColonyPanel(Colony colony, GUIColonyManagerInterface superInstance) {
         this();
         init(colony, superInstance);
     }
     
-    public void init(Colony colony, GUIColonyManager superInstance) {
+    public void init(Colony colony, GUIColonyManagerInterface superInstance) {
         if(colony != null) dispose();
         this.colony = colony;
         this.superInstance = superInstance;

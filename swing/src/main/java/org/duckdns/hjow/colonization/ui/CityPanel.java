@@ -34,6 +34,7 @@ import javax.swing.border.EtchedBorder;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -47,7 +48,7 @@ import org.duckdns.hjow.commons.stream.SingleAction;
 
 public class CityPanel extends JPanel implements ColonyElementPanel {
     private static final long serialVersionUID = 3475480727850203183L;
-    protected transient GUIColonyManager colonyManager;
+    protected transient GUIColonyManagerInterface colonyManager;
     protected transient City city;
     protected transient JTabbedPane tab;
     protected transient JProgressBar progHp;
@@ -74,12 +75,12 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         
     }
     
-    public CityPanel(City city, Colony colony, GUIColonyManager superInstance) {
+    public CityPanel(City city, Colony colony, GUIColonyManagerInterface superInstance) {
         super();
         init(city, colony, superInstance);
     }
     
-    public void init(City city, Colony colony, GUIColonyManager superInstance) {
+    public void init(City city, Colony colony, GUIColonyManagerInterface superInstance) {
         if(this.city != null) dispose();
         this.colonyManager = superInstance;
         
@@ -270,7 +271,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
     }
     
     /** 새 시설 건설 버튼 클릭 시 호출 */
-    protected void onNewFacilityButtonPressed(GUIColonyManager superInstance) {
+    protected void onNewFacilityButtonPressed(GUIColonyManagerInterface superInstance) {
         if(dialogNewFac != null) dialogNewFac.dispose();
         dialogNewFac = null;
         

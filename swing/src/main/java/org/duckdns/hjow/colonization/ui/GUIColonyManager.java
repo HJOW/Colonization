@@ -52,6 +52,7 @@ import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GUIColonizationMainClass;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.SimulationSpeed;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -68,7 +69,7 @@ import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** Colonization 프로그램 핵심 클래스 Swing 버전 */
-public class GUIColonyManager extends ColonyManager {
+public class GUIColonyManager extends ColonyManager implements GUIColonyManagerInterface {
     private static final long serialVersionUID = -2483528821790634383L;
     
     private static transient boolean flagLookAndFeelInitialized = false;
@@ -847,6 +848,7 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 룩앤필 변경 시 호출되어야 함 */
+    @Override
     public void refreshLookAndFeel() {
         SwingUtilities.updateComponentTreeUI(frame);
     }
@@ -953,8 +955,11 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 새 정착지 대화상자 응답 시 호출 */
-    public void onNewColonyTypeDecided(String type, String name, int difficulty, NewColonyManager decider) {
+    @Override
+    public void onNewColonyTypeDecided(String type, String name, int difficulty, Object decider) {
         if(decider == null) return;
+        if(! (decider instanceof NewColonyManager)) return; // 아무나 이 메소드 호출 못하게 차단하는 용도
+        
         Colony newCol = newColony(type, name);
         cbxColony.setSelectedItem(newCol);
         
@@ -1260,6 +1265,7 @@ public class GUIColonyManager extends ColonyManager {
     }
 
     /** 대화상자 객체 반환 */
+    @Override
     public JFrame getDialog() {
         return frame;
     }
@@ -1268,19 +1274,23 @@ public class GUIColonyManager extends ColonyManager {
     public Object getDialogObject() { return getDialog(); }
     
     /** 대화상자 가로 길이 반환 */
+    @Override
     public int getDialogWidth() {
         return getDialog().getWidth();
     }
     
     /** 대화상자 세로 길이 반환 */
+    @Override
     public int getDialogHeight() {
         return getDialog().getHeight();
     }
     
+    @Override
     public int getDialogX() {
         return getDialog().getX();
     }
     
+    @Override
     public int getDialogY() {
         return getDialog().getY();
     }
@@ -1531,6 +1541,7 @@ public class GUIColonyManager extends ColonyManager {
     }
     
     /** 서블릿(웹) 패널 내 정착지 영역 새로고침 요청 */
+    @Override
     public void requestLoadServletColony() {
         if(servletClient != null) servletClient.requestLoadColony();
     }

@@ -24,6 +24,8 @@ import org.duckdns.hjow.commons.data.CompressedDocument;
 import org.duckdns.hjow.commons.ui.JLogArea;
 import org.duckdns.hjow.commons.util.GUIUtil;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 
 /** 전역 로그 출력 대화상자 */
@@ -36,12 +38,12 @@ public class GlobalLogDialog implements GlobalLogUI {
     protected boolean threadSwitch = true;
     protected boolean autoOutput = false;
     
-    public GlobalLogDialog(ColonyManager superInstance) {
+    public GlobalLogDialog(ColonyManagerInterface superInstance) {
         init(superInstance);
     }
 
-    protected void init(ColonyManager superInstance) {
-        if(superInstance instanceof GUIColonyManager) dialog = new JDialog(((GUIColonyManager) superInstance).getDialog());
+    protected void init(ColonyManagerInterface superInstance) {
+        if(superInstance instanceof GUIColonyManagerInterface) dialog = new JDialog(((GUIColonyManagerInterface) superInstance).getDialog());
         else dialog = new JDialog();
         dialog.setSize(600, 400);
         dialog.setTitle(ColonyManager.t("로그"));

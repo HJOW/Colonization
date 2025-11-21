@@ -22,6 +22,8 @@ import javax.swing.JTextArea;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
@@ -32,7 +34,7 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 
 public class NewShipManager extends JDialog implements Disposeable {
 	private static final long serialVersionUID = -947684457643473489L;
-	protected ColonyManager colonyManager;
+	protected ColonyManagerInterface colonyManager;
     protected City city;
     protected Port port;
     
@@ -43,7 +45,7 @@ public class NewShipManager extends JDialog implements Disposeable {
     public NewShipManager() {
         super();
     }
-    public NewShipManager(GUIColonyManager colonyManager, City city, Port port) {
+    public NewShipManager(GUIColonyManagerInterface colonyManager, City city, Port port) {
         super(colonyManager.getDialog());
         init(colonyManager, city, port);
         refresh();
@@ -55,6 +57,11 @@ public class NewShipManager extends JDialog implements Disposeable {
         setVisible(false);
     }
     
+    /** 이미 사용 불가 상태인지 확인 */
+    public boolean isDisposed() {
+    	return (colonyManager == null);
+    }
+    
     /** 순환 참조 우려가 있는 필드만 null 처리 */
     public void disposeFields() {
         this.colonyManager = null;
@@ -63,7 +70,7 @@ public class NewShipManager extends JDialog implements Disposeable {
     }
     
     /** UI 초기화 */
-    public void init(ColonyManager colonyManager, City city, Port port) {
+    public void init(ColonyManagerInterface colonyManager, City city, Port port) {
         if(this.city != null) disposeFields();
         
         this.colonyManager = colonyManager;
@@ -135,34 +142,23 @@ public class NewShipManager extends JDialog implements Disposeable {
             }
         });
         
-        refreshFacilityList();
+        refreshShipInfoList();
     }
     
     public JDialog getDialog() { return this; }
     
     /** 함선 목록 새로고침 */
-    public void refreshFacilityList() {
+    public void refreshShipInfoList() {
     	ShipInformation beforeSelected = (ShipInformation) cbxFacInfos.getSelectedItem();
         cbxFacInfos.removeAllItems();
         
         // boolean useCheckDisables = colonyManager.isUsingCheckDisablingContent();
         
-        Colony col = null; 
-        if(city != null && colonyManager != null) col = city.getColony(colonyManager);
-
-        List<ShipInformation> lists = new ArrayList<ShipInformation>();
-        if(col != null) {
-        	List<Class<?>> classes = ColonyClassLoader.shipClasses();
-        	for(Class<?> classOne : classes) {
-        		lists.add(new ShipInformation(classOne));
-        	}
-        	
-            for(ShipInformation info : lists) {
-                if(! detectBuildAvail(col, info)) continue;
-                cbxFacInfos.addItem(info);
-            }
+        List<ShipInformation> lists = getAvailList();
+        for(ShipInformation info : lists) {
+            cbxFacInfos.addItem(info);
         }
-
+        
         if(beforeSelected != null) {
             if(lists.contains(beforeSelected)) {
                 cbxFacInfos.setSelectedItem(beforeSelected);
@@ -170,6 +166,23 @@ public class NewShipManager extends JDialog implements Disposeable {
         }
         
         refresh();
+    }
+    
+    /** 생산 가능한 함선 정보들 반환 */
+    public List<ShipInformation> getAvailList() {
+    	Colony col = null; 
+        if(city != null && colonyManager != null) col = city.getColony(colonyManager);
+        
+    	List<ShipInformation> lists = new ArrayList<ShipInformation>();
+    	if(col != null) {
+    		List<Class<?>> classes = ColonyClassLoader.shipClasses();
+        	for(Class<?> classOne : classes) {
+        		ShipInformation info = new ShipInformation(classOne);
+        		if(! detectBuildAvail(col, info)) continue;
+        		lists.add(info);
+        	}
+    	}
+    	return lists;
     }
     
     /** 해당 함선이 현재 건조 가능한지 판별 */

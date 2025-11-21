@@ -3,13 +3,13 @@ package org.duckdns.hjow.colonization.ui.licenses;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.ui.GUIColonyManager;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.help.HelpContent;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
 
 /** 이 소프트웨어 및 써드파티 라이브러리 소프트웨어 라이센스 고지 창 */
 public class LicenseDialog extends HelpDialog {
-    public LicenseDialog(GUIColonyManager superInstance) {
+    public LicenseDialog(GUIColonyManagerInterface superInstance) {
         super(superInstance);
     }
     

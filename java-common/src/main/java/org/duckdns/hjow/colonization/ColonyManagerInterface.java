@@ -1,5 +1,7 @@
 package org.duckdns.hjow.colonization;
 
+import java.io.File;
+
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -14,6 +16,10 @@ public interface ColonyManagerInterface extends Disposeable {
     public ColonyManagerConfig getConfig();
     /** 화면 UI 새로고침 예약 - 화면 새로고침 필요 사유가 발생한 경우 이 메소드를 호출할 것 */
     public void reserveRefresh();
+    /** 화면 UI 즉시 새로고침 - 시뮬레이션 진행 중에는 위 reserveRefresh 를 대신 사용 권장, 이 메소드에서는 정착지 목록은 갱신하지 않음. */
+    public void refreshColonyContent();
+    /** 정착지 목록 새로고침 - 위 refreshColonyContent 메소드 포함, 시뮬레이션 진행 중에는 호출 금지 ! */
+    public void refreshColonyList();
     /** 로그 출력 */
     public void log(String msg);
     /** 알림 메시지 출력 */
@@ -39,5 +45,20 @@ public interface ColonyManagerInterface extends Disposeable {
     
     public long    getCycleGapEachCity();         
     public long    getCycleGapEachFacility();     
-    public boolean isUsingCheckDisablingContent(); 
+    public boolean isUsingCheckDisablingContent();
+    
+    /** 정착지들을 기본 경로에서 불러오기 */
+    public void loadColonies();
+    
+    /** Colonization 기본 설정 저장 */
+    public void saveLocalConfigs();
+    
+    /** 정착지들을 기본 경로에 저장 */
+    public void saveColonies();
+    
+    /** 정착지 설정 기본 경로 반환 */
+    public File getColonyConfigRootDirectory();
+    
+    /** 새 정착지 생성 (기본형으로 생성) */
+    public Colony newColony();
 }

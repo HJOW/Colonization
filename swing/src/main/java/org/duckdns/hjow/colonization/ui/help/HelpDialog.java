@@ -15,19 +15,20 @@ import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** 도움말 대화상자 */
 public class HelpDialog implements Disposeable {
-    protected transient GUIColonyManager superInstance;
+    protected transient GUIColonyManagerInterface superInstance;
     protected transient JDialog dialog;
     protected transient JSplitPane splits;
     protected transient JList<HelpContent> listHelp;
     protected transient JEditorPane taContent;
     
-    public HelpDialog(GUIColonyManager superInstance) {
+    public HelpDialog(GUIColonyManagerInterface superInstance) {
         this.superInstance = superInstance;
         dialog = new JDialog(superInstance.getDialog());
         

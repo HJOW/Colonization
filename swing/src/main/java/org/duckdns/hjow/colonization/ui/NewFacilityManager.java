@@ -21,6 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -31,7 +33,7 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 
 public class NewFacilityManager extends JDialog implements Disposeable {
     private static final long serialVersionUID = 8433244450809087631L;
-    protected ColonyManager colonyManager;
+    protected ColonyManagerInterface colonyManager;
     protected City city;
     
     protected transient ServletClientColonyPanel servletPanel = null;
@@ -43,7 +45,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
     public NewFacilityManager() {
         super();
     }
-    public NewFacilityManager(GUIColonyManager colonyManager, City city) {
+    public NewFacilityManager(GUIColonyManagerInterface colonyManager, City city) {
         super(colonyManager.getDialog());
         init(colonyManager, city);
         refresh();
@@ -63,7 +65,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
     }
     
     /** UI 초기화 */
-    public void init(ColonyManager colonyManager, City city) {
+    public void init(ColonyManagerInterface colonyManager, City city) {
         if(this.city != null) disposeFields();
         
         this.colonyManager = colonyManager;

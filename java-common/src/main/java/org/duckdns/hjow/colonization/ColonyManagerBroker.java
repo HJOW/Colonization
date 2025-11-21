@@ -1,5 +1,6 @@
 package org.duckdns.hjow.colonization;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -172,5 +173,40 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
 	@Override
 	public boolean isUsingCheckDisablingContent() {
 		return originals.isUsingCheckDisablingContent();
+	}
+
+	@Override
+	public void refreshColonyContent() {
+		originals.reserveRefresh();
+	}
+
+	@Override
+	public void refreshColonyList() {
+		originals.reserveRefresh();
+	}
+
+	@Override
+	public void loadColonies() {
+		originals.loadColonies();
+	}
+
+	@Override
+	public void saveLocalConfigs() {
+		originals.loadLocalConfigs();
+	}
+
+	@Override
+	public void saveColonies() {
+		originals.saveColonies();
+	}
+
+	@Override
+	public File getColonyConfigRootDirectory() {
+		return null; // 접근 차단
+	}
+
+	@Override
+	public Colony newColony() {
+		return originals.newColony();
 	}
 }

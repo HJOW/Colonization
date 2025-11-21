@@ -29,6 +29,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -39,7 +40,7 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** 설정 변경 대화상자 */
 public class ConfigManager implements Disposeable {
-    protected GUIColonyManager superInstance;
+    protected GUIColonyManagerInterface superInstance;
     protected JDialog dialog;
     protected JButton btnSave, btnCancel, btnSelStringTable;
     protected JComboBox<String> cbxLookAndFeel;
@@ -47,7 +48,7 @@ public class ConfigManager implements Disposeable {
     protected JTextArea taPacks;
     protected JCheckBox chkOldVer, chkUseDis;
     
-    public ConfigManager(GUIColonyManager superInstance) {
+    public ConfigManager(GUIColonyManagerInterface superInstance) {
         this.superInstance = superInstance;
         dialog = new JDialog(superInstance.getDialog(), true);
         dialog.setSize(750, 450);

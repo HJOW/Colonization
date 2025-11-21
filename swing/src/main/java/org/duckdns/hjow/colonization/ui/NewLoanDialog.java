@@ -18,13 +18,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
 public class NewLoanDialog implements Disposeable {
-    protected GUIColonyManager man;
+    protected GUIColonyManagerInterface man;
     protected JDialog dialog;
     protected JComboBox<Loan> cbxLoans;
     protected JTextArea ta;
@@ -32,12 +33,12 @@ public class NewLoanDialog implements Disposeable {
     protected transient Colony colony;
     protected transient ServletClientColonyPanel servletPanel = null;
     
-    public NewLoanDialog(GUIColonyManager man) {
+    public NewLoanDialog(GUIColonyManagerInterface man) {
         init(man);
     }
     
     /** UI 초기화 */
-    protected void init(GUIColonyManager man) {
+    protected void init(GUIColonyManagerInterface man) {
         this.man = man;
         dialog = new JDialog(man.getDialog(), true);
         dialog.setSize(400, 300);
@@ -156,7 +157,7 @@ public class NewLoanDialog implements Disposeable {
     }
     
     /** 대화 상자 오픈 */
-    public void open(GUIColonyManager man, Colony colony) {
+    public void open(GUIColonyManagerInterface man, Colony colony) {
         if(colony.getLoanAvail().isEmpty()) {
             JOptionPane.showMessageDialog(man.getDialog(), ColonyManager.t("현재 받을 수 있는 대출 상품이 없습니다."));
             dispose();

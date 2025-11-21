@@ -198,6 +198,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 정착지 설정 기본 경로 반환 */
+    @Override
     public File getColonyConfigRootDirectory() {
         return getHomeDir("colonization", "configs");
     }
@@ -355,6 +356,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 정착지들을 기본 경로에서 불러오기 */
+    @Override
     public void loadColonies() {
     	GlobalLogs.log(t("정착지 모두 불러오는 중..."));
         File root = getColonySaveRootDirectory();
@@ -418,6 +420,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 정착지들을 기본 경로에 저장 */
+    @Override
     public void saveColonies() {
     	GlobalLogs.log(t("모든 정착지 기록 중..."));
     	
@@ -483,6 +486,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** Colonization 기본 설정 저장 */
+    @Override
     public void saveLocalConfigs() {
     	GlobalLogs.log(t("설정 저장 중..."));
     	
@@ -504,6 +508,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 새 정착지 생성 (기본형으로 생성) */
+    @Override
     public Colony newColony() {
     	GlobalLogs.log(t("새 정착지 개척 중..."));
         try {
@@ -864,6 +869,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 화면 새로고침 예약 */
+    @Override
     public void reserveRefresh() {
         if(threadPaused) { // 일시정지되어 있으면, 그냥 바로 새로고침 해버림
         	refreshColonyContent();
@@ -873,6 +879,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 정착지 목록과 화면 내용 갱신 */
+    @Override
     public void refreshColonyList() {
     	GlobalLogs.log(t("정착지 목록 갱신 중..."));
     	
@@ -881,6 +888,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 정착지 화면 내용 갱신 */
+    @Override
     public void refreshColonyContent() {
     	GlobalLogs.log(t("정착지 내부 화면 갱신 중..."));
     	
