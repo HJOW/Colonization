@@ -24,6 +24,7 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.DefaultHoldingJob;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
@@ -221,7 +222,7 @@ public class NewFacilityManager extends JDialog implements Disposeable {
                 return;
             }
             
-            HoldingJob job = new HoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
+            HoldingJob job = new DefaultHoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
             job.setUsingSpace(info.getSpaceSize());
             city.getHoldings().add(job);
             

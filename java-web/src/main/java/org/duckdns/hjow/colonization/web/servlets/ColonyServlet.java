@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.DefaultHoldingJob;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -324,7 +325,7 @@ public class ColonyServlet extends CommonServlet {
                 throw new RuntimeException(ColonyManager.t("이 정착지에는 설치할 수 없는 시설입니다."));
             }
             
-            HoldingJob job = new HoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
+            HoldingJob job = new DefaultHoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
             job.setUsingSpace(info.getSpaceSize());
             city.getHoldings().add(job);
             

@@ -1264,7 +1264,7 @@ public abstract class AbstractColony implements Colony {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        HoldingJob h = new HoldingJob();
+                        HoldingJob h = new DefaultHoldingJob();
                         h.fromJson((JsonObject) o);
                         holdings.add(h);
                     } catch(Exception ex) {

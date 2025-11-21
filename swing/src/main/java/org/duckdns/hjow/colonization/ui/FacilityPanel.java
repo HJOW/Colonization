@@ -36,6 +36,7 @@ import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.DefaultHoldingJob;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -295,7 +296,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
                 
                 colony.modifyingMoney(m * (-1L), city, f, "Upgrade", f.getName());
                 
-                HoldingJob newJob = new HoldingJob(c, c, "UpgradeFacility", String.valueOf(f.getKey()));
+                HoldingJob newJob = new DefaultHoldingJob(c, c, "UpgradeFacility", String.valueOf(f.getKey()));
                 city.addHoldingJob(newJob);
             }
         });
