@@ -55,6 +55,7 @@ import org.duckdns.hjow.colonization.GUIColonizationMainClass;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.SimulationSpeed;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
@@ -1601,10 +1602,10 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         menuMods.removeAll();
         
         for(final Mod mod : modsList) {
-            JMenuItem menuItem = new JMenuItem(t(mod.getName()));
-            menuMods.add(menuItem);
-            
-            if(mod.getLocation() == 0) {
+            if(mod.getLocation() == Constants.MOD_DIALOG) {
+            	JMenuItem menuItem = new JMenuItem(t(mod.getName()));
+                menuMods.add(menuItem);
+            	
                 final ModDialog dialog = new ModDialog(getDialog(), mod);
                 modDialogs.add(dialog);
                 if(mod instanceof ScriptMod) { ((ScriptMod) mod).injectParentComponent(dialog); }

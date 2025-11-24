@@ -2,6 +2,7 @@ package org.duckdns.hjow.colonization.constants;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
 
 /** 자주 쓰는 상수들을 정리한 클래스 (단, Colonization 게임 밸런스 자체와 연관이 깊은 상수는 ColonyManager 에 배치) */
 public class Constants {
@@ -40,6 +41,26 @@ public class Constants {
     public static final BigDecimal BIGDECIMAL_100         = new BigDecimal(String.valueOf(100));
     public static final BigDecimal BIGDECIMAL_SQRT_DIG    = new BigDecimal(String.valueOf(150));
     public static final BigDecimal BIGDECIMAL_SQRT_PRE    = new BigDecimal(String.valueOf(10)).pow(BIGDECIMAL_SQRT_DIG.intValue());
+    
+    /** MOD 타입 */
+    public static final int MOD_DIALOG = 0;
+    
+    /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
+    public static final short ATTACKTYPE_NORMAL = 0;
+    public static final short ATTACKTYPE_THIN_BULLET = 1;
+    public static final short ATTACKTYPE_THIN_RAY    = 2;
+    public static final short ATTACKTYPE_THIN_ENERGY = 3;
+    public static final short ATTACKTYPE_THICK_BULLET  = 11;
+    public static final short ATTACKTYPE_THICK_RAY     = 12;
+    public static final short ATTACKTYPE_THICK_ENERGY  = 13;
+    public static final short ATTACKTYPE_THICK_MISSILE = 14;
+    public static final short DEFENCETYPE_NORMAL   = 0;
+    public static final short DEFENCETYPE_SMALL    = 1;
+    public static final short DEFENCETYPE_BUILDING = 9;
+    
+    /** 숫자 형식 맞추기 위한 객체들 */
+    public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");
+    public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("#,##0.00");
     
     /** 아무것도 하지 않음. 단지 이 메소드를 호출함으로써, 이 클래스와 위의 상수들도 같이 준비되는 것을 목적으로 사용 */
     public static void prepare() {};

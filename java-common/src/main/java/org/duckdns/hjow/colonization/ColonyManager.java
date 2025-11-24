@@ -1340,10 +1340,10 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     }
     
     /** 버전 코드 */
-    public static final int VERSION_MAIN = 0;
-    public static final int VERSION_SUB1 = 0;
-    public static final int VERSION_SUB2 = 1;
-    public static final long BUILD_NO = 9L;
+    public static final int  VERSION_MAIN = 0;
+    public static final int  VERSION_SUB1 = 0;
+    public static final int  VERSION_SUB2 = 1;
+    public static final long BUILD_NO     = 9L;
     
     /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
     public static final short ATTACKTYPE_NORMAL = 0;
@@ -1358,12 +1358,12 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     public static final short DEFENCETYPE_SMALL    = 1;
     public static final short DEFENCETYPE_BUILDING = 9;
     
-    /** 기본 1사이클 쓰레드 간격, 밀리초 단위로, 매 사이클 연산이 끝날 때마다 이 밀리초만큼 쓰레드 Sleep */
-    public static final long CYCLEGAP_DEFAULT = 249L;
-    
     /** 숫자 형식 맞추기 위한 객체들 */
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");
     public static final DecimalFormat FORMATTER_RATE = new DecimalFormat("#,##0.00");
+    
+    /** 기본 1사이클 쓰레드 간격, 밀리초 단위로, 매 사이클 연산이 끝날 때마다 이 밀리초만큼 쓰레드 Sleep */
+    public static final long CYCLEGAP_DEFAULT = 249L;
     
     /** cycle 값 제한 (TIME 의 최대값 개념이 아님) - TIME 값이 이 값보다 커지면, 이 값으로 나눈 나머지로 cycle 시작값을 구함. */
     public static final int        CYCLE_NO_MAXIMUM     = 2000000000;
