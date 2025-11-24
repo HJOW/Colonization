@@ -43,20 +43,21 @@ public class Constants {
     public static final BigDecimal BIGDECIMAL_SQRT_PRE    = new BigDecimal(String.valueOf(10)).pow(BIGDECIMAL_SQRT_DIG.intValue());
     
     /** MOD 타입 */
-    public static final int MOD_DIALOG = 0;
+    public static final int MOD_DIALOG      =  0;
+    public static final int MOD_SPACE_PANEL = 10;
     
     /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
-    public static final short ATTACKTYPE_NORMAL = 0;
-    public static final short ATTACKTYPE_THIN_BULLET = 1;
-    public static final short ATTACKTYPE_THIN_RAY    = 2;
-    public static final short ATTACKTYPE_THIN_ENERGY = 3;
+    public static final short ATTACKTYPE_NORMAL        =  0;
+    public static final short ATTACKTYPE_THIN_BULLET   =  1;
+    public static final short ATTACKTYPE_THIN_RAY      =  2;
+    public static final short ATTACKTYPE_THIN_ENERGY   =  3;
     public static final short ATTACKTYPE_THICK_BULLET  = 11;
     public static final short ATTACKTYPE_THICK_RAY     = 12;
     public static final short ATTACKTYPE_THICK_ENERGY  = 13;
     public static final short ATTACKTYPE_THICK_MISSILE = 14;
-    public static final short DEFENCETYPE_NORMAL   = 0;
-    public static final short DEFENCETYPE_SMALL    = 1;
-    public static final short DEFENCETYPE_BUILDING = 9;
+    public static final short DEFENCETYPE_NORMAL       =  0;
+    public static final short DEFENCETYPE_SMALL        =  1;
+    public static final short DEFENCETYPE_BUILDING     =  9;
     
     /** 숫자 형식 맞추기 위한 객체들 */
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");

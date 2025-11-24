@@ -2,9 +2,12 @@ package org.duckdns.hjow.colonization;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -208,5 +211,10 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
 	@Override
 	public Colony newColony() {
 		return originals.newColony();
+	}
+
+	@Override
+	public List<Mod> getMods() {
+		return new ArrayList<Mod>(); // 접근 차단
 	}
 }

@@ -1,9 +1,11 @@
 package org.duckdns.hjow.colonization;
 
 import java.io.File;
+import java.util.List;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
+import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -61,4 +63,7 @@ public interface ColonyManagerInterface extends Disposeable {
     
     /** 새 정착지 생성 (기본형으로 생성) */
     public Colony newColony();
+    
+    /** Mods 들 목록 반환 */
+    public List<Mod> getMods();
 }

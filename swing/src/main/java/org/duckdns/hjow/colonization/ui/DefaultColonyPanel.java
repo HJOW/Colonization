@@ -54,6 +54,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
     
     protected transient List<CityPanel>     pnCities = new Vector<CityPanel>();
     protected transient List<ResearchPanel> rsPanels = new ArrayList<ResearchPanel>();
+    
     protected transient ShipsPanel shipPanel;
     
     protected transient boolean flagEditable = true;
@@ -97,7 +98,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
         pnLoanHaves = new JPanel();
         tabMain.add(ColonyManager.t("남은 대출"), pnLoanHaves);
         
-        shipPanel = new ShipsPanel();
+        shipPanel = new ShipsPanel(superInstance);
         tabMain.add(ColonyManager.t("함선"), shipPanel);
         
         cardCity = new CardLayout();

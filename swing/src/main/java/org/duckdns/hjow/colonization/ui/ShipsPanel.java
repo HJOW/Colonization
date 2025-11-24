@@ -16,6 +16,7 @@ import javax.swing.event.ChangeListener;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
+import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -24,13 +25,15 @@ import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 /** 함선들 현황 출력 및 컨트롤 화면 */
 public class ShipsPanel extends JPanel implements Disposeable {
 	private static final long serialVersionUID = 1251621290381343350L;
+	protected transient GUIColonyManagerInterface superInstance;
+	
 	protected transient Vector<ShipPanel> pnShips = new Vector<ShipPanel>();
 	protected transient JPanel     pnShipRoot;
 	protected transient JToolBar   toolbar;
 	protected transient JSpinner   spCameraX, spCameraY, spCameraZ, spYaw, spPitch;
 	protected transient SpacePanel pnSpace;
 	
-    public ShipsPanel() { init(); }
+    public ShipsPanel(GUIColonyManagerInterface superInstance) { this.superInstance = superInstance; init(); }
     
     /** UI 초기화 */
     protected void init() {
@@ -124,6 +127,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 		}
 		pnShips.clear();
 		removeAll();
+		superInstance = null;
 	}
 	
 	/** 화면 새로고침 시 호출 */
