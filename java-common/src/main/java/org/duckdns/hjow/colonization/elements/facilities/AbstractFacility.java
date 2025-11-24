@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -93,7 +94,7 @@ public abstract class AbstractFacility implements Facility {
     
     @Override
     public short getDefenceType() {
-        return ColonyManager.DEFENCETYPE_BUILDING;
+        return Constants.DEFENCETYPE_BUILDING;
     }
 
     @Override

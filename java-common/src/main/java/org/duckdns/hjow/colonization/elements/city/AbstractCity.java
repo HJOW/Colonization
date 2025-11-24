@@ -219,7 +219,7 @@ public abstract class AbstractCity implements City {
     
     @Override
     public short getDefenceType() {
-        return ColonyManager.DEFENCETYPE_BUILDING;
+        return Constants.DEFENCETYPE_BUILDING;
     }
 
     @Override

@@ -186,7 +186,7 @@ public class DefaultCitizen implements Citizen {
     
     @Override
     public short getDefenceType() {
-        return ColonyManager.DEFENCETYPE_SMALL;
+        return Constants.DEFENCETYPE_SMALL;
     }
 
     @Override

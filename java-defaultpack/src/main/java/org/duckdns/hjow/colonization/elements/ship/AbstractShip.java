@@ -94,7 +94,7 @@ public abstract class AbstractShip implements Ship {
 
 	@Override
 	public short getAttackType() {
-		return ColonyManager.ATTACKTYPE_NORMAL;
+		return Constants.ATTACKTYPE_NORMAL;
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public abstract class AbstractShip implements Ship {
 
 	@Override
 	public short getDefenceType() {
-		return ColonyManager.DEFENCETYPE_SMALL;
+		return Constants.DEFENCETYPE_SMALL;
 	}
 
 	@Override

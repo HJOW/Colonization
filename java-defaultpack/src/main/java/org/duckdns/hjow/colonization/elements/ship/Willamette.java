@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.elements.ship;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 
@@ -30,7 +31,7 @@ public class Willamette extends AbstractShip {
 
 	@Override
 	public short getAttackType() {
-		return ColonyManager.ATTACKTYPE_NORMAL;
+		return Constants.ATTACKTYPE_NORMAL;
 	}
 	
 	@Override
@@ -40,7 +41,7 @@ public class Willamette extends AbstractShip {
 	
 	@Override
 	public short getDefenceType() {
-		return ColonyManager.DEFENCETYPE_SMALL;
+		return Constants.DEFENCETYPE_SMALL;
 	}
 
 	@Override

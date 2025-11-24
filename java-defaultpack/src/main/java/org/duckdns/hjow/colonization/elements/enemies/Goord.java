@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization.elements.enemies;
 import java.math.BigInteger;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 
@@ -21,7 +22,7 @@ public class Goord extends AbstractEnemy {
 
     @Override
     public short getDefenceType() {
-        return ColonyManager.DEFENCETYPE_NORMAL;
+        return Constants.DEFENCETYPE_NORMAL;
     }
 
     @Override

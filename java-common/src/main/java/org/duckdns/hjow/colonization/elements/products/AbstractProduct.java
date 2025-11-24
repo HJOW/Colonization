@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.city.City;
@@ -74,7 +75,7 @@ public abstract class AbstractProduct implements Product {
 
     @Override
     public short getDefenceType() {
-        return ColonyManager.DEFENCETYPE_NORMAL;
+        return Constants.DEFENCETYPE_NORMAL;
     }
 
     @Override

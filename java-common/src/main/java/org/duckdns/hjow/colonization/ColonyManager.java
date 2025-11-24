@@ -1068,14 +1068,14 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         int    atkType = attacker.getAttackType();
         
         // 속성 적용
-        if(defType == DEFENCETYPE_SMALL) {
-            if(atkType == ATTACKTYPE_THICK_BULLET ) { damage = (int) Math.round( damage / 2.0 ); correctRate = correctRate * 0.75; }
-            if(atkType == ATTACKTYPE_THICK_MISSILE) { damage = (int) Math.round( damage / 2.0 ); }
-            if(atkType == ATTACKTYPE_THICK_RAY    ) { correctRate = correctRate * 0.75; }
-            if(atkType == ATTACKTYPE_THICK_ENERGY ) { correctRate = correctRate * 0.25; }
+        if(defType == Constants.DEFENCETYPE_SMALL) {
+            if(atkType == Constants.ATTACKTYPE_THICK_BULLET ) { damage = (int) Math.round( damage / 2.0 ); correctRate = correctRate * 0.75; }
+            if(atkType == Constants.ATTACKTYPE_THICK_MISSILE) { damage = (int) Math.round( damage / 2.0 ); }
+            if(atkType == Constants.ATTACKTYPE_THICK_RAY    ) { correctRate = correctRate * 0.75; }
+            if(atkType == Constants.ATTACKTYPE_THICK_ENERGY ) { correctRate = correctRate * 0.25; }
         }
         
-        if(defType == DEFENCETYPE_BUILDING) {
+        if(defType == Constants.DEFENCETYPE_BUILDING) {
             if(atkType >= 1 && atkType <= 9) damage = (int) Math.round( damage / 2.0 );
         }
         
@@ -1086,9 +1086,9 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         naturalRandom = naturalRandom - (naturalRandom / 2.0); // 반수는 음수로 가도록
         
         //    속성에 따라 랜덤값 추가 변동
-        if(atkType == ATTACKTYPE_THICK_MISSILE) naturalRandom = naturalRandom * 2;
-        if(atkType == ATTACKTYPE_THICK_ENERGY && defType == DEFENCETYPE_SMALL) naturalRandom = naturalRandom * 4;
-        if(atkType == ATTACKTYPE_THIN_ENERGY  && defType == DEFENCETYPE_SMALL) naturalRandom = naturalRandom * 2;
+        if(atkType == Constants.ATTACKTYPE_THICK_MISSILE) naturalRandom = naturalRandom * 2;
+        if(atkType == Constants.ATTACKTYPE_THICK_ENERGY && defType == Constants.DEFENCETYPE_SMALL) naturalRandom = naturalRandom * 4;
+        if(atkType == Constants.ATTACKTYPE_THIN_ENERGY  && defType == Constants.DEFENCETYPE_SMALL) naturalRandom = naturalRandom * 2;
         
         //     랜덤값 대미지에 적용
         damage = damage + (int) Math.round(naturalRandom);
@@ -1344,19 +1344,6 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     public static final int  VERSION_SUB1 = 0;
     public static final int  VERSION_SUB2 = 1;
     public static final long BUILD_NO     = 9L;
-    
-    /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
-    public static final short ATTACKTYPE_NORMAL = 0;
-    public static final short ATTACKTYPE_THIN_BULLET = 1;
-    public static final short ATTACKTYPE_THIN_RAY    = 2;
-    public static final short ATTACKTYPE_THIN_ENERGY = 3;
-    public static final short ATTACKTYPE_THICK_BULLET  = 11;
-    public static final short ATTACKTYPE_THICK_RAY     = 12;
-    public static final short ATTACKTYPE_THICK_ENERGY  = 13;
-    public static final short ATTACKTYPE_THICK_MISSILE = 14;
-    public static final short DEFENCETYPE_NORMAL   = 0;
-    public static final short DEFENCETYPE_SMALL    = 1;
-    public static final short DEFENCETYPE_BUILDING = 9;
     
     /** 숫자 형식 맞추기 위한 객체들 */
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");

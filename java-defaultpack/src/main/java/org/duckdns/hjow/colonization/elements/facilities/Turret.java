@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -74,7 +75,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     
     @Override
     public short getAttackType() {
-        return ColonyManager.ATTACKTYPE_NORMAL;
+        return Constants.ATTACKTYPE_NORMAL;
     }
     
     @Override

@@ -1029,7 +1029,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public short getDefenceType() {
-        return ColonyManager.DEFENCETYPE_BUILDING;
+        return Constants.DEFENCETYPE_BUILDING;
     }
 
     @Override
