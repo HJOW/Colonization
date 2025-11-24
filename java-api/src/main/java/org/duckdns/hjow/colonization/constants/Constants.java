@@ -44,7 +44,7 @@ public class Constants {
     
     /** MOD 타입 */
     public static final int MOD_DIALOG      =  0;
-    public static final int MOD_SPACE_PANEL = 10;
+    public static final int MOD_TOOLBAR     =  1;
     
     /** 각 객체들의 공격 타입과 방어 타입 코드 상수 */
     public static final short ATTACKTYPE_NORMAL        =  0;

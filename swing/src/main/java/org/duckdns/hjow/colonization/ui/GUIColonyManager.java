@@ -59,6 +59,8 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.mod.ModDialog;
+import org.duckdns.hjow.colonization.mod.ModToolbar;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.script.UIObject;
@@ -84,7 +86,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
     
     protected transient JEditorPane webNotice;
     
-    protected transient JPanel pnCols, pnNoColonies;
+    protected transient JPanel pnCols, pnNoColonies, pnModToolbarAreas, pnModToolbarAreaLast;
     protected transient DefaultColonyPanel cpNow;
     protected transient JComboBox<Colony> cbxColony;
     protected transient JComboBox<String> cbxSimuCount;
@@ -108,7 +110,8 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
     protected transient JMenuItem menuActionThrPlay, menuFileSave, menuFileLoad, menuFileBackup, menuFileRestore, menuFileReset, menuFileNew, menuFileDel, menuFileConfig, menuFileMods;
     
     protected transient Queue<RefreshRequest> queueRefreshes = new LinkedList<RefreshRequest>();
-    protected transient List<ModDialog> modDialogs = new ArrayList<ModDialog>();
+    protected transient List<ModDialog>  modDialogs  = new ArrayList<ModDialog>();
+    protected transient List<ModToolbar> modToolbars = new ArrayList<ModToolbar>();
     
     protected transient UIObject uiScriptBroker;
     
@@ -363,8 +366,16 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         pnMainCard1.add(pnCenter, BorderLayout.CENTER);
         pnMainCard1.add(pnNorth , BorderLayout.NORTH);
         
+        JPanel pnToolbarNorth = new JPanel();
+        pnToolbarNorth.setLayout(new BorderLayout());
+        pnNorth.add(pnToolbarNorth, BorderLayout.NORTH);
+        
         JToolBar toolbarNorth = new JToolBar();
-        pnNorth.add(toolbarNorth, BorderLayout.NORTH);
+        pnToolbarNorth.add(toolbarNorth, BorderLayout.NORTH);
+        
+        pnModToolbarAreas = new JPanel();
+        pnModToolbarAreas.setLayout(new BorderLayout());
+        pnToolbarNorth.add(pnModToolbarAreas, BorderLayout.CENTER);
         
         btnSaveAs = new JButton(UIManager.getIcon("FileView.floppyDriveIcon"));
         toolbarNorth.add(btnSaveAs);
@@ -1197,6 +1208,11 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         }
         modDialogs.clear();
         
+        for(ModToolbar toolb : modToolbars) {
+        	toolb.dispose();
+        }
+        modToolbars.clear();
+        
         for(Mod mod : modsList) {
             mod.dispose();
         }
@@ -1600,6 +1616,8 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
     @Override
     protected void applyModOnUI() {
         menuMods.removeAll();
+        pnModToolbarAreas.removeAll();
+        pnModToolbarAreaLast = null;
         
         for(final Mod mod : modsList) {
             if(mod.getLocation() == Constants.MOD_DIALOG) {
@@ -1620,6 +1638,17 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
                         dialog.open();
                     }
                 });
+            } else if(mod.getLocation() == Constants.MOD_TOOLBAR) {
+            	ModToolbar toolbar = new ModToolbar(mod);
+            	modToolbars.add(toolbar);
+            	modsEnabled.add(mod);
+            	
+            	if(pnModToolbarAreaLast == null) pnModToolbarAreaLast = pnModToolbarAreas;
+            	JPanel pn = new JPanel();
+            	pn.setLayout(new BorderLayout());
+            	pn.add(toolbar.getComponent(), BorderLayout.CENTER);
+            	pnModToolbarAreaLast.add(pn, BorderLayout.SOUTH);
+            	pnModToolbarAreaLast = pn;
             }
         }
     }

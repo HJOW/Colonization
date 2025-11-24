@@ -1,4 +1,4 @@
-package org.duckdns.hjow.colonization.ui;
+package org.duckdns.hjow.colonization.mod;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -7,7 +7,7 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
