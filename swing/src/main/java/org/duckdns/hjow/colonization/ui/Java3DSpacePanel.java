@@ -16,7 +16,7 @@ import java.awt.*;
 
 /** 함선 위치 현황 출력을 위한 패널 - Java3D 사용 - java.lang.UnsatisfiedLinkError: no j3dcore-ogl in java.library.path 문제로 당분간 사용 X */
 @Deprecated
-public class Java3DSpacePanel extends SpacePanel {
+public class Java3DSpacePanel extends AbstractSpacePanel {
 	private static final long serialVersionUID = -8262391729757987120L;
 	/*
     protected transient Canvas3D canvas;

@@ -19,7 +19,7 @@ import org.duckdns.hjow.commons.ui.graphics.OvalObject2D;
 import org.duckdns.hjow.commons.ui.graphics.TextObject2D;
 
 /** 함선 위치 현황 출력을 위한 패널 - 기본 Swing 의 Graphics 2D 사용 */ // TODO SampleJavaCodes 에 있는 Space3D 예제 참고하여 yaw, pitch (카메라의 방향) 개념 적용
-public class SwingSpacePanel extends SpacePanel {
+public class SwingSpacePanel extends AbstractSpacePanel {
 	private static final long serialVersionUID = 7794697275657421978L;
     public SwingSpacePanel() { super(); }
     

@@ -44,7 +44,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
     	
     	pnSpace    = new SwingSpacePanel();
         // pnSpace    = new Java3DSpacePanel();
-    	pnScreen.add(pnSpace, BorderLayout.CENTER);
+    	pnScreen.add(pnSpace.getComponent(), BorderLayout.CENTER);
     	
     	toolbar = new JToolBar();
     	pnScreen.add(toolbar, BorderLayout.NORTH);
