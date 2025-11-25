@@ -13,6 +13,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.script.ScriptEngine;
 
+import org.duckdns.hjow.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
@@ -77,7 +78,9 @@ public class ColonyClassLoader {
         
         colonyClassList.clear();
         for(Pack p : packs) { 
-            if(p.isEnabled()) colonyClassList.addAll(p.getColonyClasses());
+            if(p.isEnabled()) {
+            	loadClassWrappersOnList(colonyClassList, p.getColonyClasses());
+            }
         }
         try { colonyClassList.add((Class<?>) Class.forName("org.duckdns.hjow.colonization.elements.custom.FreeColony")); } catch(Exception ex) { GlobalLogs.log(ColonyManager.t("java-default-pack not detected.")); }
         
@@ -154,7 +157,11 @@ public class ColonyClassLoader {
         if(facilityClassListFlag) return facilityClassList;
         
         facilityClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) facilityClassList.addAll(p.getFacilityClasses()); }
+        for(Pack p : packs) { 
+        	if(p.isEnabled()) {
+        		loadClassWrappersOnList(facilityClassList, p.getFacilityClasses());
+        	} 
+        }
         
         facilityClassListFlag = true;
         return facilityClassList;
@@ -239,7 +246,7 @@ public class ColonyClassLoader {
         researchClassList.clear();
         for(Pack p : packs) { 
             if(p.isEnabled()) {
-                researchClassList.addAll(p.getResearchClasses()); 
+            	loadClassWrappersOnList(researchClassList, p.getResearchClasses());
             }
         }
         
@@ -255,7 +262,11 @@ public class ColonyClassLoader {
         if(enemyClassListFlag) return enemyClassList;
         
         enemyClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) enemyClassList.addAll(p.getEnemyClasses()); }
+        for(Pack p : packs) {
+        	if(p.isEnabled()) {
+        		loadClassWrappersOnList(enemyClassList, p.getEnemyClasses());
+        	} 
+        }
         
         enemyClassListFlag = true;
         return enemyClassList;
@@ -269,7 +280,11 @@ public class ColonyClassLoader {
         if(shipClassListFlag) return shipClassList;
         
         shipClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) shipClassList.addAll(p.getShipClasses()); }
+        for(Pack p : packs) {
+        	if(p.isEnabled()) {
+        		loadClassWrappersOnList(shipClassList, p.getShipClasses());
+        	} 
+        }
         
         shipClassListFlag = true;
         return shipClassList;
@@ -296,7 +311,11 @@ public class ColonyClassLoader {
         if(stateClassListFlag) return stateClassList;
         
         stateClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) stateClassList.addAll(p.getStateClasses()); }
+        for(Pack p : packs) {
+        	if(p.isEnabled()) {
+        		loadClassWrappersOnList(stateClassList, p.getStateClasses());
+        	} 
+        }
         
         stateClassListFlag = true;
         return stateClassList;
@@ -310,7 +329,11 @@ public class ColonyClassLoader {
         if(productClassListFlag) return productClassList;
         
         productClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) productClassList.addAll(p.getProductClasses()); }
+        for(Pack p : packs) { 
+        	if(p.isEnabled()) {
+        		loadClassWrappersOnList(productClassList, p.getProductClasses());
+        	} 
+        }
         
         productClassListFlag = true;
         return productClassList;
@@ -324,7 +347,11 @@ public class ColonyClassLoader {
         if(policyClassListFlag) return policyClassList;
         
         policyClassList.clear();
-        for(Pack p : packs) { if(p.isEnabled()) policyClassList.addAll(p.getPolicyClasses()); }
+        for(Pack p : packs) { 
+        	if(p.isEnabled()) {
+        		loadClassWrappersOnList(policyClassList, p.getPolicyClasses());
+        	} 
+        }
         
         policyClassListFlag = true;
         return policyClassList;
@@ -611,16 +638,24 @@ public class ColonyClassLoader {
         if(! pack.isEnabled()) return;
         
         if(pack.getColonyClasses() != null) {
-            colonyClassList.addAll(pack.getColonyClasses());
+        	loadClassWrappersOnList(colonyClassList, pack.getColonyClasses());
             colonyInfoListFlag = false;
         }
         
-        if(pack.getFacilityClasses() != null) facilityClassList.addAll(pack.getFacilityClasses());
-        if(pack.getResearchClasses() != null) researchClassList.addAll(pack.getResearchClasses());
-        if(pack.getEnemyClasses()    != null) enemyClassList.addAll(pack.getEnemyClasses());
-        if(pack.getStateClasses()    != null) stateClassList.addAll(pack.getStateClasses());
-        if(pack.getProductClasses()  != null) productClassList.addAll(pack.getProductClasses());
-        if(pack.getPolicyClasses()   != null) policyClassList.addAll(pack.getPolicyClasses());
+        if(pack.getFacilityClasses() != null) loadClassWrappersOnList(facilityClassList, pack.getFacilityClasses());
+        if(pack.getResearchClasses() != null) loadClassWrappersOnList(researchClassList, pack.getResearchClasses());
+        if(pack.getEnemyClasses()    != null) loadClassWrappersOnList(enemyClassList   , pack.getEnemyClasses());
+        if(pack.getStateClasses()    != null) loadClassWrappersOnList(stateClassList   , pack.getStateClasses());
+        if(pack.getProductClasses()  != null) loadClassWrappersOnList(productClassList , pack.getProductClasses());
+        if(pack.getPolicyClasses()   != null) loadClassWrappersOnList(policyClassList  , pack.getPolicyClasses());
+    }
+    
+    /** ClassWrapper 리스트 객체에서 클래스들을 모두 불러와 Class 리스트에 탑재 */
+    public static void loadClassWrappersOnList(List<Class<?>> list, List<ClassWrapper> wrappers) {
+    	for(ClassWrapper cls : wrappers) {
+    		Class<?> classOne = cls.getWrappedClass();
+    		if(! list.contains(classOne)) list.add(classOne);
+    	}
     }
     
     /** 등록된 Pack 객체들 리턴 (새 List 객체로 리턴) */

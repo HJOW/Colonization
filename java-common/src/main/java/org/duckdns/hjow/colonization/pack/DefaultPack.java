@@ -3,6 +3,7 @@ package org.duckdns.hjow.colonization.pack;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.duckdns.hjow.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.ColonyManager;
 
 /** 기본 형태의 Pack */
@@ -15,14 +16,14 @@ public class DefaultPack implements Pack {
     protected String email  = getDefaultEmail();
     protected boolean enabled = true;
     
-    protected List<Class<?>> colonyClasses   = new ArrayList<Class<?>>();
-    protected List<Class<?>> facilityClasses = new ArrayList<Class<?>>();
-    protected List<Class<?>> researchClasses = new ArrayList<Class<?>>();
-    protected List<Class<?>> enemyClasses    = new ArrayList<Class<?>>();
-    protected List<Class<?>> shipClasses     = new ArrayList<Class<?>>();
-    protected List<Class<?>> stateClasses    = new ArrayList<Class<?>>();
-    protected List<Class<?>> productClasses  = new ArrayList<Class<?>>();
-    protected List<Class<?>> policyClasses   = new ArrayList<Class<?>>();
+    protected List<ClassWrapper> colonyClasses   = new ArrayList<ClassWrapper>();
+    protected List<ClassWrapper> facilityClasses = new ArrayList<ClassWrapper>();
+    protected List<ClassWrapper> researchClasses = new ArrayList<ClassWrapper>();
+    protected List<ClassWrapper> enemyClasses    = new ArrayList<ClassWrapper>();
+    protected List<ClassWrapper> shipClasses     = new ArrayList<ClassWrapper>();
+    protected List<ClassWrapper> stateClasses    = new ArrayList<ClassWrapper>();
+    protected List<ClassWrapper> productClasses  = new ArrayList<ClassWrapper>();
+    protected List<ClassWrapper> policyClasses   = new ArrayList<ClassWrapper>();
     protected List<String>   featureKeywords = new ArrayList<String>();
     
     public DefaultPack() { init(); }
@@ -34,45 +35,45 @@ public class DefaultPack implements Pack {
     protected String getDefaultEmail()  { return ""; }
     
     @Override
-    public List<Class<?>> getColonyClasses() {
+    public List<ClassWrapper> getColonyClasses() {
         return colonyClasses;
     }
     @Override
-    public List<Class<?>> getFacilityClasses() {
+    public List<ClassWrapper> getFacilityClasses() {
         return facilityClasses;
     }
     @Override
-    public List<Class<?>> getResearchClasses() {
+    public List<ClassWrapper> getResearchClasses() {
         return researchClasses;
     }
     @Override
-    public List<Class<?>> getEnemyClasses() {
+    public List<ClassWrapper> getEnemyClasses() {
         return enemyClasses;
     }
     @Override
-    public List<Class<?>> getStateClasses() {
+    public List<ClassWrapper> getStateClasses() {
         return stateClasses;
     }
     @Override
-    public List<Class<?>> getShipClasses() {
+    public List<ClassWrapper> getShipClasses() {
 		return shipClasses;
 	}
-	public void setShipClasses(List<Class<?>> shipClasses) {
+	public void setShipClasses(List<ClassWrapper> shipClasses) {
 		this.shipClasses = shipClasses;
 	}
-	public void setColonyClasses(List<Class<?>> colonyClasses) {
+	public void setColonyClasses(List<ClassWrapper> colonyClasses) {
         this.colonyClasses = colonyClasses;
     }
-    public void setFacilityClasses(List<Class<?>> facilityClasses) {
+    public void setFacilityClasses(List<ClassWrapper> facilityClasses) {
         this.facilityClasses = facilityClasses;
     }
-    public void setResearchClasses(List<Class<?>> researchClasses) {
+    public void setResearchClasses(List<ClassWrapper> researchClasses) {
         this.researchClasses = researchClasses;
     }
-    public void setEnemyClasses(List<Class<?>> enemyClasses) {
+    public void setEnemyClasses(List<ClassWrapper> enemyClasses) {
         this.enemyClasses = enemyClasses;
     }
-    public void setStateClasses(List<Class<?>> stateClasses) {
+    public void setStateClasses(List<ClassWrapper> stateClasses) {
         this.stateClasses = stateClasses;
     }
 
@@ -127,18 +128,18 @@ public class DefaultPack implements Pack {
         }
     }
     @Override
-    public List<Class<?>> getProductClasses() {
+    public List<ClassWrapper> getProductClasses() {
         return productClasses;
     }
     
-    public void setProductClasses(List<Class<?>> productClasses) {
+    public void setProductClasses(List<ClassWrapper> productClasses) {
         this.productClasses = productClasses;
     }
     
-    public List<Class<?>> getPolicyClasses() {
+    public List<ClassWrapper> getPolicyClasses() {
         return policyClasses;
     }
-    public void setPolicyClasses(List<Class<?>> policyClasses) {
+    public void setPolicyClasses(List<ClassWrapper> policyClasses) {
         this.policyClasses = policyClasses;
     }
     @Override
