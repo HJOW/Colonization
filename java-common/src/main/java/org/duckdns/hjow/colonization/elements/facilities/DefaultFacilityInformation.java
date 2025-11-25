@@ -4,8 +4,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.duckdns.hjow.classwrapper.ClassWrapper;
-import org.duckdns.hjow.classwrapper.SimpleClassWrapper;
+import org.duckdns.hjow.commons.util.classwrapper.ClassWrapper;
+import org.duckdns.hjow.commons.util.classwrapper.SimpleClassWrapper;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Colony;

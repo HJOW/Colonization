@@ -3,7 +3,6 @@ package org.duckdns.hjow.colonization.console;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.duckdns.hjow.classwrapper.ClassLoaderManager;
 import org.duckdns.hjow.colonization.ColonizationMainClass;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -46,7 +45,7 @@ public class ConsoleColonization implements ColonizationMainClass {
 
     @Override
     public void exit() {
-    	ClassLoaderManager.closeAll();
+    	ClassUtil.closeAll();
         System.exit(0);
     }
     
@@ -54,4 +53,9 @@ public class ConsoleColonization implements ColonizationMainClass {
     protected void preWorks(Map<String, String> args) {
         new PreWorks(args).work();
     }
+
+	@Override
+	public void open(ColonizationMainClass superInstance) {
+		run();
+	}
 }

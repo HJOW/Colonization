@@ -1,6 +1,6 @@
 package org.duckdns.hjow.colonization.pack;
 
-import org.duckdns.hjow.classwrapper.SimpleClassWrapper;
+import org.duckdns.hjow.commons.util.classwrapper.SimpleClassWrapper;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.NormalColony;
 import org.duckdns.hjow.colonization.elements.facilities.Academy;

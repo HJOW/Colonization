@@ -2,8 +2,8 @@ package org.duckdns.hjow.colonization.elements;
 
 import java.io.Serializable;
 
-import org.duckdns.hjow.classwrapper.ClassWrapper;
-import org.duckdns.hjow.classwrapper.SimpleClassWrapper;
+import org.duckdns.hjow.commons.util.classwrapper.ClassWrapper;
+import org.duckdns.hjow.commons.util.classwrapper.SimpleClassWrapper;
 
 /** 정착지 시나리오 정보 */
 public class ColonyInformation implements Serializable {

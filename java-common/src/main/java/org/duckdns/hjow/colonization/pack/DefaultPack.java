@@ -3,7 +3,7 @@ package org.duckdns.hjow.colonization.pack;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.duckdns.hjow.classwrapper.ClassWrapper;
+import org.duckdns.hjow.commons.util.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.ColonyManager;
 
 /** 기본 형태의 Pack */

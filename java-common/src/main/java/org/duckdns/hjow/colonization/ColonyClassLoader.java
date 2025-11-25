@@ -13,8 +13,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.script.ScriptEngine;
 
-import org.duckdns.hjow.classwrapper.ClassLoaderManager;
-import org.duckdns.hjow.classwrapper.ClassWrapper;
+import org.duckdns.hjow.commons.util.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
@@ -626,7 +625,7 @@ public class ColonyClassLoader {
         
         URLClassLoader loader = null;
         try {
-        	loader = ClassLoaderManager.newClassLoader(urls, ColonyClassLoader.class.getClassLoader());
+        	loader = ClassUtil.newClassLoader(urls, ColonyClassLoader.class.getClassLoader());
             Class<?> classObj = loader.loadClass(className);
             return classObj;
         } finally {
