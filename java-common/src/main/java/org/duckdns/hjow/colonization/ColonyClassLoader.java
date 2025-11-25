@@ -473,16 +473,7 @@ public class ColonyClassLoader {
         File packClassFile = getLibPackClassFile();
         if(packClassFile.exists()) {
             try {
-                String packClassContent = FileUtil.readString(packClassFile, "UTF-8");
-                packClassContent = DataUtil.remove65279(packClassContent);
-                StringTokenizer lineTokenizer = new StringTokenizer(packClassContent, "\n");
-                while(lineTokenizer.hasMoreTokens()) {
-                    String line = lineTokenizer.nextToken().trim();
-                    if(line.startsWith("#")) continue;
-                    if(DataUtil.isEmpty(line)) continue;
-                    processAddClass(line, man);
-                }
-                
+            	loadClassListFile(packClassFile, man);
             } catch(Exception ex) {
                 GlobalLogs.processExceptionOccured(ex, false);
             }
@@ -496,6 +487,25 @@ public class ColonyClassLoader {
         
         // 스크립트 Facility 적용
         loadScriptFacilities(cfg, man);
+    }
+    
+    /** 클래스명 명시한 파일 (예: packs.txt) 불러오기 */
+    public static void loadClassListFile(File f, ColonyManager man) {
+    	try {
+            String packClassContent = FileUtil.readString(f, "UTF-8");
+            packClassContent = DataUtil.remove65279(packClassContent);
+            StringTokenizer lineTokenizer = new StringTokenizer(packClassContent, "\n");
+            while(lineTokenizer.hasMoreTokens()) {
+                String line = lineTokenizer.nextToken().trim();
+                if(line.startsWith("#")) continue; // # 으로 시작하는 줄은 주석으로 간주 (단, 중간 이후에 #이 들어가는 경우는 처리하지 못함)
+                if(DataUtil.isEmpty(line)) continue;
+                processAddClass(line, man);
+            }
+    	} catch(RuntimeException ex) {
+    		throw ex;
+        } catch(Throwable ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
     }
 
     /** 클래스명 체크 */
@@ -618,6 +628,11 @@ public class ColonyClassLoader {
         List<Pack> newList = new ArrayList<Pack>();
         newList.addAll(packs);
         return newList;
+    }
+    
+    /** 이미 설치된 Pack 인지 확인 */
+    public static boolean isInstalledPack(Pack p) {
+    	return packs.contains(p);
     }
     
     /** 기본 제공 Pack 불러오기 */

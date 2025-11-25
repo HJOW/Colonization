@@ -24,6 +24,7 @@ import org.duckdns.hjow.colonization.ColonyManagerConfig;
 import org.duckdns.hjow.colonization.DefaultColonyManagerConfig;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
+import org.duckdns.hjow.colonization.pack.Library;
 import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.colonization.web.accounts.Account;
 import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
@@ -76,9 +77,17 @@ public abstract class CommonServlet extends HttpServlet {
                 try {
                     ColonyManagerConfig child = (ColonyManagerConfig) o;
                     Class<?> classObj = ColonyClassLoader.loadClassFrom(child);
-                    Pack packOne = (Pack) classObj.newInstance();
+                    Object obj = classObj.newInstance();
                     
-                    if(! packs.contains(packOne)) packs.add(packOne);
+                    if(obj instanceof Pack) {
+                    	Pack packOne = (Pack) obj;
+                        if(! packs.contains(packOne)) packs.add(packOne);
+                    } else if(obj instanceof Library) {
+                    	Library libOne = (Library) obj;
+                    	for(Pack p : libOne.getPacks()) {
+                    		if(! packs.contains(p)) packs.add(p);
+                    	}
+                    }
                 } catch(Exception ex) {
                     GlobalLogs.processExceptionOccured(ex, false);
                 }
@@ -86,7 +95,7 @@ public abstract class CommonServlet extends HttpServlet {
             
             for(Pack p : packs) {
                 try {
-                    if(! packs.contains(p)) ColonyClassLoader.loadPack(p);
+                    if(! ColonyClassLoader.isInstalledPack(p)) ColonyClassLoader.loadPack(p);
                 } catch(Exception ex) {
                     GlobalLogs.processExceptionOccured(ex, false);
                 }
