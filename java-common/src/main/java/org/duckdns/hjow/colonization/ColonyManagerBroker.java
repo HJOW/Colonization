@@ -217,4 +217,9 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
 	public List<Mod> getMods() {
 		return new ArrayList<Mod>(); // 접근 차단
 	}
+
+	@Override
+	public String translate(String str) {
+		return originals.translate(str);
+	}
 }

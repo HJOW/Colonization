@@ -1001,6 +1001,11 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         else System.exit(0);
     }
     
+    @Override
+	public String translate(String str) {
+		return t(str);
+	}
+    
     /** 홈 디렉토리 반환 */
     public static File getHomeDir(String programNameMain, String programNameSub) {
         if(programNameMain == null) throw new NullPointerException("programNameMain cannot be null !");

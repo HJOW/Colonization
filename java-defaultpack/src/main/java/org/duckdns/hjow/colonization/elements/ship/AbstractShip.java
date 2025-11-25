@@ -685,6 +685,11 @@ public abstract class AbstractShip implements Ship {
 		setY(coordinate.getY());
 		setZ(coordinate.getZ());
 	}
+	
+	@Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
     
     /** 함선 명칭 */
     public static String getMetaName() {

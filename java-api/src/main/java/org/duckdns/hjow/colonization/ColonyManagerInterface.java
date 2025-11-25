@@ -66,4 +66,7 @@ public interface ColonyManagerInterface extends Disposeable {
     
     /** Mods 들 목록 반환 */
     public List<Mod> getMods();
+    
+    /** 탑재된 언어 스트링 테이블로 번역 */
+    public String translate(String str);
 }

@@ -268,6 +268,11 @@ public class DefaultLoan implements Loan {
     	}
     }
     
+    @Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
+    
     /** 사용 가능한 대출 목록 만들기 */
     public static List<Loan> makeAvailableLoanListRandom(Colony col) {
         List<Loan> loans = new ArrayList<Loan>();

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyClassLoader;
@@ -1596,6 +1597,25 @@ public abstract class AbstractCity implements City {
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
+    }
+    
+    @Override
+    public String describeForAI() {
+    	StringBuilder res = new StringBuilder("도시 \"" + getName() + "\"");
+    	res = res.append("\n").append("    ").append("이 도시에는 다음과 같은 건물과 시설들이 있습니다.");
+    	for(Facility o : getFacility()) {
+    		String desc = o.describeForAI();
+    		if(DataUtil.isEmpty(desc)) {
+    			res = res.append("\n").append("        ").append("시설 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
+    		} else {
+    			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+        		while(lineTokenizer.hasMoreTokens()) {
+        			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+        		}
+    		}
+    	}
+    	
+    	return res.toString();
     }
     
     /** 도시 건설 비용 */

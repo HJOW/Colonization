@@ -479,6 +479,11 @@ public abstract class AbstractFacility implements Facility {
     	return null;
     }
     
+    @Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
+    
     public static String getFacilityName() {
         return "";
     }

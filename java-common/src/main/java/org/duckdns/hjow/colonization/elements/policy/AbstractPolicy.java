@@ -149,4 +149,9 @@ public abstract class AbstractPolicy implements Policy {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
     }
+    
+    @Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
 }

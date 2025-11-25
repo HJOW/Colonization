@@ -157,6 +157,11 @@ public abstract class AbstractState implements State {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
     }
+    
+    @Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
 
     protected static List<Class<?>> stateClasses = ColonyClassLoader.stateClasses();
     

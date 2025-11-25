@@ -622,4 +622,9 @@ public class DefaultCitizen implements Citizen {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
     }
+    
+    @Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
 }

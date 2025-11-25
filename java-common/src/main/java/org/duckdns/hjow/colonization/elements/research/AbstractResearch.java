@@ -308,4 +308,9 @@ public abstract class AbstractResearch implements Research {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
     }
+    
+    @Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
 }

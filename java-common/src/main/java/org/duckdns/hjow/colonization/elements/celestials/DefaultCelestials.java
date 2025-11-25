@@ -317,6 +317,11 @@ public class DefaultCelestials implements Celestials {
     	}
     }
 	
+	@Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
+	
 	/** 랜덤 천체 생성 */
 	public static Celestials createRandom(long stdx, long stdy, long stdz, int minDist, int maxDist, int grade) {
 		Celestials c = new DefaultCelestials();

@@ -62,4 +62,7 @@ public interface ColonyElements extends Serializable, Disposeable, JsonCompatibl
     public void markAsRefresh(boolean f);
     /** UI 새로고침 필요 표시 혹은 표시 제거, 자기자신 뿐만 아니라 내부 소속 객체 전체에 적용 */
     public void markAsRefreshChildren(boolean f);
+    
+    /** AI 요청에 싣을 이 객체의 설명 문구 반환 */
+    public String describeForAI();
 }

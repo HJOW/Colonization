@@ -366,4 +366,9 @@ public abstract class AbstractEnemy implements Enemy {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
     }
+	
+	@Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
 }

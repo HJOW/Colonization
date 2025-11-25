@@ -158,6 +158,11 @@ public abstract class AbstractProduct implements Product {
     	}
     }
     
+    @Override
+    public String describeForAI() {
+    	return ""; // TODO
+    }
+    
     private static final List<Product> productTypeList = new Vector<Product>();
     private static synchronized void prepareProductTypeList() {
         productTypeList.clear();

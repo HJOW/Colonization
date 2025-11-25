@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
@@ -42,6 +43,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.stream.SimultaneousWork;
 import org.duckdns.hjow.commons.stream.SingleAction;
 import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.SecurityUtil;
 
@@ -1538,6 +1540,45 @@ public abstract class AbstractColony implements Colony {
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
+    }
+    
+    @Override
+    public String describeForAI() {
+    	StringBuilder res = new StringBuilder("정착지 \"" + getName() + "\"");
+    	res = res.append("\n").append("    ").append("이 정착지에는 예산이 ").append(getMoney()).append(" 있습니다.");
+    	res = res.append("\n").append("    ").append("이 정착지에는 다음과 같은 도시들이 개설되어 있습니다.");
+    	
+    	for(City o : getCities()) {
+    		String desc = o.describeForAI();
+    		if(DataUtil.isEmpty(desc)) {
+    			res = res.append("\n").append("        ").append("도시 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
+    		} else {
+    			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+        		while(lineTokenizer.hasMoreTokens()) {
+        			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+        		}
+    		}
+    	}
+    	
+    	res = res.append("\n").append("    ").append("이 정착지에는 다음과 같은 기술들을 보유하고 있습니다.");
+    	for(Research o : getResearches()) {
+    		if(o.getLevel() <= 0) continue;
+    		
+    		String desc = o.describeForAI();
+    		
+    		if(DataUtil.isEmpty(desc)) {
+    			res = res.append("\n").append("        ").append("기술 \"" + o.getName() + "\" (레벨 " + o.getLevel() + ", 상세정보를 조회할 수 없습니다.)");
+    		} else {
+    			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+        		while(lineTokenizer.hasMoreTokens()) {
+        			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+        		}
+    		}
+    	}
+    	
+    	res = res.append("\n").append("여기까지, 정착지 \"" + getName() + "\" 의 브리핑을 마칩니다.");
+    			
+    	return res.toString();
     }
     
     public static String getColonyClassName() {
