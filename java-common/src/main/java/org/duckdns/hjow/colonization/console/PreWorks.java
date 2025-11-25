@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.duckdns.hjow.classwrapper.ClassLoaderManager;
 import org.duckdns.hjow.colonization.ColonyClassLoader;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -286,12 +287,7 @@ public class PreWorks {
             }
         }); // TODO 여러 jar 파일이 들어가면 인식을 못함.
         
-        URL[] urls = new URL[lists.length];
-        for(int idx=0; idx<urls.length; idx++) {
-            urls[idx] = lists[idx].toURI().toURL();
-        }
-        
-        return new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+        return ClassLoaderManager.newClassLoader(lists);
     }
     
     /** 기타 사항 준비 */

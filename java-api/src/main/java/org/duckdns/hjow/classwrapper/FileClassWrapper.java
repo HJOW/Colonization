@@ -2,7 +2,6 @@ package org.duckdns.hjow.classwrapper;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URL;
 import java.net.URLClassLoader;
 
 import org.duckdns.hjow.commons.util.ClassUtil;
@@ -35,7 +34,7 @@ public class FileClassWrapper implements ClassWrapper, Serializable {
 		URLClassLoader loader = null;
 		Class<?> classObject = null;
 		try {
-			loader = new URLClassLoader(new URL[] { getFile().toURI().toURL() }, Thread.currentThread().getContextClassLoader());
+			loader = ClassLoaderManager.newClassLoader(getFile());
 			classObject = loader.loadClass(getClassName());
 		} catch(Exception ex) {
 			throw new RuntimeException(ex.getMessage(), ex);

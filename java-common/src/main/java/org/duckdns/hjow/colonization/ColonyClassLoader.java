@@ -13,6 +13,7 @@ import java.util.zip.GZIPInputStream;
 
 import javax.script.ScriptEngine;
 
+import org.duckdns.hjow.classwrapper.ClassLoaderManager;
 import org.duckdns.hjow.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -36,7 +37,7 @@ public class ColonyClassLoader {
     private static List<Class<?>> modClasses = new ArrayList<Class<?>>();
     
     private static final List<ColonyInformation> colonyInfoList     = new Vector<ColonyInformation>();
-    private static       boolean                 colonyInfoListFlag = false; 
+    private static       boolean                 colonyInfoListFlag = false;
     
     /** 정착지 시나리오 정보들을 반환, 타입명과 제목, 설명, 클래스가 포함 */
     @SuppressWarnings("unchecked")
@@ -625,7 +626,7 @@ public class ColonyClassLoader {
         
         URLClassLoader loader = null;
         try {
-            loader = new URLClassLoader(urls, ColonyClassLoader.class.getClassLoader());
+        	loader = ClassLoaderManager.newClassLoader(urls, ColonyClassLoader.class.getClassLoader());
             Class<?> classObj = loader.loadClass(className);
             return classObj;
         } finally {
