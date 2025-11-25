@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,18 +47,15 @@ public class GeminiSession implements Disposeable {
     }
     
     /** 채팅 요청 전송하고 응답 반환 */
-    public JsonObject request(Map<String, ?> questions) {
+    public JsonObject request(JsonObject jsonObject) {
         InputStream       inp1 = null;
         InputStreamReader inp2 = null;
         BufferedReader    inp3 = null;
         StringBuilder responseCollector = new StringBuilder("");
         boolean firsts = true;
         try {
-        	JsonObject jsonObject = convertObject(questions);
         	String json = jsonObject.toJSON();
-        	
         	jsonObject = null;
-            questions  = null;
             
             StringTokenizer lineTokenizer = new StringTokenizer(json, "\n");
             
@@ -164,27 +159,21 @@ public class GeminiSession implements Disposeable {
 		return arr;
 	}
 	
-	/** 질문 패키지 준비 */
-    public static HashMap<String, Object> buildRequest(String question) {
-        HashMap<String, Object> roots = new HashMap<String, Object>();
-        
-        ArrayList<Object> contentArray = new ArrayList<Object>();
+	/** 질문 패키지 생성 (질문 문장을 Gemini API에 맞도록 구조화) (참고 : https://ai.google.dev/api?hl=ko) - 대화 맥락 보관 기능 없음 - 매번 새 채팅이 됨 */
+    public static JsonObject buildRequest(String question) {
+    	JsonArray contentArray = new JsonArray();
+    	contentArray.add(new GeminiSpeak("user", question).toJson());
+        return buildRequest(contentArray);
+    }
+    
+    /** 질문 패키지 생성 (질문 문장을 Gemini API에 맞도록 구조화) (참고 : https://ai.google.dev/api?hl=ko) - 매번 채팅 시 채팅내용 전체를 매번 보내야 하며, buildContent 메소드를 사용하여 각 채팅 대화상대의 컨텐츠를 다 만들어 넣어야 함 */
+    public static JsonObject buildRequest(JsonArray contentArray) {
+        JsonObject roots = new JsonObject();
         roots.put("contents", contentArray);
-        
-        HashMap<String, Object> contentOne = new HashMap<String, Object>();
-        contentArray.add(contentOne);
-        
-        ArrayList<Object> parts = new ArrayList<Object>();
-        contentOne.put("parts", parts);
-        
-        HashMap<String, Object> partOne = new HashMap<String, Object>();
-        parts.add(partOne);
-        
-        partOne.put("text", question);
         return roots;
     }
     
-    /** 응답 JSON 에서, 답변 텍스트 추출 */
+    /** 응답 JSON 에서, 답변 텍스트 추출 (참고 : https://ai.google.dev/api?hl=ko) */
     public static String getResponseMessage(JsonObject responseJson) {
     	JsonArray  candidates   = ((JsonArray) responseJson.get("candidates"));
         JsonObject candidateOne = (JsonObject) candidates.get(0);
