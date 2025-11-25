@@ -1,9 +1,12 @@
 package org.duckdns.hjow.colonization.constants;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.duckdns.hjow.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.commons.util.Base64Util;
 import org.duckdns.hjow.commons.util.HexUtil;
@@ -43,5 +46,14 @@ public class StaticMethods {
     /** 인코딩된 문자열 디코딩 */
     public static String decodeString(String str) {
     	try { return new String(decode(str), "UTF-8"); } catch(UnsupportedEncodingException e) { throw new RuntimeException(e.getMessage(), e); }
+    }
+    
+    /** ClassWrapper 들의 List 로부터 Class 리스트 생성 */ // TODO 공통 lib 로 이관
+    public static List<Class<?>> getClassListsFrom(List<ClassWrapper> wrappers) {
+    	List<Class<?>> list = new ArrayList<Class<?>>();
+    	for(ClassWrapper cls : wrappers) {
+    		list.add(cls.getWrappedClass());
+    	}
+    	return list;
     }
 }

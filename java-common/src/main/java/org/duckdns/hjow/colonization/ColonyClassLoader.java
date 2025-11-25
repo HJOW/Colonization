@@ -39,7 +39,8 @@ public class ColonyClassLoader {
     private static       boolean                 colonyInfoListFlag = false; 
     
     /** 정착지 시나리오 정보들을 반환, 타입명과 제목, 설명, 클래스가 포함 */
-    public static synchronized List<ColonyInformation> colonyInfos() {
+    @SuppressWarnings("unchecked")
+	public static synchronized List<ColonyInformation> colonyInfos() {
         if(colonyInfoListFlag) return colonyInfoList;
         
         colonyInfoList.clear();
@@ -59,7 +60,7 @@ public class ColonyClassLoader {
                 method = classOne.getMethod("getAvailableDifficulties");
                 info.setDifficulties((int[]) method.invoke(null));
                 
-                info.setColonyClass(classOne);
+                info.setColonyClass((Class<? extends Colony>) classOne);
                 if(! colonyInfoList.contains(info)) colonyInfoList.add(info);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.city.NormalCity;
 import org.duckdns.hjow.colonization.elements.facilities.CapsuleBusStation;
@@ -66,7 +67,8 @@ public final class NormalColony extends AbstractColony {
     public boolean supportedFacility(FacilityInformation info) {
         if(info == null) return false;
         if(parentPack == null) parentPack = new BundledPack(); // 리플렉션을 통해 객체를 생성하면 필드 기본값이 안타는 현상 대응
-        return (parentPack.getFacilityClasses().contains(info.getFacilityClass()));
+        
+        return (StaticMethods.getClassListsFrom(parentPack.getFacilityClasses()).contains(info.getFacilityClass()));
     }
     
     @Override
@@ -75,7 +77,7 @@ public final class NormalColony extends AbstractColony {
         Research res = ResearchManager.createResearchInstance(researchTypeName);
         if(res == null) return false;
         if(parentPack == null) parentPack = new BundledPack(); // 리플렉션을 통해 객체를 생성하면 필드 기본값이 안타는 현상 대응
-        return (parentPack.getResearchClasses().contains(res.getClass()));
+        return (StaticMethods.getClassListsFrom(parentPack.getResearchClasses()).contains(res.getClass()));
     }
     
     /** 새 도시를 생성 */

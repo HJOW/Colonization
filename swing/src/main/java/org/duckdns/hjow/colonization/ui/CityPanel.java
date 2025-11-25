@@ -286,6 +286,7 @@ public class CityPanel extends JPanel implements ColonyElementPanel {
         	superInstance.alert(ColonyManager.t("건설 가능한 시설이 없습니다."));
         	dialogNewFac.dispose();
         	dialogNewFac = null;
+        	return;
         }
         
         dialogNewFac.setVisible(true);

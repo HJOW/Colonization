@@ -4,6 +4,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.duckdns.hjow.classwrapper.ClassWrapper;
+import org.duckdns.hjow.classwrapper.SimpleClassWrapper;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -24,7 +26,7 @@ public class DefaultFacilityInformation implements FacilityInformation {
     protected int buildingCycle = 1200;
     protected int uniqueGrade = AbstractFacility.FACILITY_UNIQUE_GRADE_NONE;
     protected boolean scriptBasedFacility = false;
-    protected Class<?> facilityClass;
+    protected ClassWrapper facilityClassWrapper;
     public DefaultFacilityInformation() {}
     public DefaultFacilityInformation(Class<?> facilityClass) {
         this();
@@ -106,7 +108,7 @@ public class DefaultFacilityInformation implements FacilityInformation {
         return description;
     }
     public Class<?> getFacilityClass() {
-        return facilityClass;
+        return facilityClassWrapper.getWrappedClass();
     }
     public void setName(String name) {
         this.name = name;
@@ -115,9 +117,15 @@ public class DefaultFacilityInformation implements FacilityInformation {
         this.description = description;
     }
     public void setFacilityClass(Class<?> facilityClass) {
-        this.facilityClass = facilityClass;
+        this.facilityClassWrapper = new SimpleClassWrapper(facilityClass);
     }
-    public Long getPrice() {
+    public void setFacilityClassWrapper(ClassWrapper wrapper) {
+    	this.facilityClassWrapper = wrapper;
+    }
+    public ClassWrapper getFacilityClassWrapper() {
+		return facilityClassWrapper;
+	}
+	public Long getPrice() {
         return price;
     }
     public int getBuildingCycle() {
@@ -156,7 +164,7 @@ public class DefaultFacilityInformation implements FacilityInformation {
     @SuppressWarnings("unchecked")
     public List<ResearchCondition> getResearchCoditions(Colony col) {
         try {
-            Method mthd = facilityClass.getMethod("getResearchCoditions", Colony.class);
+            Method mthd = getFacilityClass().getMethod("getResearchCoditions", Colony.class);
             if(mthd == null) return new ArrayList<ResearchCondition>();
             
             return (List<ResearchCondition>) mthd.invoke(null, col);
@@ -194,7 +202,7 @@ public class DefaultFacilityInformation implements FacilityInformation {
             }
             
             // 각 시설 별 따로 지정된 건설 가능여부 검사
-            Method mthd = facilityClass.getMethod("isBuildAvail", Colony.class, City.class);
+            Method mthd = getFacilityClass().getMethod("isBuildAvail", Colony.class, City.class);
             reason = (String) mthd.invoke(null, col, city);
             if(reason != null) return reason;
             
@@ -219,7 +227,7 @@ public class DefaultFacilityInformation implements FacilityInformation {
     
     /** 이 시설이 차지하는 공간 크기 반환 */
     public int getSpaceSize() {
-        try { return ((Facility) facilityClass.newInstance()).getSpaceSize(); } catch(Exception ex) { throw new RuntimeException(ex.getMessage(), ex); }
+        try { return ((Facility) getFacilityClass().newInstance()).getSpaceSize(); } catch(Exception ex) { throw new RuntimeException(ex.getMessage(), ex); }
     }
     public int getUniqueGrade() {
         return uniqueGrade;

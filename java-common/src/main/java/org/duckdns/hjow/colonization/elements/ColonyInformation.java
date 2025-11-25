@@ -2,11 +2,14 @@ package org.duckdns.hjow.colonization.elements;
 
 import java.io.Serializable;
 
+import org.duckdns.hjow.classwrapper.ClassWrapper;
+import org.duckdns.hjow.classwrapper.SimpleClassWrapper;
+
 /** 정착지 시나리오 정보 */
 public class ColonyInformation implements Serializable {
     private static final long serialVersionUID = -764866136990865870L;
     protected String name, description, title;
-    protected Class<?> colonyClass;
+    protected ClassWrapper colonyClassWrapper;
     protected int[] difficulties;
     
     public ColonyInformation() {
@@ -26,8 +29,9 @@ public class ColonyInformation implements Serializable {
         return title;
     }
 
-    public Class<?> getColonyClass() {
-        return colonyClass;
+    @SuppressWarnings("unchecked")
+	public Class<? extends Colony> getColonyClass() {
+        return (Class<? extends Colony>) colonyClassWrapper.getWrappedClass();
     }
 
     public void setName(String name) {
@@ -42,11 +46,19 @@ public class ColonyInformation implements Serializable {
         this.title = title;
     }
 
-    public void setColonyClass(Class<?> colonyClass) {
-        this.colonyClass = colonyClass;
+    public void setColonyClass(Class<? extends Colony> colonyClass) {
+        this.colonyClassWrapper = new SimpleClassWrapper(colonyClass);
     }
     
-    public int[] getDifficulties() {
+    public ClassWrapper getColonyClassWrapper() {
+		return colonyClassWrapper;
+	}
+
+	public void setColonyClassWrapper(ClassWrapper colonyClassWrapper) {
+		this.colonyClassWrapper = colonyClassWrapper;
+	}
+
+	public int[] getDifficulties() {
         return difficulties;
     }
 
