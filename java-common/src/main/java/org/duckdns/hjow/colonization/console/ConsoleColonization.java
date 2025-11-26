@@ -45,7 +45,7 @@ public class ConsoleColonization implements ColonizationMainClass {
 
     @Override
     public void exit() {
-    	ClassUtil.closeAll();
+    	ClassUtil.closeAllURLClassLoaders();
         System.exit(0);
     }
     

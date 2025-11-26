@@ -43,6 +43,7 @@ import org.duckdns.hjow.commons.script.MathObject;
 import org.duckdns.hjow.commons.script.ScriptPatternDetector;
 import org.duckdns.hjow.commons.script.ScriptUtil;
 import org.duckdns.hjow.commons.script.SecurityObject;
+import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 
@@ -1002,6 +1003,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         dispose(false);
         
         GlobalLogs.log("Exit");
+        ClassUtil.closeAllURLClassLoaders();
         if(superInstance != null) superInstance.exit();
         else System.exit(0);
     }
