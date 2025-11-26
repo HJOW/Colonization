@@ -208,6 +208,11 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         return getHomeDir("colonization", "scripts");
     }
     
+    /** 정착지 Assist 기본 경로 반환 */
+    public File getColonyAssistRootDirectory() {
+        return getHomeDir("colonization", "assist");
+    }
+    
     /** 정착지 lib 기본 경로 반환 */
     public File getColonyLibRootDirectory() {
         return getHomeDir("colonization", "lib");
@@ -1349,7 +1354,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     public static final int  VERSION_MAIN = 0;
     public static final int  VERSION_SUB1 = 0;
     public static final int  VERSION_SUB2 = 1;
-    public static final long BUILD_NO     = 9L;
+    public static final long BUILD_NO     = 10L;
     
     /** 숫자 형식 맞추기 위한 객체들 */
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");

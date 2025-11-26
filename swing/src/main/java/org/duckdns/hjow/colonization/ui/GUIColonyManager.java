@@ -738,6 +738,17 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
             }
         });
         
+        menuItem = new JMenuItem(t("조언 구하기"));
+        menuHelp.add(menuItem);
+        // menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, KeyEvent.CTRL_MASK));
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                assist.open();
+            }
+        });
+        menuItem.setVisible(false);
+        
         menuItem = new JMenuItem(t("저작권 및 라이센스"));
         menuHelp.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
