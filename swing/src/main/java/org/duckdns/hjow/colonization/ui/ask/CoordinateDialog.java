@@ -19,6 +19,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
 
+import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.util.GUIUtil;
 
@@ -140,7 +141,7 @@ public class CoordinateDialog extends JDialog {
 	}
 	
 	protected Image getDialogIconImage() {
-		return null;
+		return GUIColonyManager.getIcon();
 	}
 	
 	protected void onClose() {

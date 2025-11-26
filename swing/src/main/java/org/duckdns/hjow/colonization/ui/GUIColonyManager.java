@@ -64,6 +64,7 @@ import org.duckdns.hjow.colonization.mod.ModToolbar;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.script.UIObject;
+import org.duckdns.hjow.colonization.ui.ask.GeminiAssist;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
 import org.duckdns.hjow.colonization.ui.licenses.LicenseDialog;
 import org.duckdns.hjow.colonization.ui.tools.ToolManager;
@@ -103,6 +104,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
     protected transient ConfigManager configManager;
     protected transient HelpDialog helpDialog, licenseDialog;
     protected transient ToolManager toolManager;
+    protected transient GeminiAssist assist;
     protected transient ServletClientPanel servletClient;
     
     protected transient JMenuBar menuBar;
@@ -258,6 +260,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         aboutDialog   = new AboutDialog(frame, "Colonization", "", "v" + getVersionString() + " (No. " + BUILD_NO + ")");
         configManager = new ConfigManager(this);
         toolManager   = new ToolManager(frame);
+        assist        = new GeminiAssist(this);
         
         tabMain = new JTabbedPane();
         pnMain.setLayout(new BorderLayout());
@@ -1180,6 +1183,9 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         
         if(toolManager != null) toolManager.dispose();
         toolManager = null;
+        
+        if(assist != null) assist.dispose();
+        assist = null;
         
         if(configManager != null) configManager.dispose();
         configManager = null;
