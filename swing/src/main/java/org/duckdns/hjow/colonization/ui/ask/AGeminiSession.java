@@ -11,7 +11,7 @@ import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.gemini.GeminiModel;
 import org.duckdns.hjow.gemini.GeminiSession;
 
-/** GeminiSession 버그 임시수정  */ // TODO : 공통 lib에 반영해야...
+/** GeminiSession 버그 임시수정  */ // TODO : 테스트 완료 후 제거
 public class AGeminiSession extends GeminiSession {
 	/** 모델과 KEY 등을 설정 */
 	@Override

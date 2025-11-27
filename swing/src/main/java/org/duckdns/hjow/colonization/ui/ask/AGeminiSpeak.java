@@ -6,7 +6,7 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.gemini.GeminiSpeak;
 
-/** 채팅 대화내역 하나 (버그 수정버전) */ // TODO : 공통 lib 에 반영해야 !
+/** 채팅 대화내역 하나 (버그 수정버전) */ // TODO : 테스트 완료 후 제거
 public class AGeminiSpeak extends GeminiSpeak {
 	public AGeminiSpeak() { super(); }
 	public AGeminiSpeak(String role, String ... parts) { super(role, parts); }
