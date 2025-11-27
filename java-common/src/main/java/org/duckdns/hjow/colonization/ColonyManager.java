@@ -10,9 +10,11 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -36,6 +38,7 @@ import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.colonization.ui.GlobalLogUI;
+import org.duckdns.hjow.colonization.ui.ImageResourcePackage;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.resource.BufferedFileStringTable;
@@ -997,6 +1000,29 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     public boolean isUsingCheckDisablingContent() { return flagUseCheckDisablingContent; }
     @Override
     public Object getDialogObject() { return null; }
+    
+    /** 로드된 이미지 패키지 목록 반환 */
+    public List<ImageResourcePackage> getImagePackages() {
+    	return new ArrayList<ImageResourcePackage>();
+    }
+    
+    /** 로드된 이미지 패키지들에 포함된 이미지 이름들 반환 */
+    public Set<String> getImageNames() {
+    	Set<String> names = new HashSet<String>();
+    	for(ImageResourcePackage p : getImagePackages()) {
+    		names.addAll(p.getImageNames());
+    	}
+    	return names;
+    }
+    
+    /** 이미지 패키지에서 해당 이름의 이미지 리소스 찾아 반환 (java.awt.Image 타입이며, java.awt 패키지 import 방지를 위해 Object 타입으로 지정한 것 뿐) */
+    public Object getImage(String imageName) {
+    	for(ImageResourcePackage p : getImagePackages()) {
+    		Object m = p.getImage(imageName);
+    		if(m != null) return m;
+    	}
+    	return null;
+    }
     
     /** 프로그램 종료 */
     public void exit() {

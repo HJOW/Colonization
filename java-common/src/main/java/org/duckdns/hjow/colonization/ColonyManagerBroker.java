@@ -4,10 +4,12 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.ui.ImageResourcePackage;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -221,5 +223,20 @@ public class ColonyManagerBroker implements ColonyManagerInterface {
 	@Override
 	public String translate(String str) {
 		return originals.translate(str);
+	}
+
+	@Override
+	public List<ImageResourcePackage> getImagePackages() {
+		return originals.getImagePackages();
+	}
+
+	@Override
+	public Set<String> getImageNames() {
+		return originals.getImageNames();
+	}
+
+	@Override
+	public Object getImage(String imageName) {
+		return originals.getImage(imageName);
 	}
 }

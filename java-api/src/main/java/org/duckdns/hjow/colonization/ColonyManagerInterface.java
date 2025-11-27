@@ -2,10 +2,12 @@ package org.duckdns.hjow.colonization;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
+import org.duckdns.hjow.colonization.ui.ImageResourcePackage;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -69,4 +71,13 @@ public interface ColonyManagerInterface extends Disposeable {
     
     /** 탑재된 언어 스트링 테이블로 번역 */
     public String translate(String str);
+    
+    /** 로드된 이미지 패키지 목록 반환 */
+    public List<ImageResourcePackage> getImagePackages();
+    
+    /** 로드된 이미지 패키지들에 포함된 이미지 이름들 반환 */
+    public Set<String> getImageNames();
+    
+    /** 이미지 패키지에서 해당 이름의 이미지 리소스 찾아 반환 (java.awt.Image 타입이며, java.awt 패키지 import 방지를 위해 Object 타입으로 지정한 것 뿐) */
+    public Object getImage(String imageName);
 }
