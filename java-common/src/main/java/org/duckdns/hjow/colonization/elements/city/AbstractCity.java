@@ -39,6 +39,7 @@ import org.duckdns.hjow.colonization.elements.facilities.Residence;
 import org.duckdns.hjow.colonization.elements.facilities.TransportStation;
 import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.colonization.elements.research.Research;
+import org.duckdns.hjow.colonization.elements.ship.Satellite;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -645,6 +646,16 @@ public abstract class AbstractCity implements City {
                     else                               power += (((PowerPlant) f).getPowerGenerate(col, this)) / 2;
                 }
             }
+        }
+        
+        for(Ship ship : getShips()) {
+        	if(ship instanceof Satellite) {
+        		if(ship.getHp() <= 0) continue;
+        		if(! (ship.getX() == getX() && ship.getY() == getY() && ship.getZ() == getZ())) continue;
+        		
+        		int gen = ((Satellite) ship).getPowerGenerate(col, this);
+        		if(gen >= 1) power += gen;
+        	}
         }
         
         return power;
@@ -1440,6 +1451,17 @@ public abstract class AbstractCity implements City {
     	return res;
     }
     
+    /** 잔여 함선 격납 공간 크기 반환 */
+    @Override
+    public int getLeftShipSpaces() {
+    	int res = getShipSpaces();
+    	for(Ship s : getShips()) {
+    		res -= s.getSize();
+    	}
+    	if(res < 0) res = 0;
+    	return res;
+    }
+    
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     @Override
     public Vector<Ship> getShips() {
@@ -1523,9 +1545,24 @@ public abstract class AbstractCity implements City {
     	for(Facility f : getFacility()) {
     		if(f instanceof Port) {
     			Port p = (Port) f;
-    			p.getShips().remove(s);
+    			p.removeShip(s);
     		}
     	}
+    }
+    
+    @Override
+    public Port addShip(Ship s) {
+    	for(Facility f : getFacility()) {
+    		if(f instanceof Port) {
+    			Port p = (Port) f;
+    			if(s.getSize() <= p.leftShipSpaces()) {
+    				// 여유공간 존재하는 우주공항 찾음
+    				removeShip(s); // 혹시 모르니, 이 도시에서는 제거
+    				return p.addShip(s);
+    			}
+    		}
+    	}
+    	return null;
     }
     
     /** 우주 공항 리스트 반환 */

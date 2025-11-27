@@ -85,6 +85,8 @@ public interface City extends HasLocation {
     public void resetPolicies();
     /** 함선 격납 공간 크기 반환 */
     public int getShipSpaces();
+    /** 잔여 함선 격납 공간 크기 반환 */
+    public int getLeftShipSpaces();
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     public Vector<Ship> getShips();
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
@@ -101,6 +103,8 @@ public interface City extends HasLocation {
     public Ship getShip(long key);
     /** 함선 하나를 도시에서 제거 (파괴 혹은 다른 도시로 이동했다거나 등의 이유 발생 시 호출, 단순 파견으로는 이 메소드를 호출하면 안 됨) */
     public void removeShip(Ship s);
+    /** 함선 추가, 이 도시 내의 우주공항들 중 여유공간이 있는 곳에 정박하게 됨. 정박하게 될 우주공항 객체 반환. */
+    public Port addShip(Ship s);
     /** 우주 공항 리스트 반환 */
     public List<Port> getPorts();
 }

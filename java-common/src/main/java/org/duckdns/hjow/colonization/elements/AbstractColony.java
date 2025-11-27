@@ -1159,6 +1159,17 @@ public abstract class AbstractColony implements Colony {
     	return null;
     } 
     
+    @Override
+    public void removeShip(Ship ship) {
+    	Port p = findPort(ship);
+    	if(p == null) return;
+    	p.removeShip(ship);
+    	
+    	City city = p.getCity(this);
+    	if(city == null) return;
+    	city.removeShip(ship);
+    }
+    
     /** 빈 새 도시를 생성해 반환, 도시를 이 정착지에 등록시키지는 않음 */
     protected abstract City createCityInstance();
     

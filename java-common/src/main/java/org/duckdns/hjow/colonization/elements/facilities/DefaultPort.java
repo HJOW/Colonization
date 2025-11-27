@@ -132,6 +132,15 @@ public abstract class DefaultPort extends AbstractFacility implements Port {
 	public void setShips(Vector<Ship> ships) {
 		this.ships = ships;
 	}
+    
+    @Override
+    public Port addShip(Ship s) {
+    	if(s.getSize() > leftShipSpaces()) {
+    		throw new RuntimeException(ColonyManager.t("이 우주공항에 정박할 공간이 부족합니다."));
+    	}
+    	ships.add(s);
+    	return this;
+    }
 	
 	/** 건조 / 업그레이드 중인 함선 수 반환 */
     @Override
@@ -162,7 +171,9 @@ public abstract class DefaultPort extends AbstractFacility implements Port {
 	/** 함선 격납공간 남은 공간 */
     @Override
 	public int leftShipSpaces() {
-		return getCapacity() - usingShipSpaces();
+		int r = getCapacity() - usingShipSpaces();
+		if(r < 0) r = 0;
+		return r;
 	}
 	
 	@Override
@@ -182,5 +193,17 @@ public abstract class DefaultPort extends AbstractFacility implements Port {
         }
         
         // 적 공격 등은 도시 oneCycle 에서 따로 처리
+	}
+	
+	@Override
+	public void removeShip(Ship ship) {
+		int idx = 0;
+		while(idx < ships.size()) {
+			if(ship.getKey() == ships.get(idx).getKey()) {
+				ships.remove(idx);
+				continue;
+			}
+			idx++;
+		}
 	}
 }

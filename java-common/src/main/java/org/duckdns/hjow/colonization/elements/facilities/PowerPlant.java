@@ -49,6 +49,7 @@ public abstract class PowerPlant extends AbstractFacility {
         return 2;
     }
     
+    /** 매 사이클 발전량 계산 */
     public int getPowerGenerate(Colony col, City city) {
         return getCapacity();
     }

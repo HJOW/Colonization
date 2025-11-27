@@ -240,9 +240,25 @@ public abstract class AbstractShip implements Ship {
 		if(getLevel() <= 0) return; // 아직 건조 중인 경우 스킵 
 		// 제조/수리 진행 처리는 City 의 oneCycle 에서 진행
 		
+		Port port = colony.findPort(this);
+		if(port == null) return; // 소속 우주공항이 없다는 이상한 상황 - 아무것도 하지 않기
+		City cityCurrent = port.findCityBelongsTo(colony);
+		
 		// 이동 수행
 		if(! isArrived()) {
 			processMove(colony);
+		}
+		
+		// 이동 결과 다른 도시인 경우, 해당 도시로 소속 변경
+		for(City ct : colony.getCities()) {
+			if(ct.getKey() == cityCurrent.getKey()) continue;
+			if((ct.getX() == getX()) && (ct.getY() == getY()) && (ct.getZ() == getZ())) {
+				colony.removeShip(this);
+				ct.addShip(this);
+				cityCurrent = ct;
+				break;
+			}
+			
 		}
 		
 		// 공격 수행

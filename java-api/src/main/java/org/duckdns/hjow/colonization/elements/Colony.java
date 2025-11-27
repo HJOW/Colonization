@@ -111,6 +111,8 @@ public interface Colony extends HasLocation {
     public int getLiveShipCount();
     /** 해당 key 의 함선 찾아 반환 */
     public Ship getShip(long key);
+    /** 이 정착지 내 모든 도시, 모든 우주공항에서 해당 함선 제거 (타 우주공항으로, 혹은 타 도시로 이동 시 이 메소드 호출 후 해당 도시에 다시 추가) */
+    public void removeShip(Ship ship);
     /** 객체 복제, 일부 비공개 항목은 제외 */
     public Object cloneThis(boolean excludeSecrets);
 }
