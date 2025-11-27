@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.duckdns.hjow.commons.util.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.ui.ImageResourcePackage;
 
 /** 기본 형태의 Pack */
 public class DefaultPack implements Pack {
@@ -168,4 +169,8 @@ public class DefaultPack implements Pack {
     public List<String> newFeatures() {
         return getFeatureKeywords();
     }
+	@Override
+	public ImageResourcePackage getImageResources() {
+		return null;
+	}
 }
