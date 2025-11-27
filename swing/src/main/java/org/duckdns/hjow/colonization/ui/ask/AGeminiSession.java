@@ -6,6 +6,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.gemini.GeminiModel;
 import org.duckdns.hjow.gemini.GeminiSession;
@@ -42,5 +43,12 @@ public class AGeminiSession extends GeminiSession {
     		ClassUtil.closeAll(out2, out1);
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
+    }
+	
+	/** 채팅 요청 전송하고 응답 반환 */
+	@Override
+    public JsonObject request(JsonObject jsonObject) {
+    	System.out.println(jsonObject.toJSON());
+    	return super.request(jsonObject);
     }
 }

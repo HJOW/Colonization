@@ -254,6 +254,8 @@ public class GeminiAssist implements Disposeable {
 		    writer.write(EACH_DELIMITER);
 			writer.newLine();
 			
+			if(whoSpeaks.equals("model")) whoSpeaks = "Assist";
+			
 			StringTokenizer lineTokenizer = new StringTokenizer(msg, "\n");
 			String firstLine = lineTokenizer.nextToken();
 			String prefix    = "[" + whoSpeaks.trim() + "] ";
@@ -313,19 +315,21 @@ public class GeminiAssist implements Disposeable {
         				inst = null;
         			}
         			
-        			inst = new GeminiSpeak();
+        			inst = new AGeminiSpeak();
         			content.setLength(0);
         			firstContent = true;
         			continue;
         		} else if(firstDelimiterPassed) {
         			continue;
         		} else {
-        			if(inst == null) inst = new GeminiSpeak();
+        			if(inst == null) inst = new AGeminiSpeak();
         			String appendee = line;
         			
         			if(firstContent) {
         				String[] splits = line.split("]");
         				String whoSpeaks = splits[0].substring(1);
+        				whoSpeaks = whoSpeaks.trim();
+        				if(whoSpeaks.equals("Assist")) whoSpeaks = "model";
         				inst.setRole(whoSpeaks.trim());
         				appendee = line.substring(("[" + whoSpeaks + "]").length());
         			}
@@ -360,7 +364,7 @@ public class GeminiAssist implements Disposeable {
 		
 		// 현재의 질문 준비
 		String question = field.getText();
-		GeminiSpeak speak = new GeminiSpeak("user", question);
+		GeminiSpeak speak = new AGeminiSpeak("user", question);
 		speaks.add(speak);
 		
 		// Json 준비
@@ -375,12 +379,12 @@ public class GeminiAssist implements Disposeable {
 		JsonObject candidateOne = (JsonObject) candidates.get(0);
 		JsonObject contents     = (JsonObject) candidateOne.get("content");
 		
-		// String     role         = contents.get("role").toString();
+		String     role         = contents.get("role").toString();
 		JsonArray  parts        = (JsonArray)  contents.get("parts");
 		for(Object obj : parts) {
 			JsonObject part = (JsonObject) obj;
 			String text = part.get("text").toString();
-			put("assist", text);
+			put(role, text);
 		}
 		
 	}
