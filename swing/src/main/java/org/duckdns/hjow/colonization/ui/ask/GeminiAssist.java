@@ -177,7 +177,10 @@ public class GeminiAssist implements Disposeable {
         		return;
         	}
         	
-        	session = new GeminiSession();
+        	session = new AGeminiSession();
+        	model.setApiKey(apiKey);
+        	model.setProjectId(projectId);
+        	
         	field.setEnabled(true);
     	} catch(Throwable ex) {
     		put("system", ColonyManager.t("오류") + " : " + ex.getMessage());
