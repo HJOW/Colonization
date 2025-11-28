@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 
 public class ResearchManager {
-    protected static List<Class<?>> classes = ColonyClassLoader.researchClasses();
+    protected static List<Class<?>> classes = ColonyClassManager.researchClasses();
     
     public static Research createResearchInstance(String type) {
         for(Class<?> classOne : classes) {
@@ -33,7 +33,7 @@ public class ResearchManager {
     public static List<Research> initList(Colony col) {
         List<Research> list = new ArrayList<Research>();
         
-        if(classes.isEmpty()) classes.addAll(ColonyClassLoader.researchClasses());
+        if(classes.isEmpty()) classes.addAll(ColonyClassManager.researchClasses());
         for(Class<?> classOne : classes) {
             try { 
                 Research newInst = (Research) classOne.newInstance();

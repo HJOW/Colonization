@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Citizen;
@@ -274,7 +274,7 @@ public abstract class AbstractEnemy implements Enemy {
     }
     
     
-    protected static List<Class<?>> enemyClasses = ColonyClassLoader.enemyClasses();
+    protected static List<Class<?>> enemyClasses = ColonyClassManager.enemyClasses();
     
     /** type 를 읽어, 기본 Enemy 객체 생성 */
     public static Enemy createEnemyObject(String type) {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -166,7 +166,7 @@ public abstract class AbstractProduct implements Product {
     private static final List<Product> productTypeList = new Vector<Product>();
     private static synchronized void prepareProductTypeList() {
         productTypeList.clear();
-        List<Class<?>> prodClasses = ColonyClassLoader.productClasses();
+        List<Class<?>> prodClasses = ColonyClassManager.productClasses();
         if(! prodClasses.isEmpty()) {
             for(Class<?> prodClass : prodClasses) {
                 try {
@@ -194,12 +194,12 @@ public abstract class AbstractProduct implements Product {
     public static Product createProductInstance(String type) {
         Class<?> productClass = null;
         
-        for(Class<?> classOne : ColonyClassLoader.productClasses()) {
+        for(Class<?> classOne : ColonyClassManager.productClasses()) {
             if(classOne.getName().equals(type)) { productClass = classOne; break; }
         }
         
         if(productClass == null) {
-            for(Class<?> classOne : ColonyClassLoader.productClasses()) {
+            for(Class<?> classOne : ColonyClassManager.productClasses()) {
                 if(classOne.getSimpleName().equals(type)) { productClass = classOne; break; }
             }
         }

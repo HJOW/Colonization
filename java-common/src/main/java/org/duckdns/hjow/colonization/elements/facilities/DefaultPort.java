@@ -3,7 +3,7 @@ package org.duckdns.hjow.colonization.elements.facilities;
 import java.math.BigInteger;
 import java.util.Vector;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
@@ -55,7 +55,7 @@ public abstract class DefaultPort extends AbstractFacility implements Port {
                         Ship s = null;
                         
                         String type = jsonObj.get("type").toString();
-                        Class<?> shipClass = ColonyClassLoader.getShipClass(type);
+                        Class<?> shipClass = ColonyClassManager.getShipClass(type);
                         
                         s = (Ship) shipClass.newInstance();
                         s.fromJson(jsonObj);

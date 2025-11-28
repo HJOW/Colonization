@@ -7,7 +7,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.StringTokenizer;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -76,7 +76,7 @@ public class TCPSimpleClient {
             json = (JsonObject) json.get("colony");
             
             // JSON 으로부터 Colony 불러오기
-            responsed = ColonyClassLoader.loadColony(json);
+            responsed = ColonyClassManager.loadColony(json);
             json = null;
         } catch(Throwable t) {
             responsed = null;

@@ -10,7 +10,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -44,7 +44,7 @@ public class ColonyBackup implements Serializable {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Colony col = ColonyClassLoader.loadColony((JsonObject) o);
+                        Colony col = ColonyClassManager.loadColony((JsonObject) o);
                         colonies.add(col);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, true);
@@ -109,7 +109,7 @@ public class ColonyBackup implements Serializable {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Colony col = ColonyClassLoader.loadColony((JsonObject) o);
+                        Colony col = ColonyClassManager.loadColony((JsonObject) o);
                         col.fromJson((JsonObject) o);
                         colonies.add(col);
                     } catch(Exception ex) {

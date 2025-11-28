@@ -3,7 +3,7 @@ package org.duckdns.hjow.colonization.elements.facilities;
 import java.util.List;
 import java.util.Vector;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -15,7 +15,7 @@ public class FacilityManager {
     
     public static void reset() {
         facilities.clear();
-        for(Class<?> classOne : ColonyClassLoader.facilityClasses()) {
+        for(Class<?> classOne : ColonyClassManager.facilityClasses()) {
             register(classOne);
         }
     }
@@ -62,7 +62,7 @@ public class FacilityManager {
         for(FacilityInformation info : facilities) {
             if(info.getFacilityClass().getSimpleName().equals(name)) return info;
         }
-        for(FacilityInformation info : ColonyClassLoader.getScriptFacilityList()) {
+        for(FacilityInformation info : ColonyClassManager.getScriptFacilityList()) {
             if(info.getName().equals(name)) return info;
         }
         return null;
@@ -109,7 +109,7 @@ public class FacilityManager {
         List<FacilityInformation> newList = new Vector<FacilityInformation>();
         newList.addAll(facilities);
         
-        List<ScriptFacilityInformation> scrList = ColonyClassLoader.getScriptFacilityList();
+        List<ScriptFacilityInformation> scrList = ColonyClassManager.getScriptFacilityList();
         if(scrList != null) {
             for(ScriptFacilityInformation s : scrList) {
                 if(! newList.contains(s)) newList.add(s);

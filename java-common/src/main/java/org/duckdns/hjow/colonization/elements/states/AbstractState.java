@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
@@ -163,11 +163,11 @@ public abstract class AbstractState implements State {
     	return ""; // TODO
     }
 
-    protected static List<Class<?>> stateClasses = ColonyClassLoader.stateClasses();
+    protected static List<Class<?>> stateClasses = ColonyClassManager.stateClasses();
     
     public static void reset() {
         stateClasses.clear();
-        stateClasses.addAll(ColonyClassLoader.stateClasses());
+        stateClasses.addAll(ColonyClassManager.stateClasses());
     }
     
     public static State createStateInstance(String type) {

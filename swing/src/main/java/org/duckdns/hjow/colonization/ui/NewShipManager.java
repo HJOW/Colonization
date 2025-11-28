@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
@@ -172,7 +172,7 @@ public class NewShipManager extends JDialog implements Disposeable {
     public List<ShipInformation> getAvailList() {
     	List<ShipInformation> lists = new ArrayList<ShipInformation>();
     	if(colony != null) {
-    		List<Class<?>> classes = ColonyClassLoader.shipClasses();
+    		List<Class<?>> classes = ColonyClassManager.shipClasses();
         	for(Class<?> classOne : classes) {
         		ShipInformation info = new ShipInformation(classOne);
         		if(! detectBuildAvail(colony, info)) continue;

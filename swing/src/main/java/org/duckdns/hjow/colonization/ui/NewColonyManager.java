@@ -21,7 +21,7 @@ import javax.swing.JTextField;
 
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.util.GUIUtil;
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
@@ -69,7 +69,7 @@ public class NewColonyManager implements Disposeable {
         pnUp.add(tfName, BorderLayout.NORTH);
         
         Vector<ColonyInformation> listColTypes = new Vector<ColonyInformation>();
-        listColTypes.addAll(ColonyClassLoader.colonyInfos());
+        listColTypes.addAll(ColonyClassManager.colonyInfos());
         cbxColTypes = new JComboBox<ColonyInformation>(listColTypes);
         pnUp.add(cbxColTypes, BorderLayout.CENTER);
         

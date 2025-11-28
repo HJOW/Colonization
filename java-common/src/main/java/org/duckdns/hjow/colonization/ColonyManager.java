@@ -33,6 +33,7 @@ import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
 import org.duckdns.hjow.colonization.mod.ScriptMod;
 import org.duckdns.hjow.colonization.pack.Library;
+import org.duckdns.hjow.colonization.pack.Pack;
 import org.duckdns.hjow.colonization.script.NetObject;
 import org.duckdns.hjow.colonization.script.PrimitiveObject;
 import org.duckdns.hjow.colonization.script.ScriptClassLoader;
@@ -273,8 +274,8 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
             flagUseCheckDisablingContent = DataUtil.parseBoolean(strUseChkDis);
             
             // 설정들 중 클래스 관련 설정 적용, Pack 불러오기
-            ColonyClassLoader.clearAll();
-            ColonyClassLoader.applyLocalConfigs(configs, this);
+            ColonyClassManager.clearAll();
+            ColonyClassManager.applyLocalConfigs(configs, this);
             
             // 스크립트 엔진 매니저 준비
             initScriptEngineManager();
@@ -403,7 +404,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     	GlobalLogs.log(t("파일로부터 정착지 불러오는 중..."));
         boolean exists = false;
         try { 
-            Colony c = ColonyClassLoader.loadColony(f);
+            Colony c = ColonyClassManager.loadColony(f);
             exists = false;
             
             // 이미 불러왔는지 확인
@@ -537,7 +538,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     
     /** 새 정착지 생성 (타입 지정) */
     public Colony newColony(String type, String name) {
-        Colony newCol = ColonyClassLoader.newColonyInstance(type);
+        Colony newCol = ColonyClassManager.newColonyInstance(type);
         if(DataUtil.isNotEmpty(name)) newCol.setName(name);
         newColonyAfterJobs(newCol);
         
@@ -575,7 +576,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         modsEnabled.clear();
         
         // lib 에 등록된 Mods 도 불러오기
-        for(Class<?> classes : ColonyClassLoader.getModClasses()) {
+        for(Class<?> classes : ColonyClassManager.getModClasses()) {
             try {
                 Mod m = (Mod) classes.newInstance();
                 if((! m.isReadOnly()) && (! flagUseCheckDisablingContent)) continue;
@@ -587,7 +588,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         }
         
         // 예약어 등록된 Library 도 불러오기
-        for(String reservedLibClassNames : ColonyClassLoader.getReservedLibraryClassNames()) {
+        for(String reservedLibClassNames : ColonyClassManager.getReservedLibraryClassNames()) {
             try {
                 Class<?> libClass = Class.forName(reservedLibClassNames);
                 Library instances = (Library) libClass.newInstance();
@@ -698,7 +699,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     /** Mod 추가 (이 메소드는 ColonyClassLoader 간의 통신을 위해서만 존재하므로 되도록 직접 호출 자제 !) */
     public void addMod(String modClassName, boolean refresh, boolean saveConfig) {
         try {
-            ColonyClassLoader.checkModClassName(modClassName);
+            ColonyClassManager.checkModClassName(modClassName);
             modClassName = modClassName.trim();
             
             Class<?> modClass = Class.forName(modClassName);
@@ -759,7 +760,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         waitThreadShutdown();
         if(! flagAlreadyDisposed) { saveLocalConfigs(); saveLocalStorage(); }
         if((! flagAlreadyDisposed) && (! colonies.isEmpty())) saveColonies();
-        ColonyClassLoader.clearAll();
+        ColonyClassManager.clearAll();
         broker = null;
         if(rootEngine != null) rootEngine = null;
     }
@@ -1003,7 +1004,11 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     
     /** 로드된 이미지 패키지 목록 반환 */
     public List<ImageResourcePackage> getImagePackages() {
-    	return new ArrayList<ImageResourcePackage>();
+    	List<ImageResourcePackage> packages = new ArrayList<ImageResourcePackage>();
+    	for(Pack p : ColonyClassManager.getInstalledPacks()) {
+    		packages.add(p.getImageResources());
+    	}
+    	return packages;
     }
     
     /** 로드된 이미지 패키지들에 포함된 이미지 이름들 반환 */

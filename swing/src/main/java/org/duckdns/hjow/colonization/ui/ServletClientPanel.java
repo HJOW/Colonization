@@ -27,7 +27,7 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -755,7 +755,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
             boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
             if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
             
-            colony = ColonyClassLoader.loadColony((JsonObject) responseJson.get("detail"));
+            colony = ColonyClassManager.loadColony((JsonObject) responseJson.get("detail"));
             
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
@@ -910,7 +910,7 @@ public class ServletClientPanel extends JPanel implements Disposeable {
         boolean success = DataUtil.parseBoolean(responseJson.get("success").toString().trim());
         if(! success) throw new RuntimeException(responseJson.get("message").toString().trim());
         
-        colony = ColonyClassLoader.loadColony((JsonObject) responseJson.get("detail"));
+        colony = ColonyClassManager.loadColony((JsonObject) responseJson.get("detail"));
         
         SwingUtilities.invokeLater(new Runnable() {
             @Override

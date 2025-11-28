@@ -49,7 +49,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.duckdns.hjow.colonization.ColonizationMainClass;
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GUIColonizationMainClass;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
@@ -289,7 +289,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         webNotice = new JEditorPane();
         webNotice.setEditable(false);
         webNotice.setContentType("text/html; charset=UTF-8");
-        webNotice.setText(ColonyClassLoader.htmlNoticeEmpty());
+        webNotice.setText(ColonyClassManager.htmlNoticeEmpty());
         
         pnFrontCenter.setLayout(new BorderLayout());
         pnFrontCenter.add(new JScrollPane(webNotice), BorderLayout.CENTER);
@@ -654,7 +654,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
             }
         });
 
-        if(ColonyClassLoader.getInstalledPackNewFeatures().contains("DebugEnable")) menuAction.addSeparator();
+        if(ColonyClassManager.getInstalledPackNewFeatures().contains("DebugEnable")) menuAction.addSeparator();
 
         menuItem = new JCheckBoxMenuItem(t("디버그 모드"));
         menuAction.add(menuItem);
@@ -680,7 +680,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
             }
         });
         ((JCheckBoxMenuItem) menuItem).setSelected(isDebugModeEnabled());
-        if(! ColonyClassLoader.getInstalledPackNewFeatures().contains("DebugEnable")) {
+        if(! ColonyClassManager.getInstalledPackNewFeatures().contains("DebugEnable")) {
             menuItem.setVisible(false);
         }
 
@@ -838,8 +838,8 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         menuActionThrPlay.setEnabled(true);
         
         // 공지사항 미리 화면에 로딩
-        try { webNotice.setPage(ColonyClassLoader.htmlNoticeUrl()); } catch(java.net.UnknownHostException ex) {
-            webNotice.setText(ColonyClassLoader.htmlNoticeEmpty());
+        try { webNotice.setPage(ColonyClassManager.htmlNoticeUrl()); } catch(java.net.UnknownHostException ex) {
+            webNotice.setText(ColonyClassManager.htmlNoticeEmpty());
         } catch(Exception ex) { 
             GlobalLogs.processExceptionOccured(ex, false); 
         }
@@ -886,7 +886,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
             public void run() {
                 progFront.setValue(0);
                 progFront.setIndeterminate(true);
-                ColonyClassLoader.loadWebConfigs(getSelf());
+                ColonyClassManager.loadWebConfigs(getSelf());
                 
                 progFront.setIndeterminate(false);
                 if(progFront.isVisible()) {
@@ -1021,7 +1021,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         File[] lists = root.listFiles(getColonyFileFilter());
         for(File f : lists) {
             try {
-                Colony temp = ColonyClassLoader.loadColony(f);
+                Colony temp = ColonyClassManager.loadColony(f);
                 if(temp.getKey() == col.getKey()) f.delete();
             } catch(Exception ex) {} // 오류 건너뛰기
         }

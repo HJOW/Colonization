@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManagerConfig;
 import org.duckdns.hjow.colonization.DefaultColonyManagerConfig;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -57,7 +57,7 @@ public abstract class CommonServlet extends HttpServlet {
             DBUtil.init();
             
             // 설정들 중 클래스 관련 설정 적용
-            ColonyClassLoader.clearAll();
+            ColonyClassManager.clearAll();
             // Pack 목록 불러오기
             List<Object> packList = null;
             try {
@@ -76,7 +76,7 @@ public abstract class CommonServlet extends HttpServlet {
             for(Object o : packList) {
                 try {
                     ColonyManagerConfig child = (ColonyManagerConfig) o;
-                    Class<?> classObj = ColonyClassLoader.loadClassFrom(child);
+                    Class<?> classObj = ColonyClassManager.loadClassFrom(child);
                     Object obj = classObj.newInstance();
                     
                     if(obj instanceof Pack) {
@@ -95,7 +95,7 @@ public abstract class CommonServlet extends HttpServlet {
             
             for(Pack p : packs) {
                 try {
-                    if(! ColonyClassLoader.isInstalledPack(p)) ColonyClassLoader.loadPack(p);
+                    if(! ColonyClassManager.isInstalledPack(p)) ColonyClassManager.loadPack(p);
                 } catch(Exception ex) {
                     GlobalLogs.processExceptionOccured(ex, false);
                 }

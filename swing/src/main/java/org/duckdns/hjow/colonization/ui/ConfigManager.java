@@ -27,7 +27,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.filechooser.FileFilter;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -357,10 +357,10 @@ public class ConfigManager implements Disposeable {
         // Packs
         val = taPacks.getText();
         try {
-            File libDir = ColonyClassLoader.getHomeLibDir();
+            File libDir = ColonyClassManager.getHomeLibDir();
             if(! libDir.exists()) libDir.mkdirs();
             
-            File packClassFile = ColonyClassLoader.getLibPackClassFile();
+            File packClassFile = ColonyClassManager.getLibPackClassFile();
             FileUtil.writeString(packClassFile, "UTF-8", val);
         } catch(Exception ex) {
             GlobalLogs.processExceptionOccured(ex, true);
@@ -385,7 +385,7 @@ public class ConfigManager implements Disposeable {
         tfModClasses.setText(superInstance.getConfig().getString("Mods"));
         
         String packClasses = "";
-        File packClassFile = ColonyClassLoader.getLibPackClassFile();
+        File packClassFile = ColonyClassManager.getLibPackClassFile();
         if(packClassFile.exists()) {
             try {
                 packClasses = FileUtil.readString(packClassFile, "UTF-8");

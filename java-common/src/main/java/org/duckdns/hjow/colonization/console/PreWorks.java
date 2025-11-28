@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.commons.json.JsonArray;
@@ -55,7 +55,7 @@ public class PreWorks {
     
     /** 버전 체크 */
     protected void prepareConnectHttp() throws Throwable {
-        JsonObject jsonConfig = ColonyClassLoader.getWebConfigRoot();
+        JsonObject jsonConfig = ColonyClassManager.getWebConfigRoot();
         jsonConfigSwing = (JsonObject) jsonConfig.get("swing");
         versionNew = jsonConfigSwing.get("version").toString().trim();
         
@@ -72,13 +72,13 @@ public class PreWorks {
         if(jsonConfigSwing == null) return;
         
         // lib 폴더 (사용자홈 / .colonization / )
-        File libRoot = ColonyClassLoader.getHomeLibDir();
+        File libRoot = ColonyClassManager.getHomeLibDir();
         if(! libRoot.exists()) libRoot.mkdirs();
         
         // 기존 Pack 클래스들 목록 읽기
         List<String> packClasses = new ArrayList<String>();
         String packClassComments = "";
-        File packClassFile = ColonyClassLoader.getLibPackClassFile();
+        File packClassFile = ColonyClassManager.getLibPackClassFile();
         
         if(packClassFile.exists()) {
             String packClassText = FileUtil.readString(packClassFile, "UTF-8");
@@ -123,7 +123,7 @@ public class PreWorks {
                 }
                 
                 // 상대경로 여부 확인
-                if(! libUrl.startsWith("http")) libUrl = ColonyClassLoader.htmlRootUrl() + libUrl;
+                if(! libUrl.startsWith("http")) libUrl = ColonyClassManager.htmlRootUrl() + libUrl;
                 
                 // 해당 lib 미존재 시 다운로드
                 File file = new File(libRoot.getAbsolutePath() + File.separator + libName);
@@ -175,7 +175,7 @@ public class PreWorks {
                 JsonObject versionInfo = (JsonObject) buildConfig.get(versionNew);
                 
                 String downloadUrl = versionInfo.get("url").toString();
-                if(! downloadUrl.startsWith("http")) downloadUrl = ColonyClassLoader.htmlRootUrl() + downloadUrl;
+                if(! downloadUrl.startsWith("http")) downloadUrl = ColonyClassManager.htmlRootUrl() + downloadUrl;
                 
                 GlobalLogs.log("Downloading newer version from " + downloadUrl + "  to  " + targetToRun.getAbsolutePath());
                 NetUtil.download(new URL(downloadUrl), targetToRun);
@@ -223,7 +223,7 @@ public class PreWorks {
         // jar 파일 실행
         String javaHome = System.getProperty("java.home");
         File jreBinPath = new File(javaHome + File.separator + "bin");
-        File libRoot = ColonyClassLoader.getHomeLibDir();
+        File libRoot = ColonyClassManager.getHomeLibDir();
         
         GlobalLogs.log("Java Runtime Path : " + jreBinPath.getAbsolutePath());
         GlobalLogs.log("Library Path : " + libRoot.getAbsolutePath());
@@ -275,7 +275,7 @@ public class PreWorks {
     /** lib 클래스로더 생성 */
     public static URLClassLoader LibClassLoader() throws MalformedURLException {
         // lib 폴더 (사용자홈 / .colonization / )
-        File libRoot = ColonyClassLoader.getHomeLibDir();
+        File libRoot = ColonyClassManager.getHomeLibDir();
         if(! libRoot.exists()) libRoot.mkdirs();
         
         File[] lists = libRoot.listFiles(new FileFilter() {    

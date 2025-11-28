@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.Colony;
@@ -132,7 +132,7 @@ public class Account implements Serializable {
                 if(o instanceof String) o = JsonObject.parseJson(o.toString());
                 if(o instanceof JsonObject) {
                     try {
-                        Colony col = ColonyClassLoader.loadColony((JsonObject) o);
+                        Colony col = ColonyClassManager.loadColony((JsonObject) o);
                         colonies.add(col);
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);

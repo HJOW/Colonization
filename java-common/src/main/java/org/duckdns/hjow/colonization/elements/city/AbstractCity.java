@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -1343,7 +1343,7 @@ public abstract class AbstractCity implements City {
                     try {
                         JsonObject jsonIn = (JsonObject) o;
                         String type = jsonIn.get("type").toString();
-                        Policy p = ColonyClassLoader.createPolicyInstance(type);
+                        Policy p = ColonyClassManager.createPolicyInstance(type);
                         p.fromJson(jsonIn);
                         policies.add(p);
                     } catch(Exception ex) {

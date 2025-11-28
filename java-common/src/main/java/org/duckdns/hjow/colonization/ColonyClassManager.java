@@ -31,7 +31,7 @@ import org.duckdns.hjow.commons.util.FileUtil;
 import org.duckdns.hjow.commons.util.NetUtil;
 
 /** 정착지 시나리오, 시설, 연구, 시설과 시민의 상태 타입 등 클래스들과 타입 리스트를 관리하는 클래스 */
-public class ColonyClassLoader {
+public class ColonyClassManager {
     private static final List<Pack> packs = new Vector<Pack>();
     private static List<Class<?>> modClasses = new ArrayList<Class<?>>();
     
@@ -625,7 +625,7 @@ public class ColonyClassLoader {
         
         URLClassLoader loader = null;
         try {
-        	loader = ClassUtil.newClassLoader(urls, ColonyClassLoader.class.getClassLoader());
+        	loader = ClassUtil.newClassLoader(urls, ColonyClassManager.class.getClassLoader());
             Class<?> classObj = loader.loadClass(className);
             return classObj;
         } finally {

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import org.duckdns.hjow.colonization.ColonyClassLoader;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.commons.core.Disposeable;
@@ -162,7 +162,7 @@ public class TCPSimpleDaemon implements Disposeable {
         int cyclePass = Integer.parseInt(strCycle);
         
         JsonObject jsonCol = (JsonObject) json.get("colony");
-        Colony col = ColonyClassLoader.loadColony(jsonCol);
+        Colony col = ColonyClassManager.loadColony(jsonCol);
         jsonCol = null;
         json = null;
         
