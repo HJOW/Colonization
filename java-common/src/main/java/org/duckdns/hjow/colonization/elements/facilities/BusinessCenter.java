@@ -104,6 +104,15 @@ public abstract class BusinessCenter extends AbstractFacility {
         }
     }
     
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("지식산업센터");
+    	res = res.append("\n").append("    ").append("수익 발생 주기 : ").append(getProfitCycle());
+    	res = res.append("\n").append("    ").append("예산 수익량 : ").append(getCapacity()).append(" (효율, 상태에 따라 변동)");
+    	
+    	return res.toString().trim();
+    }
+    
     public static String getFacilityName() {
         return ColonyManager.t("비지니스센터");
     }

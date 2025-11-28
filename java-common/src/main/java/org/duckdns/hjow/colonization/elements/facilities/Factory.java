@@ -20,6 +20,7 @@ import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
+import org.duckdns.hjow.commons.util.DataUtil;
 
 public abstract class Factory extends AbstractFacility implements Storage {
     private static final long serialVersionUID = 8465140770981665970L;
@@ -104,45 +105,49 @@ public abstract class Factory extends AbstractFacility implements Storage {
                     // 저장소 및 생산 가능성 확인
                     if(! (isStoreAvail(p) && isProduced(p))) createSuccess = false;
                     else {
-                        if(sources.isEmpty()) { // 필요 재료가 없으면 성공으로 처리
-                            createSuccess = true;
-                        } else {
-                            // 사용 대상 재료 선정
-                            List<Product> using = new ArrayList<Product>();
-                            
-                            int idx = 0;
-                            while(idx < sources.size()) {
-                                Product sourceOne = sources.get(idx);
-                                
-                                for(Product storedOne : getStored()) { // 저장된 재료들 루프
-                                    if(storedOne.getType().equals(sourceOne.getType())) {
-                                        using.add(storedOne); // 사용할 목록에 추가
-                                        sourceOne = null;     // 충족 표시
-                                        break;
-                                    }
-                                }
-                                
-                                // 아직 필요 재료 충족이 안된 경우 실패로 처리 (실패했으므로 사용 재료 비우기)
-                                if(sourceOne != null) { createSuccess = false; using.clear(); break; }
-                                idx++;
-                            }
-                            
-                            if(! using.isEmpty()) { // 필요 재료가 있는데, 사용 재료도 있으면 --> 성공 처리
-                                // 사용 재료 지금 차감
-                                for(Product px : using) {
-                                    stored.remove(px);
-                                }
-                                
+                    	int idx = 0;
+                    	for(int jdx=0; jdx<((int) Math.ceil(increases / 5.0)); jdx++) {
+                    		if(sources.isEmpty()) { // 필요 재료가 없으면 성공으로 처리
                                 createSuccess = true;
+                            } else {
+                                // 사용 대상 재료 선정
+                                List<Product> using = new ArrayList<Product>();
+                                
+                                idx = 0;
+                                while(idx < sources.size()) {
+                                    Product sourceOne = sources.get(idx);
+                                    
+                                    for(Product storedOne : getStored()) { // 저장된 재료들 루프
+                                        if(storedOne.getType().equals(sourceOne.getType())) {
+                                            using.add(storedOne); // 사용할 목록에 추가
+                                            sourceOne = null;     // 충족 표시
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // 아직 필요 재료 충족이 안된 경우 실패로 처리 (실패했으므로 사용 재료 비우기)
+                                    if(sourceOne != null) { createSuccess = false; using.clear(); break; }
+                                    idx++;
+                                }
+                                
+                                if(! using.isEmpty()) { // 필요 재료가 있는데, 사용 재료도 있으면 --> 성공 처리
+                                    // 사용 재료 지금 차감
+                                    for(Product px : using) {
+                                        stored.remove(px);
+                                    }
+                                    
+                                    createSuccess = true;
+                                }
                             }
-                        }
-                        
-                        if(createSuccess) {
-                            // 생산품 추가
-                            for(int idx=0; idx<getProduceResultCount(p); idx++) {
-                                if(getStoredCount() < getMaxStoredCapacity()) store(AbstractProduct.createProductInstance(p.getType()));
+                            
+                            if(createSuccess) {
+                                // 생산품 추가
+                            	idx = 0;
+                                for(idx=0; idx<getProduceResultCount(p); idx++) {
+                                    if(getStoredCount() < getMaxStoredCapacity()) store(AbstractProduct.createProductInstance(p.getType()));
+                                }
                             }
-                        }
+                    	}
                     }
                 } else {
                     setProductType(null);
@@ -307,6 +312,24 @@ public abstract class Factory extends AbstractFacility implements Storage {
         BigInteger res = super.getCheckerValue();
         for(Product p : getStored()) { res = res.add(p.getCheckerValue().multiply(Constants.BIGINTEGER_17)); }
         return res;
+    }
+    
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("생산시설");
+    	res = res.append("\n").append("    ").append("생산 주기 : ").append(getProfitCycle());
+    	
+    	if(DataUtil.isEmpty(getProductType())) {
+    		res = res.append("\n").append("    ").append("현재 생산 중 : 없음 (지정 필요)");
+    	} else if("Money".equals(getProductType())) {
+    		res = res.append("\n").append("    ").append("현재 생산 중 : 자율 (예산이 증가함)");
+    		res = res.append("\n").append("    ").append("생산 주기 당 예산 증가량 : ").append(getCapacity()).append(" (효율, 상태에 따라 변동)");
+    	} else {
+    		res = res.append("\n").append("    ").append("현재 생산 중 : ").append(getProducingName());
+    		res = res.append("\n").append("    ").append("생산 주기 당 생산량 : ").append((int) Math.ceil(getCapacity() / 5.0)).append(" (효율, 상태에 따라 변동)");
+    	}
+    	
+    	return res.toString().trim();
     }
     
     public static String getFacilityName() {

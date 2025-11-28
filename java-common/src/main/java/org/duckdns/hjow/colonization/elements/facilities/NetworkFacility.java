@@ -89,6 +89,14 @@ public abstract class NetworkFacility extends AbstractFacility {
         // Do nothing on PowerStation (implemented on City class)
     }
     
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("네트워크 인프라 시설");
+    	res = res.append("\n").append("    ").append("네트워크 수용량 : ").append(getCapacity());
+    	
+    	return res.toString().trim();
+    }
+    
     public static String getFacilityName() {
         return ColonyManager.t("네트워크 AP");
     }

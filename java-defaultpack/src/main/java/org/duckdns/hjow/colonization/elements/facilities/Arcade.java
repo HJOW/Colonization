@@ -176,6 +176,15 @@ public class Arcade extends AbstractFacility implements ServiceFacility {
     public boolean isStoreAvail(Product p) {
         return false;
     }
+    
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("여가시설");
+    	res = res.append("\n").append("    ").append("이용 가능한 시민 수 : ").append(getCapacity());
+    	res = res.append("\n").append("    ").append("이용 시 기본 행복도 증가량 : 5");
+    	res = res.append("\n").append("    ").append("1회 이용료 : ").append(usingFee()).append(" (시민이 지불)");
+    	return res.toString().trim();
+    }
 
     public static String getFacilityName() {
         return ColonyManager.t("아케이드");

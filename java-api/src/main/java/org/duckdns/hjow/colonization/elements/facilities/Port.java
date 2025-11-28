@@ -15,6 +15,9 @@ public interface Port extends Facility {
     
     /** 소속 함선들 반환 (격납 중인 함선이 아님 ! 파견되어 있더라도 소속이 이 곳이면 여전히 조회됨) - 건조 중인 함선 제외 */
 	public Vector<Ship> getShipsLive();
+	
+	/** 건조 중인 함선들 반환 */
+	public Vector<Ship> getShipsBuilding();
 
     /** 소속 함선들 반환 (격납 중인 함선이 아님 ! 파견되어 있더라도 소속이 이 곳이면 여전히 조회됨) - 건조 중인 함선 포함 */
 	public Vector<Ship> getShips();

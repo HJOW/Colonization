@@ -90,7 +90,7 @@ public abstract class DefenceFacility extends AbstractFacility implements Attack
     
     @Override
     public String getStatusDescription(City city, Colony colony) {
-        return ""; // TODO
+        return additionalDescribes(colony, city);
     }
     
     @Override
@@ -156,6 +156,15 @@ public abstract class DefenceFacility extends AbstractFacility implements Attack
         json.put("level", new Integer(getLevel()));
         
         return json;
+    }
+    
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("방어 시설");
+    	res = res.append("\n").append("    ").append("공격 주기 : ").append(getAttackCycle());
+    	res = res.append("\n").append("    ").append("주기 당 공격 횟수 : ").append(getAttackCount());
+    	res = res.append("\n").append("    ").append("기본 공격력 : ").append(getDamage());
+    	return res.toString().trim();
     }
     
     public static String getFacilityName() {

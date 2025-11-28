@@ -214,7 +214,7 @@ public abstract class AbstractFacility implements Facility {
     
     @Override
     public String getStatusDescription(City city, Colony colony) {
-        return "";
+        return additionalDescribes(colony, city);
     }
     
     @Override
@@ -494,7 +494,7 @@ public abstract class AbstractFacility implements Facility {
     @Override
     public String describeForAI(Colony colony, City city) {
     	StringBuilder res = new StringBuilder("시설 \"" + getName() + "\" 의 브리핑을 시작합니다.");
-    	res = res.append("\n").append("    ").append("    이 시설은... ").append(getDesc());
+    	res = res.append("\n").append("    ").append("    이 시설은, ").append(getDesc());
     	String adds = additionalDescribes(colony, city);
     	if(DataUtil.isNotEmpty(adds)) {
     		StringTokenizer lineTokenizer = new StringTokenizer(adds, "\n");
@@ -502,7 +502,10 @@ public abstract class AbstractFacility implements Facility {
     			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
     		}
     	}
-    	res = res.append("\n").append("    ").append("근로자 : ").append(getWorkingCitizensCount(city, colony)).append(" / ").append(getWorkerNeeded());
+    	res = res.append("\n").append("    ").append("근로자 : ").append(getWorkingCitizensCount(city, colony)).append(" / ").append(getWorkerCapacity()).append(" (최소 ").append(getWorkerNeeded()).append("명)");
+    	res = res.append("\n").append("유지비 : ").append(getMaintainFee(city, colony));
+    	res = res.append("\n").append("전력 사용량 : ").append(getPowerConsume());
+    	res = res.append("\n").append("점유 공간 : ").append(getSpaceSize());
     	res = res.append("\n").append("여기까지, 시설 \"" + getName() + "\" 의 브리핑을 마칩니다.");
     	return res.toString().trim();
     }

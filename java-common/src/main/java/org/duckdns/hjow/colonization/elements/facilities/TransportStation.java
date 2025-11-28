@@ -73,6 +73,14 @@ public abstract class TransportStation extends AbstractFacility {
         super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
     }
     
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("교통 시설");
+    	res = res.append("\n").append("    ").append("교통 수용량 : ").append(getCapacity());
+    	
+    	return res.toString().trim();
+    }
+    
     public static String getFacilityName() {
         return "";
     }
