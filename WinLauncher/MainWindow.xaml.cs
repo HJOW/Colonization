@@ -717,6 +717,14 @@ namespace WinLauncher
         /** 본 프로그램 실행 */
         private void Run()
         {
+            RunCommon("org.duckdns.hjow.colonization.Colonization", "--updator N");
+        }
+
+        // TODO 도움말, 라이센스 띄우기 구현
+
+        /** 실행 공통 */
+        private void RunCommon(string mainClassName, string options)
+        {
             SetProgrssValue(0);
             SetProgressIndeterminate(true);
 
@@ -727,7 +735,7 @@ namespace WinLauncher
 
             // Re-Checking installation
             Install();
-            
+
             // JAR 실행
             SetStatusMessage("Colonization 실행 중...");
 
@@ -735,15 +743,15 @@ namespace WinLauncher
             System.Diagnostics.Process process = new System.Diagnostics.Process();
 
             info.FileName = javaBinPath + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
-            info.CreateNoWindow  = true;
+            info.CreateNoWindow = true;
             info.UseShellExecute = false;
-            
+
             // 실행 파일명과 매개변수 준비
             string argJarPath;
             string fileName = "colonization-swing-" + versionString + ".jar";
             if (offlineJarPath != null)
             {
-                jarPath  = offlineJarPath;
+                jarPath = offlineJarPath;
                 if (offlineJarName != null) fileName = offlineJarName;
             }
 
@@ -763,7 +771,7 @@ namespace WinLauncher
             {
                 string namePart = f.Substring(libDir.Length);
                 if (namePart.StartsWith("\\")) namePart = namePart.Substring(1);
-                
+
                 if (!namePart.EndsWith(".jar")) continue;
                 if (javaVer < 15 && namePart.StartsWith("nashorn-core")) continue;
                 if (classPaths != "") classPaths = classPaths + cpSep;
@@ -774,20 +782,18 @@ namespace WinLauncher
             info.WorkingDirectory = jarPath;
 
             // 매개변수 입력
-            info.Arguments = "-classpath \"" + classPaths + "\" org.duckdns.hjow.colonization.Colonization --updator N";
+            info.Arguments = "-classpath \"" + classPaths + "\" " + mainClassName + " " + options;
 
             // Console.WriteLine("Java Version " + javaVer);
             // Console.WriteLine(info.Arguments);
-            
-            info.RedirectStandardInput  = true;
+
+            info.RedirectStandardInput = true;
             info.RedirectStandardOutput = true;
-            info.RedirectStandardError  = true;
+            info.RedirectStandardError = true;
 
             process.StartInfo = info;
             process.Start();
         }
-
-        // TODO 도움말, 라이센스 띄우기 구현
 
         private void SetProgressIndeterminate(bool indeterminate)
         {

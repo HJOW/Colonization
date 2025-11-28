@@ -718,6 +718,15 @@ namespace WinModern
         /** 본 프로그램 실행 */
         private void Run()
         {
+            RunCommon("org.duckdns.hjow.colonization.Colonization", "--updator N");
+        }
+
+        // TODO 도움말, 라이센스 띄우기 구현
+
+
+        /** 실행 공통 */
+        private void RunCommon(string mainClassName, string options)
+        {
             SetProgrssValue(0);
             SetProgressIndeterminate(true);
 
@@ -728,7 +737,7 @@ namespace WinModern
 
             // Re-Checking installation
             Install();
-            
+
             // JAR 실행
             SetStatusMessage("Colonization 실행 중...");
 
@@ -736,7 +745,7 @@ namespace WinModern
             System.Diagnostics.Process process = new System.Diagnostics.Process();
 
             info.FileName = javaBinPath + System.IO.Path.DirectorySeparatorChar + "javaw.exe";
-            info.CreateNoWindow  = true;
+            info.CreateNoWindow = true;
             info.UseShellExecute = false;
 
             // 실행 파일명과 매개변수 준비
@@ -775,17 +784,15 @@ namespace WinModern
             info.WorkingDirectory = jarPath;
 
             // 매개변수 입력
-            info.Arguments = "-classpath \"" + classPaths + "\" org.duckdns.hjow.colonization.Colonization --updator N";
+            info.Arguments = "-classpath \"" + classPaths + "\" " + mainClassName + " " + options;
 
-            info.RedirectStandardInput  = true;
+            info.RedirectStandardInput = true;
             info.RedirectStandardOutput = true;
-            info.RedirectStandardError  = true;
+            info.RedirectStandardError = true;
 
             process.StartInfo = info;
             process.Start();
         }
-
-        // TODO 도움말, 라이센스 띄우기 구현
 
         private void SetProgressIndeterminate(bool indeterminate)
         {
