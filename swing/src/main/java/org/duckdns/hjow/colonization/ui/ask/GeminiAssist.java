@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.ui.ask;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -42,16 +43,20 @@ import org.duckdns.hjow.gemini.GeminiSpeak;
 public class GeminiAssist implements Disposeable {
 	protected GUIColonyManager superInstance; // 직접 연관될 일이 많으므로 본 객체 그대로 가져오기
     protected JDialog     dialog;
+    
+    protected JPanel      pnCardRoot, pnConnect, pnChat;
+    protected CardLayout  cardRoot;
+    
     protected JEditorPane view;
     protected JTextField  field;
     protected JButton     btnReq;
+    
+    protected JTextField  tfProjId, tfApiKey;
     
     protected transient BufferedWriter writer;
     
     protected transient GeminiModel   model;
     protected transient GeminiSession session;
-    
-    protected transient GeminiModelDialog connDialog;
     
     public static final String EACH_DELIMITER = "------------------------------------------";
     
@@ -61,7 +66,7 @@ public class GeminiAssist implements Disposeable {
     	dialog = new JDialog(superInstance.getDialog());
     	dialog.setSize(400, 600);
     	GUIUtil.centerWindow(dialog);
-    	dialog.setTitle("Assist");
+    	dialog.setTitle(ColonyManager.t("조언자와의 채팅"));
     	dialog.setIconImage(GUIColonyManager.getIcon());
     	
     	init();
@@ -75,13 +80,27 @@ public class GeminiAssist implements Disposeable {
     	pnMain.setLayout(new BorderLayout());
     	dialog.add(pnMain, BorderLayout.CENTER);
     	
+    	pnCardRoot = new JPanel();
+    	cardRoot = new CardLayout();
+    	pnCardRoot.setLayout(cardRoot);
+    	pnMain.add(pnCardRoot, BorderLayout.CENTER);
+    	
+    	pnConnect = new JPanel();
+    	pnChat    = new JPanel();
+    	pnConnect.setLayout(new BorderLayout());
+    	pnChat.setLayout(new BorderLayout());
+    	pnCardRoot.add(pnConnect, "C1");
+    	pnCardRoot.add(pnChat   , "C2");
+    	pnCardRoot.add(new JPanel(), "C3");
+    	cardRoot.show(pnCardRoot, "C3");
+    	
     	JPanel pnCenter, pnDown;
     	pnCenter = new JPanel();
     	pnDown   = new JPanel();
     	pnCenter.setLayout(new BorderLayout());
     	pnDown.setLayout(new BorderLayout());
-    	pnMain.add(pnCenter, BorderLayout.CENTER);
-    	pnMain.add(pnDown, BorderLayout.SOUTH);
+    	pnChat.add(pnCenter, BorderLayout.CENTER);
+    	pnChat.add(pnDown, BorderLayout.SOUTH);
     	
     	view = new JEditorPane();
     	view.setEditable(false);
@@ -102,6 +121,105 @@ public class GeminiAssist implements Disposeable {
     	btnReq = new JButton(ColonyManager.t("말하기"));
     	btnReq.addActionListener(actionReq);
     	pnDown.add(btnReq, BorderLayout.EAST);
+    	
+    	// 접속 정보 입력 패널
+    	JPanel pnGrid = new JPanel();
+		pnDown = new JPanel();
+		pnGrid.setLayout(new GridLayout(8, 1));
+		pnDown.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		pnConnect.add(pnGrid, BorderLayout.NORTH);
+		pnConnect.add(pnDown, BorderLayout.SOUTH);
+		
+		JPanel pn;
+		JLabel lb;
+		
+		pn = new JPanel();
+		pn.setLayout(new FlowLayout(FlowLayout.CENTER));
+		lb = new JLabel(ColonyManager.t("Gemini Assist 인증"));
+		pn.add(lb);
+		pnGrid.add(pn);
+		
+		pn = new JPanel();
+		pn.setLayout(new FlowLayout(FlowLayout.LEFT));
+		lb = new JLabel(ColonyManager.t("프로젝트 ID"));
+		pn.add(lb);
+		pnGrid.add(pn);
+		
+		pn = new JPanel();
+		pn.setLayout(new BorderLayout());
+		tfProjId = new JTextField();
+		pn.add(tfProjId);
+		pnGrid.add(pn);
+		
+		pn = new JPanel();
+		pn.setLayout(new FlowLayout(FlowLayout.LEFT));
+		lb = new JLabel(ColonyManager.t("API KEY"));
+		pn.add(lb);
+		pnGrid.add(pn);
+		
+		pn = new JPanel();
+		pn.setLayout(new BorderLayout());
+		tfApiKey = new JTextField();
+		pn.add(tfApiKey);
+		pnGrid.add(pn);
+		
+		pn = new JPanel();
+		pnGrid.add(pn);
+		
+		pn = new JPanel();
+		pnGrid.add(pn);
+		
+		pn = new JPanel();
+		pnGrid.add(pn);
+		
+		JButton btnCancel, btnOk;
+		btnOk     = new JButton(ColonyManager.t("접속"));
+		btnCancel = new JButton(ColonyManager.t("취소"));
+		pnDown.add(btnOk);
+		pnDown.add(btnCancel);
+		
+		btnOk.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardRoot.show(pnCardRoot, "C3");
+				if(model == null) model = new GeminiModel();
+				
+				JsonObject json = loadConfig();
+				
+				String projId, apiKey, loc, modelCode;
+				projId    = tfProjId.getText();
+				apiKey    = tfApiKey.getText();
+				loc       = null;
+				modelCode = null;
+				
+				if(json.containsKey("location")) loc = json.get("location").toString();
+				if(DataUtil.isEmpty(loc)) loc = GeminiModel.LOCATION_SINGAPOLE;
+				
+				if(json.containsKey("model")) modelCode = json.get("model").toString();
+				if(DataUtil.isEmpty(modelCode)) modelCode = GeminiModel.MODEL_2_5_FLASH_LITE;
+				
+				model.setProjectId(projId);
+				model.setApiKey(apiKey);
+				model.setLocation(loc);
+				model.setModelCode(modelCode);
+				
+				json.put("projectId"  , model.getProjectId());
+				json.put("apkKey"     , model.getApiKey());
+				json.put("location"   , model.getLocation());
+				json.put("model"      , model.getModelCode());
+				
+				saveConfig(json);
+				connect();
+			}
+		});
+		
+		btnCancel.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				cardRoot.show(pnCardRoot, "C3");
+				dialog.setVisible(false);
+			}
+		});
     }
     
     /** Gemini 설정 읽기 */
@@ -171,9 +289,9 @@ public class GeminiAssist implements Disposeable {
         	if(json.containsKey("apkKey"   )) apiKey    = json.get("apkKey").toString();
         	
         	if(DataUtil.isEmpty(projectId) || DataUtil.isEmpty(apiKey)) {
-        		if(connDialog != null) connDialog.closeThis();
-        		connDialog = new GeminiModelDialog(dialog);
-        		connDialog.setVisible(true);
+        		tfProjId.setText("");
+        		tfApiKey.setText("");
+        		cardRoot.show(pnCardRoot, "C1");
         		return;
         	}
         	
@@ -182,6 +300,7 @@ public class GeminiAssist implements Disposeable {
         	model.setProjectId(projectId);
         	
         	field.setEnabled(true);
+        	cardRoot.show(pnCardRoot, "C2");
     	} catch(Throwable ex) {
     		put("system", ColonyManager.t("오류") + " : " + ex.getMessage());
     		GlobalLogs.processExceptionOccured(ex, true);
@@ -201,16 +320,19 @@ public class GeminiAssist implements Disposeable {
     		writer = null;
     	}
     	
-    	if(connDialog != null) connDialog.closeThis();
-		connDialog = null;
-    	
     	field.setEnabled(false);
+    	
+    	tfProjId.setText("");
+		tfApiKey.setText("");
+    	cardRoot.show(pnCardRoot, "C1");
     }
     
     /** 대화상자 열기 */
     public void open() {
     	if(model == null || session == null) {
     		connect();
+    	} else {
+    		cardRoot.show(pnCardRoot, "C2");
     	}
     	
     	dialog.setVisible(true);
@@ -231,9 +353,6 @@ public class GeminiAssist implements Disposeable {
 		
 		if(session != null) session.dispose();
 		session = null;
-		
-		if(connDialog != null) connDialog.closeThis();
-		connDialog = null;
 		
 		superInstance = null;
 	}
@@ -387,124 +506,5 @@ public class GeminiAssist implements Disposeable {
 			put(role, text);
 		}
 		
-	}
-	
-	class GeminiModelDialog extends JDialog {
-		private static final long serialVersionUID = 7421231925048231267L;
-
-		public GeminiModelDialog(JDialog parent) {
-			super(parent, true);
-			setSize(400, 500);
-			GUIUtil.centerWindow(dialog);
-	    	dialog.setTitle("Gemini Model");
-	    	dialog.setIconImage(GUIColonyManager.getIcon());
-			setLayout(new BorderLayout());
-			
-			JPanel pnMain = new JPanel();
-			pnMain.setLayout(new BorderLayout());
-			add(pnMain, BorderLayout.CENTER);
-			
-			
-			JPanel pnGrid = new JPanel();
-			JPanel pnDown = new JPanel();
-			pnGrid.setLayout(new GridLayout(8, 1));
-			pnDown.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			pnMain.add(pnGrid, BorderLayout.NORTH);
-			pnMain.add(pnDown, BorderLayout.SOUTH);
-			
-			JPanel pn;
-			JLabel lb;
-			
-			pn = new JPanel();
-			pn.setLayout(new FlowLayout(FlowLayout.CENTER));
-			lb = new JLabel(ColonyManager.t("Gemini Assist 인증"));
-			pn.add(lb);
-			pnGrid.add(pn);
-			
-			pn = new JPanel();
-			pn.setLayout(new FlowLayout(FlowLayout.LEFT));
-			lb = new JLabel(ColonyManager.t("프로젝트 ID"));
-			pn.add(lb);
-			pnGrid.add(pn);
-			
-			pn = new JPanel();
-			pn.setLayout(new BorderLayout());
-			JTextField tfProjId = new JTextField();
-			pn.add(tfProjId);
-			pnGrid.add(pn);
-			
-			pn = new JPanel();
-			pn.setLayout(new FlowLayout(FlowLayout.LEFT));
-			lb = new JLabel(ColonyManager.t("API KEY"));
-			pn.add(lb);
-			pnGrid.add(pn);
-			
-			pn = new JPanel();
-			pn.setLayout(new BorderLayout());
-			JTextField tfApiKey = new JTextField();
-			pn.add(tfApiKey);
-			pnGrid.add(pn);
-			
-			pn = new JPanel();
-			pnGrid.add(pn);
-			
-			pn = new JPanel();
-			pnGrid.add(pn);
-			
-			pn = new JPanel();
-			pnGrid.add(pn);
-			
-			JButton btnCancel, btnOk;
-			btnOk     = new JButton(ColonyManager.t("접속"));
-			btnCancel = new JButton(ColonyManager.t("취소"));
-			pnDown.add(btnOk);
-			pnDown.add(btnCancel);
-			
-			btnOk.addActionListener(new ActionListener() {	
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					closeThis();
-					if(model == null) model = new GeminiModel();
-					
-					JsonObject json = loadConfig();
-					
-					String projId, apiKey, loc, modelCode;
-					projId    = tfProjId.getText();
-					apiKey    = tfApiKey.getText();
-					loc       = null;
-					modelCode = null;
-					
-					if(json.containsKey("location")) loc = json.get("location").toString();
-					if(DataUtil.isEmpty(loc)) loc = GeminiModel.LOCATION_SINGAPOLE;
-					
-					if(json.containsKey("model")) modelCode = json.get("model").toString();
-					if(DataUtil.isEmpty(modelCode)) modelCode = GeminiModel.MODEL_2_5_FLASH_LITE;
-					
-					model.setProjectId(projId);
-					model.setApiKey(apiKey);
-					model.setLocation(loc);
-					model.setModelCode(modelCode);
-					
-					json.put("projectId"  , model.getProjectId());
-					json.put("apkKey"     , model.getApiKey());
-					json.put("location"   , model.getLocation());
-					json.put("model"      , model.getModelCode());
-					
-					connect();
-				}
-			});
-			
-			btnCancel.addActionListener(new ActionListener() {	
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					closeThis();
-				}
-			});
-		}
-		
-		/** 대화상자 닫기 (부모 클래스와 혼용 피하기 위함) */
-		protected void closeThis() {
-			setVisible(false);
-		}
 	}
 }
