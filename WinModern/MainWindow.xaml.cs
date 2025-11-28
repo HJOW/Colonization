@@ -715,6 +715,7 @@ namespace WinModern
             }
         }
 
+        /** 본 프로그램 실행 */
         private void Run()
         {
             SetProgrssValue(0);
@@ -783,6 +784,8 @@ namespace WinModern
             process.StartInfo = info;
             process.Start();
         }
+
+        // TODO 도움말, 라이센스 띄우기 구현
 
         private void SetProgressIndeterminate(bool indeterminate)
         {
