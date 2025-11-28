@@ -6,6 +6,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManager;
@@ -480,8 +481,35 @@ public abstract class AbstractFacility implements Facility {
     }
     
     @Override
+    public String getDesc() {
+    	try {
+    	    Class<? extends AbstractFacility> classThis = getClass();
+    	    Method mthd = classThis.getMethod("getFacilityDescription");
+    	    return (String) mthd.invoke(null);
+    	} catch(Exception ex) {
+    		throw new RuntimeException(ex.getMessage(), ex);
+    	}
+    }
+    
+    @Override
     public String describeForAI(Colony colony, City city) {
-    	return ""; // TODO
+    	StringBuilder res = new StringBuilder("시설 \"" + getName() + "\" 의 브리핑을 시작합니다.");
+    	res = res.append("\n").append("    ").append("    이 시설은... ").append(getDesc());
+    	String adds = additionalDescribes(colony, city);
+    	if(DataUtil.isNotEmpty(adds)) {
+    		StringTokenizer lineTokenizer = new StringTokenizer(adds, "\n");
+    		while(lineTokenizer.hasMoreTokens()) {
+    			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+    		}
+    	}
+    	res = res.append("\n").append("    ").append("근로자 : ").append(getWorkingCitizensCount(city, colony)).append(" / ").append(getWorkerNeeded());
+    	res = res.append("\n").append("여기까지, 시설 \"" + getName() + "\" 의 브리핑을 마칩니다.");
+    	return res.toString().trim();
+    }
+    
+    /** AI 요청에 싣을 추가 설명문 반환 */
+    protected String additionalDescribes(Colony col, City city) {
+    	return "";
     }
     
     public static String getFacilityName() {

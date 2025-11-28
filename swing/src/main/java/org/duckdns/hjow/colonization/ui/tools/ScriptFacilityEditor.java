@@ -104,6 +104,10 @@ public class ScriptFacilityEditor extends ScriptCreatorTool {
         res = res.append("function getWorkerSuitability(citizen) {                                                                                \n");
         res = res.append("    return 1;                                                                                                           \n");
         res = res.append("}                                                                                                                       \n");
+        res = res.append("                                                                                                                        \n");
+        res = res.append("function getDescriptionForAI(colony, city) {                                                                            \n");
+        res = res.append("    return '';                                                                                                          \n");
+        res = res.append("}                                                                                                                       \n");
         
         return res.toString().trim();
     }

@@ -94,6 +94,13 @@ public abstract class PowerPlant extends AbstractFacility {
         // Do nothing on PowerStation (implemented on City class)
     }
     
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("발전시설");
+    	res = res.append("\n").append("    ").append("기본 전력 생산량 : ").append(getCapacity()).append(" (생산량은 상황에 따라 변동될 수 있음)");
+    	return res.toString().trim();
+    }
+    
     public static String getFacilityName() {
         return "";
     }

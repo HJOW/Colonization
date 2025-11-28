@@ -200,6 +200,14 @@ public abstract class Residence extends AbstractFacility implements Home {
         return false;
     }
     
+    @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	StringBuilder res = new StringBuilder("거주시설");
+    	res = res.append("\n").append("    ").append("수용 최대 인원 수 : ").append(getCapacity());
+    	res = res.append("\n").append("    ").append("현재 거주 인원 수 : ").append(getCitizens(city, col).size());
+    	return res.toString().trim();
+    }
+    
     public static String getFacilityName() {
         return ColonyManager.t("주거 모듈");
     }

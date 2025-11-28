@@ -87,6 +87,9 @@ public interface Facility extends ColonyElements {
     
     /** 소속 도시 객체 반환 (소속 정착지 객체를 넣어야 함) */
     public City getCity(Colony col);
+    
+    /** 이 시설에 대한 설명 반환 (getFacilityDescription 메소드와 동일한 결과를 리턴) */
+    public String getDesc();
     /*
      * 이 Facility 구현 클래스는 다음 static 메소드들을 반드시 구현해야 함.
      * 

@@ -92,6 +92,15 @@ public class ScriptFacility extends AbstractFacility {
     }
     
     @Override
+    protected String additionalDescribes(Colony col, City city) {
+    	try {
+            engine.put("__colony", col.toJson());
+            engine.put("__city"  , city.toJson());
+            return String.valueOf(ColonyManager.evaluate(engine, "getDescriptionForAI(__colony, __city)")); 
+        } catch(Throwable tx) { throw new RuntimeException(tx.getMessage(), tx); }
+    }
+    
+    @Override
     public String getStatusDescription(City city, Colony colony) {
         return info.getDescription();
     }
