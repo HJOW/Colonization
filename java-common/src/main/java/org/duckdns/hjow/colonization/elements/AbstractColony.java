@@ -1554,13 +1554,13 @@ public abstract class AbstractColony implements Colony {
     }
     
     @Override
-    public String describeForAI() {
-    	StringBuilder res = new StringBuilder("정착지 \"" + getName() + "\"");
+    public String describeForAI(Colony colony, City city) {
+    	StringBuilder res = new StringBuilder("정착지 \"" + getName() + "\" 의 브리핑을 시작합니다.");
     	res = res.append("\n").append("    ").append("이 정착지에는 예산이 ").append(getMoney()).append(" 있습니다.");
     	res = res.append("\n").append("    ").append("이 정착지에는 다음과 같은 도시들이 개설되어 있습니다.");
     	
     	for(City o : getCities()) {
-    		String desc = o.describeForAI();
+    		String desc = o.describeForAI(this, o);
     		if(DataUtil.isEmpty(desc)) {
     			res = res.append("\n").append("        ").append("도시 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
     		} else {
@@ -1575,7 +1575,7 @@ public abstract class AbstractColony implements Colony {
     	for(Research o : getResearches()) {
     		if(o.getLevel() <= 0) continue;
     		
-    		String desc = o.describeForAI();
+    		String desc = o.describeForAI(this, null);
     		
     		if(DataUtil.isEmpty(desc)) {
     			res = res.append("\n").append("        ").append("기술 \"" + o.getName() + "\" (레벨 " + o.getLevel() + ", 상세정보를 조회할 수 없습니다.)");

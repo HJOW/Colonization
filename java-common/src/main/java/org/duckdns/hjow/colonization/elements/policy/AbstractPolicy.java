@@ -151,7 +151,7 @@ public abstract class AbstractPolicy implements Policy {
     }
     
     @Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
 }

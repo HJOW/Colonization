@@ -159,7 +159,7 @@ public abstract class AbstractProduct implements Product {
     }
     
     @Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
     

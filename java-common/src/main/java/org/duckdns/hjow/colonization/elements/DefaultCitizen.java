@@ -624,7 +624,27 @@ public class DefaultCitizen implements Citizen {
     }
     
     @Override
-    public String describeForAI() {
-    	return ""; // TODO
+    public String describeForAI(Colony colony, City city) {
+    	StringBuilder res = new StringBuilder("시민 \"" + getName() + "\" 의 브리핑을 시작합니다.");
+    	res = res.append("\n").append("    ").append("재산 : ").append(String.valueOf(getMoney()));
+    	res = res.append("\n").append("    ").append("행복도 : ").append(String.valueOf(getHappy())).append("/ 100");
+    	if(isHomeless()) {
+    		res = res.append("\n").append("    ").append("노숙자 (집이 없음)");
+    	} else {
+    		Home home = getLivingHome(city);
+    		res = res.append("\n").append("    ").append("거주 : ").append(home == null ? "(알 수 없음)" : home.getName());
+    	}
+    	if(isJobSeeker()) {
+    		res = res.append("\n").append("    ").append("백수 (일자리가 없음)");
+    	} else {
+    		if(getBuildingFacility() <= 0) {
+    		    Facility f = getWorkingFacility(city);
+        		res = res.append("\n").append("    ").append("직장 : ").append(f == null ? "(알 수 없음)" : f.getName());
+    		} else {
+    			res = res.append("\n").append("    ").append("직장 : ").append("시설 건설에 참여 중");
+    		}
+    	}
+    	res = res.append("\n").append("여기까지, 시민 \"" + getName() + "\" 의 브리핑을 마칩니다.");
+    	return res.toString().trim();
     }
 }

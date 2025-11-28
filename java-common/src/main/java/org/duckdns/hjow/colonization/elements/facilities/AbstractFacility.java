@@ -480,7 +480,7 @@ public abstract class AbstractFacility implements Facility {
     }
     
     @Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
     

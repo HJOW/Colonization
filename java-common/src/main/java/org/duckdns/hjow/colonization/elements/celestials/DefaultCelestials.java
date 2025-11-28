@@ -318,7 +318,7 @@ public class DefaultCelestials implements Celestials {
     }
 	
 	@Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
 	

@@ -64,5 +64,5 @@ public interface ColonyElements extends Serializable, Disposeable, JsonCompatibl
     public void markAsRefreshChildren(boolean f);
     
     /** AI 요청에 싣을 이 객체의 설명 문구 반환 */
-    public String describeForAI();
+    public String describeForAI(Colony colony, City city);
 }

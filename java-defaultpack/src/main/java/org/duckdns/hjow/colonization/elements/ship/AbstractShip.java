@@ -703,7 +703,7 @@ public abstract class AbstractShip implements Ship {
 	}
 	
 	@Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
     

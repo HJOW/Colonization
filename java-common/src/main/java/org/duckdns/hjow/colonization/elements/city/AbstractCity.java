@@ -1637,21 +1637,62 @@ public abstract class AbstractCity implements City {
     }
     
     @Override
-    public String describeForAI() {
-    	StringBuilder res = new StringBuilder("도시 \"" + getName() + "\"");
-    	res = res.append("\n").append("    ").append("이 도시에는 다음과 같은 건물과 시설들이 있습니다.");
-    	for(Facility o : getFacility()) {
-    		String desc = o.describeForAI();
-    		if(DataUtil.isEmpty(desc)) {
-    			res = res.append("\n").append("        ").append("시설 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
-    		} else {
-    			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
-        		while(lineTokenizer.hasMoreTokens()) {
-        			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+    public String describeForAI(Colony colony, City city) {
+    	StringBuilder res = new StringBuilder("도시 \"" + getName() + "\" 의 브리핑을 시작합니다.");
+    	List<Facility> fs = getFacility();
+    	if(! fs.isEmpty()) {
+    		res = res.append("\n").append("    ").append("이 도시에는 다음과 같은 건물과 시설들이 있습니다.");
+    		for(Facility o : fs) {
+        		String desc = o.describeForAI(colony, this);
+        		if(DataUtil.isEmpty(desc)) {
+        			res = res.append("\n").append("        ").append("시설 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
+        		} else {
+        			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+            		while(lineTokenizer.hasMoreTokens()) {
+            			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+            		}
         		}
-    		}
+        	}
     	}
+    	fs = null;
     	
+    	List<Citizen> cs = getCitizens();
+    	if(! cs.isEmpty()) {
+    		res = res.append("\n").append("    ").append("이 도시에는 다음과 같은 시민들이 있습니다.");
+    		for(Citizen o : cs) {
+        		String desc = o.describeForAI(colony, this);
+        		if(DataUtil.isEmpty(desc)) {
+        			res = res.append("\n").append("        ").append("시민 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
+        		} else {
+        			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+            		while(lineTokenizer.hasMoreTokens()) {
+            			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+            		}
+        		}
+        	}
+    	}
+    	cs = null;
+        
+    	List<Policy> ps = getPolicies();
+    	int policyEnabled = 0;
+    	for(Policy o : ps) { if(o.isEnabled()) policyEnabled++; }
+    	if(policyEnabled >= 1) {
+    		res = res.append("\n").append("    ").append("이 도시에는 다음과 같은 정책들이 활성화되어 있습니다.");
+    		for(Policy o : ps) {
+        		if(! o.isEnabled()) continue;
+        		
+        		String desc = o.describeForAI(colony, this);
+        		if(DataUtil.isEmpty(desc)) {
+        			res = res.append("\n").append("        ").append("정책 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
+        		} else {
+        			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+            		while(lineTokenizer.hasMoreTokens()) {
+            			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+            		}
+        		}
+        	}
+    	}
+    	res = res.append("\n").append("여기까지, 도시 \"" + getName() + "\" 의 브리핑을 마칩니다.");
     	return res.toString();
     }
     

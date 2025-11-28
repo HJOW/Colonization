@@ -269,7 +269,7 @@ public class DefaultLoan implements Loan {
     }
     
     @Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
     

@@ -368,7 +368,7 @@ public abstract class AbstractEnemy implements Enemy {
     }
 	
 	@Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
 }

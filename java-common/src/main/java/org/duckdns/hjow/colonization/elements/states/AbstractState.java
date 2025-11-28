@@ -159,7 +159,7 @@ public abstract class AbstractState implements State {
     }
     
     @Override
-    public String describeForAI() {
+    public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }
 
