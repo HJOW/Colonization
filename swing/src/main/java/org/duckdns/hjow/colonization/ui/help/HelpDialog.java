@@ -1,10 +1,12 @@
 package org.duckdns.hjow.colonization.ui.help;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 import java.util.Vector;
 
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,13 +26,24 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 public class HelpDialog implements Disposeable {
     protected transient GUIColonyManagerInterface superInstance;
     protected transient JDialog dialog;
+    protected transient JFrame  frame;
+    
     protected transient JSplitPane splits;
     protected transient JList<HelpContent> listHelp;
     protected transient JEditorPane taContent;
     
+    public HelpDialog() {
+    	init(null);
+    }
+    
     public HelpDialog(GUIColonyManagerInterface superInstance) {
         this.superInstance = superInstance;
-        dialog = new JDialog(superInstance.getDialog());
+        init(superInstance.getDialog());
+    }
+    
+    protected void init(Window win) {
+        if(win != null) dialog = new JDialog(win);
+        else frame = new JFrame();
         
         int width  = 600;
         int height = 500;
@@ -42,14 +55,23 @@ public class HelpDialog implements Disposeable {
             if(height < 500) height = 500;
         }
         
-        dialog.setSize(width, height);
-        GUIUtil.centerWindow(dialog);
-        dialog.setIconImage(GUIColonyManager.getIcon());
-        dialog.setLayout(new BorderLayout());
-        
         JPanel pnMain = new JPanel();
         pnMain.setLayout(new BorderLayout());
-        dialog.add(pnMain, BorderLayout.CENTER);
+        
+        if(frame != null) {
+        	frame.setSize(width, height);
+            GUIUtil.centerWindow(frame);
+            frame.setIconImage(GUIColonyManager.getIcon());
+            frame.setLayout(new BorderLayout());
+            frame.add(pnMain, BorderLayout.CENTER);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        } else {
+        	dialog.setSize(width, height);
+            GUIUtil.centerWindow(dialog);
+            dialog.setIconImage(GUIColonyManager.getIcon());
+            dialog.setLayout(new BorderLayout());
+            dialog.add(pnMain, BorderLayout.CENTER);
+        }
         
         splits = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         pnMain.add(splits, BorderLayout.CENTER);
@@ -110,19 +132,25 @@ public class HelpDialog implements Disposeable {
     
     /** 대화 상자 열기 */
     public void open() {
-        dialog.setTitle(ColonyManager.t("도움말"));
+        if(frame != null) frame.setTitle(ColonyManager.t("도움말"));
+        else dialog.setTitle(ColonyManager.t("도움말"));
         
         if(listHelp.getModel().getSize() >= 1) listHelp.setSelectedIndex(0);
         onListSelected();
         
-        dialog.setVisible(true);
+        if(frame != null) frame.setVisible(true);
+        else dialog.setVisible(true);
         splits.setDividerLocation(0.3);
     }
 
     @Override
     public void dispose() {
         if(dialog != null) dialog.setVisible(false);
+        if(frame  != null) frame.setVisible(false);
         superInstance = null;
         dialog = null;
+        
+        if(frame != null) { System.exit(0); return; }
+        frame = null;
     }
 }

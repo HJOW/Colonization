@@ -7,9 +7,12 @@ import org.duckdns.hjow.colonization.daemon.TCPSimpleDaemon;
 import org.duckdns.hjow.colonization.ui.GUIColonyManager;
 import org.duckdns.hjow.colonization.ui.GUIPreWorks;
 import org.duckdns.hjow.colonization.ui.LoadingAWTDialog;
+import org.duckdns.hjow.colonization.ui.help.HelpDialog;
+import org.duckdns.hjow.colonization.ui.licenses.LicenseDialog;
 import org.duckdns.hjow.commons.ui.LogComponent;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
+import org.duckdns.hjow.commons.util.GUIUtil;
 
 public class Colonization extends ConsoleColonization implements GUIColonizationMainClass {
     private static final Colonization INSTANCES = new Colonization();
@@ -41,6 +44,8 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     @Override
     public void run() {
         mode = arguments.get("mode");
+        
+        if(DataUtil.isEmpty(mode) && DataUtil.isNotEmpty(arguments.get("--mode"))) mode = arguments.get("--mode");
         if(DataUtil.isEmpty(mode)) mode = arguments.get("m");
         if(DataUtil.isEmpty(mode)) mode = "gui";
         
@@ -73,6 +78,12 @@ public class Colonization extends ConsoleColonization implements GUIColonization
             }
             manager = new GUIColonyManager(this);
             manager.open(this);
+        } else if(mode.equals("help") || mode.equals("h")) {
+        	defaultJobNoManager();
+        	new HelpDialog().open();
+        } else if(mode.equals("license") || mode.equals("l")) {
+        	defaultJobNoManager();
+        	new LicenseDialog().open();
         }
     }
     
@@ -113,5 +124,10 @@ public class Colonization extends ConsoleColonization implements GUIColonization
     @Override
     protected void preWorks(Map<String, String> args) {
         new GUIPreWorks(args).work();
+    }
+    
+    /** 매니저 없는 실행 모드인 경우 기본 작업 수행 */
+    protected void defaultJobNoManager() {
+    	GUIUtil.setLookAndFeel(null); // 시스템 기본 LookAndFeel
     }
 }
