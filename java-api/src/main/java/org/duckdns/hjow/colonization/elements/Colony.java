@@ -97,6 +97,8 @@ public interface Colony extends HasLocation {
     public void randomizeCelestials();
     /** 해당 함선의 소속 항구 찾기 */
     public Port findPort(Ship ship);
+    /** 해당 함선의 소속 도시 찾기 */
+    public City findCity(Ship ship);
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     public Vector<Ship> getShips();
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
@@ -113,6 +115,8 @@ public interface Colony extends HasLocation {
     public Ship getShip(long key);
     /** 이 정착지 내 모든 도시, 모든 우주공항에서 해당 함선 제거 (타 우주공항으로, 혹은 타 도시로 이동 시 이 메소드 호출 후 해당 도시에 다시 추가) */
     public void removeShip(Ship ship);
+    /** 우주공항 목록 반환 */
+    public List<Port> getPorts();
     /** 객체 복제, 일부 비공개 항목은 제외 */
     public Object cloneThis(boolean excludeSecrets);
 }

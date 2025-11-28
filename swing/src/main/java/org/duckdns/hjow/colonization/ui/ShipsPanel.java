@@ -15,7 +15,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.duckdns.hjow.colonization.ColonyManager;
-import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
@@ -131,7 +130,7 @@ public class ShipsPanel extends JPanel implements Disposeable {
 	}
 	
 	/** 화면 새로고침 시 호출 */
-	public void refresh(int cycle, Colony colony, ColonyManagerInterface superInstance) {
+	public void refresh(int cycle, Colony colony, GUIColonyManagerInterface superInstance) {
 		if(pnSpace.getColony() == null || colony != pnSpace.getColony()) {
 		    pnSpace.setColony(colony);
 		    spCameraX.setValue(colony.getX());

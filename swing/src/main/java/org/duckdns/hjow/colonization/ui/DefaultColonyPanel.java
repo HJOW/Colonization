@@ -376,7 +376,7 @@ public class DefaultColonyPanel extends JPanel implements ColonyElementPanel, Co
             }
         }
         
-        if(shipPanel != null) shipPanel.refresh(cycle, colony, superInstance);
+        if(shipPanel != null) shipPanel.refresh(cycle, colony, (GUIColonyManagerInterface) superInstance);
         
         refreshAccoutingTable();
         refreshLoanHaveList();

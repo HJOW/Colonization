@@ -1075,6 +1075,7 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 해당 함선의 소속 항구 찾기 */
+    @Override
     public Port findPort(Ship ship) {
     	for(City ct : getCities()) {
     		for(Facility f : ct.getFacility()) {
@@ -1082,6 +1083,22 @@ public abstract class AbstractColony implements Colony {
     				Port p = (Port) f;
     				for(Ship s : p.getShips()) {
     					if(s.getKey() == ship.getKey()) return p;
+    				}
+    			}
+    		}
+    	}
+    	return null;
+    }
+    
+    /** 해당 함선의 소속 도시 찾기 */
+    @Override
+    public City findCity(Ship ship) {
+    	for(City ct : getCities()) {
+    		for(Facility f : ct.getFacility()) {
+    			if(f instanceof Port) {
+    				Port p = (Port) f;
+    				for(Ship s : p.getShips()) {
+    					if(s.getKey() == ship.getKey()) return ct;
     				}
     			}
     		}
@@ -1168,6 +1185,18 @@ public abstract class AbstractColony implements Colony {
     	City city = p.getCity(this);
     	if(city == null) return;
     	city.removeShip(ship);
+    }
+    
+    /** 우주공항 목록 반환 */
+    public List<Port> getPorts() {
+    	List<Port> ports = new ArrayList<Port>();
+    	for(City c : getCities()) {
+    		for(Facility f : c.getFacility()) {
+    			if(f.getHp() <= 0) continue;
+    			if(f instanceof Port) ports.add((Port) f);
+    		}
+    	}
+    	return ports;
     }
     
     /** 빈 새 도시를 생성해 반환, 도시를 이 정착지에 등록시키지는 않음 */
