@@ -9,14 +9,14 @@ Windows 의 경우 WinLauncher 를 이용해 플레이가 가능합니다.
 JRE 확인 이후 게임 (Swing 빌드) 을 최신 버전으로 다운로드 받아 실행합니다.     
 자세한 사항은 다음 링크를 참고해 주세요.    
     
-https://github.com/HJOW/Colonization/releases/tag/WinLauncher_20251107    
+https://github.com/HJOW/Colonization/releases/tag/WinLauncher_20251129    
     
 기타 플랫폼의 경우    
 Java 8 런타임 환경 (OpenJDK 1.8 을 대신 사용 가능) 별도 설치가 필요합니다.
 마찬가지로 Swing 빌드 기반 버전입니다.    
 자세한 사항은 다음 링크를 참고해 주세요. 이 또한 Windows 에서도 사용이 가능합니다.    
     
-https://github.com/HJOW/Colonization/releases/tag/Swing_20251107    
+https://github.com/HJOW/Colonization/releases/tag/Swing_20251129    
 
 # 게임 언인스톨
 더 이상 플레이를 원하지 않아 PC에서 게임 삭제를 원하신다면    
