@@ -76,16 +76,26 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="5"/>
                             <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="25"/>
                             <ColumnDefinition Width="5"/>
                             <ColumnDefinition Width="60"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button Name="btnExplore" Grid.Row="0" Grid.Column="0" Click="BtnExplore_Click" Visibility="Hidden">탐색</Button>
                         <Button Name="btnInst" Grid.Row="0" Grid.Column="2" IsEnabled="False" Click="BtnInst_Click">설치</Button>
                         <Button Name="btnRun" Grid.Row="0" Grid.Column="4" IsEnabled="False" Click="BtnRun_Click">실행</Button>
-                        <Button Name="btnExit" Grid.Row="0" Grid.Column="6" Click="BtnExit_Click">종료</Button>
+                        <Button Name="btnMore" Grid.Row="0" Grid.Column="6" Click="BtnMore_Click" Content="▼">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Name="menuMore_Explore" Header="설치폴더 탐색" Click="MenuMore_Explore_Click"/>
+                                    <MenuItem Name="menuMore_License" Header="저작권 및 라이센스" Click="MenuMore_License_Click" IsEnabled="False"/>
+                                    <MenuItem Name="menuMore_Help" Header="도움말" Click="MenuMore_Help_Click" IsEnabled="False"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                        <Button Name="btnExit" Grid.Row="0" Grid.Column="8" Click="BtnExit_Click">종료</Button>
                     </Grid>
                 </Grid>
             </TabItem>

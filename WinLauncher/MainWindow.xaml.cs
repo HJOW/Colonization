@@ -103,12 +103,7 @@ namespace WinLauncher
             Thread mainThread = new Thread(RunWith);
             mainThread.Start();
         }
-
-        private void BtnExplore_Click(object sender, RoutedEventArgs e)
-        {
-            Util.OpenExplorer(pathInstalled);
-        }
-
+        
         private void BtnAgreeOk_Click(object sender, RoutedEventArgs e)
         {
             tabItemMainAction.IsEnabled = true;
@@ -329,7 +324,7 @@ namespace WinLauncher
 
             Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
             {
-                btnRun.IsEnabled = true;
+                btnRun.IsEnabled = false;
                 progMain.Value = 0;
                 progMain.IsIndeterminate = false;
 
@@ -357,7 +352,9 @@ namespace WinLauncher
                 {
                     btnInst.IsEnabled = false;
                     btnInst.Visibility = Visibility.Hidden;
-                    btnExplore.Visibility = Visibility.Visible;
+                    menuMore_Explore.Visibility = Visibility.Visible;
+                    menuMore_Help.IsEnabled = true;
+                    menuMore_License.IsEnabled = true;
                     btnRun.IsEnabled = true;
                     if (pathInstalled == null) pathInstalled = ROOTPATH;
                     statusMsg = "Colonization 실행 준비 완료";
@@ -387,14 +384,16 @@ namespace WinLauncher
                     progMain.Value = 0;
                     btnInst.IsEnabled = false;
                     btnRun.IsEnabled = true;
+                    menuMore_Help.IsEnabled = true;
+                    menuMore_License.IsEnabled = true;
 
                     if (!string.IsNullOrEmpty(pathInstalled))
                     {
-                        btnExplore.Visibility = Visibility.Visible;
+                        menuMore_Explore.Visibility = Visibility.Visible;
                     }
                     else
                     {
-                        btnExplore.Visibility = Visibility.Hidden;
+                        menuMore_Explore.Visibility = Visibility.Hidden;
                     }
                 }));
             }
@@ -793,6 +792,9 @@ namespace WinLauncher
 
             process.StartInfo = info;
             process.Start();
+
+            SetProgrssValue(0);
+            SetProgressIndeterminate(false);
         }
 
         private void SetProgressIndeterminate(bool indeterminate)
@@ -824,6 +826,30 @@ namespace WinLauncher
         private void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             SetProgrssValue(e.ProgressPercentage + progressPads + 10);
+        }
+
+        private void BtnMore_Click(object sender, RoutedEventArgs e)
+        {
+            btnMore.ContextMenu.PlacementTarget = btnMore;
+            btnMore.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            btnMore.ContextMenu.IsOpen = true;
+        }
+
+        private void MenuMore_Explore_Click(object sender, RoutedEventArgs e)
+        {
+            if (pathInstalled == null) pathInstalled = ROOTPATH;
+            if (!Directory.Exists(pathInstalled)) Directory.CreateDirectory(pathInstalled);
+            Util.OpenExplorer(pathInstalled);
+        }
+
+        private void MenuMore_License_Click(object sender, RoutedEventArgs e)
+        {
+            RunCommon("org.duckdns.hjow.colonization.Colonization", "--updator N --mode l");
+        }
+
+        private void MenuMore_Help_Click(object sender, RoutedEventArgs e)
+        {
+            RunCommon("org.duckdns.hjow.colonization.Colonization", "--updator N --mode h");
         }
     }
 }
