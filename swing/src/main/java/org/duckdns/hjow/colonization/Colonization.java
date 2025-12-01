@@ -9,6 +9,7 @@ import org.duckdns.hjow.colonization.ui.GUIPreWorks;
 import org.duckdns.hjow.colonization.ui.LoadingAWTDialog;
 import org.duckdns.hjow.colonization.ui.help.HelpDialog;
 import org.duckdns.hjow.colonization.ui.licenses.LicenseDialog;
+import org.duckdns.hjow.colonization.ui.tools.files.FileManager;
 import org.duckdns.hjow.commons.ui.LogComponent;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
@@ -84,6 +85,9 @@ public class Colonization extends ConsoleColonization implements GUIColonization
         } else if(mode.equals("license") || mode.equals("l")) {
         	defaultJobNoManager();
         	new LicenseDialog().open();
+        } else if(mode.equals("fileman") || mode.equals("f")) {
+        	defaultJobNoManager();
+        	new FileManager().open();
         }
     }
     

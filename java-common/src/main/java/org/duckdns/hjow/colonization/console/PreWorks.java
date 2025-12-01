@@ -41,10 +41,10 @@ public class PreWorks {
         if(DataUtil.isNotEmpty(strUsingUpdator)) runOffline = (! DataUtil.parseBoolean(strUsingUpdator.trim()));
         
         try { prepareConnectHttp();  } catch(Throwable ex) { ex.printStackTrace(); runOffline = true; jsonConfigSwing = null; return; }// 서버 접속을 아예 못한 경우 PreWork 작업 자체를 중단
-        try { prepareDownloadLibs(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  }
         
         if(! runOffline) {
-            try { downloadNewVersion(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  } // 새 버전 다운로드 및 실행되는 경우 새 버전 실행 후 이 프로세스는 종료됨 !
+        	try { prepareDownloadLibs(); } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  }
+            try { downloadNewVersion();  } catch(Throwable ex) { ex.printStackTrace(); runOffline = true;  } // 새 버전 다운로드 및 실행되는 경우 새 버전 실행 후 이 프로세스는 종료됨 !
             // 위 downloadNewVersion 에서, 새 버전 실행이 되면, 이 프로세스가 종료되므로
             //    이 시점에서 메소드 동작이 중단됨 !
         }

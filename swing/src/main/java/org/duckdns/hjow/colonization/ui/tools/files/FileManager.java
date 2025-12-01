@@ -3,6 +3,8 @@ package org.duckdns.hjow.colonization.ui.tools.files;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
@@ -10,9 +12,12 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
@@ -28,12 +33,14 @@ import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
 import org.duckdns.hjow.commons.util.DataUtil;
+import org.duckdns.hjow.commons.util.NetUtil;
 
 /** lib 파일들을 관리하는 대화상자 */
 public class FileManager extends AbstractTool {
 	protected transient boolean eventTabChanges = false;
 	
 	protected transient JTabbedPane tab;
+	protected transient JProgressBar prog;
 	
 	protected transient JSplitPane splitLibs;
 	protected transient JList<JarFile> listLibs;
@@ -41,9 +48,14 @@ public class FileManager extends AbstractTool {
 	protected transient DefaultListModel<JarFile> modelLibs;
 	protected transient DefaultListModel<JarWeb>  modelLibsOnWeb;
 	
+	protected transient JButton btnRemove, btnRefresh, btnDownload;
+	
 	protected transient Vector<JarFile> collectionLibs      = new Vector<JarFile>();
 	protected transient Vector<JarWeb>  collectionLibsOnWeb = new Vector<JarWeb>();
 	
+	public FileManager() {
+		super();
+	}
     public FileManager(Window win) {
     	super(win);
     }
@@ -70,9 +82,12 @@ public class FileManager extends AbstractTool {
 			}
 		});
 	    
+	    prog = new JProgressBar();
+	    pnCenter.add(prog, BorderLayout.NORTH);
+	    
 	    JPanel pnLibRoot = new JPanel();
 	    pnLibRoot.setLayout(new BorderLayout());
-	    tab.add(ColonyManager.t("Library"), pnLibRoot);
+	    tab.add(ColonyManager.t("라이브러리 파일 관리"), pnLibRoot);
 	    
 	    JPanel pnLibCenter = new JPanel();
 	    pnLibCenter.setLayout(new BorderLayout());
@@ -89,14 +104,6 @@ public class FileManager extends AbstractTool {
 	    splitLibs.setLeftComponent(pnLibLeft);
 	    splitLibs.setRightComponent(pnLibRight);
 	    
-	    JPanel pnLibCtrlLeft, pnLibCtrlRight;
-	    pnLibCtrlLeft  = new JPanel();
-	    pnLibCtrlRight = new JPanel();
-	    pnLibCtrlLeft.setLayout(new FlowLayout(FlowLayout.LEFT));
-	    pnLibCtrlRight.setLayout(new FlowLayout(FlowLayout.RIGHT));
-	    pnLibLeft.add(pnLibCtrlLeft, BorderLayout.NORTH);
-	    pnLibRight.add(pnLibCtrlRight, BorderLayout.NORTH);
-	    
 	    modelLibs      = new DefaultListModel<JarFile>();
 	    modelLibsOnWeb = new DefaultListModel<JarWeb>();
 	    
@@ -109,8 +116,78 @@ public class FileManager extends AbstractTool {
 	    pnLibLeft.add(listLibs, BorderLayout.CENTER);
 	    pnLibRight.add(listLibOnWeb, BorderLayout.CENTER);
 	    
-	    // TODO
+	    JPanel pnLibCtrlLeft, pnLibCtrlRight, pnLibCtrlLeftIn, pnLibCtrlRightIn;
 	    
+	    pnLibCtrlLeft  = new JPanel();
+	    pnLibCtrlRight = new JPanel();
+	    pnLibCtrlLeft.setLayout(new BorderLayout());
+	    pnLibCtrlRight.setLayout(new BorderLayout());
+	    pnLibLeft.add(pnLibCtrlLeft, BorderLayout.NORTH);
+	    pnLibRight.add(pnLibCtrlRight, BorderLayout.NORTH);
+	    
+	    pnLibCtrlLeftIn  = new JPanel();
+	    pnLibCtrlRightIn = new JPanel();
+	    pnLibCtrlLeftIn.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    pnLibCtrlRightIn.setLayout(new FlowLayout(FlowLayout.RIGHT));
+	    pnLibCtrlLeft.add(pnLibCtrlLeftIn, BorderLayout.CENTER);
+	    pnLibCtrlRight.add(pnLibCtrlRightIn, BorderLayout.CENTER);
+	    
+	    JPanel pnLb;
+	    JLabel lb;
+	    
+	    pnLb = new JPanel();
+	    pnLb.setLayout(new FlowLayout(FlowLayout.CENTER));
+	    lb = new JLabel(ColonyManager.t("설치된 파일"));
+	    pnLb.add(lb);
+	    pnLibCtrlLeft.add(pnLb, BorderLayout.NORTH);
+	    
+	    pnLb = new JPanel();
+	    pnLb.setLayout(new FlowLayout(FlowLayout.CENTER));
+	    lb = new JLabel(ColonyManager.t("다운로드 가능한 파일"));
+	    pnLb.add(lb);
+	    pnLibCtrlRight.add(pnLb, BorderLayout.NORTH);
+	    
+	    btnRefresh = new JButton(ColonyManager.t("새로고침"));
+	    pnLibCtrlLeftIn.add(btnRefresh);
+	    btnRefresh.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				refresh();
+			}
+		});
+	    
+	    btnRemove = new JButton(ColonyManager.t("삭제"));
+	    pnLibCtrlLeftIn.add(btnRemove);
+	    btnRemove.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JarFile j = listLibs.getSelectedValue();
+				if(j == null) { JOptionPane.showMessageDialog(dialog, ColonyManager.t("삭제할 항목을 먼저 선택해 주세요.")); return; }
+				
+				if(j.getFile() == null) { refresh(); return; }
+				if(! j.getFile().exists()) { refresh(); return; }
+				
+				prog.setIndeterminate(true);
+				try { j.getFile().delete(); } catch(Exception ex) { JOptionPane.showMessageDialog(dialog, ColonyManager.t("파일 삭제에 실패하였습니다.") + "\n" + ColonyManager.t("오류") + " : " + ex.getMessage()); }
+				refresh();
+			}
+		});
+	    
+	    btnDownload = new JButton(ColonyManager.t("다운로드"));
+	    pnLibCtrlRightIn.add(btnDownload);
+	    btnDownload.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JarWeb w = listLibOnWeb.getSelectedValue();
+				if(w == null) { JOptionPane.showMessageDialog(dialog, ColonyManager.t("다운로드할 항목을 먼저 선택해 주세요.")); return; }
+				
+				prog.setIndeterminate(true);
+				btnRefresh.setEnabled(false);
+		    	btnDownload.setEnabled(false);
+		    	btnRemove.setEnabled(false);
+				onDownloadRequested();				
+			}
+		});
 	}
 	
 	@Override
@@ -126,6 +203,11 @@ public class FileManager extends AbstractTool {
     
     /** 새로 고침 */
     public void refresh() {
+    	btnRefresh.setEnabled(false);
+    	btnDownload.setEnabled(false);
+    	btnRemove.setEnabled(false);
+    	prog.setIndeterminate(true);
+    	
     	new Thread(new Runnable() {	
 			@Override
 			public void run() {
@@ -229,8 +311,48 @@ public class FileManager extends AbstractTool {
 					
 					collectionLibs.clear();
 					collectionLibsOnWeb.clear();
+					
+					btnRefresh.setEnabled(true);
+			    	btnDownload.setEnabled(true);
+			    	btnRemove.setEnabled(true);
+			    	prog.setIndeterminate(false);
 				}
 			});
 		}
 	}
+	
+	/** 다운로드 요청 */
+    protected void onDownloadRequested() {
+    	final JarWeb w = listLibOnWeb.getSelectedValue();
+    	
+    	btnRefresh.setEnabled(false);
+    	btnDownload.setEnabled(false);
+    	btnRemove.setEnabled(false);
+    	prog.setIndeterminate(true);
+    	
+    	new Thread(new Runnable() {	
+			@Override
+			public void run() {
+				processDownload(w);
+			}
+		}).start();
+    }
+    
+    /** 다운로드 처리 */
+    protected void processDownload(JarWeb web) {
+    	try {
+    		NetUtil.download(web.getUrl(), web.getFile());
+    		refresh();
+    	} catch(final Throwable tx) {
+			SwingUtilities.invokeLater(new Runnable() {	
+				@Override
+				public void run() {
+					GlobalLogs.processExceptionOccured(tx, true);
+				    JOptionPane.showMessageDialog(dialog, ColonyManager.t("오류") + " : " + tx.getMessage());
+				    btnRefresh.setEnabled(true);
+				    prog.setIndeterminate(false);
+				}
+			});
+		}
+    }
 }
