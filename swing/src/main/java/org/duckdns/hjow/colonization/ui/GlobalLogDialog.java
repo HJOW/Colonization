@@ -45,7 +45,7 @@ public class GlobalLogDialog implements GlobalLogUI {
     protected void init(ColonyManagerInterface superInstance) {
         if(superInstance instanceof GUIColonyManagerInterface) dialog = new JDialog(((GUIColonyManagerInterface) superInstance).getDialog());
         else dialog = new JDialog();
-        dialog.setSize(600, 400);
+        dialog.setSize(400, 400);
         dialog.setTitle(ColonyManager.t("로그"));
         GUIUtil.centerWindow(dialog);
         dialog.setIconImage(GUIColonyManager.getIcon());
@@ -256,10 +256,18 @@ public class GlobalLogDialog implements GlobalLogUI {
     }
     
     public void setLocationBottom(Window superDialog) {
+    	setLocationBottom(superDialog, 0, 0);
+    }
+    
+    public void setLocationBottom(Window superDialog, int xAdds, int yAdds) {
         Point p = superDialog.getLocation();
         dialog.setSize(superDialog.getWidth(), dialog.getHeight());
-        dialog.setLocation((int) p.getX(), (int) (p.getY() + superDialog.getHeight()));
-    } 
+        dialog.setLocation((int) p.getX() + xAdds, (int) (p.getY() + superDialog.getHeight() + yAdds));
+    }
+    
+    public boolean isVisible() {
+    	return dialog.isVisible();
+    }
     
     public void oneCycle() {
         GlobalLogs inst = GlobalLogs.getInstance();

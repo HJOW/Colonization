@@ -102,6 +102,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
     protected transient AboutDialog aboutDialog;
     protected transient BackupManager backupManager;
     protected transient ConfigManager configManager;
+    protected transient SpaceViewDialog spaceView;
     protected transient HelpDialog helpDialog, licenseDialog;
     protected transient ToolManager toolManager;
     protected transient GeminiAssist assist;
@@ -164,24 +165,15 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
                 onWindowClosing();
             }
         });
+        
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentMoved(ComponentEvent e) {
-                int x = frame.getX();
-                int y = frame.getY() + frame.getHeight();
-                if(dialogGlobalLog instanceof GlobalLogDialog) {
-                    GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
-                    d.setLocation(x, y);
-                }
+            	onFrameMoved();
             }
             @Override
             public void componentResized(ComponentEvent e) {
-                int w = frame.getWidth();
-                if(dialogGlobalLog instanceof GlobalLogDialog) {
-                    GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
-                    d.setSize(w, (int) d.getSize().getHeight());
-                    componentMoved(e);
-                }
+            	onFrameResized();
             }
         });
         
@@ -259,6 +251,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         licenseDialog = new LicenseDialog(this);
         aboutDialog   = new AboutDialog(frame, "Colonization", "", "v" + getVersionString() + " (No. " + BUILD_NO + ")");
         configManager = new ConfigManager(this);
+        spaceView     = new SpaceViewDialog(this);
         toolManager   = new ToolManager(frame);
         assist        = new GeminiAssist(this);
         
@@ -694,9 +687,17 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
             @Override
             public void actionPerformed(ActionEvent e) {
                 dialogGlobalLog.open(getSelf());
-                
-                GlobalLogDialog logDiag = (GlobalLogDialog) dialogGlobalLog;
-                logDiag.setLocationBottom(getDialog());
+                onFrameResized();
+            }
+        });
+        
+        menuItem = new JMenuItem(t("View 보기"));
+        menuView.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                spaceView.open(getColony());
+                onFrameResized();
             }
         });
         
@@ -807,6 +808,44 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         }
         flagLookAndFeelInitialized = true;
     }
+    
+    /** 메인 창 이동 시 호출 */
+    protected void onFrameMoved() {
+    	int x = frame.getX();
+        int y = frame.getY() + frame.getHeight();
+        
+        if(dialogGlobalLog instanceof GlobalLogDialog) {
+            GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
+            
+            if(spaceView.isVisible() && d.isVisible()) {
+            	d.setLocation(x, y);
+            	spaceView.setLocation((int) (x + d.getSize().getWidth()), y);
+            } else if(spaceView.isVisible()) {
+            	spaceView.setLocation(x, y);
+            } else if(d.isVisible()) {
+            	d.setLocation(x, y);
+            }
+        }
+    }
+    
+    /** 메인 창 크기 변경 시 호출 */
+    protected void onFrameResized() {
+    	int w = frame.getWidth();
+        if(dialogGlobalLog instanceof GlobalLogDialog) {
+            GlobalLogDialog d = (GlobalLogDialog) dialogGlobalLog;
+            
+            if(spaceView.isVisible() && d.isVisible()) {
+            	d.setSize(w / 2, (int) d.getSize().getHeight());
+            	spaceView.setSize(w / 2, (int) d.getSize().getHeight());
+            } else if(spaceView.isVisible()) {
+            	spaceView.setSize(w, (int) d.getSize().getHeight());
+            } else if(d.isVisible()) {
+            	d.setSize(w, (int) d.getSize().getHeight());
+            }
+            
+            onFrameMoved();
+        }
+    }
 
     /** 창이 열리기 전 수행해야 할 작업 */
     public void onBeforeOpened(GUIColonizationMainClass superInstance) {
@@ -865,6 +904,10 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         SwingUtilities.invokeLater(new Runnable() {   
             @Override
             public void run() {
+            	if(dialogGlobalLog != null) dialogGlobalLog.open(getSelf());
+                if(spaceView       != null) spaceView.open(getColony());
+                onFrameResized();
+            	
                 ((GUIColonizationMainClass) superInstance).closeLoadingDialog();
                 
                 cardLocalLoading1.show(pnLocalRoot, "C1");
@@ -1141,7 +1184,6 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
     public void open(ColonizationMainClass superInstance) {
         onBeforeOpened((GUIColonizationMainClass) superInstance);
         frame.setVisible(true);
-        if(dialogGlobalLog != null) dialogGlobalLog.open(this);
         onAfterOpened((GUIColonizationMainClass) superInstance);
     }
 
@@ -1200,6 +1242,9 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         
         if(configManager != null) configManager.dispose();
         configManager = null;
+        
+        if(spaceView != null) spaceView.dispose();
+        spaceView = null;
         
         if(helpDialog != null) helpDialog.dispose();
         helpDialog = null;
