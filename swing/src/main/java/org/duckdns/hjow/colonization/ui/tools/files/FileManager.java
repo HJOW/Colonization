@@ -48,7 +48,7 @@ public class FileManager extends AbstractTool {
 	protected transient DefaultListModel<JarFile> modelLibs;
 	protected transient DefaultListModel<JarWeb>  modelLibsOnWeb;
 	
-	protected transient JButton btnRemove, btnRefresh, btnDownload;
+	protected transient JButton btnRemove, btnRefresh, btnDownload, btnDownloadAll;
 	
 	protected transient Vector<JarFile> collectionLibs      = new Vector<JarFile>();
 	protected transient Vector<JarWeb>  collectionLibsOnWeb = new Vector<JarWeb>();
@@ -187,8 +187,23 @@ public class FileManager extends AbstractTool {
 				prog.setIndeterminate(true);
 				btnRefresh.setEnabled(false);
 		    	btnDownload.setEnabled(false);
+		    	btnDownloadAll.setEnabled(false);
 		    	btnRemove.setEnabled(false);
 				onDownloadRequested();				
+			}
+		});
+	    
+	    btnDownloadAll = new JButton(ColonyManager.t("모두 다운로드"));
+	    pnLibCtrlRightIn.add(btnDownloadAll);
+	    btnDownloadAll.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				prog.setIndeterminate(true);
+				btnRefresh.setEnabled(false);
+		    	btnDownload.setEnabled(false);
+		    	btnDownloadAll.setEnabled(false);
+		    	btnRemove.setEnabled(false);
+				onDownloadAllRequested();				
 			}
 		});
 	}
@@ -208,6 +223,7 @@ public class FileManager extends AbstractTool {
     public void refresh() {
     	btnRefresh.setEnabled(false);
     	btnDownload.setEnabled(false);
+    	btnDownloadAll.setEnabled(false);
     	btnRemove.setEnabled(false);
     	prog.setIndeterminate(true);
     	
@@ -317,6 +333,7 @@ public class FileManager extends AbstractTool {
 					
 					btnRefresh.setEnabled(true);
 			    	btnDownload.setEnabled(true);
+			    	btnDownloadAll.setEnabled(true);
 			    	btnRemove.setEnabled(true);
 			    	prog.setIndeterminate(false);
 				}
@@ -330,22 +347,23 @@ public class FileManager extends AbstractTool {
     	
     	btnRefresh.setEnabled(false);
     	btnDownload.setEnabled(false);
+    	btnDownloadAll.setEnabled(false);
     	btnRemove.setEnabled(false);
     	prog.setIndeterminate(true);
     	
     	new Thread(new Runnable() {	
 			@Override
 			public void run() {
-				processDownload(w);
+				processDownload(w, true);
 			}
 		}).start();
     }
     
     /** 다운로드 처리 */
-    protected void processDownload(JarWeb web) {
+    protected void processDownload(JarWeb web, boolean refreshAfter) {
     	try {
     		NetUtil.download(web.getUrl(), web.getFile());
-    		refresh();
+    		if(refreshAfter) refresh();
     	} catch(final Throwable tx) {
 			SwingUtilities.invokeLater(new Runnable() {	
 				@Override
@@ -357,5 +375,33 @@ public class FileManager extends AbstractTool {
 				}
 			});
 		}
+    }
+    
+    /** 전체 다운로드 요청 */
+    protected void onDownloadAllRequested() {
+    	btnRefresh.setEnabled(false);
+    	btnDownload.setEnabled(false);
+    	btnDownloadAll.setEnabled(false);
+    	btnRemove.setEnabled(false);
+    	prog.setIndeterminate(true);
+    	
+    	collectionLibsOnWeb.clear();
+    	for(int idx=0; idx<modelLibsOnWeb.getSize(); idx++) {
+    		collectionLibsOnWeb.add(modelLibsOnWeb.getElementAt(idx));
+    	}
+    	
+    	for(JarWeb w : collectionLibsOnWeb) {
+    		modelLibsOnWeb.removeElement(w);
+    	}
+    	
+    	new Thread(new Runnable() {	
+			@Override
+			public void run() {
+				for(JarWeb w : collectionLibsOnWeb) {
+				    processDownload(w, false);
+				}
+				refresh();
+			}
+		}).start();
     }
 }
