@@ -85,6 +85,12 @@ public class FileManager extends AbstractTool {
 	    prog = new JProgressBar();
 	    pnCenter.add(prog, BorderLayout.NORTH);
 	    
+	    JPanel pnLb = new JPanel();
+	    pnLb.setLayout(new FlowLayout());
+	    JLabel lb = new JLabel(ColonyManager.t("다운로드된 lib 파일은 다음번 실행에 적용됩니다."));
+	    pnLb.add(lb);
+	    pnCenter.add(pnLb, BorderLayout.SOUTH);
+	    
 	    JPanel pnLibRoot = new JPanel();
 	    pnLibRoot.setLayout(new BorderLayout());
 	    tab.add(ColonyManager.t("라이브러리 파일 관리"), pnLibRoot);
@@ -131,9 +137,6 @@ public class FileManager extends AbstractTool {
 	    pnLibCtrlRightIn.setLayout(new FlowLayout(FlowLayout.RIGHT));
 	    pnLibCtrlLeft.add(pnLibCtrlLeftIn, BorderLayout.CENTER);
 	    pnLibCtrlRight.add(pnLibCtrlRightIn, BorderLayout.CENTER);
-	    
-	    JPanel pnLb;
-	    JLabel lb;
 	    
 	    pnLb = new JPanel();
 	    pnLb.setLayout(new FlowLayout(FlowLayout.CENTER));
