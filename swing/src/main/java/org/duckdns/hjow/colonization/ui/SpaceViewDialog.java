@@ -39,8 +39,12 @@ public class SpaceViewDialog implements Disposeable {
         dialog.add(pnMain, BorderLayout.CENTER);
         
         spaces = new SwingSpacePanel();
-        dialog.add(spaces.getComponent(), BorderLayout.CENTER);
         
+        Colony col = superInstance.getColony();
+        spaces.setColony(col);
+        if(col != null) spaces.setCameraLocation(col.getCoordinate());
+        
+        dialog.add(spaces.getComponent(), BorderLayout.CENTER);
         dialog.addWindowListener(new WindowAdapter() {
         	@Override
         	public void windowClosing(WindowEvent e) {
@@ -81,6 +85,19 @@ public class SpaceViewDialog implements Disposeable {
 			spaces.refresh();
 		} else if(code == KeyEvent.VK_E) {
 			spaces.rotateCamera(spaces.getCameraYaw() - Math.toRadians(1), spaces.getCameraPitch());
+			spaces.refresh();
+		}  else if(code == KeyEvent.VK_O) {
+			Colony col = superInstance.getColony();
+			Coordinate3D coord = null;
+			if(col == null) coord = new Coordinate3D();
+			else {
+				coord = col.getCoordinate();
+				coord.setX(coord.getX() - 100L);
+				coord.setY(coord.getY() - 100L);
+				coord.setZ(coord.getZ() -  10L);
+			}
+			spaces.setCameraLocation(coord);
+			spaces.rotateCamera(0.0, 0.0);
 			spaces.refresh();
 		}
     }

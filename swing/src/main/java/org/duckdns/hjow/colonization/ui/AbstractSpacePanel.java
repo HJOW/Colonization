@@ -21,9 +21,11 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 	@Override
 	public void setColony(Colony colony) {
 		this.colony = colony;
-		cameraLocation.setX(colony.getX() - 100L);
-		cameraLocation.setY(colony.getY() - 100L);
-		cameraLocation.setZ(colony.getZ() +  10L);
+		if(colony != null) { 
+			cameraLocation.setX(colony.getX() - 100L);
+			cameraLocation.setY(colony.getY() - 100L);
+			cameraLocation.setZ(colony.getZ() +  10L);
+		}
 		refresh();
 	}
 	
