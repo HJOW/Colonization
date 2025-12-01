@@ -68,6 +68,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			
 			radius = Math.ceil(sizes * 3 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
 			if(radius >= Integer.MAX_VALUE) radius = (double) Integer.MAX_VALUE;
+			if(radius < 1.0) radius = 1.0;
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -93,6 +94,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			
 			radius = Math.ceil(sizes * 2 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
 			if(radius >= Integer.MAX_VALUE) radius = (double) Integer.MAX_VALUE;
+			if(radius < 1.0) radius = 1.0;
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
@@ -111,6 +113,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			
 			radius = Math.ceil(sizes * 1.5 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
 			if(radius >= Integer.MAX_VALUE) radius = (double) Integer.MAX_VALUE;
+			if(radius < 1.0) radius = 1.0;
 			
 			OvalObject2D ov = new OvalObject2D();
 			ov.setCenter(proj); // 2D 정보만 입력됨
