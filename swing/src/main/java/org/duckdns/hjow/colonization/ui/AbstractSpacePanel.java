@@ -21,13 +21,22 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 	@Override
 	public void setColony(Colony colony) {
 		this.colony = colony;
-		if(colony != null) { 
-			cameraLocation.setX(colony.getX() - 100L);
-			cameraLocation.setY(colony.getY() - 100L);
-			cameraLocation.setZ(colony.getZ() +  10L);
-			setCameraToSee(colony.getCoordinate());
-		}
+		resetCameraPosition();
 		refresh();
+	}
+	
+	/** 카메라 위치 초기화 */
+	public void resetCameraPosition() {
+		if(colony != null) { 
+			cameraLocation.setX(colony.getX() - 300L);
+			cameraLocation.setY(colony.getY() - 300L);
+			cameraLocation.setZ(colony.getZ() + 100L);
+		} else {
+			cameraLocation.setX(0L);
+			cameraLocation.setY(0L);
+			cameraLocation.setZ(0L);
+		}
+		setCameraToSee();
 	}
 	
 	@Override
@@ -88,6 +97,16 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 		while(this.getCameraYaw()   < 0) this.setCameraYaw(  2 * Math.PI - this.getCameraYaw()  );
 		while(this.getCameraPitch() < 0) this.setCameraPitch(2 * Math.PI - this.getCameraPitch());
 	}
+	
+	/** 카메라가 정착지 좌표를 바라보도록 방향 조정시키기 (카메라 위치는 변하지 않음) */
+    public void setCameraToSee() {
+    	Colony col = getColony();
+    	if(col == null) {
+    	    rotateCamera(0.0, 0.0);
+    	} else {
+    	    setCameraToSee(getColony().getCoordinate());
+    	}
+    }
 	
 	/** 카메라가 특정 좌표를 바라보도록 방향 조정시키기 (카메라 위치는 변하지 않음) */
     public void setCameraToSee(Coordinate3D target) {

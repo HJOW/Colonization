@@ -76,42 +76,31 @@ public class SpaceViewDialog implements Disposeable {
 		} else if(code == KeyEvent.VK_RIGHT  || code == KeyEvent.VK_D) {
 			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX(), spaces.getCameraLocation().getY() + 1, spaces.getCameraLocation().getZ()));
 			spaces.refresh();
-		} else if(code == KeyEvent.VK_R) {
+		} else if(code == KeyEvent.VK_R || code == KeyEvent.VK_PAGE_UP) {
 			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX(), spaces.getCameraLocation().getY(), spaces.getCameraLocation().getZ() + 1));
 			spaces.refresh();
-		} else if(code == KeyEvent.VK_F) {
+		} else if(code == KeyEvent.VK_F || code == KeyEvent.VK_PAGE_DOWN) {
 			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX(), spaces.getCameraLocation().getY(), spaces.getCameraLocation().getZ() - 1));
 			spaces.refresh();
 		} else if(code == KeyEvent.VK_Q) {
-			spaces.rotateCamera(spaces.getCameraYaw() + Math.toRadians(1), spaces.getCameraPitch());
+			spaces.rotateCamera(spaces.getCameraYaw() - Math.toRadians(1), spaces.getCameraPitch());
 			spaces.refresh();
 		} else if(code == KeyEvent.VK_E) {
-			spaces.rotateCamera(spaces.getCameraYaw() - Math.toRadians(1), spaces.getCameraPitch());
+			spaces.rotateCamera(spaces.getCameraYaw() + Math.toRadians(1), spaces.getCameraPitch());
+			spaces.refresh();
+		} else if(code == KeyEvent.VK_T) {
+			spaces.rotateCamera(spaces.getCameraYaw(), spaces.getCameraPitch() - Math.toRadians(1));
+			spaces.refresh();
+		} else if(code == KeyEvent.VK_G) {
+			spaces.rotateCamera(spaces.getCameraYaw(), spaces.getCameraPitch() + Math.toRadians(1));
 			spaces.refresh();
 		}  else if(code == KeyEvent.VK_O) {
 			Colony col = superInstance.getColony(); // 정착지
-			
-			// 정착지의 3D 좌표
-            Coordinate3D colLoc = col == null ? null : col.getCoordinate();
-
-            // 적정한 카메라 위치 계산
-			Coordinate3D coord = null;
-			if(col == null) coord = new Coordinate3D();
-			else {
-				coord = new Coordinate3D(colLoc.getX(), colLoc.getY(), colLoc.getZ());
-				
-                // 정착지 위치로부터 적당히 떨어진 거리로 지정
-				coord.setX(colLoc.getX() - 100L);
-				coord.setY(colLoc.getY() - 100L);
-				coord.setZ(colLoc.getZ() -  10L);
-			}
-
-            // 지정된 위치로 카메라 위치 지정
-			spaces.setCameraLocation(coord);
-
-            // 이 카메라가 정착지를 바라보도록 yaw 와 pitch 값 지정
-			spaces.setCameraToSee(colLoc);
-
+            spaces.setColony(col);
+            
+            // 카메라 위치 초기화
+            spaces.resetCameraPosition();
+            
             // 새로 고침
 			spaces.refresh();
 		}
