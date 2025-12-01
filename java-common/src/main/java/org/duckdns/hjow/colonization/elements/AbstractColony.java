@@ -22,6 +22,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.celestials.DefaultCelestials;
+import org.duckdns.hjow.colonization.elements.celestials.SoFarCelestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -1552,10 +1553,17 @@ public abstract class AbstractColony implements Colony {
     	Random rand = new Random();
 		int intRand = ((int) (Math.abs(rand.nextInt())) / (Integer.MAX_VALUE / 1000)) + 1000;
 		int grade = 1;
+		int idx=0;
 		
-	    for(int idx=0; idx<intRand; idx++) {
+	    for(idx=0; idx<intRand; idx++) {
 	    	newOne = DefaultCelestials.createRandom(getX(), getY(), getZ(), 10000, (int) (100000 + (Math.random() * idx)), grade + (Math.random() >= 0.5 ? 1 : 0) + (Math.random() >= 0.8 ? 1 : 0) );
 	    	if(idx % 100 == 0) grade++;
+	    	celestials.add(newOne);
+	    }
+	    
+	    intRand = ((int) (Math.abs(rand.nextInt())) / (Integer.MAX_VALUE / 1000)) + 1000;
+	    for(idx=0; idx<intRand; idx++) {
+	    	newOne = SoFarCelestials.createRandom(getX(), getY(), getZ());
 	    	celestials.add(newOne);
 	    }
     }
