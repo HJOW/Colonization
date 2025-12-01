@@ -846,6 +846,11 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
             onFrameMoved();
         }
     }
+    
+    /** 자식 대화상자 (로그 및 뷰 대화상자) 닫힌 경우 호출 */
+    public void onChildDialogClosed() {
+    	onFrameResized();
+    }
 
     /** 창이 열리기 전 수행해야 할 작업 */
     public void onBeforeOpened(GUIColonizationMainClass superInstance) {

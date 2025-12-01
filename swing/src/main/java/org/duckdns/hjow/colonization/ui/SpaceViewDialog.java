@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -16,13 +18,13 @@ import org.duckdns.hjow.commons.util.GUIUtil;
 
 /** 우주 현황판 대화상자 */
 public class SpaceViewDialog implements Disposeable {
-	protected GUIColonyManagerInterface superInterface;
+	protected GUIColonyManagerInterface superInstance;
 	
     protected JDialog    dialog;
     protected SpacePanel spaces;
     
-    public SpaceViewDialog(GUIColonyManagerInterface superInterface) {
-    	dialog = new JDialog(superInterface.getDialog());
+    public SpaceViewDialog(GUIColonyManagerInterface superInstance) {
+    	dialog = new JDialog(superInstance.getDialog());
     	dialog.setSize(300, 300);
         dialog.setTitle(ColonyManager.t("View"));
         GUIUtil.centerWindow(dialog);
@@ -35,6 +37,13 @@ public class SpaceViewDialog implements Disposeable {
         
         spaces = new SwingSpacePanel();
         dialog.add(spaces.getComponent(), BorderLayout.CENTER);
+        
+        dialog.addWindowListener(new WindowAdapter() {
+        	@Override
+        	public void windowClosing(WindowEvent e) {
+        		if(superInstance != null) superInstance.onChildDialogClosed();
+        	}
+		});
     }
     
     public JDialog getDialog() { return dialog; }
@@ -83,7 +92,7 @@ public class SpaceViewDialog implements Disposeable {
 		}
 		if(spaces != null) spaces.dispose();
 		spaces = null;
-		superInterface = null;
+		superInstance = null;
 	}
     
 }

@@ -6,6 +6,8 @@ import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -42,7 +44,7 @@ public class GlobalLogDialog implements GlobalLogUI {
         init(superInstance);
     }
 
-    protected void init(ColonyManagerInterface superInstance) {
+    protected void init(final ColonyManagerInterface superInstance) {
         if(superInstance instanceof GUIColonyManagerInterface) dialog = new JDialog(((GUIColonyManagerInterface) superInstance).getDialog());
         else dialog = new JDialog();
         dialog.setSize(400, 400);
@@ -58,6 +60,15 @@ public class GlobalLogDialog implements GlobalLogUI {
         pnDown.setLayout(new BorderLayout());
         dialog.add(pnMain, BorderLayout.CENTER);
         dialog.add(pnDown, BorderLayout.SOUTH);
+        
+        dialog.addWindowListener(new WindowAdapter() {
+        	@Override
+        	public void windowClosing(WindowEvent e) {
+        		if(superInstance != null && (superInstance instanceof GUIColonyManagerInterface)) {
+        			((GUIColonyManagerInterface) superInstance).onChildDialogClosed();
+        		}
+        	}
+		});
 
         taLog = new JLogArea();
         taLog.setLineWrap(true);

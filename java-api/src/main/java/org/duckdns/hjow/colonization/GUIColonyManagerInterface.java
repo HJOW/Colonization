@@ -23,4 +23,7 @@ public interface GUIColonyManagerInterface extends ColonyManagerInterface {
     public void onNewColonyTypeDecided(String type, String name, int difficulty, Object decider);
     /** 서블릿(웹) 패널 내 정착지 영역 새로고침 요청 */
     public void requestLoadServletColony();
+    
+    /** 자식 대화상자 닫일 때 프레임 동작에 영향을 받아야 하는 경우 외부에서 호출됨 */
+    public void onChildDialogClosed();
 }
