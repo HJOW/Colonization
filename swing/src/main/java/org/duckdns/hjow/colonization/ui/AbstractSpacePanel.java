@@ -45,6 +45,7 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 		draw(g);
 	}
 
+	@Override
 	public Coordinate3D getCameraLocation() {
 		return cameraLocation;
 	}
@@ -54,6 +55,7 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 		this.cameraLocation = cameraLocation;
 	}
 
+	@Override
 	public double getCameraYaw() {
 		return cameraYaw;
 	}
@@ -63,6 +65,7 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 		this.cameraYaw = cameraYaw;
 	}
 
+	@Override
 	public double getCameraPitch() {
 		return cameraPitch;
 	}
@@ -70,6 +73,16 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 	@Override
 	public void setCameraPitch(double cameraPitch) {
 		this.cameraPitch = cameraPitch;
+	}
+	
+	public void rotateCamera(double yaw, double pitch) {
+		setCameraYaw(yaw);
+		setCameraPitch(pitch);
+		
+		while(this.getCameraYaw()   > Math.PI * 2) this.setCameraYaw(  this.getCameraYaw()   - (2 * Math.PI)); 
+		while(this.getCameraPitch() > Math.PI * 2) this.setCameraPitch(this.getCameraPitch() - (2 * Math.PI)); 
+		while(this.getCameraYaw()   < 0) this.setCameraYaw(  2 * Math.PI - this.getCameraYaw()  );
+		while(this.getCameraPitch() < 0) this.setCameraPitch(2 * Math.PI - this.getCameraPitch());
 	}
 
 	@Override

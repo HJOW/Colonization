@@ -1621,6 +1621,8 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
             }
         }
         
+        if(spaceView != null) spaceView.refresh(col);
+        
         cardLocalLoading2.show(pnLocalSecond, "C1F");
     }
     
