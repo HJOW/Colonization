@@ -40,13 +40,21 @@ public class SpaceViewDialog implements Disposeable {
         pnMain.setLayout(new BorderLayout());
         dialog.add(pnMain, BorderLayout.CENTER);
         
+        JPanel pnCenter, pnDown;
+        pnCenter = new JPanel();
+        pnDown   = new JPanel();
+        pnCenter.setLayout(new BorderLayout());
+        pnDown.setLayout(new BorderLayout());
+        pnMain.add(pnCenter, BorderLayout.CENTER);
+        pnMain.add(pnDown  , BorderLayout.SOUTH);
+        
         spaces = new SwingSpacePanel();
         
         Colony col = superInstance.getColony();
         spaces.setColony(col);
         if(col != null) spaces.setCameraLocation(col.getCoordinate());
         
-        dialog.add(spaces.getComponent(), BorderLayout.CENTER);
+        pnCenter.add(spaces.getComponent(), BorderLayout.CENTER);
         dialog.addWindowListener(new WindowAdapter() {
         	@Override
         	public void windowClosing(WindowEvent e) {
