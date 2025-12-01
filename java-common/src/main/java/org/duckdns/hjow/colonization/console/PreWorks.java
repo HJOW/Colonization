@@ -156,7 +156,7 @@ public class PreWorks {
         FileUtil.writeString(packClassFile, "UTF-8", packRebuild.toString().trim());        
     }
     
-    /** 필요 시 새 버전 다운로드, 다운로드한 jar 실행 후 이 프로세스는 종료가 됨 ! 반대로, 다운로드 혹은 실행에 실패할 경우 이 메소드가 예외처리 혹은 return으로 빠져 나가므로 종료되지 않음. */
+    /** 필요 시 새 버전 다운로드하고, 다운로드한 jar 실행 후 이 프로세스는 종료가 됨 ! 반대로, 다운로드 혹은 실행에 실패할 경우 이 메소드가 예외처리 혹은 return으로 빠져 나가므로 종료되지 않음. */
     protected void downloadNewVersion() throws Throwable {
         if(jsonConfigSwing == null) return;
         if(runOffline) return;

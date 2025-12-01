@@ -11,6 +11,7 @@ import javax.swing.JMenuItem;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.benchmark.BenchmarkManager;
+import org.duckdns.hjow.colonization.ui.tools.files.FileManager;
 import org.duckdns.hjow.commons.core.Disposeable;
 
 /** 기타 도구들 관리 */
@@ -24,9 +25,10 @@ public class ToolManager implements Disposeable {
     public void init(Window win) {
         tools.clear();
         tools.add(new BenchmarkManager(win));
+        tools.add(new Log4JManager(win));
+        tools.add(new FileManager(win));
         tools.add(new GUITCPSimpleDaemonManager(win));
         tools.add(new CDOCViewer(win));
-        tools.add(new Log4JManager(win));
         tools.add(new ScriptModEditor(win));
         tools.add(new ScriptFacilityEditor(win));
     }
