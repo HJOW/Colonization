@@ -27,6 +27,8 @@ public class SpaceViewDialog implements Disposeable {
     protected SpacePanel spaces;
     
     public SpaceViewDialog(GUIColonyManagerInterface superInstance) {
+    	this.superInstance = superInstance;
+    	
     	dialog = new JDialog(superInstance.getDialog());
     	dialog.setSize(300, 300);
         dialog.setTitle(ColonyManager.t("View"));
@@ -87,17 +89,30 @@ public class SpaceViewDialog implements Disposeable {
 			spaces.rotateCamera(spaces.getCameraYaw() - Math.toRadians(1), spaces.getCameraPitch());
 			spaces.refresh();
 		}  else if(code == KeyEvent.VK_O) {
-			Colony col = superInstance.getColony();
+			Colony col = superInstance.getColony(); // 정착지
+			
+			// 정착지의 3D 좌표
+            Coordinate3D colLoc = col == null ? null : col.getCoordinate();
+
+            // 적정한 카메라 위치 계산
 			Coordinate3D coord = null;
 			if(col == null) coord = new Coordinate3D();
 			else {
-				coord = col.getCoordinate();
-				coord.setX(coord.getX() - 100L);
-				coord.setY(coord.getY() - 100L);
-				coord.setZ(coord.getZ() -  10L);
+				coord = new Coordinate3D(colLoc.getX(), colLoc.getY(), colLoc.getZ());
+				
+                // 정착지 위치로부터 적당히 떨어진 거리로 지정
+				coord.setX(colLoc.getX() - 100L);
+				coord.setY(colLoc.getY() - 100L);
+				coord.setZ(colLoc.getZ() -  10L);
 			}
+
+            // 지정된 위치로 카메라 위치 지정
 			spaces.setCameraLocation(coord);
-			spaces.rotateCamera(0.0, 0.0);
+
+            // 이 카메라가 정착지를 바라보도록 yaw 와 pitch 값 지정
+			spaces.setCameraToSee(colLoc);
+
+            // 새로 고침
 			spaces.refresh();
 		}
     }

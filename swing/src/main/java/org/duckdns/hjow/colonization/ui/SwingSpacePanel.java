@@ -53,7 +53,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		int centerX = rootWidth  / 2;
 		int centerY = rootHeight / 2;
 		long divides = 10L;
-		double sizes = 10.0;
+		double sizes = 1000.0;
 		double focals = 500.0;
 		
 		double radius;
