@@ -1387,7 +1387,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     public static final int  VERSION_MAIN = 0;
     public static final int  VERSION_SUB1 = 0;
     public static final int  VERSION_SUB2 = 1;
-    public static final long BUILD_NO     = 11L;
+    public static final long BUILD_NO     = 12L;
     
     /** 숫자 형식 맞추기 위한 객체들 */
     public static final DecimalFormat FORMATTER_INT  = new DecimalFormat("#,###");

@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.net.URL;
-import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -28,11 +27,10 @@ import javax.swing.event.ChangeListener;
 import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.GlobalLogs;
+import org.duckdns.hjow.colonization.console.PreWorks;
 import org.duckdns.hjow.colonization.ui.tools.AbstractTool;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
-import org.duckdns.hjow.commons.util.ClassUtil;
-import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.NetUtil;
 
 /** lib 파일들을 관리하는 대화상자 */
@@ -270,7 +268,7 @@ public class FileManager extends AbstractTool {
 	                String libName  = libOne.get("name").toString();
 	                
 	                // 조건 확인
-	                if(! isAcceptLib(libOne)) continue;
+	                if(! PreWorks.isAcceptLib(libOne)) continue;
 	                
 	                // 상대경로 여부 확인
 	                if(! libUrl.startsWith("http")) libUrl = ColonyClassManager.htmlRootUrl() + libUrl;
@@ -324,33 +322,6 @@ public class FileManager extends AbstractTool {
 				}
 			});
 		}
-	}
-	
-	/** 해당 lib 다운로드 여부 판단 */
-	protected boolean isAcceptLib(JsonObject libOne) {
-		String libUrl   = libOne.get("url").toString();
-        String libName  = libOne.get("name").toString();
-        String condJava = libOne.get("java"  ) == null ? null : libOne.get("java"  ).toString().trim();
-        String condSys  = libOne.get("system") == null ? null : libOne.get("system").toString().trim();
-        
-        // 자바 버전 조건
-        if(DataUtil.isNotEmpty(condJava)) {
-        	StringTokenizer waveTokenizer = new StringTokenizer(condJava, "~");
-        	String sFront = waveTokenizer.nextToken().trim();
-        	String sBack = null;
-        	if(waveTokenizer.hasMoreTokens()) sBack = waveTokenizer.nextToken().trim();
-        	
-        	int front = -1;
-        	int back  = -1;
-        	if(DataUtil.isNotEmpty(sFront)) front = Integer.parseInt(sFront);
-        	if(DataUtil.isNotEmpty(sBack )) back  = Integer.parseInt(sBack);
-        	
-        	int javaVer = ClassUtil.getJavaMajorVersion();
-        	if(front >= 1 && javaVer < front) return false;
-        	if(back  >= 1 && javaVer > back ) return false;
-        }
-        
-        return true;
 	}
 	
 	/** 다운로드 요청 */

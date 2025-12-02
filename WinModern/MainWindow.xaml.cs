@@ -118,9 +118,12 @@ namespace WinModern
             Application.Current.Shutdown();
         }
 
+        /** lib 다운로드 여부 결정 */
         private bool IsAcceptLib(string javaBinPath, JObject libOne)
         {
             string condJava = libOne.ContainsKey("java") ? libOne["java"].ToString() : null;
+            string condSys = libOne.ContainsKey("system") ? libOne["system"].ToString() : null;
+
             if (!Util.IsEmpty(condJava))
             {
                 string[] splits = condJava.Split('~');
@@ -137,6 +140,18 @@ namespace WinModern
                 if (front >= 1 && javaVer < front) return false;
                 if (back >= 1 && javaVer > back) return false;
             }
+
+            if (!Util.IsEmpty(condSys))
+            {
+                string[] splits = condSys.Split(',');
+                bool exists = false;
+                foreach (string s in splits)
+                {
+                    if (s.Trim() == arch) { exists = true; break; }
+                }
+                if (!exists) return false;
+            }
+
             return true;
         }
 
