@@ -751,6 +751,18 @@ namespace WinLauncher
             info.CreateNoWindow = true;
             info.UseShellExecute = false;
 
+            // 환경 변수 수정
+            string currentPathVal = info.EnvironmentVariables["PATH"];
+            string additionalPath = libDir;
+            if (Util.IsEmpty(currentPathVal))
+            {
+                info.EnvironmentVariables["PATH"] += System.IO.Path.PathSeparator + additionalPath;
+            }
+            else
+            {
+                info.EnvironmentVariables["PATH"] = additionalPath;
+            }
+            
             // 실행 파일명과 매개변수 준비
             string argJarPath;
             string fileName = "colonization-swing-" + versionString + ".jar";

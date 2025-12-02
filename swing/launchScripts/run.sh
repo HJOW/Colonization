@@ -32,5 +32,7 @@ if [ "$MAJOR_VERSION" -lt 8 ]; then
   exit 1
 fi
 
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.colonization/lib/
+
 # Run the Java application
 "$JAVA_HOME/bin/java" -cp "./colonization-swing-0.0.1.jar:$HOME/.colonization/lib/*" org.duckdns.hjow.colonization.Colonization --updator Y

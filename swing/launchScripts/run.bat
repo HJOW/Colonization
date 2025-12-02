@@ -12,6 +12,8 @@ IF NOT EXIST "%JAVA_HOME%\bin\java.exe" (
     goto :eof
 )
 
+set PATH="%PATH%;%HOMEDRIVE%%HOMEPATH%\lib\"
+
 "%JAVA_HOME%\bin\java.exe" -cp ".\colonization-swing-0.0.1.jar;%HOMEDRIVE%%HOMEPATH%\lib\*" org.duckdns.hjow.colonization.Colonization --updator Y %*
 
 :EOF
