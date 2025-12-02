@@ -118,6 +118,28 @@ namespace WinModern
             Application.Current.Shutdown();
         }
 
+        private bool IsAcceptLib(string javaBinPath, JObject libOne)
+        {
+            string condJava = libOne.ContainsKey("java") ? libOne["java"].ToString() : null;
+            if (!Util.IsEmpty(condJava))
+            {
+                string[] splits = condJava.Split('~');
+
+                string sFront = splits[0].Trim();
+                string sBack = null;
+
+                if (splits.Length >= 2) sBack = splits[1].Trim();
+
+                int front = int.Parse(sFront);
+                int back = sBack == null ? -1 : int.Parse(sBack);
+
+                int javaVer = Util.GetJavaVersion(javaBinPath);
+                if (front >= 1 && javaVer < front) return false;
+                if (back >= 1 && javaVer > back) return false;
+            }
+            return true;
+        }
+
         private async void Prepare()
         {
             string statusMsg = "";
@@ -267,23 +289,7 @@ namespace WinModern
                         if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { continue; }
                         SetStatusMessage("라이브러리 " + libName + " 확인 중...");
 
-                        string condJava = libOne.ContainsKey("java") ? libOne["java"].ToString() : null;
-                        if (!Util.IsEmpty(condJava))
-                        {
-                            string[] splits = condJava.Split('~');
-
-                            string sFront = splits[0].Trim();
-                            string sBack = null;
-
-                            if (splits.Length >= 2) sBack = splits[1].Trim();
-
-                            int front = int.Parse(sFront);
-                            int back = sBack == null ? -1 : int.Parse(sBack);
-
-                            int javaVer = Util.GetJavaVersion(javaBinPath);
-                            if (front >= 1 && javaVer < front) continue;
-                            if (back >= 1 && javaVer > back) continue;
-                        }
+                        if (!IsAcceptLib(javaBinPath, libOne)) continue;
 
                         string localFile = libDir + System.IO.Path.DirectorySeparatorChar + libName;
                         if(! File.Exists(localFile))
@@ -629,22 +635,7 @@ namespace WinModern
                 if (string.IsNullOrEmpty(libUrl) || string.IsNullOrEmpty(libName)) { indexes++; continue;  }
                 if (!libUrl.StartsWith("http")) libUrl = ROOTURL + libUrl;
 
-                if (!Util.IsEmpty(condJava))
-                {
-                    string[] splits = condJava.Split('~');
-
-                    string sFront = splits[0].Trim();
-                    string sBack = null;
-
-                    if (splits.Length >= 2) sBack = splits[1].Trim();
-
-                    int front = int.Parse(sFront);
-                    int back = sBack == null ? -1 : int.Parse(sBack);
-
-                    int javaVer = Util.GetJavaVersion(javaBinPath);
-                    if (front >= 1 && javaVer < front) continue;
-                    if (back >= 1 && javaVer > back) continue;
-                }
+                if (!IsAcceptLib(javaBinPath, libOne)) continue;
 
                 string libFile = libDir + System.IO.Path.DirectorySeparatorChar + libName;
                 if (!File.Exists(libFile))
