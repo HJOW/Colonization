@@ -35,7 +35,7 @@ public class PreWorks {
     /** 사전 작업 수행 */
     public final void work() {
     	GlobalLogs.log("Start to pre-work...");
-    	GlobalLogs.log("    Your system : " + getSystemInfo());
+    	GlobalLogs.log("    Your system : " + ClassUtil.getSystemInfo());
     	
         String strUsingUpdator = params.get("--updator");
         boolean runOffline = true;
@@ -316,38 +316,10 @@ public class PreWorks {
         	for(String s : splits) { systemsAllows.add(s.trim()); }
         	splits = null;
         	
-        	String sysInfo = getSystemInfo();
+        	String sysInfo = ClassUtil.getSystemInfo();
         	if(! systemsAllows.contains(sysInfo)) return false;
         }
         
         return true;
-	}
-	
-	/** 시스템 OS 및 아키텍처 정보 반환 ( 예: win_x64, linux_x86, mac_arm64 ... ) 절대 null 을 반환하지 않으며, 알 수 없는 경우 UNKNOWN 이 반환 */ // TODO : 공통 lib 로 이관 !
-	public static String getSystemInfo() {
-		String osPart, archPart, propVal;
-		osPart   = null;
-		archPart = null;
-		
-		if(ClassUtil.isWindowsOS()) osPart = "win";
-		else {
-			propVal = System.getProperty("os.name").toLowerCase();
-			if(propVal.contains("linux")) osPart = "linux";
-			else if(propVal.contains("mac")) osPart = "mac";
-			else if(propVal.contains("sunos")) osPart = "solaris";
-			else osPart = propVal.replace(" ", "_").trim();
-		}
-		
-		propVal = System.getProperty("os.arch").toLowerCase();
-		if(propVal.equals("amd64")) archPart = "x64";
-		else if(propVal.equals("x86_64")) archPart = "x64";
-		else if(propVal.equals("aarch64")) archPart = "arm64";
-		else archPart = propVal.replace(" ", "_").trim();
-		
-		if(DataUtil.isEmpty(osPart  )) osPart   = "UNKNOWN";
-		if(DataUtil.isEmpty(archPart)) archPart = "UNKNOWN";
-		if(osPart.equals("UNKNOWN") && archPart.equals("UNKNOWN")) return "UNKNOWN";
-		
-		return osPart + "_" + archPart;
 	}
 }
