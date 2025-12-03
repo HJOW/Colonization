@@ -81,6 +81,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			
 			TextObject2D tx = new TextObject2D();
 			tx.setLeft(ov.getCenter());
+			tx.getLeft().setY(tx.getLeft().getY() + 10);
 			tx.setColor(Color.WHITE);
 			tx.setContent(city.getName());
 			texts.add(tx);
@@ -176,8 +177,8 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		
 		for(TextObject2D tx : texts) {
 			g2d.setColor(tx.getColor());
-			x = (int) (tx.getLeft().getX() - (metric.stringWidth(tx.getContent()) / 2));
-			y = (int) tx.getLeft().getY();
+			x = (int) ((tx.getLeft().getX() - (metric.stringWidth(tx.getContent()) / 2)) / divides);
+			y = (int) (tx.getLeft().getY() / divides);
 			g2d.drawString(tx.getContent(), x, y);
 		}
 		
