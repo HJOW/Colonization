@@ -1,12 +1,14 @@
 package org.duckdns.hjow.colonization.ui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
@@ -36,6 +38,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setFont(new Font(null, Font.PLAIN, 12));
 		
 		FontMetrics metric = g2d.getFontMetrics();
 		
@@ -77,7 +80,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			ovals.add(ov);
 			
 			TextObject2D tx = new TextObject2D();
-			tx.setLeft(proj);
+			tx.setLeft(ov.getCenter());
 			tx.setColor(Color.WHITE);
 			tx.setContent(city.getName());
 			texts.add(tx);
@@ -86,7 +89,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		// 천체 그리기
 		for(Celestials cele : colony.getCelestials()) {
 			Coordinate3D coordinate = new Coordinate3D(cele.getX(), cele.getY(), cele.getZ());
-			if(! cele.isOpened()) continue;
+			// if(! cele.isOpened()) continue; // 그리기는 해야 함
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
 			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
@@ -181,8 +184,9 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		// 정보 출력
 		int sy = 20;
 		g2d.setColor(Color.DARK_GRAY);
-		g2d.drawString(ColonyManager.t("카메라 위치 : [X], [Y], [Z]").replace("[X]", String.valueOf(cameraLocation.getX())).replace("[Y]", String.valueOf(cameraLocation.getY())).replace("[Z]", String.valueOf(cameraLocation.getZ())), 10, sy); sy += 10;
-		g2d.drawString(ColonyManager.t("카메라 방향 : [YAW], [PITCH]").replace("[YAW]", ColonyManager.formatRate(getCameraYaw())).replace("[PITCH]", ColonyManager.formatRate(getCameraPitch())), 10, sy); sy += 10;
-		
+		StringTokenizer lineTokenzier = new StringTokenizer(getMessage(), "\n");
+		while(lineTokenzier.hasMoreTokens()) {
+			g2d.drawString(ColonyManager.t(lineTokenzier.nextToken().replace("[X]", String.valueOf(cameraLocation.getX())).replace("[Y]", String.valueOf(cameraLocation.getY())).replace("[Z]", String.valueOf(cameraLocation.getZ())).replace("[YAW]", ColonyManager.formatRate(getCameraYaw())).replace("[PITCH]", ColonyManager.formatRate(getCameraPitch()))  ), 10, sy); sy+=15;
+		}
 	}
 }

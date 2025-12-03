@@ -18,7 +18,7 @@ public class SoFarCelestials extends DefaultCelestials implements FarCelestials 
 	/** 랜덤 천체 생성 */
 	public static FarCelestials createRandom(long stdx, long stdy, long stdz) {
 		FarCelestials c = new SoFarCelestials();
-		Map<String, Number> coordinate = DataUtil.createCoordinateIntScale(stdx, stdy, stdz, (Integer.MAX_VALUE / 10), Integer.MAX_VALUE);
+		Map<String, Number> coordinate = DataUtil.createCoordinateLongScale(stdx, stdy, stdz, (Long.MAX_VALUE / 100L), (Long.MAX_VALUE / 10L));
 		c.setX(coordinate.get("x").longValue());
 		c.setY(coordinate.get("y").longValue());
 		c.setZ(coordinate.get("z").longValue());

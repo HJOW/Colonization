@@ -15,6 +15,7 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 	protected Coordinate3D cameraLocation = new Coordinate3D(0L, 0L, 0L);
 	protected double       cameraYaw      = 0.0;
 	protected double       cameraPitch    = 0.0;
+	protected String       message        = "";
 	public AbstractSpacePanel() { setLayout(null); }
 	
 	/** 정착지 객체 받기 */
@@ -56,6 +57,16 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 		super.paintComponent(g);
 		draw(g);
 	}
+	
+	@Override
+	public String getMessage() {
+		return message;
+	}
+
+	@Override
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
 	@Override
 	public Coordinate3D getCameraLocation() {
@@ -86,7 +97,7 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 	public void setCameraPitch(double cameraPitch) {
 		this.cameraPitch = cameraPitch;
 	}
-	
+
 	@Override
 	public void rotateCamera(double yaw, double pitch) {
 		setCameraYaw(yaw);

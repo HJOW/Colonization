@@ -24,6 +24,8 @@ public interface SpacePanel extends Disposeable {
     public void setCameraToSee();
 	/** 카메라가 특정 좌표를 바라보도록 방향 조정시키기 (카메라 위치는 변하지 않음) */
     public void setCameraToSee(Coordinate3D target);
+    public void setMessage(String message);
+    public String getMessage();
     /** 카메라 위치 좌표 반환 */
 	public Coordinate3D getCameraLocation();
 	public double getCameraYaw();
