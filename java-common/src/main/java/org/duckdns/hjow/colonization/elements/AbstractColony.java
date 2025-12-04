@@ -25,6 +25,7 @@ import org.duckdns.hjow.colonization.elements.celestials.DefaultCelestials;
 import org.duckdns.hjow.colonization.elements.celestials.SoFarCelestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
+import org.duckdns.hjow.colonization.elements.enemies.AbstractEnemy;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
@@ -1284,6 +1285,10 @@ public abstract class AbstractColony implements Colony {
         json.put("celestials", list);
         
         list = new JsonArray();
+        for(Enemy h : enemies) { list.add(h.toJson(details, col, city, excludeSecrets)); }
+        json.put("enemies", list);
+        
+        list = new JsonArray();
         for(Research d : getResearches()) { list.add(d.toJson(details, col, city, excludeSecrets)); }
         json.put("researches", list);
         
@@ -1411,6 +1416,23 @@ public abstract class AbstractColony implements Colony {
         }
         
         list = null;
+        try { list = (JsonArray) json.get("enemies"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+        enemies.clear();
+        if(list != null) {
+            for(Object o : list) {
+                if(o instanceof String) o = JsonObject.parseJson(o.toString());
+                if(o instanceof JsonObject) {
+                    try {
+                        Enemy en = AbstractEnemy.createEnemyFromJson((JsonObject) o);
+                        enemies.add(en);
+                    } catch(Exception ex) {
+                        GlobalLogs.processExceptionOccured(ex, false);
+                    }
+                }
+            }
+        }
+        
+        list = null;
         try { list = (JsonArray) json.get("researches"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         researches.clear();
         if(list != null) {
@@ -1496,6 +1518,7 @@ public abstract class AbstractColony implements Colony {
         for(Loan       l : getLoanAvail())  { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
         for(Loan       l : getLoanHave())   { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
         for(Celestials c : getCelestials()) { res = res.add(c.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(c instanceof CustomElement) res = BigInteger.ZERO; }
+        for(Enemy      e : getEnemies()   ) { res = res.add(e.getCheckerValue()); if(e instanceof CustomElement) res = BigInteger.ZERO; }
         
         return res;
     }
