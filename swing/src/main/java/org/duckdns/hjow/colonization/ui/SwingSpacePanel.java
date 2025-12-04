@@ -54,11 +54,11 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		List<OvalObject2D> ovals = new ArrayList<OvalObject2D>();
 		List<TextObject2D> texts = new ArrayList<TextObject2D>();
 		
-		int centerX = rootWidth  / 2;
-		int centerY = rootHeight / 2;
-		long divides = 10L;
-		double sizes = 1000.0;
-		double focals = 500.0;
+		int centerX   = (int) Math.round((rootWidth  / 2.0) * 10.0);
+		int centerY   = (int) Math.round((rootHeight / 2.0) *  2.0);
+		long divides  = 10L;
+		double sizes  = 1000.0;
+		double focals = 2000.0;
 		
 		double radius;
 		

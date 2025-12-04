@@ -125,7 +125,6 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 	/** 카메라가 특정 좌표를 바라보도록 방향 조정시키기 (카메라 위치는 변하지 않음) */
     public void setCameraToSee(Coordinate3D target) {
     	if(target == null) target = getColony().getCoordinate();
-    	
     	// 이 카메라가 타겟을 바라보도록 yaw 와 pitch 값 지정
     	Coordinate3D coord = getCameraLocation();
     	
