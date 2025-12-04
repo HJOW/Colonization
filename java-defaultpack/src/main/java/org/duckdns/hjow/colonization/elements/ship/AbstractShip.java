@@ -703,6 +703,11 @@ public abstract class AbstractShip implements Ship {
 	}
 	
 	@Override
+	public boolean isSameLocation(Coordinate3D coordinate) {
+		return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
+	}
+	
+	@Override
     public String describeForAI(Colony colony, City city) {
     	return ""; // TODO
     }

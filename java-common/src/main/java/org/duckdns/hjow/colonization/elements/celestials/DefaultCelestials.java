@@ -199,6 +199,11 @@ public class DefaultCelestials implements Celestials {
 	}
 	
 	@Override
+	public boolean isSameLocation(Coordinate3D coordinate) {
+		return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
+	}
+	
+	@Override
 	public long getKey() {
 		return key;
 	}

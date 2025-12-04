@@ -265,6 +265,23 @@ public abstract class AbstractColony implements Colony {
     public void setEnemies(List<Enemy> enemies) {
         this.enemies = enemies;
     }
+    
+    @Override
+    public void addEnemy(Enemy en) {
+    	if(contains(en)) return;
+    	if(en.getHp() <= 0) return;
+    	enemies.add(en);
+    }
+    
+    @Override
+    public boolean contains(Enemy en) {
+    	return (enemies.contains(en));
+    }
+    
+    @Override
+    public boolean contains(City city) {
+    	return (cities.contains(city));
+    }
 
     @Override
     public List<HoldingJob> getHoldings() {
@@ -657,9 +674,15 @@ public abstract class AbstractColony implements Colony {
         workOnCycle = new SimultaneousWork(actionsOnCycle);
         workOnCycle.start();
         
-        // 적 사이클 처리
-        for(Enemy e : getEnemies()) {
-            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+        // 적 - 도시에 위치한 경우 도시에 등록, 사이클은 도시 oneCycle 에서 처리
+        for(Enemy en : getEnemies()) {
+        	// 이동 처리
+        	en.processMove(cycle, colony);
+        	
+        	// 도시와 좌표가 동일한 경우, 도시에 등록 (기 등록 여부는 도시 등록 메소드 내에서 처리)
+        	for(final City c : getCities()) {
+        		if(en.getX() == c.getX() && en.getY() == c.getY() && en.getZ() == c.getZ()) { c.addEnemy(en); }
+        	}
         }
         
         // 예약 작업 처리
@@ -881,6 +904,11 @@ public abstract class AbstractColony implements Colony {
 		setX(coordinate.getX());
 		setY(coordinate.getY());
 		setZ(coordinate.getZ());
+	}
+	
+	@Override
+	public boolean isSameLocation(Coordinate3D coordinate) {
+		return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
 	}
     
     /** 새 도시의 좌표 지정 */

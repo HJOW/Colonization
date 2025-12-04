@@ -2,18 +2,17 @@ package org.duckdns.hjow.colonization.elements.ship;
 
 import java.util.List;
 
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
-import org.duckdns.hjow.colonization.elements.HasLocation;
+import org.duckdns.hjow.colonization.elements.Movable;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
 import org.duckdns.hjow.colonization.elements.states.State;
-import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
-import org.duckdns.hjow.colonization.ColonyManagerInterface;
 
 /** 함선 */
-public interface Ship extends AttackableObject, HasLocation {
+public interface Ship extends AttackableObject, Movable {
 	/** 초기 함선 상태로 리셋 (단, 기존 함선 불러오는 경우는 이 메소드 호출할 필요 없음) */
 	public void init(Port port, Colony colony);
 	/** 이름 지정 */
@@ -26,8 +25,6 @@ public interface Ship extends AttackableObject, HasLocation {
 	public long getMaxProgress(Port port, Colony colony);
 	/** 함선의 레벨 반환 */
 	public int getLevel();
-	/** 속도 - 1 사이클 당 이동 거리 반환 */
-    public int getSpeed();
     /** 실제 속도 반환 (연구 등 적용) */
     public long getRealSpeed(Colony col);
     /** 상태 객체들 반환 */
@@ -42,26 +39,12 @@ public interface Ship extends AttackableObject, HasLocation {
     public int getStoredCount();
     /** 최대 화물 수용량 */
     public int getMaxStoredCapacity();
-    /** 목적지 X 좌표 */
-    public long getDestinationX();
-    /** 목적지 Y 좌표 */
-    public long getDestinationY();
-    /** 목적지 반환 */
-    public Coordinate3D getDestination();
-    /** 목적지 Z 좌표 */
-    public long getDestinationZ();
-    public void setDestinationX(long destinationX);
-    public void setDestinationY(long destinationY);
-    public void setDestinationZ(long destinationZ);
-    public void setDestination(Coordinate3D dest);
     /** 정지 명령 */
     public void stop();
     /** 해당 좌표로 이동 명령 */
     public void moveStartTo(int x, int y, int z);
     /** 도착 예정시간 (사이클 수) 반환 */
     public long getEstimatedArrivalTime(Colony colony);
-    /** 도착 여부 반환 */
-    public boolean isArrived();
     /** 함선 제조/수리까지 남은 시간(사이클) 반환 - 이 값이 1 이상이면 조작 불가, 매 사이클마다 감소 */
     public long getLeftProgress();
     /** 함선 제조/수리 진행 */

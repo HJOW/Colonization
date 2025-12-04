@@ -39,10 +39,14 @@ public class EasyGorrdInvasion extends TimeEvent {
         if(floatCounts >= 1) {
             for(int idx=0; idx<floatCounts; idx++) {
             	Enemy en = new Goord();
-            	en.setX(city.getX());
-            	en.setY(city.getY());
-            	en.setZ(city.getZ());
-                city.getEnemies().add(en);
+            	en.setX(city.getX() + Math.round(Math.random() * 1000.0) + 100);
+            	en.setY(city.getY() + Math.round(Math.random() * 1000.0) + 100);
+            	en.setZ(city.getZ() + Math.round(Math.random() * 1000.0) + 100);
+            	en.setDestinationX(city.getX());
+            	en.setDestinationY(city.getY());
+            	en.setDestinationZ(city.getZ());
+            	en.setSpeed(3 + (int) Math.abs(Math.random() * 2.0));
+                col.getEnemies().add(en); // 정착지에 등록해야 함. 도시 도착 시 정착지 사이클 처리 중 도시에 자동 등록됨
             }
             ColonyManager.logGlobals(ColonyManager.t("고드 무리가 침략해 오고 있습니다."));
         }

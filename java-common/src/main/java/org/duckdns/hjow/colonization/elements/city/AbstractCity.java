@@ -172,6 +172,15 @@ public abstract class AbstractCity implements City {
     public void setEnemies(List<Enemy> enemies) {
         this.enemies = enemies;
     }
+    
+    /** 적 개체 등록 (이미 존재 시 무시, 도시와 위치 좌표가 동일해야 등록됨) - 중복 등록 방지 기능 포함 */
+    @Override
+    public void addEnemy(Enemy enemy) {
+    	if(this.enemies.contains(enemy)) return;
+    	if(! (enemy.getX() == getX() && enemy.getY() == getY() && enemy.getZ() == getZ())) return;
+    	if(enemy.getHp() <= 0) return;
+    	this.enemies.add(enemy);
+    }
 
     @Override
     public List<HoldingJob> getHoldings() {
@@ -731,11 +740,26 @@ public abstract class AbstractCity implements City {
         idx = 0;
         while(idx < getEnemies().size()) {
             Enemy en = getEnemies().get(idx);
+            
+            // HP 0 체트
             if(en.getHp() <= 0) {
-                en.dispose();
-                getEnemies().remove(idx);
+                getEnemies().remove(idx); // dispose 하지 않고 제거 (dispose 는 정착지의 oneCycle 에서 처리)
                 continue;
             }
+            
+            // 위치 체크
+            if(! (en.getX() == getX() && en.getY() == getY() && en.getZ() == getZ())) {
+            	getEnemies().remove(idx); // dispose 하지 않고 제거 (dispose 는 정착지의 oneCycle 에서 처리)
+                continue;
+            }
+            
+            // 정착지에 등록되어 있는지 체크
+            if(! col.contains(en)) {
+            	en.dispose(); // 이 경우는 dispose 해야 함. 정착지에도 등록 안되어 있으면 dispose 호출할 주체가 없음.
+            	getEnemies().remove(idx);
+                continue;
+            }
+            
             idx++;
         }
     }
@@ -1041,6 +1065,11 @@ public abstract class AbstractCity implements City {
 		setY(coordinate.getY());
 		setZ(coordinate.getZ());
 	};
+	
+	@Override
+	public boolean isSameLocation(Coordinate3D coordinate) {
+		return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
+	}
 
 	/** 출산률 계산 */
 	@Override

@@ -31,6 +31,8 @@ public interface City extends HasLocation {
     public Citizen getCitizen(long citizenKey);
     /** 적 목록 반환 */
     public List<Enemy> getEnemies();
+    /** 적 개체 등록 (이미 존재 시 무시, 도시와 위치 좌표가 동일해야 등록됨) */
+    public void addEnemy(Enemy enemy);
     /** 도시 단위 작업 목록 반환 */
     public List<HoldingJob> getHoldings();
     /** 도시 단위 작업 중 해당 key 에 대응하는 작업 반환 */

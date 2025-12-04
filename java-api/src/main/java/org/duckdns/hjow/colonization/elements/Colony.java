@@ -30,6 +30,10 @@ public interface Colony extends HasLocation {
     /** 새 도시 건설 비용 반환 (기본 도시 클래스에 해당) */
     public long getBuildingNewCityFee();
     public List<Enemy> getEnemies();
+    /** 정착지에 적 등록 (도시에 바로 등록하면 안 됨 ! 필히 이 메소드로 등록할 것. 해당 도시에 적 도착 시 자동으로 도시에 등록됨) */
+    public void addEnemy(Enemy en);
+    public boolean contains(Enemy en);
+    public boolean contains(City city);
     public List<HoldingJob> getHoldings();
     public List<Research> getResearches();
     /** 연구 목록 초기화 (비우고, 초기 상태로 다시 채움) */

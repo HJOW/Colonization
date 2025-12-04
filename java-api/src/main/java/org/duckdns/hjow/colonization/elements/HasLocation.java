@@ -13,4 +13,6 @@ public interface HasLocation extends ColonyElements {
     public void setY(long y);
     public void setZ(long z);
     public void setCoordinate(Coordinate3D coordinate);
+    
+    public boolean isSameLocation(Coordinate3D coordinate);
 }
