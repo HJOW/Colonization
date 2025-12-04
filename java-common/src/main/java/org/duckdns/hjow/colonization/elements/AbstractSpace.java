@@ -22,7 +22,7 @@ import org.duckdns.hjow.commons.ui.graphics.Coordinate3D;
 import org.duckdns.hjow.commons.util.SecurityUtil;
 
 /** 우주 */ // TODO : 정착지에 구현된 개념들 일부가 우주로 이관될 예정
-public class AbstractSpace implements Space {
+public abstract class AbstractSpace implements Space {
 	private static final long serialVersionUID = 2399047051505848540L;
 	protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;
@@ -95,6 +95,7 @@ public class AbstractSpace implements Space {
 		try { setTime(new BigInteger(json.get("time").toString()));                   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); time       = BigInteger.ZERO; }
 		try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.1"; } 
         try { clientBuildNo = json.get("buildNo").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientBuildNo = "1"; }
+        try { setUserColonyKey(new Long(json.get("userColonyKey").toString()));       } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); userColonyKey = 0L; }
 		
         JsonArray list = null;
         try { list = (JsonArray) json.get("colonies"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
@@ -161,6 +162,7 @@ public class AbstractSpace implements Space {
         json.put("time", getTime().toString());
         json.put("version", getClientVersion());
         json.put("buildNo", clientBuildNo);
+        json.put("userColonyKey", String.valueOf(getUserColonyKey()));
         
         JsonArray list = null;
         
