@@ -17,6 +17,8 @@ import org.duckdns.hjow.commons.util.classwrapper.ClassWrapper;
 import org.duckdns.hjow.colonization.cheats.Cheat;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyInformation;
+import org.duckdns.hjow.colonization.elements.DefaultSpace;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.facilities.ScriptFacilityInformation;
 import org.duckdns.hjow.colonization.elements.policy.Policy;
 import org.duckdns.hjow.colonization.mod.Mod;
@@ -148,6 +150,13 @@ public class ColonyClassManager {
             }
         }
         return null;
+    }
+    
+    /** JSON 으로부터 우주 객체 읽어 반환 */
+    public static Space loadSpace(JsonObject json) throws Exception {
+    	Space spc = new DefaultSpace();
+    	spc.fromJson(json);
+    	return spc;
     }
     
     private static final List<Class<?>> facilityClassList     = new Vector<Class<?>>();

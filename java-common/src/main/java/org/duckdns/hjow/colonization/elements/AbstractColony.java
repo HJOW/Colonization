@@ -15,6 +15,7 @@ import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
 
 import org.duckdns.hjow.colonization.AccountingData;
+import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
@@ -54,6 +55,8 @@ public abstract class AbstractColony implements Colony {
     private static final long serialVersionUID = -3144963237818493111L;
     protected volatile long key = ColonyManager.generateKey();
     protected transient boolean fNeedRefresh = true;
+    
+    protected Space space;
     
     protected List<City>       cities     = new Vector<City>();
     protected List<Enemy>      enemies    = new Vector<Enemy>();
@@ -105,6 +108,7 @@ public abstract class AbstractColony implements Colony {
         holdings.clear(); 
         loanAvail.clear(); 
         loanHave.clear();  
+        space = new DefaultSpace();
         resetResearches();
         
         setDifficulty(difficulty);    // 값 세팅하면서, 최대/최소도 이 메소드에서 적용
@@ -284,7 +288,15 @@ public abstract class AbstractColony implements Colony {
     	return (cities.contains(city));
     }
 
-    @Override
+    public Space getSpace() {
+		return space;
+	}
+
+	public void setSpace(Space space) {
+		this.space = space;
+	}
+
+	@Override
     public List<HoldingJob> getHoldings() {
         return holdings;
     }
@@ -1260,6 +1272,7 @@ public abstract class AbstractColony implements Colony {
         json.put("tech", String.valueOf(getTech()));
         json.put("time", getTime().toString());
         json.put("credit", new Integer(getCredit()));
+        json.put("space", getSpace().toJson(true, details, excludeSecrets)); // 우주에도 정착지가 포함되므로 무한반복 방지를 위해 excludeColonies 를 반드시 true로 설정
         json.put("version", getClientVersion());
         json.put("buildNo", clientBuildNo);
         if(getMoneyOvers() != null) json.put("money2", getMoneyOvers().toString());
@@ -1342,7 +1355,10 @@ public abstract class AbstractColony implements Colony {
             }
         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); moneyOvers = BigInteger.ZERO;             }
         try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.1"; } 
-        try { clientBuildNo = json.get("buildNo").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientBuildNo = "1"; } 
+        try { clientBuildNo = json.get("buildNo").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientBuildNo = "1"; }
+        
+        try { setSpace(ColonyClassManager.loadSpace((JsonObject) json.get("space"))); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); space = new DefaultSpace(); }
+        space.addColony(this);
         
         JsonArray list = null;
         try { list = (JsonArray) json.get("cities"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
@@ -1568,6 +1584,19 @@ public abstract class AbstractColony implements Colony {
             en.dispose();
         }
         enemies.clear();
+        for(Research r : researches) {
+            r.dispose();
+        }
+        researches.clear();
+        for(Loan l : loanAvail) {
+            l.dispose();
+        }
+        loanAvail.clear();
+        for(Loan l : loanHave) {
+            l.dispose();
+        }
+        loanHave.clear();
+        this.space = null;
     }
     
     @Override

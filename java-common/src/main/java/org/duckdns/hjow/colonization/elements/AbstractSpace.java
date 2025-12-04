@@ -154,10 +154,16 @@ public abstract class AbstractSpace implements Space {
 	
 	@Override
 	public JsonObject toJson() {
-		return toJson(true, false);
+		return toJson(false);
+	}
+	
+	@Override
+	public JsonObject toJson(boolean excludeColonies) {
+		return toJson(excludeColonies, true, false);
 	}
 
-	public JsonObject toJson(boolean details, boolean excludeSecrets) {
+	@Override
+	public JsonObject toJson(boolean excludeColonies, boolean details, boolean excludeSecrets) {
 		JsonObject json = new JsonObject();
         json.put("type", getType());
         json.put("key", String.valueOf(getKey()));
@@ -169,7 +175,9 @@ public abstract class AbstractSpace implements Space {
         JsonArray list = null;
         
         list = new JsonArray();
-        for(Colony col : getColonies()) { list.add(col.toJson(details, col, null, excludeSecrets)); }
+        if(! excludeColonies) {
+            for(Colony col : getColonies()) { list.add(col.toJson(details, col, null, excludeSecrets)); }
+        }
         json.put("colonies", list);
         
         list = new JsonArray();
@@ -188,7 +196,7 @@ public abstract class AbstractSpace implements Space {
 		try {
 			Class<? extends AbstractSpace> thisClass = getClass();
 			AbstractSpace newInst = thisClass.newInstance();
-			newInst.fromJson(toJson(true, false));
+			newInst.fromJson(toJson(false, true, false));
 			return newInst;
 		} catch(Exception ex) {
 		    throw new RuntimeException(ex.getMessage(), ex);
@@ -218,6 +226,17 @@ public abstract class AbstractSpace implements Space {
 	@Override
 	public boolean contains(Enemy en) {
 		return (enemies.contains(en));
+	}
+	
+	@Override
+	public void addColony(Colony col) {
+		if(contains(col)) return;
+		colonies.add(col);
+	}
+	
+	@Override
+	public boolean contains(Colony col) {
+		return (colonies.contains(col));
 	}
 
 	/** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */

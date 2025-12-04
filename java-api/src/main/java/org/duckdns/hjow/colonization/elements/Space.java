@@ -10,6 +10,7 @@ import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.core.JsonCompatible;
+import org.duckdns.hjow.commons.json.JsonObject;
 
 /** 우주 */ // TODO : 정착지에 구현된 개념들 일부가 우주로 이관될 예정
 public interface Space extends Serializable, Disposeable, JsonCompatible {
@@ -22,10 +23,14 @@ public interface Space extends Serializable, Disposeable, JsonCompatible {
     /** 해당 사용자의 정착지 반환 */
     public Colony getYourColony();
     
+    /** 정착지 등록 (정착지를 먼저 불러오고 그 안에서 우주를 불러오는 순서이므로, 우주 불러올 때 이 메소드가 호출됨) */
+    public void addColony(Colony col);
+    
     public List<Enemy> getEnemies();
     /** 정착지에 적 등록 (도시에 바로 등록하면 안 됨 ! 필히 이 메소드로 등록할 것. 해당 도시에 적 도착 시 자동으로 도시에 등록됨) */
     public void addEnemy(Enemy en);
     public boolean contains(Enemy en);
+    public boolean contains(Colony col);
     
     /** 천체 목록 반환 */
     public List<Celestials> getCelestials();
@@ -49,4 +54,10 @@ public interface Space extends Serializable, Disposeable, JsonCompatible {
     
     /** 쓰레드 N 사이클 당 1회 호출됨. */
     public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel);
+    
+    /** JSON 으로 변환 (무한반복을 막기 위해, 정착지 정보는 미포함시킬 수 있음) */
+    public JsonObject toJson(boolean excludeColonies);
+    
+    /** JSON 으로 변환 (무한반복을 막기 위해, 정착지 정보는 미포함시킬 수 있음) */
+    public JsonObject toJson(boolean excludeColonies,boolean details, boolean excludeSecrets);
 }

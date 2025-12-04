@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.duckdns.hjow.colonization.AccountingData;
+import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -14,7 +15,6 @@ import org.duckdns.hjow.colonization.elements.loan.Loan;
 import org.duckdns.hjow.colonization.elements.research.Research;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.events.TimeEvent;
-import org.duckdns.hjow.colonization.ColonyManagerInterface;
 
 /** 정착지 인터페이스 */
 public interface Colony extends HasLocation {
