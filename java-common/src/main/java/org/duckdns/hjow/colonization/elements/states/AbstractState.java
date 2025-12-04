@@ -8,6 +8,7 @@ import org.duckdns.hjow.colonization.ColonyClassManager;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
@@ -79,7 +80,7 @@ public abstract class AbstractState implements State {
     public int cycleGap(Colony colony) { return 1; }
 
     @Override
-    public final void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+    public final void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
         // 이 메소드는 수정하거나 오버라이드하지 말 것 !
         
         if(lefts < Long.MAX_VALUE) lefts--;

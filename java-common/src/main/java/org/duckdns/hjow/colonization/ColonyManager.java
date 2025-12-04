@@ -866,7 +866,7 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         // logGlobals("Running main cycle " + cycle, 1);
         
         if(cycle % col.cycleGap(col) == 0) {
-            try { col.oneCycle(cycle, null, col, 100, getColonyPanel(col)); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
+            try { col.oneCycle(cycle, null, null, col, 100, getColonyPanel(col)); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         }
         
         // logGlobals("Running refreshing UI cycle " + cycle, 1);

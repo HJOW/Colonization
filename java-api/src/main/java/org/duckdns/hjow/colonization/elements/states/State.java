@@ -1,6 +1,7 @@
 package org.duckdns.hjow.colonization.elements.states;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
@@ -10,5 +11,5 @@ public interface State extends ColonyElements {
     public String getTitle();
     public long getDefaultLefts();
     /** 1 사이클마다 쓰레드에서 호출됨. */
-    public void oneCycle(int cycle, ColonyElements hosts, City city, Colony colony, ColonyPanel colPanel);
+    public void oneCycle(int cycle, ColonyElements hosts, City city, Colony colony, Space space, ColonyPanel colPanel);
 }

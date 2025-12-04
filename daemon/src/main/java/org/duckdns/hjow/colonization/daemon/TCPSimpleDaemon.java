@@ -176,7 +176,7 @@ public class TCPSimpleDaemon implements Disposeable {
         
         for(int idx=0; idx<cyclePass; idx++) {
             cycle++;
-            col.oneCycle(cycle, null, col, 100, null);
+            col.oneCycle(cycle, null, null, col, 100, null);
         }
         
         if(logger != null) logger.log("Colony " + col.getName() + " (" + col.getKey() + ") cycle " + cyclePass + " processed.");

@@ -8,6 +8,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -68,7 +69,7 @@ public abstract class School extends AbstractFacility {
     }
     
     @Override
-    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
     	City city = (City) stage;
         if(cycle % getProfitCycle() == 0) {
             int counts = getCapacity();

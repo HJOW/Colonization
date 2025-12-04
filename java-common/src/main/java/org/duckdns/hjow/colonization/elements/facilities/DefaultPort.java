@@ -12,6 +12,7 @@ import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -192,8 +193,8 @@ public abstract class DefaultPort extends AbstractFacility implements Port {
     }
     
     @Override
-    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, space, colony, efficiency100, colPanel);
         
         // 수명 다된 함선 제거
         int std = 0;

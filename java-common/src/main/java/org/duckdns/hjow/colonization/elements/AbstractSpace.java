@@ -304,7 +304,8 @@ public abstract class AbstractSpace implements Space {
 	}
 	
 	@Override
-	public void oneCycle(int cycle, ColonyElements stage, Space space, int efficiency100, ColonyPanel colPanel) {
+	public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
+		space = this;
 		
 		// 적 - 정착지, 도시에 위치한 경우 도시에 등록, 사이클은 도시 oneCycle 에서 처리
         for(Enemy en : getEnemies()) {
@@ -321,7 +322,9 @@ public abstract class AbstractSpace implements Space {
         
         // 정착지
         for(Colony col : getColonies()) {
-        	col.oneCycle(cycle, col, col, efficiency100, colPanel);
+        	if(cycle % col.cycleGap(col) == 0) {
+        		col.oneCycle(cycle, col, this, col, efficiency100, colPanel);
+        	}
         }
 		
 		// 시간 지남

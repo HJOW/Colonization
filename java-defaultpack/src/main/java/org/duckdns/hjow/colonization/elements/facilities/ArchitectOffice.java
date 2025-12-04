@@ -10,6 +10,7 @@ import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
 import org.duckdns.hjow.colonization.elements.Facility;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -63,8 +64,8 @@ public class ArchitectOffice extends AbstractFacility {
     }
 
     @Override
-    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, space, colony, efficiency100, colPanel);
         City city = (City) stage;
         
         // 업무 처리

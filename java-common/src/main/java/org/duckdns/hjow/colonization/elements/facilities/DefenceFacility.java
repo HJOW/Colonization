@@ -8,6 +8,7 @@ import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
@@ -46,8 +47,8 @@ public abstract class DefenceFacility extends AbstractFacility implements Attack
     protected void processAfterAttack(int cycle, ColonyElements element, int finalDamage) { }
     
     @Override
-    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
-        super.oneCycle(cycle, stage, colony, efficiency100, colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
+        super.oneCycle(cycle, stage, space, colony, efficiency100, colPanel);
         City city = (City) stage;
         
         int castLeft    = getAttackCount();

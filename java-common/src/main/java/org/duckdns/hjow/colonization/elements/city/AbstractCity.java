@@ -23,6 +23,7 @@ import org.duckdns.hjow.colonization.elements.DefaultCitizen;
 import org.duckdns.hjow.colonization.elements.DefaultHoldingJob;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.AbstractEnemy;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -306,7 +307,7 @@ public abstract class AbstractCity implements City {
     }
 
     @Override
-    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) { // city should be a self
+    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) { // city should be a self
         int idx;
         boolean warnNetworkNeeded = false;
         
@@ -411,7 +412,7 @@ public abstract class AbstractCity implements City {
             }
             
             // 시설 효과 처리
-            if(cycle % f.cycleGap(colony) == 0) f.oneCycle(cycle, this, colony, efficiency, colPanel);
+            if(cycle % f.cycleGap(colony) == 0) f.oneCycle(cycle, this, space, colony, efficiency, colPanel);
             
             // 교통시설인 경우 교통점수 계산
             if(f instanceof TransportStation) {    
@@ -436,7 +437,7 @@ public abstract class AbstractCity implements City {
         
         // 시민 처리
         for(Citizen ct : getCitizens()) {
-            if(cycle % ct.cycleGap(colony) == 0) ct.oneCycle(cycle, this, colony, efficiency100, colPanel);
+            if(cycle % ct.cycleGap(colony) == 0) ct.oneCycle(cycle, this, space, colony, efficiency100, colPanel);
             
             if(networks <= 0L) {
                 if(ct.getHappy() > 70) ct.setHappy(70); // 네트워크 사용 불가 시 행복도 상한 적용
@@ -465,7 +466,7 @@ public abstract class AbstractCity implements City {
             
             // 효과 처리
             if(cycle % p.cycleGap(colony) == 0) {
-                p.oneCycle(cycle, this, colony, efficiency100, colPanel);
+                p.oneCycle(cycle, this, space, colony, efficiency100, colPanel);
             }
         }
         
@@ -484,13 +485,13 @@ public abstract class AbstractCity implements City {
         	ColonyElements target = null;
         	if(isHere) target = this;
         	
-        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, target, colony, efficiency100, colPanel);
+        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, target, space, colony, efficiency100, colPanel);
         }
         
         // 적 사이클 처리
         for(Enemy e : getEnemies()) {
         	if(e.getHp() <= 0) continue;
-            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, colony, efficiency100, colPanel);
+            if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, space, colony, efficiency100, colPanel);
         }
         
         // 사망 개체 제거

@@ -10,6 +10,7 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.AbstractEnemy;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -270,19 +271,19 @@ public class DefaultCelestials implements Celestials {
 	public int getDefencePoint() { return 0; }
 
 	@Override
-	public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+	public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
 		// 함선의 공격
 		for(Ship s : colony.getShips()) {
         	if(s.getHp() <= 0) continue;
         	if(! (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ())) continue;
-        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, this, colony, efficiency100, colPanel);
+        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, this, space, colony, efficiency100, colPanel);
         }
 		
 		// 적의 공격
 		List<Enemy> enemies = getEnemies();
 		for(Enemy e : enemies) {
 			if(e.getHp() <= 0) continue;
-			if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, colony, efficiency100, colPanel);
+			if(cycle % e.cycleGap(colony) == 0) e.oneCycle(cycle, this, space, colony, efficiency100, colPanel);
 		}
 		
 		int enemiesLeft = 0;

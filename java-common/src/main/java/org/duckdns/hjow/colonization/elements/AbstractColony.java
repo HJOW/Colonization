@@ -648,7 +648,7 @@ public abstract class AbstractColony implements Colony {
     
 
     @Override
-    public void oneCycle(final int cycle, ColonyElements stage, Colony colony, int efficiency100, final ColonyPanel colPanel) {
+    public void oneCycle(final int cycle, ColonyElements stage, final Space space, Colony colony, int efficiency100, final ColonyPanel colPanel) {
         int idx;
         colony = this;
         stage = this;
@@ -657,7 +657,7 @@ public abstract class AbstractColony implements Colony {
         removeDeadObjects();
         
         // 대출 사이클 처리
-        processLoans(cycle, colPanel);
+        processLoans(cycle, space, colPanel);
         
         // 누락 연구 추가
         if(cycle == 0 || cycle % 600 == 0) addOmittedResearches();
@@ -668,7 +668,7 @@ public abstract class AbstractColony implements Colony {
             actionsOnCycle.add(new SingleAction() {    
                 @Override
                 public void run(int index) throws Throwable {
-                    if(cycle % c.cycleGap(getSelf()) == 0) c.oneCycle(cycle, c, getSelf(), 100, colPanel);
+                    if(cycle % c.cycleGap(getSelf()) == 0) c.oneCycle(cycle, c, space, getSelf(), 100, colPanel);
                 }
             });
         }
@@ -731,7 +731,7 @@ public abstract class AbstractColony implements Colony {
         
         // 탐험 진행
         for(Celestials c : getCelestials()) {
-        	c.oneCycle(cycle, null, colony, efficiency100, colPanel);
+        	c.oneCycle(cycle, null, space, colony, efficiency100, colPanel);
         	
         	// 함선들이 이 천체 근처에 하나라도 있으면 오픈
         	if(! c.isOpened()) {
@@ -806,9 +806,9 @@ public abstract class AbstractColony implements Colony {
     }
     
     /** 대출 사이클 처리 */
-    protected void processLoans(int cycle, ColonyPanel colPanel) {
+    protected void processLoans(int cycle, Space space, ColonyPanel colPanel) {
         for(Loan l : getLoanHave()) {
-            if(cycle % l.cycleGap(this) == 0) l.oneCycle(cycle, null, this, 100, colPanel);
+            if(cycle % l.cycleGap(this) == 0) l.oneCycle(cycle, null, space, this, 100, colPanel);
         }
         
         // 1년 지날 때마다, 사용 가능한 대출 목록 갱신

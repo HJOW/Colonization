@@ -91,7 +91,7 @@ public class DefaultCitizen implements Citizen {
     public int cycleGap(Colony colony) { return 1; }
 
     @Override
-    public void oneCycle(int cycle, ColonyElements stage, Colony colony, int efficiency100, ColonyPanel colPanel) {
+    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
     	City city = (City) stage;
     	
         // HP 처리
@@ -145,12 +145,12 @@ public class DefaultCitizen implements Citizen {
         
         // State 영향력 동작
         for(State st : getStates()) {
-            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, this, city, colony, colPanel);
+            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, this, city, colony, space, colPanel);
         }
         
         // State 수명 동작
         for(State st : getStates()) {
-            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, city, colony, efficiency100, colPanel);
+            if(cycle % st.cycleGap(colony) == 0) st.oneCycle(cycle, city, space, colony, efficiency100, colPanel);
         }
         
         // 수명 다된 state 제거

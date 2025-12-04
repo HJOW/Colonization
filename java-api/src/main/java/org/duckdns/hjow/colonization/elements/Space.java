@@ -48,5 +48,5 @@ public interface Space extends Serializable, Disposeable, JsonCompatible {
     public BigInteger getCheckerValue();
     
     /** 쓰레드 N 사이클 당 1회 호출됨. */
-    public void oneCycle(int cycle, ColonyElements stage, Space space, int efficiency100, ColonyPanel colPanel);
+    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel);
 }

@@ -212,7 +212,7 @@ public class ColonyServlet extends CommonServlet {
         
         for(int idx=0; idx<cyclePass; idx++) {
             cycle++;
-            col.oneCycle(cycle, null, col, 100, null);
+            col.oneCycle(cycle, null, null, col, 100, null);
         }
         
         responses.put("success", new Boolean(true));
