@@ -20,7 +20,7 @@ import org.duckdns.hjow.commons.ui.graphics.LineObject2D;
 import org.duckdns.hjow.commons.ui.graphics.OvalObject2D;
 import org.duckdns.hjow.commons.ui.graphics.TextObject2D;
 
-/** 함선 위치 현황 출력을 위한 패널 - 기본 Swing 의 Graphics 2D 사용 */ // TODO SampleJavaCodes 에 있는 Space3D 예제 참고하여 yaw, pitch (카메라의 방향) 개념 적용
+/** 함선 위치 현황 출력을 위한 패널 - 기본 Swing 의 Graphics 2D 사용 */
 public class SwingSpacePanel extends AbstractSpacePanel {
 	private static final long serialVersionUID = 7794697275657421978L;
     public SwingSpacePanel() { super(); }
@@ -43,8 +43,9 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		FontMetrics metric = g2d.getFontMetrics();
 		
 		// 배경 그리기
-		int rootWidth  = getWidth();
-		int rootHeight = getHeight();
+		int rootWidth  = getViewWidth();
+		int rootHeight = getViewHeight();
+		
 		g2d.setColor(Color.BLACK);
 		g2d.fillRect(0, 0, rootWidth, rootHeight);
 		
@@ -66,7 +67,8 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			Coordinate3D coordinate = new Coordinate3D(city.getX(), city.getY(), city.getZ());
 			
 			// 2D에 투영
-			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+			// Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+            Coordinate2D proj = project(coordinate, getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재
 			
 			radius = Math.ceil(sizes * 3 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
@@ -93,7 +95,8 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			// if(! cele.isOpened()) continue; // 그리기는 해야 함
 			
 			// 2D에 투영 - 이렇게 만들어진 "좌표" 에는 Z축이 없음에 유의 !
-			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+			// Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+            Coordinate2D proj = project(coordinate, getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재
 			
 			radius = Math.ceil(sizes * 2 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
@@ -111,8 +114,12 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 		for(Ship ship : colony.getShips()) {
 			Coordinate3D coordinate = new Coordinate3D(ship.getX(), ship.getY(), ship.getZ());
 			
+			City city = colony.findCity(ship);
+			if(ship.getX() == city.getX() && ship.getY() == city.getY() && ship.getZ() == city.getZ()) continue; // 도시 안에 정박중인 경우 스킵
+			
 			// 2D에 투영
-			Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+			// Coordinate2D proj = coordinate.project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+            Coordinate2D proj = project(coordinate, getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
 			if(proj == null) continue; // 카메라 뒤로 가려지는 케이스 존재 
 			
 			radius = Math.ceil(sizes * 1.5 / ( coordinate.getDistance(getCameraLocation()) + 0.01 ));
@@ -124,6 +131,17 @@ public class SwingSpacePanel extends AbstractSpacePanel {
 			ov.setR((int) radius);
 			ov.setColor(Color.GREEN);
 			ovals.add(ov);
+			
+			if(! ship.isArrived()) {
+				// Coordinate2D dest = ship.getDestination().project(getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+                Coordinate2D dest = project(ship.getDestination(), getCameraLocation(), getCameraYaw(), getCameraPitch(), focals, (double) centerX, (double) centerY);
+				
+				LineObject2D line = new LineObject2D();
+				line.setFrom(proj);
+				line.setTo(dest);
+				line.setColor(Color.GRAY);
+				lines.add(line);
+			}
 		}
 		
 		// 적절한 스케일 구하기

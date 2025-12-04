@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -38,6 +40,13 @@ public class SpaceViewDialog implements Disposeable {
         GUIUtil.centerWindow(dialog);
         dialog.setIconImage(GUIColonyManager.getIcon());
         dialog.setLayout(new BorderLayout());
+        dialog.addComponentListener(new ComponentAdapter() {
+        	@Override
+        	public void componentResized(ComponentEvent e) {
+        		spaces.setViewWidth(dialog.getWidth());
+				spaces.setViewHeight(dialog.getHeight());
+        	}
+		});
     	
         JPanel pnMain = new JPanel();
         pnMain.setLayout(new BorderLayout());
@@ -78,16 +87,16 @@ public class SpaceViewDialog implements Disposeable {
     /** 키보드 키 입력 시 호출 */
     protected void onKeyPressed(int code) {
     	if(code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
-    		spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX() + speedMove, spaces.getCameraLocation().getY(), spaces.getCameraLocation().getZ()));
+    		spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX(), spaces.getCameraLocation().getY() + speedMove, spaces.getCameraLocation().getZ()));
     		remakeMessage();
 		} else if(code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
-			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX() - speedMove, spaces.getCameraLocation().getY(), spaces.getCameraLocation().getZ()));
-			remakeMessage();
-		} else if(code == KeyEvent.VK_LEFT  || code == KeyEvent.VK_A) {
 			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX(), spaces.getCameraLocation().getY() - speedMove, spaces.getCameraLocation().getZ()));
 			remakeMessage();
+		} else if(code == KeyEvent.VK_LEFT  || code == KeyEvent.VK_A) {
+			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX() - speedMove, spaces.getCameraLocation().getY(), spaces.getCameraLocation().getZ()));
+			remakeMessage();
 		} else if(code == KeyEvent.VK_RIGHT  || code == KeyEvent.VK_D) {
-			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX(), spaces.getCameraLocation().getY() + speedMove, spaces.getCameraLocation().getZ()));
+			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX() + speedMove, spaces.getCameraLocation().getY(), spaces.getCameraLocation().getZ()));
 			remakeMessage();
 		} else if(code == KeyEvent.VK_R || code == KeyEvent.VK_PAGE_UP) {
 			spaces.setCameraLocation(new Coordinate3D(spaces.getCameraLocation().getX(), spaces.getCameraLocation().getY(), spaces.getCameraLocation().getZ() + speedMove));
@@ -139,13 +148,27 @@ public class SpaceViewDialog implements Disposeable {
     
     public JDialog getDialog() { return dialog; }
     public void open(Colony col) {
-    	refresh(col);
     	dialog.setVisible(true);
+    	
+    	new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try { Thread.sleep(1000L); } catch(InterruptedException ex) {}
+				spaces.setViewWidth(dialog.getWidth());
+				spaces.setViewHeight(dialog.getHeight());
+				resetCameraPosition();
+				refresh(col);
+			}
+		}).start();
     }
     
     public void refresh(Colony col) {
     	spaces.setColony(col);
     	spaces.refresh();
+    }
+    
+    public void resetCameraPosition() {
+    	spaces.resetCameraPosition();
     }
     
     public Dimension getSize() {

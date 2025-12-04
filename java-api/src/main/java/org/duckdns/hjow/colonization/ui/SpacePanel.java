@@ -30,6 +30,10 @@ public interface SpacePanel extends Disposeable {
 	public Coordinate3D getCameraLocation();
 	public double getCameraYaw();
 	public double getCameraPitch();
+	public int getViewWidth();
+	public void setViewWidth(int viewWidth);
+	public int getViewHeight();
+	public void setViewHeight(int viewHeight);
 	/** 정착지 객체 반환 */
 	public Colony getColony();
 	/** 정착지 객체 받기 */
