@@ -12,9 +12,11 @@ import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.celestials.DefaultCelestials;
 import org.duckdns.hjow.colonization.elements.celestials.SoFarCelestials;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
 import org.duckdns.hjow.colonization.elements.enemies.AbstractEnemy;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.exception.KnownRuntimeException;
 import org.duckdns.hjow.commons.json.JsonArray;
 import org.duckdns.hjow.commons.json.JsonObject;
@@ -299,6 +301,31 @@ public abstract class AbstractSpace implements Space {
 		if(man == null) throw new NullPointerException();
     	clientVersion = ColonyManager.getVersionString();
         clientBuildNo = String.valueOf(ColonyManager.BUILD_NO);
+	}
+	
+	@Override
+	public void oneCycle(int cycle, ColonyElements stage, Space space, int efficiency100, ColonyPanel colPanel) {
+		
+		// 적 - 정착지, 도시에 위치한 경우 도시에 등록, 사이클은 도시 oneCycle 에서 처리
+        for(Enemy en : getEnemies()) {
+        	// 이동 처리
+        	en.processMove(cycle);
+        	
+        	for(Colony col : getColonies()) {
+        		// 도시와 좌표가 동일한 경우, 정착지에 등록 (도시에 등록하는 부분은 정착지 쪽 oneCycle 에서 처리)
+            	for(final City c : col.getCities()) {
+            		if(en.getX() == c.getX() && en.getY() == c.getY() && en.getZ() == c.getZ()) { col.addEnemy(en); }
+            	}
+        	}
+        }
+        
+        // 정착지
+        for(Colony col : getColonies()) {
+        	col.oneCycle(cycle, col, col, efficiency100, colPanel);
+        }
+		
+		// 시간 지남
+        time = time.add(BigInteger.ONE);
 	}
 	
 	@Override

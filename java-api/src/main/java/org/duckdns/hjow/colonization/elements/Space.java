@@ -7,6 +7,7 @@ import java.util.List;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.core.JsonCompatible;
 
@@ -45,4 +46,7 @@ public interface Space extends Serializable, Disposeable, JsonCompatible {
     public void resetClientVersion(ColonyManagerInterface man);
     /** 변조방지값 계산 */
     public BigInteger getCheckerValue();
+    
+    /** 쓰레드 N 사이클 당 1회 호출됨. */
+    public void oneCycle(int cycle, ColonyElements stage, Space space, int efficiency100, ColonyPanel colPanel);
 }

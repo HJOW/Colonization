@@ -678,7 +678,7 @@ public abstract class AbstractColony implements Colony {
         // 적 - 도시에 위치한 경우 도시에 등록, 사이클은 도시 oneCycle 에서 처리
         for(Enemy en : getEnemies()) {
         	// 이동 처리
-        	en.processMove(cycle, colony);
+        	en.processMove(cycle);
         	
         	// 도시와 좌표가 동일한 경우, 도시에 등록 (기 등록 여부는 도시 등록 메소드 내에서 처리)
         	for(final City c : getCities()) {

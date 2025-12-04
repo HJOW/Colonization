@@ -233,7 +233,7 @@ public abstract class AbstractEnemy implements Enemy {
     
     /** 이동 사이클 수행 (정착지 oneCycle 에서 호출) */
     @Override
-    public void processMove(int cycle, Colony col) {
+    public void processMove(int cycle) {
     	if(isArrived()) return;
     	
         long distance = DataUtil.getDistance(getX(), getY(), getZ(), getDestinationX(), getDestinationY(), getDestinationZ());
