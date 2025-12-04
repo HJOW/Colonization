@@ -175,42 +175,8 @@ public abstract class AbstractSpacePanel extends JPanel implements SpacePanel {
 		return this;
 	}
 	
-	/** 2D로 좌표 투영 */ // TODO : 공통 lib 에 반영
+	/** 2D로 좌표 투영 */
     public static Coordinate2D project(Coordinate3D target, Coordinate3D camera, double yaw, double pitch, double focalLength, double screenCenterX, double screenCenterY) {
-        // Translate point relative to camera
-        double dx = target.getX() - camera.getX();
-        double dy = target.getY() - camera.getY();
-        double dz = target.getZ() - camera.getZ();
-
-        // Rotate point around camera
-        // Yaw (Y-axis rotation)
-        double cosYaw = Math.cos(yaw);
-        double sinYaw = Math.sin(yaw);
-        double rotatedX = dx * cosYaw + dz * sinYaw;
-        double rotatedZ = -dx * sinYaw + dz * cosYaw;
-
-        // Pitch (X-axis rotation)
-        double cosPitch = Math.cos(pitch);
-        double sinPitch = Math.sin(pitch);
-        double rotatedY = dy * cosPitch - rotatedZ * sinPitch;
-        rotatedZ = dy * sinPitch + rotatedZ * cosPitch;
-
-        // Roll is not used in this case
-
-        double cx = rotatedX;
-        double cy = rotatedY;
-        double cz = rotatedZ;
-
-        if(cz <= 0) return null; // Behind the camera
-
-        // Project to 2D
-        double px = focalLength * cx / cz;
-        double py = focalLength * cy / cz;
-
-        // Convert to screen coordinates
-        double u = px + screenCenterX;
-        double v = py + screenCenterY;
-
-        return new Coordinate2D((long) u, (long) v);
+        return target.project(camera, yaw, pitch, focalLength, screenCenterX, screenCenterY);
     }
 }
