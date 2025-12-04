@@ -2,7 +2,6 @@
     <modelVersion>4.0.0</modelVersion>
     
     <artifactId>colonization-java-api</artifactId>
-    <version>0.0.1</version>
     <name>colonization-java-api</name>
     <description>Colonization - java API</description>
     <licenses>
