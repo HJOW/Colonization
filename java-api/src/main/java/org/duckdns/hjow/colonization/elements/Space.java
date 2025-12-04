@@ -3,10 +3,15 @@ package org.duckdns.hjow.colonization.elements;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Set;
+import java.util.Vector;
 
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
+import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
+import org.duckdns.hjow.colonization.elements.facilities.Port;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.core.Disposeable;
 import org.duckdns.hjow.commons.core.JsonCompatible;
@@ -16,6 +21,7 @@ import org.duckdns.hjow.commons.json.JsonObject;
 public interface Space extends Serializable, Disposeable, JsonCompatible {
 	/** 객체 타입 반환, JSON 변환 시 type 으로 들어갈 내용 */
     public String getType();
+    public long getKey();
     
 	/** 이 우주에 등록된 정착지들 반환 (로컬 플레이 시 단 하나의 정착지만 등록됨) - 해당 사용자의 정착지도 포함되어야 함 */
     public List<Colony> getColonies();
@@ -53,11 +59,36 @@ public interface Space extends Serializable, Disposeable, JsonCompatible {
     public BigInteger getCheckerValue();
     
     /** 쓰레드 N 사이클 당 1회 호출됨. */
-    public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel);
+    public void oneCycle(int cycle, ColonyPanel colPanel, Set<ColonyElements> excludes);
     
     /** JSON 으로 변환 (무한반복을 막기 위해, 정착지 정보는 미포함시킬 수 있음) */
     public JsonObject toJson(boolean excludeColonies);
     
     /** JSON 으로 변환 (무한반복을 막기 위해, 정착지 정보는 미포함시킬 수 있음) */
     public JsonObject toJson(boolean excludeColonies,boolean details, boolean excludeSecrets);
+    
+    /** 해당 함선의 소속 항구 찾기 */
+    public Port findPort(Ship ship);
+    /** 해당 함선의 소속 도시 찾기 */
+    public City findCity(Ship ship);
+    /** 해당 함선의 소속 정착지 찾기 */
+    public Colony findColony(Ship ship);
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
+    public Vector<Ship> getShips();
+    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
+    public Vector<Ship> getShipsLive();
+    /** 해당 위치의 모든 함선들 반환 - 건조 중인 함선 제외 */
+    public Vector<Ship> getShips(long x, long y, long z);
+    /** 해당 위치의 해당 범위 내 모든 함선들 반환 - 건조 중인 함선 제외 */
+    public Vector<Ship> getShips(long x, long y, long z, long dist);
+    /** 소속 함선 수 반환 - 건조 중인 함선 포함 */
+    public int getShipCount();
+    /** 소속 함선 수 반환 - 건조 중인 함선 제외 */
+    public int getLiveShipCount();
+    /** 해당 key 의 함선 찾아 반환 */
+    public Ship getShip(long key);
+    /** 이 정착지 내 모든 도시, 모든 우주공항에서 해당 함선 제거 (타 우주공항으로, 혹은 타 도시로 이동 시 이 메소드 호출 후 해당 도시에 다시 추가) */
+    public void removeShip(Ship ship);
+    /** 우주공항 목록 반환 */
+    public List<Port> getPorts();
 }

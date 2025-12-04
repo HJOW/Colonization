@@ -14,6 +14,11 @@ public interface Celestials extends HasLocation {
 	public List<Enemy> getEnemies();
 	/** 전리품 목록 반환 */
 	public List<Product> getDebries();
+	/** 전리품 - 자금 목록 반환 */
+	public long getMoneyLeft();
+	/** 전리품 - 자금 모두 꺼내기 */
+	public long withdraw();
+	public void setMoney(long money);
 	/** 공개 여부 반환 */
 	public boolean isOpened();
 	/** 공개 여부 설정 */

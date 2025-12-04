@@ -6,9 +6,7 @@ import java.util.Vector;
 
 import org.duckdns.hjow.colonization.AccountingData;
 import org.duckdns.hjow.colonization.ColonyManagerInterface;
-import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.city.City;
-import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.loan.Loan;
@@ -20,7 +18,12 @@ import org.duckdns.hjow.colonization.events.TimeEvent;
 public interface Colony extends HasLocation {
     /** 객체 타입 반환, JSON 변환 시 type 으로 들어갈 내용 */
     public String getType();
+    /** 정착지 이름 변경 */
     public void setName(String name);
+    /** 소속 우주 객체 반환 */
+    public Space getSpace();
+    /** 소속 우주 객체 지정 (직접 호출 자제 !) */
+    public void setSpace(Space space);
     public List<City> getCities();
     public City getCity(long key);
     /** 새 도시를 생성 */
@@ -29,10 +32,6 @@ public interface Colony extends HasLocation {
     public Class<? extends City> getDefaultCityClass();
     /** 새 도시 건설 비용 반환 (기본 도시 클래스에 해당) */
     public long getBuildingNewCityFee();
-    public List<Enemy> getEnemies();
-    /** 정착지에 적 등록 (도시에 바로 등록하면 안 됨 ! 필히 이 메소드로 등록할 것. 해당 도시에 적 도착 시 자동으로 도시에 등록됨) */
-    public void addEnemy(Enemy en);
-    public boolean contains(Enemy en);
     public boolean contains(City city);
     public List<HoldingJob> getHoldings();
     public List<Research> getResearches();
@@ -95,10 +94,6 @@ public interface Colony extends HasLocation {
     public long getClientBuildNo();
     /** 버전 정보 리셋 */
     public void resetClientVersion(ColonyManagerInterface man);
-    /** 천체 목록 반환 */
-    public List<Celestials> getCelestials();
-    /** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */
-    public void randomizeCelestials();
     /** 해당 함선의 소속 항구 찾기 */
     public Port findPort(Ship ship);
     /** 해당 함선의 소속 도시 찾기 */

@@ -482,6 +482,14 @@ public abstract class AbstractFacility implements Facility {
     }
     
     @Override
+    public boolean equals(Object obj) {
+    	if(obj == null) return false;
+    	if(! (obj instanceof AbstractFacility)) return false;
+    	AbstractFacility c = (AbstractFacility) obj;
+    	return (c.getKey() == getKey());
+    }
+    
+    @Override
     public String getDesc() {
     	try {
     	    Class<? extends AbstractFacility> classThis = getClass();

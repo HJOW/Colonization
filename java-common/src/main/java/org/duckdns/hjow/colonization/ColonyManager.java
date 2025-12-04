@@ -28,6 +28,7 @@ import org.duckdns.hjow.colonization.elements.AbstractColony;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.DefaultSpace;
 import org.duckdns.hjow.colonization.elements.HasLocation;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.mod.Mod;
@@ -459,13 +460,19 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
         }
         
         // 저장
-        for(Colony c : colonies) {
+        int colIdx = 0;
+        int colCount = colonies.size();
+        while(colIdx < colCount) {
+        	Colony c = colonies.get(colIdx);
+        	
             String name = null;
             if(c instanceof AbstractColony) name = ((AbstractColony) c).getOriginalFileName();
             if(name == null) name = "col_" + c.getKey() + ".colony";
             
             File colFile = new File(root.getAbsolutePath() + File.separator + name);
             saveColony(c, colFile, false);
+            
+            colIdx++;
         }
         
         // 임시 백업 삭제
@@ -547,9 +554,11 @@ public abstract class ColonyManager implements ColonyManagerInterface, Serializa
     
     /** 새 정착지 생성 후반부 동작 */
     protected void newColonyAfterJobs(Colony col) {
+    	if(col.getSpace() == null) col.setSpace(new DefaultSpace());
+    	col.getSpace().randomizeCelestials();
+    	
         col.newCity();
         col.resetAvailLoans();
-        col.randomizeCelestials();
         colonies.add(col);
         refreshColonyList();
     }

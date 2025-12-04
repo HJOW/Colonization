@@ -69,7 +69,7 @@ public abstract class DefenceFacility extends AbstractFacility implements Attack
             }
             
             if(castLeft >= 1) {
-                enemies = colony.getEnemies();
+                enemies = colony.getSpace().getEnemies();
                 for(Enemy e : enemies) {
                 	if(castLeft <= 0) break;
                     if(e.getHp() >= 1) {

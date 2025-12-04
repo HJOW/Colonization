@@ -8,8 +8,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.GZIPOutputStream;
@@ -21,13 +23,8 @@ import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.GlobalLogs;
 import org.duckdns.hjow.colonization.constants.Constants;
 import org.duckdns.hjow.colonization.constants.StaticMethods;
-import org.duckdns.hjow.colonization.elements.celestials.Celestials;
-import org.duckdns.hjow.colonization.elements.celestials.DefaultCelestials;
-import org.duckdns.hjow.colonization.elements.celestials.SoFarCelestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.custom.CustomElement;
-import org.duckdns.hjow.colonization.elements.enemies.AbstractEnemy;
-import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.facilities.Residence;
@@ -59,12 +56,10 @@ public abstract class AbstractColony implements Colony {
     protected Space space;
     
     protected List<City>       cities     = new Vector<City>();
-    protected List<Enemy>      enemies    = new Vector<Enemy>();
     protected List<HoldingJob> holdings   = new Vector<HoldingJob>();
     protected List<Research>   researches = new Vector<Research>();
     protected List<Loan>       loanAvail  = new Vector<Loan>();
     protected List<Loan>       loanHave   = new Vector<Loan>();
-    protected List<Celestials> celestials = new Vector<Celestials>();
     
     protected String name = getDefaultNamePrefix() + "_" + ColonyManager.getNaturalNumberFrom(key);
     protected int  difficulty = 0;
@@ -100,15 +95,16 @@ public abstract class AbstractColony implements Colony {
     
     /** 완전히 초기화, 난이도 지정 */
     public void resetAll(int difficulty) {
+        space = new DefaultSpace();
+        space.addColony(this);
+        
         checked = true;
         hp = getMaxHp();
         accountingData.clear();
         cities.clear();    
-        enemies.clear();   
         holdings.clear(); 
         loanAvail.clear(); 
-        loanHave.clear();  
-        space = new DefaultSpace();
+        loanHave.clear();
         resetResearches();
         
         setDifficulty(difficulty);    // 값 세팅하면서, 최대/최소도 이 메소드에서 적용
@@ -218,8 +214,8 @@ public abstract class AbstractColony implements Colony {
     /** 버전 정보 리셋 */
     @Override
     public void resetClientVersion(ColonyManagerInterface man) {
-    	if(man == null) throw new NullPointerException();
-    	clientVersion = ColonyManager.getVersionString();
+        if(man == null) throw new NullPointerException();
+        clientVersion = ColonyManager.getVersionString();
         clientBuildNo = String.valueOf(ColonyManager.BUILD_NO);
     }
 
@@ -263,40 +259,22 @@ public abstract class AbstractColony implements Colony {
     }
 
     @Override
-    public List<Enemy> getEnemies() {
-        return enemies;
-    }
-
-    public void setEnemies(List<Enemy> enemies) {
-        this.enemies = enemies;
-    }
-    
-    @Override
-    public void addEnemy(Enemy en) {
-    	if(contains(en)) return;
-    	if(en.getHp() <= 0) return;
-    	enemies.add(en);
-    }
-    
-    @Override
-    public boolean contains(Enemy en) {
-    	return (enemies.contains(en));
-    }
-    
-    @Override
     public boolean contains(City city) {
-    	return (cities.contains(city));
+        return (cities.contains(city));
     }
 
+    @Override
     public Space getSpace() {
-		return space;
-	}
+        return space;
+    }
 
-	public void setSpace(Space space) {
-		this.space = space;
-	}
+    @Override
+    public void setSpace(Space space) {
+        space.addColony(this);
+        this.space = space;
+    }
 
-	@Override
+    @Override
     public List<HoldingJob> getHoldings() {
         return holdings;
     }
@@ -305,15 +283,7 @@ public abstract class AbstractColony implements Colony {
         this.holdings = holdings;
     }
 
-    public List<Celestials> getCelestials() {
-		return celestials;
-	}
-
-	public void setCelestials(List<Celestials> celestials) {
-		this.celestials = celestials;
-	}
-
-	@Override
+    @Override
     public List<Research> getResearches() {
         return researches;
     }
@@ -660,12 +630,20 @@ public abstract class AbstractColony implements Colony {
     
 
     @Override
-    public void oneCycle(final int cycle, ColonyElements stage, final Space space, Colony colony, int efficiency100, final ColonyPanel colPanel) {
+    public void oneCycle(final int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, final ColonyPanel colPanel) {
         int idx;
         colony = this;
         stage = this;
         
-        /** 체력이 없는 객체 삭제 */
+        // 우주 사이클 처리
+        space = getSpace();
+        final Space spaceObj = space;
+        
+        Set<ColonyElements> excl = new HashSet<ColonyElements>();
+        excl.add(this); // 이 정착지 oneCycle 이 다시 호출되는 것 방지
+        space.oneCycle(cycle, colPanel, excl);
+        
+        // 체력이 없는 객체 삭제
         removeDeadObjects();
         
         // 대출 사이클 처리
@@ -680,23 +658,12 @@ public abstract class AbstractColony implements Colony {
             actionsOnCycle.add(new SingleAction() {    
                 @Override
                 public void run(int index) throws Throwable {
-                    if(cycle % c.cycleGap(getSelf()) == 0) c.oneCycle(cycle, c, space, getSelf(), 100, colPanel);
+                    if(cycle % c.cycleGap(getSelf()) == 0) c.oneCycle(cycle, c, spaceObj, getSelf(), 100, colPanel);
                 }
             });
         }
         workOnCycle = new SimultaneousWork(actionsOnCycle);
         workOnCycle.start();
-        
-        // 적 - 도시에 위치한 경우 도시에 등록, 사이클은 도시 oneCycle 에서 처리
-        for(Enemy en : getEnemies()) {
-        	// 이동 처리
-        	en.processMove(cycle);
-        	
-        	// 도시와 좌표가 동일한 경우, 도시에 등록 (기 등록 여부는 도시 등록 메소드 내에서 처리)
-        	for(final City c : getCities()) {
-        		if(en.getX() == c.getX() && en.getY() == c.getY() && en.getZ() == c.getZ()) { c.addEnemy(en); }
-        	}
-        }
         
         // 예약 작업 처리
         for(HoldingJob h : getHoldings()) {
@@ -723,7 +690,7 @@ public abstract class AbstractColony implements Colony {
             
             if(ev.getEventSize() == TimeEvent.EVENTSIZE_COLONY) {
                 if(cycle % ev.getOccurCycle(this, null) == 0) {
-                    if(ColonyManager.random() <= ev.getOccurRate(this, this, null)) ev.onEventOccured(this, this, null, colPanel);
+                    if(ColonyManager.random() <= ev.getOccurRate(this, spaceObj, this, null)) ev.onEventOccured(this, spaceObj, this, null, colPanel);
                 }
             }
         }
@@ -739,21 +706,6 @@ public abstract class AbstractColony implements Colony {
         // 1시간 마다 수익량 초기화
         if(income.mod(Constants.BIGINTEGER_600).equals(BigInteger.ZERO)) {
             income = BigInteger.ZERO;
-        }
-        
-        // 탐험 진행
-        for(Celestials c : getCelestials()) {
-        	c.oneCycle(cycle, null, space, colony, efficiency100, colPanel);
-        	
-        	// 함선들이 이 천체 근처에 하나라도 있으면 오픈
-        	if(! c.isOpened()) {
-        		for(Ship s : colony.getShips()) {
-    			    if(Math.abs(s.getX() - c.getX()) <= 10 && Math.abs(s.getY() - c.getY()) <= 10 && Math.abs(s.getZ() - c.getZ()) <= 10) {
-    			    	c.setOpened(true);
-    			    	break;
-    			    }
-    			}
-        	}
         }
         
         // 시간 지남
@@ -777,19 +729,6 @@ public abstract class AbstractColony implements Colony {
             idx++;
         }
         
-        // 체력이 없는 적 삭제
-        idx = 0;
-        while(idx < getEnemies().size()) {
-            Enemy en = getEnemies().get(idx);
-            if(en.getHp() <= 0) {
-                en.dispose();
-                getEnemies().remove(idx);
-                ColonyManager.logGlobals(ColonyManager.t("적 [ENEMY] 파괴됨").replace("[ENEMY]", en.getName()), 1);
-                continue;
-            }
-            idx++;
-        }
-        
         // 잔액이 없는 대출 삭제
         idx = 0;
         while(idx < getLoanHave().size()) {
@@ -801,19 +740,6 @@ public abstract class AbstractColony implements Colony {
                 continue;
             }
             idx++;
-        }
-        
-        // 적과 보상이 남아있지 않은 천체 삭제
-        idx = 0;
-        while(idx < getCelestials().size()) {
-        	Celestials cele = getCelestials().get(idx);
-        	if(cele.isEmpty()) {
-        		cele.dispose();
-        		getCelestials().remove(idx);
-        		ColonyManager.logGlobals(ColonyManager.t("천체 [CELE] 에는 더 이상 갈 필요가 없음.").replace("[CELE]", cele.getName()), 1);
-                continue;
-        	}
-        	idx++;
         }
     }
     
@@ -852,121 +778,121 @@ public abstract class AbstractColony implements Colony {
     
     /** 소속 도시들의 평균 X 좌표 반환 */
     public long getX() {
-    	BigDecimal sums = BigDecimal.ZERO;
-    	
-    	List<City> cities = getCities();
-    	if(cities.isEmpty()) return sums.longValue();
-    	
-    	for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getX()))); }
-    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
-    	return av.longValue();
+        BigDecimal sums = BigDecimal.ZERO;
+        
+        List<City> cities = getCities();
+        if(cities.isEmpty()) return sums.longValue();
+        
+        for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getX()))); }
+        BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
+        return av.longValue();
     }
     
     /** 소속 도시들의 평균 Y 좌표 반환 */
     public long getY() {
-    	BigDecimal sums = BigDecimal.ZERO;
-    	
-    	List<City> cities = getCities();
-    	if(cities.isEmpty()) return sums.longValue();
-    	
-    	for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getY()))); }
-    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
-    	return av.longValue();
+        BigDecimal sums = BigDecimal.ZERO;
+        
+        List<City> cities = getCities();
+        if(cities.isEmpty()) return sums.longValue();
+        
+        for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getY()))); }
+        BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
+        return av.longValue();
     }
     
     /** 소속 도시들의 평균 Z 좌표 반환 */
     public long getZ() {
-    	BigDecimal sums = BigDecimal.ZERO;
-    	
-    	List<City> cities = getCities();
-    	if(cities.isEmpty()) return sums.longValue();
-    	
-    	for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getZ()))); }
-    	BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
-    	return av.longValue();
+        BigDecimal sums = BigDecimal.ZERO;
+        
+        List<City> cities = getCities();
+        if(cities.isEmpty()) return sums.longValue();
+        
+        for(City c : cities) { sums = sums.add(new BigDecimal(String.valueOf(c.getZ()))); }
+        BigDecimal av = sums.divide(new BigDecimal(String.valueOf(cities.size())), 0, RoundingMode.HALF_UP);
+        return av.longValue();
     }
     
     @Override
-	public void setX(long x) { 
-    	// 도시들의 중심위치가 정착지의 위치이므로, 위치를 변경한다는 건 도시의 위치들을 모두 변경한다는 뜻.
-    	// 변화량을 계산한 후, 소속 도시들 모두 해당 변화량만큼 이동
-    	
-    	long changes = getX() - x;
-    	for(City c : getCities()) { c.setX(c.getX() + changes); }
+    public void setX(long x) { 
+        // 도시들의 중심위치가 정착지의 위치이므로, 위치를 변경한다는 건 도시의 위치들을 모두 변경한다는 뜻.
+        // 변화량을 계산한 후, 소속 도시들 모두 해당 변화량만큼 이동
+        
+        long changes = getX() - x;
+        for(City c : getCities()) { c.setX(c.getX() + changes); }
     }
 
-	@Override
-	public void setY(long y) { 
-		long changes = getY() - y;
-    	for(City c : getCities()) { c.setY(c.getY() + changes); }
-	}
+    @Override
+    public void setY(long y) { 
+        long changes = getY() - y;
+        for(City c : getCities()) { c.setY(c.getY() + changes); }
+    }
 
-	@Override
-	public void setZ(long z) { 
-		long changes = getZ() - z;
-    	for(City c : getCities()) { c.setZ(c.getZ() + changes); }
-	}
-	
-	@Override
-	public Coordinate3D getCoordinate() {
-		return new Coordinate3D(getX(), getY(), getZ());
-	}
+    @Override
+    public void setZ(long z) { 
+        long changes = getZ() - z;
+        for(City c : getCities()) { c.setZ(c.getZ() + changes); }
+    }
+    
+    @Override
+    public Coordinate3D getCoordinate() {
+        return new Coordinate3D(getX(), getY(), getZ());
+    }
 
-	@Override
-	public void setCoordinate(Coordinate3D coordinate) {
-		setX(coordinate.getX());
-		setY(coordinate.getY());
-		setZ(coordinate.getZ());
-	}
-	
-	@Override
-	public boolean isSameLocation(Coordinate3D coordinate) {
-		return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
-	}
+    @Override
+    public void setCoordinate(Coordinate3D coordinate) {
+        setX(coordinate.getX());
+        setY(coordinate.getY());
+        setZ(coordinate.getZ());
+    }
+    
+    @Override
+    public boolean isSameLocation(Coordinate3D coordinate) {
+        return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
+    }
     
     /** 새 도시의 좌표 지정 */
     protected void setNewCityCoordinate(City newCity) {
-    	List<City> cities = getCities();
-    	
-    	Random rd = new Random();
-    	boolean positive = rd.nextBoolean();
-    	
-    	long x = 0L;
-    	long y = 0L;
-    	long z = 0L;
-    	
-    	long stdx = (long) rd.nextInt();
-    	long stdy = (long) rd.nextInt();
-    	long stdz = (long) rd.nextInt();
-    	
-    	if(! cities.isEmpty()) {
-    		stdx = getX();
-    		stdy = getY();
-    		stdz = getZ();
-    	}
-    	
-    	while(true) {
-    		// 적당한 범위 내로 랜덤 위치 설정
-    	    x = stdx + (((rd.nextInt() + Integer.MAX_VALUE) / (Integer.MAX_VALUE / 4000)) * (positive ? 1 : (-1)));
+        List<City> cities = getCities();
+        
+        Random rd = new Random();
+        boolean positive = rd.nextBoolean();
+        
+        long x = 0L;
+        long y = 0L;
+        long z = 0L;
+        
+        long stdx = (long) rd.nextInt();
+        long stdy = (long) rd.nextInt();
+        long stdz = (long) rd.nextInt();
+        
+        if(! cities.isEmpty()) {
+            stdx = getX();
+            stdy = getY();
+            stdz = getZ();
+        }
+        
+        while(true) {
+            // 적당한 범위 내로 랜덤 위치 설정
+            x = stdx + (((rd.nextInt() + Integer.MAX_VALUE) / (Integer.MAX_VALUE / 4000)) * (positive ? 1 : (-1)));
             y = stdy + (((rd.nextInt() + Integer.MAX_VALUE) / (Integer.MAX_VALUE / 4000)) * (positive ? 1 : (-1)));
             z = stdz + (((rd.nextInt() + Integer.MAX_VALUE) / (Integer.MAX_VALUE / 4000)) * (positive ? 1 : (-1)));
             
             // 기 존재하는 도시들 중 이 좌표와 너무 가까운 도시가 있는지 체크
             boolean failed = false;
             for(City c : cities) {
-            	if(c.getKey() == newCity.getKey()) continue;
-            	
-            	if(    Math.abs(x - c.getX()) <= 100L 
-            	    && Math.abs(y - c.getY()) <= 100L 
-            	    && Math.abs(z - c.getZ()) <= 100L
+                if(c.getKey() == newCity.getKey()) continue;
+                
+                if(    Math.abs(x - c.getX()) <= 100L 
+                    && Math.abs(y - c.getY()) <= 100L 
+                    && Math.abs(z - c.getZ()) <= 100L
                   ) { failed = true; break; }
             }
             if(! failed) break;
-    	}
-    	
-    	newCity.setX(x);
-    	newCity.setY(y);
-    	newCity.setZ(z);
+        }
+        
+        newCity.setX(x);
+        newCity.setY(y);
+        newCity.setZ(z);
     }
     
     /** 새 도시를 생성 */
@@ -1119,126 +1045,126 @@ public abstract class AbstractColony implements Colony {
     /** 해당 함선의 소속 항구 찾기 */
     @Override
     public Port findPort(Ship ship) {
-    	for(City ct : getCities()) {
-    		for(Facility f : ct.getFacility()) {
-    			if(f instanceof Port) {
-    				Port p = (Port) f;
-    				for(Ship s : p.getShips()) {
-    					if(s.getKey() == ship.getKey()) return p;
-    				}
-    			}
-    		}
-    	}
-    	return null;
+        for(City ct : getCities()) {
+            for(Facility f : ct.getFacility()) {
+                if(f instanceof Port) {
+                    Port p = (Port) f;
+                    for(Ship s : p.getShips()) {
+                        if(s.getKey() == ship.getKey()) return p;
+                    }
+                }
+            }
+        }
+        return null;
     }
     
     /** 해당 함선의 소속 도시 찾기 */
     @Override
     public City findCity(Ship ship) {
-    	for(City ct : getCities()) {
-    		for(Facility f : ct.getFacility()) {
-    			if(f instanceof Port) {
-    				Port p = (Port) f;
-    				for(Ship s : p.getShips()) {
-    					if(s.getKey() == ship.getKey()) return ct;
-    				}
-    			}
-    		}
-    	}
-    	return null;
+        for(City ct : getCities()) {
+            for(Facility f : ct.getFacility()) {
+                if(f instanceof Port) {
+                    Port p = (Port) f;
+                    for(Ship s : p.getShips()) {
+                        if(s.getKey() == ship.getKey()) return ct;
+                    }
+                }
+            }
+        }
+        return null;
     }
     
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     @Override
     public Vector<Ship> getShips() {
-    	Vector<Ship> list = new Vector<Ship>();
-    	for(City c : getCities()) {
-    		list.addAll(c.getShips());
-    	}
-    	return list;
+        Vector<Ship> list = new Vector<Ship>();
+        for(City c : getCities()) {
+            list.addAll(c.getShips());
+        }
+        return list;
     }
     
     /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
     @Override
     public Vector<Ship> getShipsLive() {
-    	Vector<Ship> list = new Vector<Ship>();
-    	for(City c : getCities()) {
-    		list.addAll(c.getShipsLive());
-    	}
-    	return list;
+        Vector<Ship> list = new Vector<Ship>();
+        for(City c : getCities()) {
+            list.addAll(c.getShipsLive());
+        }
+        return list;
     }
     
     /** 해당 위치의 모든 함선들 반환 */
     @Override
     public Vector<Ship> getShips(long x, long y, long z) {
-    	Vector<Ship> list = new Vector<Ship>();
-    	for(City c : getCities()) {
-    		list.addAll(c.getShips(x, y, z));
-    	}
-    	return list;
+        Vector<Ship> list = new Vector<Ship>();
+        for(City c : getCities()) {
+            list.addAll(c.getShips(x, y, z));
+        }
+        return list;
     }
     
     /** 해당 위치의 해당 범위 내 모든 함선들 반환 */
     @Override
     public Vector<Ship> getShips(long x, long y, long z, long dist) {
-    	Vector<Ship> list = new Vector<Ship>();
-    	for(City c : getCities()) {
-    		list.addAll(c.getShips(x, y, z, dist));
-    	}
-    	return list;
+        Vector<Ship> list = new Vector<Ship>();
+        for(City c : getCities()) {
+            list.addAll(c.getShips(x, y, z, dist));
+        }
+        return list;
     }
     
     /** 소속 함선 수 반환 - 건조 중인 함선 포함 */
     @Override
     public int getShipCount() {
-    	int res = 0;
-    	for(City c : getCities()) {
-    		res += c.getShipCount();
-    	}
-    	return res;
+        int res = 0;
+        for(City c : getCities()) {
+            res += c.getShipCount();
+        }
+        return res;
     }
     
     /** 소속 함선 수 반환 - 건조 중인 함선 제외 */
     @Override
     public int getLiveShipCount() {
-    	int res = 0;
-    	for(City c : getCities()) {
-    		res += c.getLiveShipCount();
-    	}
-    	return res;
+        int res = 0;
+        for(City c : getCities()) {
+            res += c.getLiveShipCount();
+        }
+        return res;
     }
     
     @Override
     public Ship getShip(long key) {
-    	Ship sh;
-    	for(City city : getCities()) {
-    		sh = city.getShip(key);
-    		if(sh != null) return sh;
-    	}
-    	return null;
+        Ship sh;
+        for(City city : getCities()) {
+            sh = city.getShip(key);
+            if(sh != null) return sh;
+        }
+        return null;
     } 
     
     @Override
     public void removeShip(Ship ship) {
-    	Port p = findPort(ship);
-    	if(p == null) return;
-    	p.removeShip(ship);
-    	
-    	City city = p.getCity(this);
-    	if(city == null) return;
-    	city.removeShip(ship);
+        Port p = findPort(ship);
+        if(p == null) return;
+        p.removeShip(ship);
+        
+        City city = p.getCity(this);
+        if(city == null) return;
+        city.removeShip(ship);
     }
     
     /** 우주공항 목록 반환 */
     public List<Port> getPorts() {
-    	List<Port> ports = new ArrayList<Port>();
-    	for(City c : getCities()) {
-    		for(Facility f : c.getFacility()) {
-    			if(f.getHp() <= 0) continue;
-    			if(f instanceof Port) ports.add((Port) f);
-    		}
-    	}
-    	return ports;
+        List<Port> ports = new ArrayList<Port>();
+        for(City c : getCities()) {
+            for(Facility f : c.getFacility()) {
+                if(f.getHp() <= 0) continue;
+                if(f instanceof Port) ports.add((Port) f);
+            }
+        }
+        return ports;
     }
     
     /** 빈 새 도시를 생성해 반환, 도시를 이 정착지에 등록시키지는 않음 */
@@ -1254,7 +1180,7 @@ public abstract class AbstractColony implements Colony {
     
     @Override
     public JsonObject toJson(boolean excludeSecrets) {
-    	return toJson(false, this, null, excludeSecrets);
+        return toJson(false, this, null, excludeSecrets);
     }
     
     @Override
@@ -1292,14 +1218,6 @@ public abstract class AbstractColony implements Colony {
         list = new JsonArray();
         for(AccountingData d : getAccountingData()) { list.add(d.toJson()); }
         json.put("accountinghis", list);
-        
-        list = new JsonArray();
-        for(Celestials c : getCelestials()) { if((! excludeSecrets) || c.isOpened())  list.add(c.toJson(details, col, city, excludeSecrets)); }
-        json.put("celestials", list);
-        
-        list = new JsonArray();
-        for(Enemy h : enemies) { list.add(h.toJson(details, col, city, excludeSecrets)); }
-        json.put("enemies", list);
         
         list = new JsonArray();
         for(Research d : getResearches()) { list.add(d.toJson(details, col, city, excludeSecrets)); }
@@ -1414,41 +1332,6 @@ public abstract class AbstractColony implements Colony {
         }
         
         list = null;
-        try { list = (JsonArray) json.get("celestials"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
-        celestials.clear();
-        if(list != null) {
-            for(Object o : list) {
-                if(o instanceof String) o = JsonObject.parseJson(o.toString());
-                if(o instanceof JsonObject) {
-                    try {
-                        Celestials cele = new DefaultCelestials();
-                        cele.fromJson((JsonObject) o);
-                        celestials.add(cele);
-                    } catch(Exception ex) {
-                        GlobalLogs.processExceptionOccured(ex, false);
-                    }
-                }
-            }
-        }
-        
-        list = null;
-        try { list = (JsonArray) json.get("enemies"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
-        enemies.clear();
-        if(list != null) {
-            for(Object o : list) {
-                if(o instanceof String) o = JsonObject.parseJson(o.toString());
-                if(o instanceof JsonObject) {
-                    try {
-                        Enemy en = AbstractEnemy.createEnemyFromJson((JsonObject) o);
-                        enemies.add(en);
-                    } catch(Exception ex) {
-                        GlobalLogs.processExceptionOccured(ex, false);
-                    }
-                }
-            }
-        }
-        
-        list = null;
         try { list = (JsonArray) json.get("researches"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
         researches.clear();
         if(list != null) {
@@ -1533,8 +1416,6 @@ public abstract class AbstractColony implements Colony {
         for(City       c : getCities())     { res = res.add(c.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(c instanceof CustomElement) res = BigInteger.ZERO; }
         for(Loan       l : getLoanAvail())  { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
         for(Loan       l : getLoanHave())   { res = res.add(l.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(l instanceof CustomElement) res = BigInteger.ZERO; }
-        for(Celestials c : getCelestials()) { res = res.add(c.getCheckerValue().multiply(ColonyManager.getCheckerConst(getClientBuildNo()))); if(c instanceof CustomElement) res = BigInteger.ZERO; }
-        for(Enemy      e : getEnemies()   ) { res = res.add(e.getCheckerValue()); if(e instanceof CustomElement) res = BigInteger.ZERO; }
         
         return res;
     }
@@ -1580,10 +1461,6 @@ public abstract class AbstractColony implements Colony {
             c.dispose();
         }
         cities.clear();
-        for(Enemy en : enemies) {
-            en.dispose();
-        }
-        enemies.clear();
         for(Research r : researches) {
             r.dispose();
         }
@@ -1613,7 +1490,6 @@ public abstract class AbstractColony implements Colony {
     public void markAsRefreshChildren(boolean f) {
         markAsRefresh(f);
         for(City     ct : getCities() )    { ct.markAsRefreshChildren(f); }
-        for(Enemy    en : getEnemies())    { en.markAsRefreshChildren(f); }
         for(Research r  : getResearches()) { r.markAsRefreshChildren(f);  }
         for(Loan     l  : getLoanAvail())  { l.markAsRefreshChildren(f);  }
         for(Loan     l  : getLoanHave())   { l.markAsRefreshChildren(f);  }
@@ -1624,89 +1500,73 @@ public abstract class AbstractColony implements Colony {
         return this;
     }
     
-    /** 주변 천체 목록 랜덤화 (단, 천체 목록이 이미 생성된 경우 아무 동작하지 않음) */
     @Override
-    public void randomizeCelestials() {
-    	if(! celestials.isEmpty()) return;
-    	Celestials newOne;
-    	
-    	Random rand = new Random();
-		int intRand = ((int) (Math.abs(rand.nextInt())) / (Integer.MAX_VALUE / 1000)) + 1000;
-		int grade = 1;
-		int idx=0;
-		
-	    for(idx=0; idx<intRand; idx++) {
-	    	newOne = DefaultCelestials.createRandom(getX(), getY(), getZ(), 10000, (int) (100000 + (Math.random() * idx)), grade + (Math.random() >= 0.5 ? 1 : 0) + (Math.random() >= 0.8 ? 1 : 0) );
-	    	if(idx % 100 == 0) grade++;
-	    	celestials.add(newOne);
-	    }
-	    
-	    intRand = ((int) (Math.abs(rand.nextInt())) / (Integer.MAX_VALUE / 1000)) + 1000;
-	    for(idx=0; idx<intRand; idx++) {
-	    	newOne = SoFarCelestials.createRandom(getX(), getY(), getZ());
-	    	celestials.add(newOne);
-	    }
+    public Object cloneThis() {
+        return cloneThis(false);
     }
     
     @Override
-    public Object cloneThis() {
-    	return cloneThis(false);
+    public boolean equals(Object obj) {
+    	if(obj == null) return false;
+    	if(! (obj instanceof AbstractColony)) return false;
+    	AbstractColony c = (AbstractColony) obj;
+    	return (c.getKey() == getKey());
     }
     
     /** 객체 복제, 일부 비공개 항목은 제외 */
     public Object cloneThis(boolean excludeSecrets) {
-    	try {
-    	    JsonObject json = toJson();
-    	    if(excludeSecrets) {
-    	    	json.put("celestials", new JsonArray()); // 기밀 항목 제거
-    	    }
-    	    
-    	    Class<?> classThis = getClass();
-    	    ColonyElements col = (ColonyElements) classThis.newInstance();
-    	    col.fromJson(json);
-    	    return col;
-    	} catch(Exception ex) {
-    		throw new RuntimeException(ex.getMessage(), ex);
-    	}
+        try {
+            JsonObject json = toJson();
+            if(excludeSecrets) {
+                json.put("celestials", new JsonArray()); // 기밀 항목 제거
+            }
+            
+            Class<?> classThis = getClass();
+            ColonyElements col = (ColonyElements) classThis.newInstance();
+            col.fromJson(json);
+            return col;
+        } catch(Exception ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
     }
     
     @Override
     public String describeForAI(Colony colony, City city) {
-    	StringBuilder res = new StringBuilder("정착지 \"" + getName() + "\" 의 브리핑을 시작합니다.");
-    	res = res.append("\n").append("    ").append("이 정착지에는 예산이 ").append(getMoney()).append(" 있습니다.");
-    	res = res.append("\n").append("    ").append("이 정착지에는 다음과 같은 도시들이 개설되어 있습니다.");
-    	
-    	for(City o : getCities()) {
-    		String desc = o.describeForAI(this, o);
-    		if(DataUtil.isEmpty(desc)) {
-    			res = res.append("\n").append("        ").append("도시 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
-    		} else {
-    			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
-        		while(lineTokenizer.hasMoreTokens()) {
-        			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
-        		}
-    		}
-    	}
-    	
-    	res = res.append("\n").append("    ").append("이 정착지에는 다음과 같은 기술들을 보유하고 있습니다.");
-    	for(Research o : getResearches()) {
-    		if(o.getLevel() <= 0) continue;
-    		
-    		String desc = o.describeForAI(this, null);
-    		
-    		if(DataUtil.isEmpty(desc)) {
-    			res = res.append("\n").append("        ").append("기술 \"" + o.getName() + "\" (레벨 " + o.getLevel() + ", 상세정보를 조회할 수 없습니다.)");
-    		} else {
-    			StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
-        		while(lineTokenizer.hasMoreTokens()) {
-        			res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
-        		}
-    		}
-    	}
-    	
-    	res = res.append("\n").append("여기까지, 정착지 \"" + getName() + "\" 의 브리핑을 마칩니다.");
-    			
-    	return res.toString();
+        StringBuilder res = new StringBuilder("정착지 \"" + getName() + "\" 의 브리핑을 시작합니다.");
+        res = res.append("\n").append("    ").append("이 정착지에는 예산이 ").append(getMoney()).append(" 있습니다.");
+        res = res.append("\n").append("    ").append("이 정착지에는 다음과 같은 도시들이 개설되어 있습니다.");
+        
+        for(City o : getCities()) {
+            String desc = o.describeForAI(this, o);
+            if(DataUtil.isEmpty(desc)) {
+                res = res.append("\n").append("        ").append("도시 \"" + o.getName() + "\" (상세정보를 조회할 수 없습니다.)");
+            } else {
+                StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+                while(lineTokenizer.hasMoreTokens()) {
+                    res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+                }
+            }
+        }
+        
+        res = res.append("\n").append("    ").append("이 정착지에는 다음과 같은 기술들을 보유하고 있습니다.");
+        for(Research o : getResearches()) {
+            if(o.getLevel() <= 0) continue;
+            
+            String desc = o.describeForAI(this, null);
+            
+            if(DataUtil.isEmpty(desc)) {
+                res = res.append("\n").append("        ").append("기술 \"" + o.getName() + "\" (레벨 " + o.getLevel() + ", 상세정보를 조회할 수 없습니다.)");
+            } else {
+                StringTokenizer lineTokenizer = new StringTokenizer(desc, "\n");
+                while(lineTokenizer.hasMoreTokens()) {
+                    res = res.append("\n").append("        ").append(lineTokenizer.nextToken());
+                }
+            }
+        }
+        
+        res = res.append("\n").append("여기까지, 정착지 \"" + getName() + "\" 의 브리핑을 마칩니다.");
+                
+        return res.toString();
     }
     
     public static String getColonyClassName() {

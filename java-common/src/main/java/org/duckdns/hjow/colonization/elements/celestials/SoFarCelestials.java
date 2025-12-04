@@ -23,6 +23,26 @@ public class SoFarCelestials extends DefaultCelestials implements FarCelestials 
 		c.setY(coordinate.get("y").longValue());
 		c.setZ(coordinate.get("z").longValue());
 		
+		int grade = 9;
+		int debriesCount = grade <= 0 ? 5 : grade * 5;
+		int idx;
+		for(idx=0; idx<debriesCount; idx++) {
+			if(Math.random() >= 0.5) {
+				// TODO : 보상 추가 - 별도 클래스에서 추가해야 할 듯 (common 프로젝트에서 default 클래스 액세스 안됨)
+				
+			}
+		}
+		
+		int enemyCount = grade <= 0 ? 5 : grade * 5;
+		for(idx=0; idx<enemyCount; idx++) {
+			if(Math.random() >= 0.3) {
+				// TODO : 적 추가 - 별도 클래스에서 추가해야 할 듯 (common 프로젝트에서 default 클래스 액세스 안됨)
+				
+			}
+		}
+		
+		c.setMoney( (long) ( (10.0 * Math.random()) * Math.pow(2, 1 + (0.01 * (grade > 10 ? 10 : grade) * Math.random()) ) ) + 1L );
+		
 		return c;
 	}
 }

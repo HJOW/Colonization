@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 
@@ -20,10 +21,10 @@ public abstract class TimeEvent implements Serializable {
     public abstract long   getOccurMinimumTime(Colony col);
     
     /** 이벤트 발생률 */
-    public abstract double getOccurRate(ColonyElements target, Colony col, City city);
+    public abstract double getOccurRate(ColonyElements target, Space space, Colony col, City city);
     
     /** 이벤트 처리 */
-    public abstract void onEventOccured(ColonyElements target, Colony col, City city, ColonyPanel colPanel);
+    public abstract void onEventOccured(ColonyElements target, Space space, Colony col, City city, ColonyPanel colPanel);
     
     /** 이벤트 명칭 반환 */
     public abstract String getTitle();

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.duckdns.hjow.colonization.ColonyManager;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.celestials.Celestials;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
@@ -36,6 +37,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
     @Override
     protected void draw(Graphics g) {
         if(colony == null) return;
+        Space space = colony.getSpace();
         
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -91,7 +93,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
         }
         
         // 천체 그리기
-        for(Celestials cele : colony.getCelestials()) {
+        for(Celestials cele : space.getCelestials()) {
             Coordinate3D coordinate = new Coordinate3D(cele.getX(), cele.getY(), cele.getZ());
             // if(! cele.isOpened()) continue; // 그리기는 해야 함
             
@@ -112,7 +114,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
         }
         
         // 함선 그리기
-        for(Ship ship : colony.getShips()) {
+        for(Ship ship : space.getShips()) {
             if(ship.getHp() <= 0) continue;
             Coordinate3D coordinate = new Coordinate3D(ship.getX(), ship.getY(), ship.getZ());
             
@@ -147,7 +149,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
         }
         
         // 적 그리기
-        for(Enemy en : colony.getEnemies()) {
+        for(Enemy en : space.getEnemies()) {
             if(en.getHp() <= 0) continue;
             
             Coordinate3D coordinate = new Coordinate3D(en.getX(), en.getY(), en.getZ());
@@ -157,7 +159,7 @@ public class SwingSpacePanel extends AbstractSpacePanel {
             for(City ct : colony.getCities()) {
                 if(en.isSameLocation(ct.getCoordinate())) { docked = true; break; }
             }
-            for(Celestials cele : colony.getCelestials()) {
+            for(Celestials cele : colony.getSpace().getCelestials()) {
                 if(en.isSameLocation(cele.getCoordinate())) { docked = true; break; }
             }
             if(docked) continue;

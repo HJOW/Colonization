@@ -30,6 +30,7 @@ public class DefaultCelestials implements Celestials {
 	protected long x = 0L;
     protected long y = 0L;
     protected long z = 0L;
+    protected long money = 0L;
     protected String name = "소행성_" + key;
     protected boolean opened = false;
 
@@ -48,6 +49,7 @@ public class DefaultCelestials implements Celestials {
 		try { setName(json.get("name").toString());                                  } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setName("");  }
 		try { key = Long.parseLong(json.get("key").toString());                      } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setKey(ColonyManager.generateKey()); }
 		try { setOpened(DataUtil.parseBoolean(String.valueOf(json.get("opened"))));  } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setOpened(false); }
+		try { setMoney(Long.parseLong(json.get("money").toString()));                } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); ex.printStackTrace(); setMoney(0L); }
 		
 		try { x = Long.parseLong(json.get("x").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setX(0L); }
         try { y = Long.parseLong(json.get("y").toString());               } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setY(0L); }
@@ -100,6 +102,7 @@ public class DefaultCelestials implements Celestials {
         json.put("name", getName());
         json.put("key", String.valueOf(getKey()));
         json.put("opened", isOpened() ? "Y" : "N");
+        json.put("money", String.valueOf(getMoney()));
         
         json.put("x", String.valueOf(getX()));
         json.put("y", String.valueOf(getY()));
@@ -154,7 +157,7 @@ public class DefaultCelestials implements Celestials {
 	
 	/** 적과 보상이 모두 남아있지 않으면 true 반환 */
 	public boolean isEmpty() {
-		return ( getDebries().isEmpty() && getEnemies().isEmpty() );
+		return ( getDebries().isEmpty() && getEnemies().isEmpty() && getMoneyLeft() <= 0L );
 	}
 
 	@Override
@@ -204,6 +207,30 @@ public class DefaultCelestials implements Celestials {
 		return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
 	}
 	
+	public long getMoney() {
+		return money;
+	}
+	
+	@Override
+	public long getMoneyLeft() {
+		return getMoney();
+	}
+	
+	@Override
+	public long withdraw() {
+		long l = getMoneyLeft();
+		if(l <= 0) return 0L;
+		setMoney(0L);
+		return l;
+	}
+
+	public void setMoney(long money) {
+		this.money = money;
+		if(this.money <= 0L) {
+			this.money = 0L;
+		}
+	}
+
 	@Override
 	public long getKey() {
 		return key;
@@ -273,10 +300,11 @@ public class DefaultCelestials implements Celestials {
 	@Override
 	public void oneCycle(int cycle, ColonyElements stage, Space space, Colony colony, int efficiency100, ColonyPanel colPanel) {
 		// 함선의 공격
-		for(Ship s : colony.getShips()) {
+		for(Ship s : space.getShips()) {
         	if(s.getHp() <= 0) continue;
         	if(! (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ())) continue;
-        	if(cycle % s.cycleGap(colony) == 0) s.oneCycle(cycle, this, space, colony, efficiency100, colPanel);
+        	Colony owners = space.findColony(s);
+        	if(cycle % s.cycleGap(owners) == 0) s.oneCycle(cycle, this, space, owners, efficiency100, colPanel);
         }
 		
 		// 적의 공격
@@ -294,9 +322,13 @@ public class DefaultCelestials implements Celestials {
 			enemies.clear();
 			
 			// 보상 수거
-			for(Ship s : colony.getShips()) {
+			for(Ship s : space.getShips()) {
 				if(s.getHp() <= 0) continue;
-	        	if(! (getX() == s.getX() && getY() == s.getY() && getZ() == s.getZ())) continue;
+				if(! isSameLocation(s.getCoordinate())) continue;
+				
+				Colony owners = space.findColony(s);
+				
+				if(getMoneyLeft() >= 1L) owners.modifyingMoney(withdraw(), null, owners, "", "");
 	        	
 	        	int lefts = s.getMaxStoredCapacity() - s.getStoredCount();
 	        	while(lefts >= 1 && debries.size() >= 1) {
@@ -335,6 +367,25 @@ public class DefaultCelestials implements Celestials {
 		c.setX(coordinate.get("x").longValue());
 		c.setY(coordinate.get("y").longValue());
 		c.setZ(coordinate.get("z").longValue());
+		
+		int debriesCount = grade <= 0 ? 5 : grade * 5;
+		int idx;
+		for(idx=0; idx<debriesCount; idx++) {
+			if(Math.random() >= 0.5) {
+				// TODO : 보상 추가 - 별도 클래스에서 추가해야 할 듯 (common 프로젝트에서 default 클래스 액세스 안됨)
+				
+			}
+		}
+		
+		int enemyCount = grade <= 0 ? 5 : grade * 5;
+		for(idx=0; idx<enemyCount; idx++) {
+			if(Math.random() >= 0.3) {
+				// TODO : 적 추가 - 별도 클래스에서 추가해야 할 듯 (common 프로젝트에서 default 클래스 액세스 안됨)
+				
+			}
+		}
+		
+		c.setMoney( (long) ( (10.0 * Math.random()) * Math.pow(2, 1 + (0.01 * (grade > 10 ? 10 : grade) * Math.random()) ) ) + 1L );
 		
 		return c;
 	}

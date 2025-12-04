@@ -543,12 +543,12 @@ public abstract class AbstractCity implements City {
             
             if(ev.getEventSize() == TimeEvent.EVENTSIZE_CITY) {
                 if(cycle % ev.getOccurCycle(colony, this) == 0) {
-                    if(ColonyManager.random() <= ev.getOccurRate(this, colony, this)) ev.onEventOccured(this, colony, this, colPanel);
+                    if(ColonyManager.random() <= ev.getOccurRate(this, space, colony, this)) ev.onEventOccured(this, space, colony, this, colPanel);
                 }
             } else if(ev.getEventSize() == TimeEvent.EVENTSIZE_FACILITY) {
                 for(Facility fac : getFacility()) {
                     if(cycle % ev.getOccurCycle(colony, this) == 0) {
-                        if(ColonyManager.random() <= ev.getOccurRate(fac, colony, this)) ev.onEventOccured(fac, colony, this, colPanel);
+                        if(ColonyManager.random() <= ev.getOccurRate(fac, space, colony, this)) ev.onEventOccured(fac, space, colony, this, colPanel);
                     }
                 }
             }
@@ -754,8 +754,8 @@ public abstract class AbstractCity implements City {
                 continue;
             }
             
-            // 정착지에 등록되어 있는지 체크
-            if(! col.contains(en)) {
+            // 우주에 등록되어 있는지 체크
+            if(! col.getSpace().contains(en)) {
             	en.dispose(); // 이 경우는 dispose 해야 함. 정착지에도 등록 안되어 있으면 dispose 호출할 주체가 없음.
             	getEnemies().remove(idx);
                 continue;
@@ -1664,6 +1664,14 @@ public abstract class AbstractCity implements City {
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	if(obj == null) return false;
+    	if(! (obj instanceof AbstractCity)) return false;
+    	AbstractCity c = (AbstractCity) obj;
+    	return (c.getKey() == getKey());
     }
     
     @Override

@@ -7,6 +7,7 @@ import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.ColonyElements;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.states.Influenza;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
@@ -31,12 +32,12 @@ public class InfluenzaEvent extends TimeEvent {
     }
 
     @Override
-    public double getOccurRate(ColonyElements target, Colony col, City city) {
+    public double getOccurRate(ColonyElements target, Space space, Colony col, City city) {
         return 0.1;
     }
 
     @Override
-    public void onEventOccured(ColonyElements target, Colony col, City city, ColonyPanel colPanel) {
+    public void onEventOccured(ColonyElements target, Space space, Colony col, City city, ColonyPanel colPanel) {
         List<Citizen> all     = city.getCitizens();
         List<Citizen> already = new ArrayList<Citizen>();
         

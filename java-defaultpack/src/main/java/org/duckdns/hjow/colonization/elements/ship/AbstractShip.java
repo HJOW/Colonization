@@ -285,7 +285,7 @@ public abstract class AbstractShip implements Ship {
                 }
                 
                 if(castLeft >= 1) {
-                    enemies = colony.getEnemies();
+                    enemies = colony.getSpace().getEnemies();
                     for(Enemy e : enemies) {
                         if(e.getHp() >= 1) {
                         	if(castLeft <= 0) break;
@@ -707,6 +707,14 @@ public abstract class AbstractShip implements Ship {
 	public boolean isSameLocation(Coordinate3D coordinate) {
 		return (getX() == coordinate.getX() && getY() == coordinate.getY() && getZ() == coordinate.getZ());
 	}
+	
+	@Override
+    public boolean equals(Object obj) {
+    	if(obj == null) return false;
+    	if(! (obj instanceof AbstractShip)) return false;
+    	AbstractShip c = (AbstractShip) obj;
+    	return (c.getKey() == getKey());
+    }
 	
 	@Override
     public String describeForAI(Colony colony, City city) {
