@@ -17,6 +17,12 @@ request.setAttribute("ctx", ctx);
 <script type="text/javascript" src="<c:url value="/resources/lib/jqueryui/jquery-ui.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/lib/moment.min.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/lib/chart.js"/>"></script>
+<!--
+<script type="text/javascript" src="<c:url value="/resources/lib/threejs/three.core.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/lib/threejs/three.module.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/lib/threejs/three.tsl.min.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/resources/lib/threejs/three.webgpu.min.js"/>"></script>
+-->
 <script type="text/javascript" src="<c:url value="/resources/common.js"/>"></script>
 <script type="text/javascript" src="<c:url value="/resources/lib/react/babel.js"/>"></script>
 <script type="text/javascript">$.ctx = "<c:out value="${ctx}"/>";</script>
