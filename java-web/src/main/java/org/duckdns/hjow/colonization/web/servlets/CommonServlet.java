@@ -31,6 +31,7 @@ import org.duckdns.hjow.colonization.web.accounts.AccountUtil;
 import org.duckdns.hjow.colonization.web.db.DBUtil;
 import org.duckdns.hjow.commons.json.JsonObject;
 import org.duckdns.hjow.commons.util.ClassUtil;
+import org.duckdns.hjow.commons.util.DataUtil;
 import org.duckdns.hjow.commons.util.FileUtil;
 
 public abstract class CommonServlet extends HttpServlet {
@@ -156,9 +157,25 @@ public abstract class CommonServlet extends HttpServlet {
             return acc;
         }
     }
+
+    /** 접속 기록 로깅 */
+    protected void logRequest(HttpServletRequest req) throws Throwable {
+        Map<String, String> params = getParameterMap(req);
+        HashMap<String, String> clonedMap = new HashMap<String, String>();
+        clonedMap.putAll(params);
+
+        String svName = clonedMap.get("svName");
+        if(DataUtil.isEmpty(svName)) svName = "UNKNOWN";
+        clonedMap.remove("svName");
+
+        String logContent = req.getRemoteAddr() + " at " + System.currentTimeMillis() + " request(" + svName + ") " + clonedMap.toString();
+        logger.info(logContent);
+    }
     
     /** doCommon 메소드 내 맨 앞에서 반드시 호출 ! */
     protected void doBefore(HttpServletRequest req, HttpServletResponse resp) throws Throwable {
+        logRequest(req);
+
         boolean logined = false;
         
         // JWT 토큰이 있는 경우 로그인 여부 판단
