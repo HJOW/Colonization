@@ -269,7 +269,7 @@ public class GUIColonyManager extends ColonyManager implements GUIColonyManagerI
         
         tabMain.add(t("홈"), pnFront);
         tabMain.add(t("로컬"), pnLocalRoot);
-        tabMain.add(t("웹"), servletClient);
+        // tabMain.add(t("웹"), servletClient); // TODO
         
         pnFront.setLayout(new BorderLayout());
         
