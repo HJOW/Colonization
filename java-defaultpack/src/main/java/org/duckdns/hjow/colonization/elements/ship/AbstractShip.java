@@ -318,20 +318,22 @@ public abstract class AbstractShip implements Ship {
                 }
         	}
         	
-        	// 다른 정착지 함선 상대
-        	for(Ship s : space.getShipsLive()) {
-        		if(s.isSameLocation(getCoordinate())) {
-        			if(s.getOwner() != 0L && s.getOwner() != getOwner() && (! s.getAllied().contains(String.valueOf(getOwner())))) {
-            			if(s.getHp() >= 1) {
-                        	if(castLeft <= 0) break;
-                        	damages = getRealDamage(s, colony);
-                            naturalized = ColonyManager.naturalizeDamage(this, s, damages);
-                            s.addHp(naturalized * (-1));
-                            processAfterAttack(cycle, s, naturalized);
-                            castLeft--;
-                        }
-            		}
-        		}
+        	if(castLeft >= 1) {
+        	    // 다른 정착지 함선 상대
+        	    for(Ship s : space.getShipsLive()) {
+        	    	if(s.isSameLocation(getCoordinate())) {
+        	    		if(s.getOwner() != 0L && s.getOwner() != getOwner() && (! s.getAllied().contains(String.valueOf(getOwner())))) {
+                			if(s.getHp() >= 1) {
+                            	if(castLeft <= 0) break;
+                            	damages = getRealDamage(s, colony);
+                                naturalized = ColonyManager.naturalizeDamage(this, s, damages);
+                                s.addHp(naturalized * (-1));
+                                processAfterAttack(cycle, s, naturalized);
+                                castLeft--;
+                            }
+                		}
+        	    	}
+        	    }
         	}
         }
 	}

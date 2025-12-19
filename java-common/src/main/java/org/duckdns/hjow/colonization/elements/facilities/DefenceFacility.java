@@ -12,6 +12,7 @@ import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.enemies.Enemy;
 import org.duckdns.hjow.colonization.elements.research.ResearchCondition;
+import org.duckdns.hjow.colonization.elements.ship.Ship;
 import org.duckdns.hjow.colonization.ui.ColonyPanel;
 import org.duckdns.hjow.commons.json.JsonObject;
 
@@ -80,6 +81,24 @@ public abstract class DefenceFacility extends AbstractFacility implements Attack
                         castLeft--;
                     }
                 }
+            }
+            
+            if(castLeft >= 1) {
+            	// 도시와 같은 위치에 있는 다른 소유주의 함선에도 공격 수행
+            	for(Ship s : space.getShipsLive()) {
+        	    	if(s.isSameLocation(city.getCoordinate())) {
+        	    		if(s.getOwner() != 0L && s.getOwner() != colony.getKey() && (! s.getAllied().contains(String.valueOf(colony.getKey())))) {
+                			if(s.getHp() >= 1) {
+                            	if(castLeft <= 0) break;
+                            	damages = getRealDamage(s, colony);
+                                naturalized = ColonyManager.naturalizeDamage(this, s, damages);
+                                s.addHp(naturalized * (-1));
+                                processAfterAttack(cycle, s, naturalized);
+                                castLeft--;
+                            }
+                		}
+        	    	}
+        	    }
             }
         }
     }
