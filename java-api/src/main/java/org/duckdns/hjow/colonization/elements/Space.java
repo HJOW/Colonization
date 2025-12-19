@@ -73,9 +73,9 @@ public interface Space extends Serializable, Disposeable, JsonCompatible {
     public City findCity(Ship ship);
     /** 해당 함선의 소속 정착지 찾기 */
     public Colony findColony(Ship ship);
-    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
+    /** 우주 내 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 포함 */
     public Vector<Ship> getShips();
-    /** 도시 내 소속 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
+    /** 우주 내 함선들 반환 (말그대로 소속 함선으로, 실제 위치는 도시 내가 아닐수도 있음) - 건조 중인 함선 제외 */
     public Vector<Ship> getShipsLive();
     /** 해당 위치의 모든 함선들 반환 - 건조 중인 함선 제외 */
     public Vector<Ship> getShips(long x, long y, long z);

@@ -1288,6 +1288,13 @@ public abstract class AbstractColony implements Colony {
                     try {
                         City city = createCityInstance((JsonObject) o);
                         cities.add(city);
+                        
+                        // 소유 함선들 소유권 변경해야 함
+                        for(Port p : city.getPorts()) {
+                        	for(Ship s : p.getShips()) {
+                        		s.setOwner(this);
+                        	}
+                        }
                     } catch(Exception ex) {
                         GlobalLogs.processExceptionOccured(ex, false);
                     }

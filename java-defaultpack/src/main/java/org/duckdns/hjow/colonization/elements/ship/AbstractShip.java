@@ -49,10 +49,14 @@ public abstract class AbstractShip implements Ship {
     protected long destinationY = y;
     protected long destinationZ = z;
     
+    protected long owner = 0L;
+    protected List<String> allied = new Vector<String>();
+    
     @Override
     public void init(Port port, Colony colony) {
     	level        = 0;
     	leftProgress = getMaxProgress(port, colony);
+    	owner        = colony.getKey();
     	
     	City city = port.findCityBelongsTo(colony);
     	if(city != null) {
@@ -269,6 +273,7 @@ public abstract class AbstractShip implements Ship {
             int damages     = getDamage();
             int naturalized = damages;
             
+            // 적 상대
         	if(stage instanceof City) {
         		City city = (City) stage;
         		enemies = city.getEnemies();
@@ -312,6 +317,22 @@ public abstract class AbstractShip implements Ship {
                     }
                 }
         	}
+        	
+        	// 다른 정착지 함선 상대
+        	for(Ship s : space.getShipsLive()) {
+        		if(s.isSameLocation(getCoordinate())) {
+        			if(s.getOwner() != 0L && s.getOwner() != getOwner() && (! s.getAllied().contains(String.valueOf(getOwner())))) {
+            			if(s.getHp() >= 1) {
+                        	if(castLeft <= 0) break;
+                        	damages = getRealDamage(s, colony);
+                            naturalized = ColonyManager.naturalizeDamage(this, s, damages);
+                            s.addHp(naturalized * (-1));
+                            processAfterAttack(cycle, s, naturalized);
+                            castLeft--;
+                        }
+            		}
+        		}
+        	}
         }
 	}
 	
@@ -338,6 +359,8 @@ public abstract class AbstractShip implements Ship {
         try { destinationX = Long.parseLong(json.get("dx").toString());   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setDestinationX(0L); }
         try { destinationY = Long.parseLong(json.get("dy").toString());   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setDestinationY(0L); }
         try { destinationZ = Long.parseLong(json.get("dz").toString());   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setDestinationZ(0L); }
+        
+        try { owner = Long.parseLong(json.get("owner").toString());   } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); setDestinationZ(0L); }
         
         JsonArray list = (JsonArray) json.get("states");
         states.clear();
@@ -378,6 +401,14 @@ public abstract class AbstractShip implements Ship {
                 }
             }
         }
+        
+        list = (JsonArray) json.get("allied");
+        allied.clear();
+        if(list != null) {
+            for(Object o : list) {
+            	allied.add(o.toString().trim());
+            }
+        }
 	}
 
 	@Override
@@ -408,6 +439,8 @@ public abstract class AbstractShip implements Ship {
         json.put("dy", String.valueOf(getDestinationY()));
         json.put("dz", String.valueOf(getDestinationZ()));
         
+        json.put("owner", String.valueOf(getOwner()));
+        
         JsonArray list = new JsonArray();
         for(State s : getStates()) { list.add(s.toJson(details, col, city, excludeSecrets)); }
         json.put("states", list);
@@ -415,6 +448,10 @@ public abstract class AbstractShip implements Ship {
         list = new JsonArray();
         for(Product p : getStored()) { list.add(p.toJson()); }
         json.put("stored", list);
+        
+        list = new JsonArray();
+        for(String s : getAllied()) { list.add(s); }
+        json.put("allied", list);
         
         return json;
 	}
@@ -668,6 +705,40 @@ public abstract class AbstractShip implements Ship {
 	}
     
     @Override
+    public long getOwner() {
+		return owner;
+	}
+    
+    @Override
+    public Colony getOwner(Space space) {
+    	for(Colony c : space.getColonies()) {
+    		if(c.getKey() == getOwner()) return c;
+    	}
+    	return null;
+    }
+
+    @Override
+	public void setOwner(long owner) {
+		this.owner = owner;
+	}
+    
+    @Override
+    public void setOwner(Colony owner) {
+		this.owner = owner.getKey();
+	}
+
+    @Override
+	public List<String> getAllied() {
+		return allied;
+	}
+
+    @Override
+	public void setAllied(List<String> allied) {
+		this.allied.clear();
+		this.allied.addAll(allied);
+	}
+
+	@Override
     public Object cloneThis() {
     	try {
     	    Class<?> classThis = getClass();

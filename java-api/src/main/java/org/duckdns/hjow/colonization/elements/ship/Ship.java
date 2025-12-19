@@ -6,6 +6,7 @@ import org.duckdns.hjow.colonization.ColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.AttackableObject;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.Movable;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.Port;
 import org.duckdns.hjow.colonization.elements.products.Product;
@@ -21,6 +22,18 @@ public interface Ship extends AttackableObject, Movable {
 	public String getDefaultName();
 	/** 함선 종류의 설명 반환 */
 	public String getDescription();
+	/** 소유자 정착지 고유 KEY 반환 */
+	public long getOwner();
+	/** 소유자 정착지 객체 반환, 찾지 못한 경우 null 이 반한 */
+	public Colony getOwner(Space space);
+	/** 소유자 정착지 변경, 정착지의 고유 KEY 입력 */
+	public void setOwner(long owner);
+	/** 소유자 정착지 변경  */
+	public void setOwner(Colony owner);
+	/** 소유자와 동맹 관계의 정착지 KEY 목록 반환 (문자열의 List로 반환) */
+	public List<String> getAllied();
+	/** 소유자와 동맹 관계의 정착지 목록 교체 (정착지 KEY들을 문자열로 변환해 넣어야 함) */
+	public void setAllied(List<String> allied);
 	/** 함선 건조에 필요한 최대 시간 (사이클) 반환 */
 	public long getMaxProgress(Port port, Colony colony);
 	/** 함선의 레벨 반환 */
