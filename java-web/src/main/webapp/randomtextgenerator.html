@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <script type="text/javascript" src="resources/lib/jquery-1.12.4.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var formMain = $('.form_main');
+        var inpChars = formMain.find("[name='input_characters']");
+        var inpNums  = formMain.find("[name='input_numbers']");
+        var taRes    = formMain.find('.ta_result');
+        
+        formMain.find('.btn_build').on('click', function() {
+            taRes.val('...');
+
+            try {
+                var idx = 0;
+                var chars = [];
+                var strings = inpChars.val();
+                for(idx=0; idx<strings.length; idx++) {
+                    chars.push(strings.charAt(idx));
+                }
+
+                var res = '';
+                var counts = 0;
+                
+                try { counts = parseInt(inpNums.val()); } catch(e) { taRes.val('오류 : ' + e); return; }
+
+                for(idx=0; idx<counts; idx++) {
+                    var randomNo = Math.floor(chars.length * Math.random());
+                    res = res + chars[randomNo];
+                }
+                taRes.val(res);
+            } catch(e) { taRes.val('오류 : ' + e); return; }
+        });
+
+        inpChars.val('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_');
+    });
+    </script>
+</head>
+<body>
+    <div class='main_root'>
+        <h1>랜덤 문자열 생성기</h1>
+        <form onsubmit="return false" class="form_main">
+            <div class="div_division" style="width: 69%">
+                <div class="div_select_characters">
+                    <p>문자열을 구성할 글자들을 아래에 입력해 주세요.</p>
+                    <input type="text" name="input_characters" style="width: 100%"/>
+                </div>
+                <div class="div_ctrl" style="text-align: center;">
+                    총 <input type="number" name="input_numbers" min="1" max="9999" step="1" value="20"/>글자를 
+                    <input type="button" class="btn_build" value="지금 생성" accesskey="G"/>
+                </div>
+                <div class="div_result">
+                    <p>아래에 랜덤 문자열이 생성되어 나타납니다.</p>
+                    <textarea class="ta_result" style="width: 100%; min-height: 300px;" readonly></textarea>
+                </div>
+            </div>
+            <div class="div_division" style="width: 10%"></div>
+            <div class="div_division" style="width: 29%">
+                <p>자주 쓰는 글자 목록들</p>
+                <textarea class="ta_favorites" style="width: 100%; min-height: 300px;" readonly>
+0123456789abcdefghijklmnopqrstuvwxyz
+0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_
+                </textarea>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
