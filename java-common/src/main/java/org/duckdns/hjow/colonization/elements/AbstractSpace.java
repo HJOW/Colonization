@@ -479,6 +479,7 @@ public abstract class AbstractSpace implements Space {
 
 	public void setCycleCostRate(double cycleCostRate) {
 		this.cycleCostRate = cycleCostRate;
+		if(this.cycleCostRate < 0.1) this.cycleCostRate = 0.1;
 	}
 
 	@Override
@@ -488,6 +489,7 @@ public abstract class AbstractSpace implements Space {
 
 	public void setMoneyCostRate(double moneyCostRate) {
 		this.moneyCostRate = moneyCostRate;
+		if(this.moneyCostRate < 0.1) this.moneyCostRate = 0.1;
 	}
 
 	@Override
