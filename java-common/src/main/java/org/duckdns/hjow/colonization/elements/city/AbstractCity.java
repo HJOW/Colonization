@@ -1425,7 +1425,7 @@ public abstract class AbstractCity implements City {
                 if(rNow != null) rsName = rNow.getTitle();
                 
                 percents = "";
-                if(rNow != null) percents = ColonyManager.formatRate(rNow.getProgressPercents()) + "%";
+                if(rNow != null) percents = ColonyManager.formatRate(rNow.getProgressPercents(col.getSpace())) + "%";
                 
                 desc = desc.append("\n").append(ColonyManager.t("[FACILITYNAME] 에서 연구 진행 중 : [RESEARCH] ([PROGRESS])").replace("[FACILITYNAME]", f.getName()).replace("[RESEARCH]", rsName).replace("[PROGRESS]", percents));
             } else if(f instanceof Port) {

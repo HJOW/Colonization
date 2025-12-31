@@ -80,13 +80,13 @@ public abstract class AbstractResearch implements Research {
     }
     
     @Override
-    public double getProgressPercents() {
-        return getProgressPercents(true);
+    public double getProgressPercents(Space space) {
+        return getProgressPercents(space, true);
     }
     
     @Override
-    public double getProgressPercents(boolean left2FloatPoint) {
-        BigDecimal r = new BigDecimal(String.valueOf(getMaxProgress()));
+    public double getProgressPercents(Space space, boolean left2FloatPoint) {
+        BigDecimal r = new BigDecimal(String.valueOf(getMaxProgress(space)));
         if(r.compareTo(BigDecimal.ZERO) <= 0) return 0.0;
         
         BigDecimal p = new BigDecimal(String.valueOf(getProgress()));
@@ -104,21 +104,22 @@ public abstract class AbstractResearch implements Research {
     public void setProgress(long progress) {
         this.progress = progress;
         if(this.progress < 0) this.progress = 0;
-        if(this.progress > getMaxProgress()) this.progress = getMaxProgress();
     }
     
     /** 진행 상태 증가 (레벨업 로직 포함 - adds는 반드시 양수로 입력해야 함) 레벨 변동 시 true 리턴 */
     @Override
-    public boolean increaseProgress(int adds) {
+    public boolean increaseProgress(Space space, int adds) {
         if(adds < 0) adds = 0;
         boolean increased = false;
         
         this.progress += adds;
         if(this.progress < 0) this.progress = 0;
-        while(this.progress >= getMaxProgress()) {
+        
+        long max = getMaxProgress(space);
+        while(this.progress >= max) {
             increased = true;
             if(getLevel() < getMaxLevel()) {
-                this.progress -= getMaxProgress();
+                this.progress -= max;
                 if(this.progress < 0) this.progress = 0;
                 setLevel(getLevel() + 1);
             } else {
@@ -127,7 +128,7 @@ public abstract class AbstractResearch implements Research {
                 break;
             }
         }
-        if(this.progress > getMaxProgress()) this.progress = getMaxProgress();
+        if(this.progress > max) this.progress = max;
         return increased;
     }
     
@@ -146,7 +147,7 @@ public abstract class AbstractResearch implements Research {
         return Integer.MAX_VALUE / 10;
     }
     
-    /** 다음 레벨까지 도달하기에 필요한 진행상태(cycle) 필요 요구량 계산 */
+    /** 다음 레벨까지 도달하기에 필요한 진행상태(cycle) 필요 요구량 계산 - 밸런스 배율 제외 */
     @Override
     public long getMaxProgress() {
         long res = getMaxProgressStarts();
@@ -159,6 +160,11 @@ public abstract class AbstractResearch implements Research {
             nowLevelLefts--;
         }
         return res;
+    }
+    
+    @Override
+    public long getMaxProgress(Space space) {
+    	return (long) (getMaxProgress() * space.getCycleCostRate());
     }
     
     @Override

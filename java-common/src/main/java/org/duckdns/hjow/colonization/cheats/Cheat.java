@@ -102,8 +102,10 @@ public abstract class Cheat {
                         if(f instanceof ResearchCenter) {
                             ResearchCenter rc = (ResearchCenter) f;
                             Research r = rc.getResearch(col);
+                            
+                            long max = r.getMaxProgress(col.getSpace());
                             if(r.getLevel() < r.getMaxLevel()) {
-                            	if(r instanceof AbstractResearch) ((AbstractResearch) r).setProgress(r.getMaxProgress() - 1);
+                            	if(r instanceof AbstractResearch) ((AbstractResearch) r).setProgress(max - 1);
                             }
                         }
                     }

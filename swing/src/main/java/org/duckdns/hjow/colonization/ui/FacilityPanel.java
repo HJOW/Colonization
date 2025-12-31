@@ -437,7 +437,7 @@ public class FacilityPanel extends JPanel implements ColonyElementPanel {
             if(research == null) {
                 res = res.append(" -");
             } else {
-                res = res.append(" ").append(research.getTitle() + " ( " + research.getProgressPercents() + " % )");
+                res = res.append(" ").append(research.getTitle() + " ( " + research.getProgressPercents(colony.getSpace()) + " % )");
             }
         } else if(fac instanceof Factory) {
             Factory factory = (Factory) fac;

@@ -118,11 +118,12 @@ public class ResearchPanel extends JPanel implements Disposeable {
         else if(r.getProgress() <= 0) lbLevel.setText("(" + ColonyManager.t("연구 필요") + ")");
         else                          lbLevel.setText("(" + ColonyManager.t("연구 중") + ")");
         
-        if(r.getMaxProgress() >= (Integer.MAX_VALUE / 10)) {
-            prog.setMaximum((int) (r.getMaxProgress() / 10000));
+        long max = r.getMaxProgress(colony.getSpace());
+        if(max >= (Integer.MAX_VALUE / 10)) {
+            prog.setMaximum((int) (max / 10000));
             prog.setValue((int) (r.getProgress() / 10000));
         } else {
-            prog.setMaximum((int) r.getMaxProgress());
+            prog.setMaximum((int) max);
             prog.setValue((int) r.getProgress());
         }
         

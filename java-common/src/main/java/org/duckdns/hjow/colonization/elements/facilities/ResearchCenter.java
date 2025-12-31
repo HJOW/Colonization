@@ -115,11 +115,11 @@ public abstract class ResearchCenter extends AbstractFacility {
                 if(incFloat < 1) {
                     increases = 1;
                     if(ColonyManager.random() >= incFloat) {
-                        lvUp = research.increaseProgress(increases);
+                        lvUp = research.increaseProgress(space, increases);
                     }
                 } else {
                     increases = (int) Math.round(incFloat);
-                    lvUp = research.increaseProgress(increases);
+                    lvUp = research.increaseProgress(space, increases);
                 }
                 if(lvUp) colPanel.reserveRefresh();
             }
