@@ -204,7 +204,7 @@ public class Arcade extends AbstractFacility implements ServiceFacility {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(240);
+        return new Integer(60);
     }
     
     public static Long getTechNeeded() {

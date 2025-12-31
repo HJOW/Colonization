@@ -68,7 +68,7 @@ public class SmallApartment extends Residence {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(680);
+        return new Integer(240);
     }
     
     public static int getUniqueFacilityGrade() {

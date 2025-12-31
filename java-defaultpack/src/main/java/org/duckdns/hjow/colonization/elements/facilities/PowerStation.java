@@ -65,7 +65,7 @@ public class PowerStation extends PowerPlant {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(300);
+        return new Integer(120);
     }
     
     public static int getUniqueFacilityGrade() {

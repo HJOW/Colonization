@@ -63,7 +63,7 @@ public class SmallPort extends DefaultPort {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(1200);
+        return new Integer(180);
     }
     
     public static int getUniqueFacilityGrade() {

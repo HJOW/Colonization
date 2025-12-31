@@ -75,7 +75,7 @@ public class Academy extends School {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(180);
+        return new Integer(60);
     }
     
     public static int getUniqueFacilityGrade() {

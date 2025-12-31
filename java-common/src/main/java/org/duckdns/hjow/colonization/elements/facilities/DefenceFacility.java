@@ -204,7 +204,7 @@ public abstract class DefenceFacility extends AbstractFacility implements Attack
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(400);
+        return new Integer(40);
     }
     
     public static int getUniqueFacilityGrade() {

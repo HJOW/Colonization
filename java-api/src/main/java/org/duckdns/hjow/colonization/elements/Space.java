@@ -91,4 +91,8 @@ public interface Space extends Serializable, Disposeable, JsonCompatible {
     public void removeShip(Ship ship);
     /** 우주공항 목록 반환 */
     public List<Port> getPorts();
+    /** 밸런스 - 소요시간 배율 */
+    public double getCycleCostRate();
+    /** 밸런스 - 비용 배율 */
+    public double getMoneyCostRate();
 }

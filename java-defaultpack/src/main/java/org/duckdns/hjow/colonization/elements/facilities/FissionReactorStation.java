@@ -68,7 +68,7 @@ public class FissionReactorStation extends PowerPlant {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(1200);
+        return new Integer(600);
     }
     
     public static int getUniqueFacilityGrade() {

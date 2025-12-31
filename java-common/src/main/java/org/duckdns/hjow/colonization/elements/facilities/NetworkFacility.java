@@ -115,7 +115,7 @@ public abstract class NetworkFacility extends AbstractFacility {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(300);
+        return new Integer(30);
     }
     
     public static int getUniqueFacilityGrade() {

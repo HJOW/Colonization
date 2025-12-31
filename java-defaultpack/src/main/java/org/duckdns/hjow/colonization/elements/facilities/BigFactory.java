@@ -67,7 +67,7 @@ public class BigFactory extends Factory {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(1500);
+        return new Integer(240);
     }
     
     public static int getUniqueFacilityGrade() {

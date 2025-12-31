@@ -196,7 +196,7 @@ public class CargoRailSystem extends AbstractFacility {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(240);
+        return new Integer(180);
     }
     
     public static Long getTechNeeded() {

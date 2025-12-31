@@ -119,7 +119,7 @@ public abstract class PowerPlant extends AbstractFacility {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(120);
+        return new Integer(60);
     }
     
     public static int getUniqueFacilityGrade() {

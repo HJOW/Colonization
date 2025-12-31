@@ -541,7 +541,7 @@ public abstract class AbstractFacility implements Facility {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(1200);
+        return new Integer(120);
     }
     
     public static Long getTechNeeded() {

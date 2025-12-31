@@ -54,7 +54,7 @@ public class ResidenceModule extends Residence {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(180);
+        return new Integer(30);
     }
     
     public static int getUniqueFacilityGrade() {

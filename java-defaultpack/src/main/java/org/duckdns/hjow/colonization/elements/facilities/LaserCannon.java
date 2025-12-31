@@ -132,7 +132,7 @@ public class LaserCannon extends DefenceFacility implements AttackableObject {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(500);
+        return new Integer(600);
     }
     
     public static int getUniqueFacilityGrade() {

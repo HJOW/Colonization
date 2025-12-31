@@ -85,7 +85,7 @@ public class SmallResearchCenter extends ResearchCenter {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(1200);
+        return new Integer(120);
     }
     
     public static int getUniqueFacilityGrade() {

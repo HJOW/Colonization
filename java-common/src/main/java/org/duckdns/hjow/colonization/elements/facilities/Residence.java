@@ -226,7 +226,7 @@ public abstract class Residence extends AbstractFacility implements Home {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(180);
+        return new Integer(30);
     }
     
     public static int getUniqueFacilityGrade() {

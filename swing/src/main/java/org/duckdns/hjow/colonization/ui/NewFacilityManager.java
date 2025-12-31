@@ -26,6 +26,7 @@ import org.duckdns.hjow.colonization.GUIColonyManagerInterface;
 import org.duckdns.hjow.colonization.elements.Colony;
 import org.duckdns.hjow.colonization.elements.DefaultHoldingJob;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityInformation;
 import org.duckdns.hjow.colonization.elements.facilities.FacilityManager;
@@ -200,12 +201,16 @@ public class NewFacilityManager extends JDialog implements Disposeable {
     protected void onOkRequested() {
         FacilityInformation info;
         Colony col;
+        Space spc;
         
         try {
             info = (FacilityInformation) cbxFacInfos.getSelectedItem();
             col = city.getColony(colonyManager);
+            spc = col.getSpace();
             
-            if(col.getMoney() < info.getPrice().longValue()) {
+            long prices = (int) (info.getPrice().longValue() * spc.getMoneyCostRate());
+            
+            if(col.getMoney() < prices) {
                 JOptionPane.showMessageDialog(getDialog(), ColonyManager.t("예산이 부족합니다.\n[MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(info.getPrice() - col.getMoney())));
                 return;
             };
@@ -234,11 +239,13 @@ public class NewFacilityManager extends JDialog implements Disposeable {
                 return;
             }
             
-            HoldingJob job = new DefaultHoldingJob(info.getBuildingCycle(), info.getBuildingCycle(), "NewFacility", info.getName());
+            int cycles = (int) (info.getBuildingCycle() * spc.getCycleCostRate());
+            
+            HoldingJob job = new DefaultHoldingJob(cycles, cycles, "NewFacility", info.getName());
             job.setUsingSpace(info.getSpaceSize());
             city.getHoldings().add(job);
             
-            col.modifyingMoney(info.getPrice() * (-1) , city, city, "Building", info.getTitle());
+            col.modifyingMoney(prices * (-1) , city, city, "Building", info.getTitle());
             
             if(servletPanel != null) {
                 try { servletPanel.onNewFacilityAdded(info, city, col); } catch(Throwable t) {
@@ -265,11 +272,15 @@ public class NewFacilityManager extends JDialog implements Disposeable {
         }
         
         Colony col = city.getColony(colonyManager);
+        Space spc = col.getSpace();
+        
         boolean avail = true;
         String prepends = "";
         String appends  = "";
         
-        if(col.getMoney() < info.getPrice().longValue()) {
+        long prices = (int) (info.getPrice().longValue() * spc.getMoneyCostRate());
+        
+        if(col.getMoney() < prices) {
             prepends = "\n" + ColonyManager.t("건설에 [MONEY] 의 예산이 더 필요합니다.").replace("[MONEY]", String.valueOf(info.getPrice() - col.getMoney()));
             avail = false;
         }
@@ -278,9 +289,9 @@ public class NewFacilityManager extends JDialog implements Disposeable {
             avail = false;
         }
         
-        appends = appends + "\n" + ColonyManager.t("비용") + " : " + info.getPrice();
+        appends = appends + "\n" + ColonyManager.t("비용") + " : " + prices;
         appends = appends + "\n" + ColonyManager.t("기술") + " : " + info.getTech();
-        appends = appends + "\n" + ColonyManager.t("소요") + " : " + info.getBuildingCycle();
+        appends = appends + "\n" + ColonyManager.t("소요") + " : " + (info.getBuildingCycle() * spc.getCycleCostRate());
         
         ta.setText(new String(prepends + "\n\n" + info.getDescription() + "\n\n" + appends).trim());
         btnOk.setEnabled(avail);

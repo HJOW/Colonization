@@ -131,7 +131,7 @@ public abstract class BusinessCenter extends AbstractFacility {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(600);
+        return new Integer(120);
     }
     
     public static int getUniqueFacilityGrade() {

@@ -133,7 +133,7 @@ public class Turret extends DefenceFacility implements AttackableObject {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(400);
+        return new Integer(60);
     }
     
     public static int getUniqueFacilityGrade() {

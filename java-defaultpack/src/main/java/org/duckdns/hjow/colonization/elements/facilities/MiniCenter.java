@@ -67,7 +67,7 @@ public class MiniCenter extends BusinessCenter {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(600);
+        return new Integer(120);
     }
     
     public static int getUniqueFacilityGrade() {

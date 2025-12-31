@@ -44,6 +44,9 @@ public abstract class AbstractSpace implements Space {
     protected transient String clientVersion = ColonyManager.getVersionString();
     protected transient String clientBuildNo = String.valueOf(ColonyManager.BUILD_NO);
     
+    protected double cycleCostRate = 3.0;
+    protected double moneyCostRate = 3.0;
+    
     public AbstractSpace() {}
 
     public List<Colony> getColonies() {
@@ -102,6 +105,9 @@ public abstract class AbstractSpace implements Space {
         try { clientVersion = json.get("version").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientVersion = "0.0.1"; } 
         try { clientBuildNo = json.get("buildNo").toString();                         } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); clientBuildNo = "1"; }
         try { setUserColonyKey(new Long(json.get("userColonyKey").toString()));       } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); userColonyKey = 0L; }
+        
+        try { setCycleCostRate(Double.parseDouble(json.get("cycleCostRate").toString()));  } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); cycleCostRate = 3.0; }
+        try { setMoneyCostRate(Double.parseDouble(json.get("moneyCostRate").toString()));  } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); moneyCostRate = 3.0; }
         
         JsonArray list = null;
         try { list = (JsonArray) json.get("colonies"); } catch(Exception ex) { GlobalLogs.processExceptionOccured(ex, false); }
@@ -175,6 +181,9 @@ public abstract class AbstractSpace implements Space {
         json.put("version", getClientVersion());
         json.put("buildNo", clientBuildNo);
         json.put("userColonyKey", String.valueOf(getUserColonyKey()));
+        
+        json.put("cycleCostRate", String.valueOf(getCycleCostRate()));
+        json.put("moneyCostRate", String.valueOf(getMoneyCostRate()));
         
         JsonArray list = null;
         
@@ -464,6 +473,24 @@ public abstract class AbstractSpace implements Space {
     } 
     
     @Override
+    public double getCycleCostRate() {
+		return cycleCostRate;
+	}
+
+	public void setCycleCostRate(double cycleCostRate) {
+		this.cycleCostRate = cycleCostRate;
+	}
+
+	@Override
+	public double getMoneyCostRate() {
+		return moneyCostRate;
+	}
+
+	public void setMoneyCostRate(double moneyCostRate) {
+		this.moneyCostRate = moneyCostRate;
+	}
+
+	@Override
     public void removeShip(Ship ship) {
         Port p = findPort(ship);
         if(p == null) return;

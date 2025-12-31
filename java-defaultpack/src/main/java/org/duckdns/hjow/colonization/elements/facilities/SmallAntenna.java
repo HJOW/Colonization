@@ -97,7 +97,7 @@ public class SmallAntenna extends NetworkFacility {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(300);
+        return new Integer(60);
     }
     
     public static Long getTechNeeded() {

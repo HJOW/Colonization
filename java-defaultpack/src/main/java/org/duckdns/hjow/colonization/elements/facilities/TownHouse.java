@@ -70,7 +70,7 @@ public class TownHouse extends Residence {
     }
     
     public static Integer getFacilityBuildingCycle() {
-        return new Integer(360);
+        return new Integer(120);
     }
     
     public static int getUniqueFacilityGrade() {
