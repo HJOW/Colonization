@@ -16,7 +16,7 @@ public class ConstructionDrones extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 1800L; }
+    public long   getMaxProgressStarts()       { return 180L; }
     public double getMaxProgressIncreaseRate() { return 1.5;  }
     
     @Override

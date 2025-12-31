@@ -16,7 +16,7 @@ public class BasicBuildingTech extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 600L; }
+    public long   getMaxProgressStarts()       { return 60L; }
     public double getMaxProgressIncreaseRate() { return 1.1;  }
     
     @Override

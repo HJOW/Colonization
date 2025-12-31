@@ -16,7 +16,7 @@ public class Plasteel extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 1200L; }
+    public long   getMaxProgressStarts()       { return 120L; }
     public double getMaxProgressIncreaseRate() { return 1.5;  }
     
     @Override

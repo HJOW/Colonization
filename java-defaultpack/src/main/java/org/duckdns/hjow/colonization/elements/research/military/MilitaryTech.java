@@ -23,7 +23,7 @@ public class MilitaryTech extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 800L; }
+    public long   getMaxProgressStarts()       { return 80L; }
     public double getMaxProgressIncreaseRate() { return 1.1;  }
     
     @Override

@@ -23,7 +23,7 @@ public class ComputerTech extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 1200L; }
+    public long   getMaxProgressStarts()       { return 120L; }
     public double getMaxProgressIncreaseRate() { return 2.0;  }
     
     @Override

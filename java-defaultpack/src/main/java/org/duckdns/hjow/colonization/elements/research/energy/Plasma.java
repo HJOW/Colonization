@@ -22,7 +22,7 @@ public class Plasma extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 1500L; }
+    public long   getMaxProgressStarts()       { return 150L; }
     public double getMaxProgressIncreaseRate() { return 1.5;  }
     
     @Override

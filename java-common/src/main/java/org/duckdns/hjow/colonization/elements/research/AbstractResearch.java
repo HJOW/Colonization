@@ -168,7 +168,7 @@ public abstract class AbstractResearch implements Research {
     }
     
     @Override
-    public long   getMaxProgressStarts()       { return 600L; }
+    public long   getMaxProgressStarts()       { return 60L; }
     @Override
     public double getMaxProgressIncreaseRate() { return 1.1;  }
     

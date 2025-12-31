@@ -16,7 +16,7 @@ public class NuclearFusion extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 2000L; }
+    public long   getMaxProgressStarts()       { return 200L; }
     public double getMaxProgressIncreaseRate() { return 2.0;  }
     
     @Override

@@ -23,7 +23,7 @@ public class BasicEngineering extends AbstractResearch {
         return Integer.MAX_VALUE;
     }
 
-    public long   getMaxProgressStarts()       { return 900L; }
+    public long   getMaxProgressStarts()       { return 90L; }
     public double getMaxProgressIncreaseRate() { return 1.1;  }
     
     @Override
