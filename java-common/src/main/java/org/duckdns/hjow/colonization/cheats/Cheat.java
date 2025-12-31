@@ -6,8 +6,10 @@ import java.util.Map;
 import org.duckdns.hjow.colonization.ColonyManager;
 import org.duckdns.hjow.colonization.elements.Citizen;
 import org.duckdns.hjow.colonization.elements.Colony;
+import org.duckdns.hjow.colonization.elements.DefaultSpace;
 import org.duckdns.hjow.colonization.elements.Facility;
 import org.duckdns.hjow.colonization.elements.HoldingJob;
+import org.duckdns.hjow.colonization.elements.Space;
 import org.duckdns.hjow.colonization.elements.city.City;
 import org.duckdns.hjow.colonization.elements.facilities.ResearchCenter;
 import org.duckdns.hjow.colonization.elements.research.AbstractResearch;
@@ -111,6 +113,24 @@ public abstract class Cheat {
                     }
                 }
             }
+        };
+        map.put(c.getCode(), c);
+        
+        c = new Cheat("presto") { // 속도 배율 자체를 빠르게 올려버리는 치트, 기존 작업중인 건들은 영향 없음, 매개변수 필요없음
+			@Override
+			public void onCodeInput(ColonyManager man, String params) {
+				if(man == null) return;
+                Colony col = man.getSelectedColony();
+                if(col == null) return;
+                if(col.getCities().isEmpty()) return;
+                
+                col.disableChecked(); // 인증 제거 (여기서 안해도 이 메소드 호출되기 전 한번 더 함)
+                
+                Space space = col.getSpace();
+                if(space instanceof DefaultSpace) {
+                	((DefaultSpace) space).setCycleCostRate(1.0);
+                }
+			}
         };
         map.put(c.getCode(), c);
         

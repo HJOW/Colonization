@@ -673,7 +673,7 @@ public abstract class AbstractShip implements Ship {
     	try {
     	    Class<? extends Ship> classes = getClass();
     	    Method mthd = classes.getMethod("getMetaBuildCycle", Port.class, Colony.class);
-    	    return ((Number) mthd.invoke(null, port, colony)).longValue();
+    	    return (long) (((Number) mthd.invoke(null, port, colony)).longValue() * colony.getSpace().getCycleCostRate());
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
@@ -684,7 +684,7 @@ public abstract class AbstractShip implements Ship {
     	try {
     	    Class<? extends Ship> classes = getClass();
     	    Method mthd = classes.getMethod("getMetaPrice", Port.class, Colony.class);
-    	    return ((Number) mthd.invoke(null, port, colony)).longValue();
+    	    return (long) (((Number) mthd.invoke(null, port, colony)).longValue() * colony.getSpace().getMoneyCostRate());
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}

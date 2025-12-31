@@ -279,7 +279,7 @@ class ShipInformation {
 	public long getPrice(Port port, Colony colony) {
 		try {
     	    Method mthd = shipClass.getMethod("getMetaPrice", Port.class, Colony.class);
-    	    return ((Number) mthd.invoke(null, port, colony)).longValue();
+    	    return (long) (((Number) mthd.invoke(null, port, colony)).longValue() * colony.getSpace().getMoneyCostRate());
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
@@ -288,7 +288,7 @@ class ShipInformation {
 	public long getCycle(Port port, Colony colony) {
 		try {
     	    Method mthd = shipClass.getMethod("getMetaBuildCycle", Port.class, Colony.class);
-    	    return ((Number) mthd.invoke(null, port, colony)).longValue();
+    	    return (long) (((Number) mthd.invoke(null, port, colony)).longValue() * colony.getSpace().getCycleCostRate());
     	} catch(Exception ex) {
     		throw new RuntimeException(ex.getMessage(), ex);
     	}
